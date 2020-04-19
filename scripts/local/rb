@@ -1,0 +1,17 @@
+#!/bin/bash
+# One-time reboot into selected OS
+
+set -e
+
+index="$(grep "menuentry '\|submenu '" /boot/grub/grub.cfg | grep -v -P '\t'  | grep -i -n "$1" | head -1 | awk -F':' '{print $1}')"
+if [ -z $index ]; then
+  echo "No entry found"
+else 
+  index=$(( $index - 1 ))
+  echo "Selected menuentry: $index. Proceed?"
+  read response
+  if [ "$response" == 'y' ]; then
+    sudo grub-reboot $index
+    reboot
+  fi
+fi

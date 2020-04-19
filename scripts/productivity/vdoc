@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Find the html documentation of the current project and open it in firefox
+
+function open() {
+
+	shopt -s globstar
+
+	if cd **/docs/_build/html || cd **/_build/html || cd **/html; then
+		firefox -P minimal ./index.html & disown
+	fi 2>/dev/null
+
+}
+
+export -f open
+timeout 2s bash -c open

@@ -1,0 +1,5 @@
+#!/bin/bash
+# Output where the specified command resides, as returned by type
+
+full="$(type "$1")"
+echo "/${full#*/}"

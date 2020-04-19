@@ -1,0 +1,5 @@
+#!/bin/bash
+
+file="$(conf "$1")"
+
+test -f "$file" && emacsclient --create-frame "$file" {1,2}>/dev/null & disown

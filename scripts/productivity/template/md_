@@ -1,0 +1,11 @@
+#!/bin/bash
+
+shopt -s globstar
+
+# cd to directory containing this script
+cd ~/templates/md
+
+for arg in $@; do
+	cat **/"$arg.md"
+	echo # new line
+done

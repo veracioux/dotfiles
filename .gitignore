@@ -1,0 +1,11 @@
+.cfg/
+src/
+templates/
+projects/
+mnt/
+data/
+bin/
+.local/
+wiki/
+scripts/tmp
+~/.mozilla/firefox/*/prefs.js

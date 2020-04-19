@@ -1,0 +1,32 @@
+
+
+% So I don't accidentally clear the workspace
+function clear()
+	system('fish -c clear');
+end
+
+function CLEAR(varargin)
+	args = sprintf(', "%s"', varargin{:});
+	evalin ("caller", ['builtin ("clear"' args ')']);
+end
+
+% Required for symbolic package
+setenv PYTHON python2
+
+% Packages
+pkg load symbolic
+pkg load control
+pkg load signal
+pkg load communications
+pkg load miscellaneous
+pkg load io
+pkg load struct
+pkg load statistics
+pkg load optim
+
+octave_core_file_name('.octave-workspace')
+edit mode sync
+edit home .
+EDITOR('vim > /dev/tty 2>&1 < /dev/tty %s')
+
+clear

@@ -1,0 +1,16 @@
+[user]
+	email = harisgusic.dev@gmail.com
+	name = Haris Gušić
+[alias]
+	doglog = log --graph --decorate --oneline
+	whenadded = log --diff-filter=A
+	pom = push origin master
+	s = status
+	c = commit
+	l = doglog
+	tweak = commit --amend --no-edit
+	pam = push all master
+[core]
+	autocrlf = input
+	pager = less -F -X
+	editor = vim

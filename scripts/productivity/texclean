@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Array of extensions
+extarray=($(sed -e '/^#/d' -e '/^$/d' ~/templates/latex/ignored_files))
+
+if [ "$1" == '-r' ]; then
+	shopt -s globstar
+	rm -f ${extarray[*]/#/\*\*\/\*.} # **/*.extension
+else
+	rm -f ${extarray[*]/#/\*.} # **/*.extension
+fi
+
+exit 

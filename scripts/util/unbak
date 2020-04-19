@@ -1,0 +1,15 @@
+#!/bin/bash
+
+for file in $@; do
+	raw=$(echo "$file" | sed 's_\(.*\)\.bak$_\1_')
+	# File is not a backup -- skip it
+	[ "$raw" == "$file" ] && continue;
+	#Un-bak-ed file already exists
+	if test -f "$raw"; then
+		read -p "$raw already exists. Proceed? " user_input
+		if [ "$user_input" != 'y' ]; then
+			continue
+		fi
+	fi
+	mv "$file" "$raw"
+done

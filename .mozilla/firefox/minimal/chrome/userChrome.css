@@ -1,0 +1,8 @@
+
+/* Fix right-click bug */
+#contentAreaContextMenu{ margin: 2px 0 0 2px }
+
+/* Hide toolbar and everything from the top */
+#navigator-toolbox {
+	visibility: collapse !important;
+}

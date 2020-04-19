@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Quickly create a backup of a file in the format ${filename}.bak
+# If the file contains .bak in its name, the backup will not be created unless the
+# -a (--all) option is specified
+
+# Extract options into variables
+while getopts "a" arg
+do
+	case "$arg" in
+		a)
+			a=1
+			;;
+		'?')
+			exit 1
+			;;
+	esac
+done
+
+for file in $@ ; do
+
+	if [ "${file:0:1}" != '-' ] &&
+		{ [ -n "$a" ] || [ "$file" = "${file/.bak/}" ]; };
+	then
+		cp "$file" "$file.bak"
+	fi
+
+done

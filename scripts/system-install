@@ -1,0 +1,56 @@
+#!/bin/bash
+
+custom_install() {
+	cd ~/scripts/local/pkgbuild
+	mkdir -p /tmp/"$1"/
+	cp $(echo $1 | tr [:lower:] [:upper:]) /tmp/"$1"/PKGBUILD
+	cd /tmp/"$1"
+	makepkg --skipinteg -f --install
+}
+
+pacman -S neovim fish
+
+useradd -m -G log,lock,wheel,tty,audio,lp,uucp,video,haris -s fish haris
+
+# For dual-boot setups, configure the clock TODO
+
+# A list of packages to install on a fresh system install
+
+# System stuff
+pacman -S base-devel sudo
+pacman -S etckeeper
+# Network
+pacman -S networkmanager iw wpa_suplicant
+# Low-level
+pacman -S xorg acpilight qtile xwallpaper
+
+# Editors and viewers
+pacman -S exa xarchiver ueberzug imagemagick python-sphinx emacs
+pacman -S vifm ueberzug ffmpegthumbnailer ranger nemo gsettings
+pacman -S zathura zathura-pdf-mupdf
+pacman -S gimp inkscape poppler
+
+# Programming
+pacman -S python
+
+# Utilities
+pacman -S git xsel moreutils rsync findutils
+pacman -S neomutt translate-shell
+pacman -S speedcrunch
+yay -S urlview
+
+pacman -S hugo
+# Resources
+pacman -S adobe-source-code-pro-fonts
+
+## Additional installs using various methods
+	# spacemacs
+	# mutt-wizard @lukesmith
+
+git clone 'https://github.com/syl20bnr/spacemacs' ~/.emacs.d &&
+pacman -S lynx # Optional dependency for mutt-wizard
+
+# Fix wifi dropping issue
+echo -e '[connection]\nwifi.powersave = 2' > \
+/etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
+

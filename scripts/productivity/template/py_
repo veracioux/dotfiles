@@ -1,0 +1,11 @@
+#!/bin/bash
+
+shopt -s globstar
+
+# cd to directory containing this script
+cd ~/templates/py
+
+for arg in $@; do
+	cat **/"$arg.py"
+	echo # new line
+done

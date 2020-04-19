@@ -1,0 +1,87 @@
+##############
+# Appearance #
+##############
+
+font:
+  # The normal (roman) font face to use.
+  normal:
+    family: monospace
+    style: Regular
+
+  # The bold font face
+  bold:
+    family: monospace
+    style: Bold
+
+  # The italic font face
+  italic:
+    family: monospace
+    style: Italic
+
+  # Point size of the font
+  size: 7
+
+colors:
+  # Default colors
+  primary:
+    background: '#202023'
+    foreground: '#dddddd'
+
+  # Normal colors
+  normal:
+    black: '#202023'
+    red: '#ff5555'
+    green: '#54ba88'
+    yellow: '#ffa655'
+    blue: '#6b88fe'
+    magenta: '#e24aff'
+    cyan: '#8cceff'
+    white: '#92aab7'
+
+  # Bright colors
+  bright:
+    black: '#6b746b'
+    red: '#ff8c8c'
+    green: '#8cff8c'
+    yellow: '#f4ff8c'
+    blue: '#8C9EFF'
+    magenta: '#ff99c9'
+    cyan: '#8cf7ff'
+    white: '#dddddd'
+
+  indexed_colors: 
+    - { index: 16, color: '0x303030' }
+    - { index: 17, color: '0x993333' }
+    - { index: 18, color: '0x28594e' }
+    - { index: 19, color: '0x522d59' }
+    - { index: 20, color: '0x182466' }
+    - { index: 21, color: '0x522d59' }
+    - { index: 22, color: '0xff0000' }
+    - { index: 23, color: '0xff0000' }
+
+mouse:
+  url:
+    modifiers: Control
+
+selection:
+  save_to_clipboard: true
+
+################
+# Key bindings #
+################
+
+key_bindings:
+
+- { key: U,   mods: Alt,  action: ScrollPageUp,     mode: ~AppCursor }
+- { key: D,   mods: Alt,  action: ScrollPageDown,   mode: ~AppCursor }
+- { key: H,   mods: Alt,  chars: "\x1b[D",          mode: ~AppCursor }
+- { key: J,   mods: Alt,  action: ScrollLineDown,   mode: ~AppCursor }
+- { key: K,   mods: Alt,  action: ScrollLineUp,     mode: ~AppCursor }
+- { key: L,   mods: Alt,  chars: "\x1b[C",          mode: ~AppCursor }
+
+# Alt+X deletes current character
+- { key: X,   mods: Alt,  chars: "\x1b[3~",         mode: ~AppCursor }
+
+# Alt+T launcher another terminal in the PWD
+- { key: T,   mods: Alt,  command: { program: "fish",  args: ["-c", "term"] },
+    mode: ~AppCursor }

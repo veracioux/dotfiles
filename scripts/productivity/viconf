@@ -1,0 +1,5 @@
+#!/bin/bash
+
+file="$(conf "$1")"
+
+test -f "$file" && nvim "$file"
