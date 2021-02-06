@@ -3,7 +3,7 @@ abbr --add mv 'mv -i'
 
 alias src_fish 'source ~/.config/fish/config.fish'
 alias proj 'exec proj'
-alias config 'git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias cf 'git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias sconfig 'git --git-dir=$HOME/.cfg-secret/ --work-tree=$HOME'
 alias term 'alacritty -e fish -C "cd (pwd)" & disown >/dev/null'
 alias vifm '~/.config/vifm/scripts/vifmrun'
