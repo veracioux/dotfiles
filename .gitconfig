@@ -4,12 +4,16 @@
 [alias]
 	doglog = log --graph --decorate --oneline
 	whenadded = log --diff-filter=A
-	pom = push origin master
+    i = init
 	s = status
 	c = commit
 	l = doglog
+    po = push origin
 	tweak = commit --amend --no-edit
+	pom = push origin master
 	pam = push all master
+    cm = checkout master
+    co = checkout
 [core]
 	autocrlf = input
 	pager = less -F -X

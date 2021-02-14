@@ -16,5 +16,7 @@ alias wkpd 'wikicurses'
 alias calc 'speedcrunch'
 alias info 'info --vi-keys'
 alias py 'python'
+alias yay 'paru'
+alias g 'git'
 
 set aur 'aur@aur.archlinux.org'
