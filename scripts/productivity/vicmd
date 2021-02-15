@@ -1,3 +1,5 @@
 #!/bin/bash
 
-nvim "$(fcmd "$1")"
+file="$(fcmd "$1")"
+
+test -f "$file" && nvim "$file"

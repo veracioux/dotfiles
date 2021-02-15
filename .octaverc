@@ -8,6 +8,7 @@ end
 function CLEAR(varargin)
 	args = sprintf(', "%s"', varargin{:});
 	evalin ("caller", ['builtin ("clear"' args ')']);
+    source ~/.octaverc
 end
 
 % Required for symbolic package
@@ -23,6 +24,7 @@ pkg load io
 pkg load struct
 pkg load statistics
 pkg load optim
+pkg load image
 
 octave_core_file_name('.octave-workspace')
 edit mode sync
