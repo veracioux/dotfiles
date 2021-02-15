@@ -35,6 +35,18 @@ bind -M insert \cp up-or-search
 bind -M default \cn down-or-search
 bind -M insert \cn down-or-search
 
+##################
+# Other bindings #
+##################
+
+# Copy the current contents of the command line
+bind -M default \ec __copy_to_clipboard
+bind -M insert \ec __copy_to_clipboard
+
+# Run the current command in bash
+bind -M default \eb __run_in_bash
+bind -M insert \eb __run_in_bash
+
 #################
 # Custom colors #
 #################

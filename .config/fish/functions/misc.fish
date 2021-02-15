@@ -28,3 +28,20 @@ end
 function rawblob
 	echo "$argv" | sed -e 's:github\.com:raw\.githubusercontent.com:' -e 's:blob/::'
 end
+
+####################################
+# Helper functions for keybindings #
+####################################
+
+function __copy_to_clipboard
+    echo (commandline -b) | xsel -b
+end
+
+function __run_in_bash
+    set -l cmd (commandline -b)
+    echo
+    eval bash -c "'source ~/.bashrc; $cmd'"
+    commandline -f repaint
+    commandline -r ''
+end
+
