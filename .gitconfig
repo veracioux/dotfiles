@@ -8,12 +8,17 @@
 	s = status
 	c = commit
 	l = doglog
+    p = push
+    b = branch
     po = push origin
-	tweak = commit --amend --no-edit
 	pom = push origin master
+    pa = push all
 	pam = push all master
-    cm = checkout master
+    ppo = pull origin
+    ppom = pull origin master
     co = checkout
+    com = checkout master
+	tweak = commit --amend --no-edit
 [core]
 	autocrlf = input
 	pager = less -F -X
