@@ -6,7 +6,12 @@ function open() {
 
 	shopt -s globstar
 
-	if cd **/docs/_build/html || cd **/_build/html || cd **/html; then
+    # Doesn't work if the path contains spaces, but who cares
+    if  cd $(echo docs/_build/html | tr ' ' '\n' | head -1) ||
+        cd $(echo **/docs/_build/html | tr ' ' '\n' | head -1) ||
+        cd $(echo **/_build/html | tr ' ' '\n' | head -1) ||
+        cd $(echo **/html | tr ' ' '\n' | head -1)
+    then
 		firefox -P minimal ./index.html & disown
 	fi 2>/dev/null
 
