@@ -47,6 +47,10 @@ bind -M insert \ec __copy_to_clipboard
 bind -M default \eb __run_in_bash
 bind -M insert \eb __run_in_bash
 
+# Prepend o in front of current command
+bind -M default \eo __prepend_o
+bind -M insert \eo __prepend_o
+
 #################
 # Custom colors #
 #################

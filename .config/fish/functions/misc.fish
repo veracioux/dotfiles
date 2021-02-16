@@ -45,3 +45,9 @@ function __run_in_bash
     commandline -r ''
 end
 
+function __prepend_o
+    set -l cmd (commandline -b)
+    commandline -C 0
+    commandline -i 'o '
+    commandline -f end-of-line
+end
