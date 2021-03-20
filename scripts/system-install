@@ -37,7 +37,7 @@ pacman -S python
 pacman -S git xsel moreutils rsync findutils
 pacman -S neomutt translate-shell
 pacman -S speedcrunch
-yay -S urlview
+yay -S urlview buku-git asciinema
 
 pacman -S hugo
 # Resources

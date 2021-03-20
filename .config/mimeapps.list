@@ -16,6 +16,7 @@ x-scheme-handler/trash=nemo.desktop;
 
 application/pdf=zathura.desktop;
 application/x-bibtex=gvim.desktop;texstudio.desktop;
+application/x-schim=schim.desktop
 
 [Default Applications]
 text/plain=gvim.desktop;texstudio.desktop
@@ -25,6 +26,8 @@ text/x-bibtex=gvim.desktop;texstudio.desktop
 text/x-org=emacs.desktop
 text/x-script.python=gvim.desktop
 text/html=firefox.desktop
+x-scheme-handler/http=firefox.desktop;
+x-scheme-handler/https=firefox.desktop;
 text/x-shellscript=gvim.desktop
 text/doc=libreoffice-writer.desktop
 
@@ -41,7 +44,9 @@ x-directory/normal=nemo.desktop
 x-directory/gnome-default-handler=nemo.desktop
 x-scheme-handler/file=nemo.desktop
 
+application/octet-stream=gvim.desktop
 application/pdf=org.pwmt.zathura.desktop
 application/x-gnome-saved-search=nemo.desktop
 application/x-dxf=librecad.desktop
 x-scheme-handler/viber=viber.desktop
+x-scheme-handler/eclipse+command=_usr_lib_papyrus_.desktop

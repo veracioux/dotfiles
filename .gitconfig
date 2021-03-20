@@ -1,12 +1,13 @@
 [user]
 	email = harisgusic.dev@gmail.com
 	name = Haris Gušić
+	signingkey = 0348E6D2D1D44A6D
 [alias]
 	doglog = log --graph --decorate --oneline
 	whenadded = log --diff-filter=A
     i = init
 	s = status
-	c = commit
+	c = commit -s
 	l = doglog
     p = push
     b = branch
@@ -23,3 +24,5 @@
 	autocrlf = input
 	pager = less -F -X
 	editor = vim
+[commit]
+	gpgsign = true

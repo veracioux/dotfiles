@@ -9,6 +9,7 @@ set showcmd
 let mapleader = "\<Space>"
 set breakindent
 set clipboard^=unnamed
+set maxmempattern=2000
 
 set tabstop=4
 set shiftwidth=4
@@ -166,7 +167,7 @@ colorscheme customtheme
 
 	let g:vimtex_complete_enabled = 1
 	let g:vimtex_complete_close_braces = 1
-  let g:vimtex_fold_enabled = 1
+    let g:vimtex_fold_enabled = 1
 	let g:tex_flavor='latex'
 	let g:vimtex_view_method='zathura'
 	let g:vimtex_quickfix_mode = 0
@@ -197,8 +198,8 @@ colorscheme customtheme
 " Riv "
 """""""
 
-	let g:riv_disable_folding = 1
-	let g:riv_fold_level = 0
+	let g:riv_disable_folding = 0
+	let g:riv_fold_level = 1
 	let g:riv_fold_auto_update = 0
 	let g:riv_auto_fold_force = 0
 	let g:riv_auto_format_table = 0

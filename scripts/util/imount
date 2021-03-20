@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+listing="$(lsblk --list -o NAME,LABEL)"
+
+items="$(echo "$listing" | tail -n +2 | sed 's/.*/"&"/' | nl --number-width=1)"
+lineno="$(echo "$items" | wc -l)"
+
+exec 3>&1
+id=$(eval dialog --default-item $lineno --menu '"Choose a device/partition:"' 60 50 $lineno $items 2>&1 1>&3)
+[ "$?" != 0 ] && exit 1
+mount_dir="$(dialog --fselect ~/mnt 60 50 2>&1 1>&3)"
+[ "$?" != 0 ] && exit 1
+
+clear -x
+
+if [ ! -d "$mount_dir" ]; then
+    echo The directory "$mount_dir" does not exist and will be created. \
+        Continue? [y/n]:
+    read -n 1 choice 1>/dev/null
+    [ "$choice" != "y" ] && exit 1
+    echo
+    mkdir "$mount_dir"
+fi
+
+device=/dev/"$(echo "$items" | sed -n ${id}p | sed 's_.*"\(\S*\)\s.*_\1_')"
+
+echo $device will be mounted at "$mount_dir". \
+    "Continue? (requires sudo) [y/n]:"
+
+read -n 1 choice
+[ "$choice" != "y" ] && exit 1
+doas mount "$device" "$mount_dir" -o umask=002,uid=$(id -u),gid=$(id -g)
