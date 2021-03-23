@@ -51,6 +51,10 @@ bind -M insert \eb __run_in_bash
 bind -M default \eo __prepend_o
 bind -M insert \eo __prepend_o
 
+# Prepend o in front of current command
+bind -M default \em __prepend_man
+bind -M insert \em __prepend_man
+
 #################
 # Custom colors #
 #################

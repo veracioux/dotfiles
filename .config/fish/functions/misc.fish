@@ -13,7 +13,7 @@ function emacs; command emacsclient --create-frame $argv & disown >/dev/null 2>/
 # When you ls, save the argument so you can quickly cd to that folder.
 # It's not fool-proof, but it works in most situations and it's safe.
 function ls 
-	exa --color=auto $argv
+	lsd --color=auto $argv
 	set -g __last_ls_folder "$argv"
 end
 
@@ -49,5 +49,13 @@ function __prepend_o
     set -l cmd (commandline -b)
     commandline -C 0
     commandline -i 'o '
+    commandline -f end-of-line
+end
+
+
+function __prepend_man
+    set -l cmd (commandline -b)
+    commandline -C 0
+    commandline -i 'man '
     commandline -f end-of-line
 end

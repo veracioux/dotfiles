@@ -28,27 +28,31 @@ pacman -S xorg acpilight qtile xwallpaper
 pacman -S exa xarchiver ueberzug imagemagick python-sphinx emacs
 pacman -S vifm ueberzug ffmpegthumbnailer ranger nemo gsettings
 pacman -S zathura zathura-pdf-mupdf
-pacman -S gimp inkscape poppler
+pacman -S gimp inkscape poppler xournalpp
 
 # Programming
-pacman -S python
+pacman -S python python-pip
 
 # Utilities
-pacman -S git xsel moreutils rsync findutils
+pacman -S git xsel moreutils rsync findutils dialog
 pacman -S neomutt translate-shell
 pacman -S speedcrunch
 yay -S urlview buku-git asciinema
 
-pacman -S hugo
+# Plugins
+pacman -S fisher vundle firefox-tridactyl
+
 # Resources
-pacman -S adobe-source-code-pro-fonts
+pacman -S adobe-source-code-pro-fonts ttf-lato
 
 ## Additional installs using various methods
 	# spacemacs
-	# mutt-wizard @lukesmith
 
-git clone 'https://github.com/syl20bnr/spacemacs' ~/.emacs.d &&
-pacman -S lynx # Optional dependency for mutt-wizard
+## Dependencies
+~/.vim/pacman.sh
+~/.mozilla/firefox/pacman.sh
+
+git clone 'https://github.com/syl20bnr/spacemacs' ~/.emacs.d
 
 # Fix wifi dropping issue
 echo -e '[connection]\nwifi.powersave = 2' > \
