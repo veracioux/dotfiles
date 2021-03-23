@@ -1,34 +1,28 @@
 syntax on
-set number
-set relativenumber
-set nocompatible				 "required
-filetype off					 "required
+set number " relativenumber
+set nocompatible				" required
+filetype off					" required
 filetype plugin on
 set exrc
 set showcmd
-let mapleader = "\<Space>"
 set breakindent
-set clipboard^=unnamed
+set clipboard+=unnamedplus
 set maxmempattern=2000
+set updatetime=90				" used by gitgutter
 
-set tabstop=4
-set shiftwidth=4
+set tabstop=4 shiftwidth=4
 set expandtab
 set softtabstop=0
 set smarttab
 set autoindent
 
-set foldmethod=syntax
-set nofoldenable
+set foldmethod=syntax nofoldenable
 
-set colorcolumn=81
-set tw=80
-set ignorecase
-set smartcase
-set incsearch
+set textwidth=80 colorcolumn=81
+set ignorecase smartcase incsearch
+
 if has('gui_running')
-	set guioptions -=T
-	set guioptions -=m
+	set guioptions -=T guioptions -=m
 	set mouse=a
 endif
 if !has('nvim')
@@ -65,7 +59,15 @@ call vundle#begin()
 	" Syntax highlighting
 	Plugin 'dag/vim-fish'
 
+    " IDE 
 	Plugin 'ycm-core/YouCompleteMe'
+    Plugin 'sheerun/vim-polyglot'
+    Plugin 'preservim/tagbar' 			" NOTE: requires ctags installed
+    Plugin 'dyng/ctrlsf.vim'			" NOTE: requires ack installed
+    Plugin 'derekwyatt/vim-fswitch'
+    Plugin 'derekwyatt/vim-protodef'
+	Plugin 'matze/vim-move'
+	Plugin 'airblade/vim-gitgutter'
 
 	" Misc
 	if has('nvim')
@@ -82,6 +84,7 @@ colorscheme customtheme
 """""""""""""""""""
 " Custom mappings "
 """""""""""""""""""
+	let mapleader = "\<Space>"
 
 	noremap		Y		y$
 	noremap		vv		V
@@ -193,6 +196,84 @@ colorscheme customtheme
 " EasyMotion "
 """"""""""""""
 	nmap \ <Plug>(easymotion-prefix)
+
+""""""""""""
+" NERDTree "
+""""""""""""
+
+	let NERDTreeShowBookmarks   = 1 			" Show the bookmarks table
+	let NERDTreeShowHidden      = 1 			" Show hidden files
+	let NERDTreeShowLineNumbers = 0 			" Hide line numbers
+	let NERDTreeMinimalMenu     = 1 			" Use the minimal menu (m)
+	let NERDTreeWinPos          = 'left' 		" Panel opens on the left side
+	let NERDTreeWinSize         = 31        	" Set panel width to 31 columns
+
+""""""""""
+" Tagbar "
+""""""""""
+
+	let g:tagbar_autofocus   = 1 				" Focus the panel when opening
+	let g:tagbar_autoshowtag = 1				" Highlight the active tag
+	let g:tagbar_position = 'botright vertical' " Make vertical and place right
+	nmap <F8> :TagbarToggle<CR>
+
+""""""""""
+" CtrlFS "
+""""""""""
+
+	let g:ctrlsf_backend = 'ack' 							" Use the ack tool as the backend
+	let g:ctrlsf_auto_close = { "normal":0, "compact":0 } 	" Auto close the results panel when opening a file
+	let g:ctrlsf_auto_focus = { "at":"start" }				" Immediately switch focus to the search window
+	let g:ctrlsf_auto_preview = 0							" Don't open the preview window automatically
+	let g:ctrlsf_case_sensitive = 'smart'					" Use the smart case sensitivity search scheme
+	let g:ctrlsf_default_view = 'normal'					" Normal mode, not compact mode
+	let g:ctrlsf_regex_pattern = 0							" Use absoulte search by default
+	let g:ctrlsf_position = 'right'							" Position of the search window
+	let g:ctrlsf_winsize = '46'								" Width or height of search window
+	let g:ctrlsf_default_root = 'cwd'						" Search from the current working directory
+
+	" (Ctrl-F + f) Open search prompt (Normal Mode)
+	nmap <C-F>f <Plug>CtrlSFPrompt
+	" (Ctrl-F + f) Open search prompt with selection (Visual Mode)
+	xmap <C-F>f <Plug>CtrlSFVwordPath
+	" (Ctrl-F + F) Perform search with selection (Visual Mode)
+	xmap <C-F>F <Plug>CtrlSFVwordExec
+	" (Ctrl-F + n) Open search prompt with current word (Normal Mode)
+	nmap <C-F>n <Plug>CtrlSFCwordPath
+	" (Ctrl-F + o )Open CtrlSF window (Normal Mode)
+	nnoremap <C-F>o :CtrlSFOpen<CR>
+	" (Ctrl-F + t) Toggle CtrlSF window (Normal Mode)
+	nnoremap <C-F>t :CtrlSFToggle<CR>
+	" (Ctrl-F + t) Toggle CtrlSF window (Insert Mode)
+	inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+
+"""""""""""
+" FSwitch "
+"""""""""""
+	au! BufEnter *.cpp let b:fswitchdst = 'hpp,h'
+	au! BufEnter *.h let b:fswitchdst = 'cpp,c'
+	nmap <silent> <Leader>of :FSHere<cr>
+	nmap <silent> <Leader>ol :FSSplitRight<cr>
+	nmap <silent> <Leader>oh :FSSplitLeft<cr>
+	nmap <silent> <Leader>ok :FSSplitAbove<cr>
+	nmap <silent> <Leader>oj :FSSplitBelow<cr>
+	nmap <silent> <Leader>oL :FSRight<cr>
+	nmap <silent> <Leader>oH :FSLeft<cr>
+	nmap <silent> <Leader>oK :FSAbove<cr>
+	nmap <silent> <Leader>oJ :FSBelow<cr>
+
+""""""""""""
+" Protodef "
+""""""""""""
+	" Pull in prototypes
+	nmap <buffer> <silent> <leader> ,PP
+	" Pull in prototypes without namespace definition
+	nmap <buffer> <silent> <leader> ,PN
+
+""""""""
+" Move "
+""""""""
+    let g:move_key_modifier = 'C'
 
 """""""
 " Riv "
