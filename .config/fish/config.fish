@@ -3,7 +3,7 @@ fish_vi_key_bindings
 
 # Aliases
 source ~/.config/fish/alias.fish
-source ~/.config/fish/alias.tmp.fish
+source ~/.config/fish/tmp.fish
 # Custom functions
 source ~/.config/fish/functions/misc.fish
 # Load .profile

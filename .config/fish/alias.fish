@@ -28,5 +28,7 @@ abbr sp 'sudo pacman'
 abbr sps 'sudo pacman -S'
 abbr spr 'sudo pacman -R'
 abbr py 'python'
+abbr copy 'xsel -b'
+abbr paste 'xsel -b -o'
 
 set aur 'aur@aur.archlinux.org'
