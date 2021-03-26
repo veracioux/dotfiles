@@ -1,12 +1,12 @@
 syntax on
-set number " relativenumber
+set number relativenumber
 set nocompatible				" required
 filetype off					" required
 filetype plugin on
 set exrc
 set showcmd
 set breakindent
-set clipboard+=unnamedplus
+set clipboard^=unnamed
 set maxmempattern=2000
 set updatetime=90				" used by gitgutter
 
@@ -19,6 +19,7 @@ set autoindent
 set foldmethod=syntax nofoldenable
 
 set textwidth=80 colorcolumn=81
+set virtualedit=all
 set ignorecase smartcase incsearch
 
 if has('gui_running')
@@ -35,6 +36,7 @@ au BufEnter * if &syntax == '' && expand('%:e') == '' | set ft=sh | endif
 au BufNewFile,BufRead *.spacemacs set syntax=lisp
 au BufNewFile,BufRead .octaverc set syntax=matlab
 au BufNewFile,BufRead *.snippets set ft=snippets
+au BufNewFile,BufRead *.py set foldmethod=indent
 au BufNewFile,BufRead *.fish set ft=fish
 au BufNewFile,BufRead PKGBUILD set ft=sh
 au BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
@@ -93,6 +95,7 @@ colorscheme customtheme
 	noremap		<leader>t :silent !term<CR>
     noremap     <M-j>   <C-e>
     noremap     <M-k>   <C-y>
+	noremap		<M-w>	<C-w><C-w>
 
 	""" Insertions
 
@@ -109,14 +112,12 @@ colorscheme customtheme
 	cnoreabbrev S Subvert
 	command! Src so ~/.vimrc
 
+	nmap <leader>r :!./%<CR>
+	nmap <leader>m :make
+	nmap <leader>c :!cmake -S . -B _build && cmake --build _build<CR>
+
 	" NERDTree
 	noremap		<leader>n :NERDTreeToggle<CR>
-
-	" Splits navigation
-	noremap		<C-h> <C-w>h
-	noremap		<C-j> <C-w>j
-	noremap		<C-k> <C-w>k
-	noremap		<C-l> <C-w>l
 
 	" GVim - toggle menubar
 	function ToggleMenubar()
@@ -161,8 +162,8 @@ colorscheme customtheme
 	let g:UltiSnipsJumpForwardTrigger = "<tab>"
 	let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
-	let g:UltiSnipsSnippetsDir = "~/.vim/my-snippets"
-	let g:UltiSnipsSnippetDirectories = [ '/home/haris/.vim/my-snippets', '/home/haris/templates/latex']
+	let g:UltiSnipsSnippetsDir = "~/.vim/snips"
+	let g:UltiSnipsSnippetDirectories = [ '/home/haris/.vim/snips', '/home/haris/templates/latex']
 
 """"""""""
 " Vimtex "
@@ -216,6 +217,7 @@ colorscheme customtheme
 	let g:tagbar_autoshowtag = 1				" Highlight the active tag
 	let g:tagbar_position = 'botright vertical' " Make vertical and place right
 	nmap <F8> :TagbarToggle<CR>
+	set tags=.tags
 
 """"""""""
 " CtrlFS "
@@ -274,6 +276,11 @@ colorscheme customtheme
 " Move "
 """"""""
     let g:move_key_modifier = 'C'
+
+"""""""
+" FZF "
+"""""""
+	nmap <leader>/ :FZF<CR>
 
 """""""
 " Riv "

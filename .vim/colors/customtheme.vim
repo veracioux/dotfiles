@@ -13,40 +13,65 @@ endif
 
 let colors_name = "customtheme"
 
+if has('gui_running') | let s:k  = '#202023' | else | let s:k  =  0 | endif
+if has('gui_running') | let s:r  = '#ff5555' | else | let s:r  =  1 | endif
+if has('gui_running') | let s:g  = '#54ba88' | else | let s:g  =  2 | endif
+if has('gui_running') | let s:y  = '#ffa655' | else | let s:y  =  3 | endif
+if has('gui_running') | let s:b  = '#6b88fe' | else | let s:b  =  4 | endif
+if has('gui_running') | let s:m  = '#d098ff' | else | let s:m  =  5 | endif
+if has('gui_running') | let s:c  = '#8cceff' | else | let s:c  =  6 | endif
+if has('gui_running') | let s:w  = '#92aab7' | else | let s:w  =  7 | endif
+if has('gui_running') | let s:K  = '#6b746b' | else | let s:K  =  8 | endif
+if has('gui_running') | let s:R  = '#ff8c8c' | else | let s:R  =  9 | endif
+if has('gui_running') | let s:G  = '#8cff8c' | else | let s:G  = 10 | endif
+if has('gui_running') | let s:Y  = '#dee695' | else | let s:Y  = 11 | endif
+if has('gui_running') | let s:B  = '#8C9EFF' | else | let s:B  = 12 | endif
+if has('gui_running') | let s:M  = '#f2aacc' | else | let s:M  = 13 | endif
+if has('gui_running') | let s:C  = '#8cceff' | else | let s:C  = 14 | endif
+if has('gui_running') | let s:W  = '#dddddd' | else | let s:W  = 15 | endif
+if has('gui_running') | let s:x  = '#303030' | else | let s:x  = 16 | endif         " color 16
+
+let s:n  = 'none'
+
+if has('gui_running')
+      let s:vmode = 'gui'
+else
+      let s:vmode = 'cterm'
+endif
+
 " Remove pipe symbols
 set fillchars+=vert:\ 
 
-hi Normal			                      guifg=#ffffff	guibg=#202023
-hi Statement	ctermfg=12                guifg=#8c9eff		            cterm=bold      gui=bold
-hi Comment		ctermfg=2                 guifg=#54ba88
-hi Type			ctermfg=12                guifg=#8c9eff		                            gui=bold
-hi Constant		ctermfg=11                guifg=#f4ff8c
-hi PreProc		ctermfg=13                guifg=#ff99c9
-hi Identifier	ctermfg=14                guifg=#8cf7ff
-hi Todo			ctermfg=4   ctermbg=3     guifg=#3d5afe	guibg=#ffa655   cterm=bold	    gui=bold
-hi LineNr		ctermfg=7                 guifg=#78909c
-hi MatchParen	ctermfg=3   ctermbg=none  guifg=#ffa655 guibg=#202023	cterm=underline gui=underline
-hi Folded		ctermfg=4   ctermbg=16    guifg=#3d5afe	guibg=#303030
-hi FoldColumn	ctermfg=4   ctermbg=16    guifg=#3d5afe	guibg=#303030
-hi Conceal		ctermfg=14  ctermbg=16    guifg=#8cf7ff	guibg=#303030
-hi Error		ctermfg=15  ctermbg=1     guifg=#ffffff	guibg=#ff5555
-
-hi ColorColumn		        ctermbg=16                  guibg=#303030
-hi SignColumn				ctermbg=16	                guibg=#202023
-hi Search		ctermfg=0	ctermbg=3     guifg=#202023	guibg=#ffa655
-
-hi VertSplit	ctermfg=8   ctermbg=0     guifg=#303030	guibg=#202023
-
-hi StatusLine   ctermfg=12                guifg=#8c9eff
-hi StatusLineNC ctermfg=12                guifg=#8c9eff
+exe "hi Normal          ".s:vmode."fg=".s:W."                                                   "
+exe "hi Statement       ".s:vmode."fg=".s:B."                           ".s:vmode."=bold        "
+exe "hi Type            ".s:vmode."fg=".s:b."                           ".s:vmode."=bold        "
+exe "hi Comment         ".s:vmode."fg=".s:g."                                                   "
+exe "hi Constant        ".s:vmode."fg=".s:M."                                                   "
+exe "hi PreProc         ".s:vmode."fg=".s:Y."                                                   "
+exe "hi Identifier      ".s:vmode."fg=".s:C."                           ".s:vmode."=none        "
+exe "hi LineNr          ".s:vmode."fg=".s:w."   ".s:vmode."bg=".s:k."                           "
+exe "hi Todo            ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:y."   ".s:vmode."=bold        "
+exe "hi MatchParen      ".s:vmode."fg=".s:y."   ".s:vmode."bg=".s:y."   ".s:vmode."=underline   "
+exe "hi Folded          ".s:vmode."fg=".s:w."   ".s:vmode."bg=".s:x."                           "
+exe "hi FoldColumn      ".s:vmode."fg=".s:b."   ".s:vmode."bg=".s:x."                           "
+exe "hi Conceal         ".s:vmode."fg=".s:C."   ".s:vmode."bg=".s:x."                           "
+exe "hi Error           ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:r."                           "
+                                                                                                 
+exe "hi ColorColumn     ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:x."                           "
+exe "hi SignColumn                              ".s:vmode."bg=".s:x."                           "
+exe "hi VertSplit       ".s:vmode."fg=".s:K."   ".s:vmode."bg=".s:K."                           "
+                                                                                                 
+exe "hi Search          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:y."   ".s:vmode."=bold        "
+exe "hi StatusLine      ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:B."                           "
+exe "hi StatusLineNC    ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:B."                           "
 
 " VimDiff
-hi DiffDelete	ctermfg=15	ctermbg=17
-hi DiffAdd		ctermfg=15	ctermbg=18
-hi DiffChange	ctermfg=15	ctermbg=21
-hi DiffText		ctermfg=11	ctermbg=19		                            cterm=bold
+exe "hi DiffDelete      ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:r."                           "
+exe "hi DiffAdd         ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:g."                           "
+exe "hi DiffChange      ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                           "
+exe "hi DiffText        ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:x."   ".s:vmode."=bold        "
 
 " YouCompleteMe
-hi Pmenu		ctermfg=0	ctermbg=12	  guifg=#202023 guibg=#8c9eff
-hi PmenuSel		ctermfg=0	ctermbg=4	  guifg=#202023	guibg=#6b88fe
-hi PmenuSbar	ctermfg=0	ctermbg=12	  guifg=#202023	guibg=#8c9eff
+exe "hi Pmenu           ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                           "
+exe "hi PmenuSel        ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:B."                           "
+exe "hi PmenuSbar       ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                           "
