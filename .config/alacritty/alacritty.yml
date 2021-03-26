@@ -1,3 +1,6 @@
+shell:
+  program: /bin/fish
+
 ##############
 # Appearance #
 ##############
@@ -24,16 +27,16 @@ font:
 colors:
   # Default colors
   primary:
-    background: '#202023'
+    background: '#1e1e1e'
     foreground: '#dddddd'
 
   # Normal colors
   normal:
-    black:      '#202023'
+    black:      '#1e1e1e'
     red:        '#ff5555'
-    green:      '#54ba88'
-    yellow:     '#ffa655'
-    blue:       '#6b88fe'
+    green:      '#56baa1'
+    yellow:     '#eb9967'
+    blue:       '#566ef0'
     magenta:    '#d098ff'
     cyan:       '#8cceff' # Change to something darker
     white:      '#92aab7'
@@ -42,10 +45,10 @@ colors:
   bright:
     black:      '#6b746b'
     red:        '#ff8c8c'
-    green:      '#8cff8c'
-    yellow:     '#dee695'
-    blue:       '#8C9EFF'
-    magenta:    '#f2aacc'
+    green:      '#90f090'
+    yellow:     '#ffef99'
+    blue:       '#8fa0ff'
+    magenta:    '#f298c3'
     cyan:       '#a6d9ff'
     white:      '#dddddd'
 
