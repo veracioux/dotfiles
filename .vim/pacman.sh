@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-pacman -S gvim vundle
+pacman -S gvim vundle fzf
