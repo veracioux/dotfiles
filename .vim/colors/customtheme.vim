@@ -1,8 +1,3 @@
-" Set 'background' back to the default.  The value can't always be estimated
-" and is then guessed.
-hi clear Normal
-set bg&
-
 " Remove all existing highlighting and set the defaults.
 hi clear
 
@@ -15,7 +10,7 @@ let colors_name = "customtheme"
 
 if has('gui_running') | let s:k  = '#1e1e1e' | else | let s:k  =  0 | endif
 if has('gui_running') | let s:r  = '#ff5555' | else | let s:r  =  1 | endif
-if has('gui_running') | let s:g  = '#56baa1' | else | let s:g  =  2 | endif
+if has('gui_running') | let s:g  = '#5ac2a8' | else | let s:g  =  2 | endif
 if has('gui_running') | let s:y  = '#eb9967' | else | let s:y  =  3 | endif
 if has('gui_running') | let s:b  = '#566ef0' | else | let s:b  =  4 | endif
 if has('gui_running') | let s:m  = '#d098ff' | else | let s:m  =  5 | endif
@@ -24,8 +19,8 @@ if has('gui_running') | let s:w  = '#92aab7' | else | let s:w  =  7 | endif
 
 if has('gui_running') | let s:K  = '#6b746b' | else | let s:K  =  8 | endif
 if has('gui_running') | let s:R  = '#ff8c8c' | else | let s:R  =  9 | endif
-if has('gui_running') | let s:G  = '#90f090' | else | let s:G  = 10 | endif
-if has('gui_running') | let s:Y  = '#ffef99' | else | let s:Y  = 11 | endif
+if has('gui_running') | let s:G  = '#98eb98' | else | let s:G  = 10 | endif
+if has('gui_running') | let s:Y  = '#ccc784' | else | let s:Y  = 11 | endif
 if has('gui_running') | let s:B  = '#8fa0ff' | else | let s:B  = 12 | endif
 if has('gui_running') | let s:M  = '#f298c3' | else | let s:M  = 13 | endif
 if has('gui_running') | let s:C  = '#a6d9ff' | else | let s:C  = 14 | endif
@@ -44,26 +39,28 @@ endif
 " Remove pipe symbols
 set fillchars+=vert:\ 
 
-exe "hi Normal          ".s:vmode."fg=".s:W."                                                   "
+exe "hi Normal          ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:k."                           "
 exe "hi Statement       ".s:vmode."fg=".s:B."                           ".s:vmode."=bold        "
 exe "hi Type            ".s:vmode."fg=".s:b."                           ".s:vmode."=bold        "
 exe "hi Comment         ".s:vmode."fg=".s:g."                                                   "
-exe "hi Constant        ".s:vmode."fg=".s:M."                                                   "
-exe "hi PreProc         ".s:vmode."fg=".s:Y."                                                   "
+exe "hi Constant        ".s:vmode."fg=".s:y."                                                   "
+exe "hi PreProc         ".s:vmode."fg=".s:m."                           ".s:vmode."=bold        "
 exe "hi Identifier      ".s:vmode."fg=".s:C."                           ".s:vmode."=none        "
 exe "hi LineNr          ".s:vmode."fg=".s:w."   ".s:vmode."bg=".s:k."                           "
-exe "hi Todo            ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:y."   ".s:vmode."=bold        "
-exe "hi MatchParen      ".s:vmode."fg=".s:y."   ".s:vmode."bg=".s:k."   ".s:vmode."=underline   "
+exe "hi CursorLineNr    ".s:vmode."fg=".s:Y."   ".s:vmode."bg=".s:k."   ".s:vmode."=bold        "
+exe "hi Special         ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                           "
+exe "hi Todo            ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:y."   ".s:vmode."=bold        "
+exe "hi MatchParen      ".s:vmode."fg=".s:m."   ".s:vmode."bg=".s:k."   ".s:vmode."=underline   "
 exe "hi Folded          ".s:vmode."fg=".s:w."   ".s:vmode."bg=".s:x."                           "
 exe "hi FoldColumn      ".s:vmode."fg=".s:b."   ".s:vmode."bg=".s:x."                           "
 exe "hi Conceal         ".s:vmode."fg=".s:C."   ".s:vmode."bg=".s:x."                           "
-exe "hi Error           ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:r."                           "
+exe "hi Error           ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:r."   ".s:vmode."=bold        "
                                                                                                  
 exe "hi ColorColumn     ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:x."                           "
 exe "hi SignColumn                              ".s:vmode."bg=".s:x."                           "
 exe "hi VertSplit       ".s:vmode."fg=".s:K."   ".s:vmode."bg=".s:K."                           "
                                                                                                  
-exe "hi Search          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:y."   ".s:vmode."=bold        "
+exe "hi Search          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:Y."   ".s:vmode."=bold        "
 exe "hi StatusLine      ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                           "
 exe "hi StatusLineNC    ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                           "
 

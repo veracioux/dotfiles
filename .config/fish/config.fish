@@ -6,6 +6,7 @@ source ~/.config/fish/alias.fish
 source ~/.config/fish/tmp.fish
 # Custom functions
 source ~/.config/fish/functions/misc.fish
+source ~/.config/fish/completions/misc.fish
 # Load .profile
 bass source ~/.profile
 

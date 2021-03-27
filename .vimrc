@@ -1,5 +1,6 @@
 syntax on
 set number relativenumber
+set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\ 
 set nocompatible				" required
 filetype off					" required
 filetype plugin on

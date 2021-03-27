@@ -24,9 +24,8 @@ function cls
 	end
 end
 
-# Convert a GitHub blob link to raw content link -- echo it
-function rawblob
-	echo "$argv" | sed -e 's:github\.com:raw\.githubusercontent.com:' -e 's:blob/::'
+function chbg
+    feh --bg-fill /usr/share/backgrounds/"$argv[1]"
 end
 
 ####################################

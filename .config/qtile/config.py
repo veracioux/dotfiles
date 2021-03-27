@@ -34,6 +34,25 @@ from libqtile.utils import guess_terminal
 mod = "mod4"
 terminal = guess_terminal()
 
+colors = {
+    'k': '1e1e1e',
+    'r': 'ff5555',
+    'g': '5ac2a8',
+    'y': 'eb9967',
+    'b': '566ef0',
+    'm': 'd098ff',
+    'c': '8cceff',
+    'w': '92aab7',
+    'K': '6b746b',
+    'R': 'ff8c8c',
+    'G': '98eb98',
+    'Y': 'ccc784',
+    'B': '8fa0ff',
+    'M': 'f298c3',
+    'C': 'a6d9ff',
+    'W': 'dddddd',
+}
+
 keys = [
     # Switch between windows in current stack pane
     Key([mod], "j", lazy.layout.down(),
@@ -78,6 +97,8 @@ keys = [
     Key([mod, "shift"], "o", lazy.spawn("fish -c todo"), desc="Launch TODO in Emacs"),
     Key([mod, "shift"], "t", lazy.spawn("alacritty -e trans -shell"), desc="Open translate-shell"),
 
+    Key([mod], "period", lazy.spawn("emacsclient --create-frame /home/haris/projects/schim/TODO.org"), desc="Open schim TODO.org"),
+
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod, "shift"], "Tab", lazy.prev_layout(), desc="Toggle between layouts"),
@@ -106,7 +127,7 @@ keys.append(Key([mod], "m", lazy.group["min"].toscreen()))
 keys.append(Key([mod, "shift"], "m", lazy.window.togroup("min")))
 
 layout_theme = {"border_width": 3,
-                "margin": 0,
+                "margin": 4,
                 "border_focus": "8c9eff",
                 "border_normal": "666666"
                 }
@@ -130,7 +151,7 @@ layouts = [
 widget_defaults = dict(
     font='sans',
     fontsize=12,
-    padding=3,
+    padding=4,
     background="202023"
 )
 extension_defaults = widget_defaults.copy()
@@ -143,12 +164,6 @@ screens = [
                 widget.GroupBox(),
                 widget.Prompt(),
                 widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        'launch': ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
                 widget.Systray(),
                 widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
                 widget.QuickExit(),

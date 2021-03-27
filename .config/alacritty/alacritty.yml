@@ -5,6 +5,11 @@ shell:
 # Appearance #
 ##############
 
+window:
+  padding:
+    x: 4
+    y: 4
+
 font:
   # The normal (roman) font face to use.
   normal:
@@ -34,9 +39,9 @@ colors:
   normal:
     black:      '#1e1e1e'
     red:        '#ff5555'
-    green:      '#56baa1'
-    yellow:     '#eb9967'
-    blue:       '#566ef0'
+    green:      '#5ac2a8'
+    yellow:     '#f2b374'
+    blue:       '#6980fa'
     magenta:    '#d098ff'
     cyan:       '#8cceff' # Change to something darker
     white:      '#92aab7'
@@ -45,9 +50,9 @@ colors:
   bright:
     black:      '#6b746b'
     red:        '#ff8c8c'
-    green:      '#90f090'
-    yellow:     '#ffef99'
-    blue:       '#8fa0ff'
+    green:      '#98eb98'
+    yellow:     '#e0d97b'
+    blue:       '#99a3ff'
     magenta:    '#f298c3'
     cyan:       '#a6d9ff'
     white:      '#dddddd'
