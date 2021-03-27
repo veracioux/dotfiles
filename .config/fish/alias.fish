@@ -19,6 +19,7 @@ alias info 'info --vi-keys'
 alias yay 'paru'
 alias SSH 'eval (ssh-agent -c) && ssh-add'
 
+abbr tdm 'tdm --disable-xrunning-check'
 abbr g 'git'
 abbr p 'pacman'
 abbr s 'sudo'
