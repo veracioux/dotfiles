@@ -8,7 +8,9 @@
     i = init
 	s = status
 	c = commit -s
-	l = doglog
+	l = doglog --pretty=format:'%C(magenta bold)%h%Creset \
+		-%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
+		--abbrev-commit --date=short
     p = push
     b = branch
     po = push origin
@@ -24,5 +26,30 @@
 	autocrlf = input
 	pager = less -F -X
 	editor = vim
+	whitespace = trailing-space
+[apply]
+	whitespace = fix
 [init]
 	defaultBranch = master
+
+[color "diff"]
+	context 		= white
+	frag 			= magenta
+	meta 			= brightblue bold
+	hunk 			= red
+	old 			= brightred
+	new 			= green
+	oldMoved 		= yellow
+	newMoved 		= brightcyan
+
+[color "branch"]
+	current 		= blue bold
+	local 			= brightcyan
+	remote 			= brightmagenta
+	upstream 		= magenta
+
+[color "decorate"]
+	head 			= brightblue bold
+	branch 			= brightblue bold
+	remoteBranch 	= brightred bold
+

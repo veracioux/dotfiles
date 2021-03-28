@@ -51,4 +51,6 @@ if exists('g:started_by_firenvim') && g:started_by_firenvim
 
 endif
 
+source ~/.config/nvim/init.tmp.vim
+
 let g:python3_host_prog = '/bin/python3'

@@ -43,7 +43,7 @@ colors:
     yellow:     '#f2b374'
     blue:       '#6980fa'
     magenta:    '#d098ff'
-    cyan:       '#8cceff' # Change to something darker
+    cyan:       '#8cceff' # TODO Change to something darker
     white:      '#92aab7'
 
   # Bright colors

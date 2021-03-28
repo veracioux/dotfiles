@@ -14,5 +14,5 @@ if [ -n "$2" ]; then
 	l="$2"
 fi
 
-(x=`tput op` y=`printf %76s`;for i in $(seq "$f" "$l");do o=00$i;echo -e ${o:${#o}-3:3} \
+(x=`tput op` y=`printf %40s`;for i in $(seq "$f" "$l");do o=00$i;echo -e ${o:${#o}-3:3} \
 `tput setaf $i;tput setab $i`${y// /=}$x;done)

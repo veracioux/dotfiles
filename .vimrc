@@ -76,6 +76,7 @@ call vundle#begin()
 	if has('nvim')
 		Plugin 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 	endif
+	Plugin 'PotatoesMaster/i3-vim-syntax'
 
 call vundle#end()
 

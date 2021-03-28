@@ -22,7 +22,8 @@ pacman -S etckeeper
 # Network
 pacman -S networkmanager iw wpa_suplicant
 # Low-level
-pacman -S xorg acpilight qtile xwallpaper
+pacman -S xorg acpilight qtile i3-gaps picom
+yay -S tdm polybar
 
 # Editors and viewers
 pacman -S exa xarchiver ueberzug imagemagick python-sphinx emacs
@@ -34,7 +35,7 @@ pacman -S gimp inkscape poppler xournalpp
 pacman -S python python-pip
 
 # Utilities
-pacman -S git xsel moreutils rsync findutils dialog
+pacman -S git xsel moreutils rsync findutils dialog fzf
 pacman -S neomutt translate-shell
 pacman -S speedcrunch
 yay -S urlview buku-git asciinema
@@ -44,6 +45,7 @@ pacman -S fisher vundle firefox-tridactyl
 
 # Resources
 pacman -S adobe-source-code-pro-fonts ttf-lato
+yay -S dracula-gtk-theme
 
 ## Additional installs using various methods
 	# spacemacs
