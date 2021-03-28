@@ -63,9 +63,6 @@ set $mod Mod4
   # screen before suspend. Use loginctl lock-session to lock your screen.
   exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
-  # NetworkManager
-  exec --no-startup-id nm-applet
-
   exec_always --no-startup-id /home/haris/.local/share/i3/i3-cycle-focus.py --history 2
 
   # Use pactl to adjust volume in PulseAudio.
@@ -184,6 +181,7 @@ bar {
   strip_workspace_numbers yes
 
   status_command /home/haris/.config/i3status/custom-script.sh
+  tray_output primary
 
   i3bar_command i3bar --transparency
   colors {
