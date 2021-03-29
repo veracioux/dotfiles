@@ -16,5 +16,5 @@ for cmd in {,cd,vi,cat,e}cmd
     complete --command $cmd --no-files --arguments="$args"
 end
 
-set -l args (command ls (~/.vim/snips) | sed 's_\(.*\)\.snippets_\1_g')
+set -l args (pushd ~/.vim/snips; command ls | sed 's_\(.*\)\.snippets_\1_g'; popd)
 complete --command snip --no-files --arguments="$args"

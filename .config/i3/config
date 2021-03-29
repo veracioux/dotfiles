@@ -2,12 +2,12 @@
 
 set $mod Mod4
 
-###########
-# VISUALS #
-###########
+# ┏━━━━━━━━━┓
+# ┃ VISUALS ┃
+# ┗━━━━━━━━━┛
 
   font pango:Source Code Pro, Icons bold 10
-  default_border pixel 4
+  default_border pixel 3
   hide_edge_borders none
   gaps inner 6
   gaps outer 0
@@ -51,18 +51,18 @@ set $mod Mod4
   client.focused_inactive $col_b_b  $col_b_b  $col_n_k  $col_n_m  $col_b_k
   client.urgent           $col_n_r  $col_b_r  $col_n_k  $col_n_m  $col_n_r
 
-############
-# BEHAVIOR #
-############
+# ┏━━━━━━━━━━┓
+# ┃ BEHAVIOR ┃
+# ┗━━━━━━━━━━┛
 
   focus_follows_mouse no
   popup_during_fullscreen leave_fullscreen
   workspace_auto_back_and_forth yes
   for_window [instance="i3ConfigError" class="Alacritty"] floating enable
 
-###########
-# STARTUP #
-###########
+# ┏━━━━━━━━━┓
+# ┃ STARTUP ┃
+# ┗━━━━━━━━━┛
 
   # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
   # screen before suspend. Use loginctl lock-session to lock your screen.
@@ -74,9 +74,9 @@ set $mod Mod4
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
 
-###############
-# KEYBINDINGS #
-###############
+# ┏━━━━━━━━━━━━━┓
+# ┃ KEYBINDINGS ┃
+# ┗━━━━━━━━━━━━━┛
 
   # Manipulation using mouse
   floating_modifier $mod
@@ -85,9 +85,7 @@ set $mod Mod4
   bindsym $mod+w kill
 
   # Navigation
-  bindsym $mod+Shift+7  exec --no-startup-id "dmenu_run -nb $col_a_k          \
-                          -nf $col_b_w -sb $col_b_b -sf $col_n_k"
-                        
+  bindsym $mod+Shift+7  exec --no-startup-id "dmenu_run"
   bindsym $mod+g scratchpad show
   bindsym $mod+Shift+g move scratchpad
   bindsym $mod+Tab exec --no-startup-id \
@@ -119,17 +117,21 @@ set $mod Mod4
   bindsym $mod+b            bar mode toggle
 
   # Resize window
-  bindsym $mod+plus         resize grow   width   20
-  bindsym $mod+Shift+plus   resize grow   height  20
-  bindsym $mod+minus        resize shrink width   20
-  bindsym $mod+Shift+minus  resize shrink height  20
+  bindsym $mod+plus               resize grow   width   20
+  bindsym $mod+minus              resize shrink width   20
+  bindsym $mod+Shift+plus         resize grow                 height  20
+  bindsym $mod+Shift+minus        resize shrink               height  20
+  bindsym $mod+f                  floating enable;                            \
+                                  resize set    width   695   height 600;     \
+                                  move position center
+  bindsym $mod+c                  move position center
 
   mode "resize" {
 
-    bindsym h resize  shrink width  1 px or 1 ppt
-    bindsym j resize  grow   height 1 px or 1 ppt
-    bindsym k resize  shrink height 1 px or 1 ppt
-    bindsym l resize  grow   width  1 px or 1 ppt
+    bindsym h resize  shrink width  1 px
+    bindsym j resize  grow   height 1 px
+    bindsym k resize  shrink height 1 px
+    bindsym l resize  grow   width  1 px
 
     # Back to normal: Enter or Escape or $mod+r
     bindsym Return mode "default"
@@ -141,15 +143,11 @@ set $mod Mod4
   # Execution
   bindsym $mod+Shift+r reload
   bindsym $mod+Ctrl+r restart
-  # logout
-  bindsym $mod+Shift+q exec "i3-nagbar -t warning -m \
-    'You pressed the exit shortcut. Do you really want to exit i3? \
-    This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+  bindsym $mod+Shift+q exit
 
-
-##############
-# WORKSPACES #
-##############
+# ┏━━━━━━━━━━━━┓
+# ┃ WORKSPACES ┃
+# ┗━━━━━━━━━━━━┛
 
   set $ws1 "1:wrk"
   set $ws2 "2:study"
@@ -177,9 +175,9 @@ set $mod Mod4
   bindsym $mod+n        workspace next
   bindsym $mod+p        workspace prev
   
-###########
-# The bar #
-###########
+# ┏━━━━━━━━━┓
+# ┃ The bar ┃
+# ┗━━━━━━━━━┛
 
 bar {
   font pango:Source Code Pro, Icons bold 10
@@ -188,7 +186,7 @@ bar {
   workspace_buttons yes
   strip_workspace_numbers yes
 
-  status_command /home/haris/.config/i3status/custom-script.sh
+  status_command i3status | ~/.config/i3status/custom-script.py
   tray_output primary
 
   i3bar_command i3bar --transparency
@@ -206,9 +204,9 @@ bar {
   }
 }
 
-################
-# Applications #
-################
+# ┏━━━━━━━━━━━━━━┓
+# ┃ APPLICATIONS ┃
+# ┗━━━━━━━━━━━━━━┛
 
   bindsym $mod+Return       exec --no-startup-id "alacritty"
   bindsym $mod+Shift+Return exec --no-startup-id "alacritty --class           \
@@ -216,6 +214,7 @@ bar {
 
   bindsym $mod+Shift+f      exec --no-startup-id "firefox -P haris"
   bindsym $mod+Print        exec "flameshot && flameshot gui"
+  bindsym $mod+Shift+Print  exec "flameshot && flameshot config"
 
   bindsym $mod+Shift+v      exec --no-startup-id "alacritty                   \
                               --class Vifm,Alacritty -e vifm"
@@ -229,4 +228,7 @@ bar {
   for_window [instance="Translator" class="Alacritty"]        floating enable
   for_window [instance="FloatingTerminal" class="Alacritty"]  floating enable
   for_window [instance="Vifm" class="Alacritty"]              floating enable
+
+  for_window [class="Alacritty" floating] resize set width 695 height 600
+  for_window [class="Alacritty" floating] move position center
 

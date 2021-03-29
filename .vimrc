@@ -70,6 +70,7 @@ call vundle#begin()
     Plugin 'derekwyatt/vim-fswitch'
     Plugin 'derekwyatt/vim-protodef'
 	Plugin 'matze/vim-move'
+	Plugin 'junegunn/vim-easy-align'
 	Plugin 'airblade/vim-gitgutter'
 
 	" Misc
@@ -85,9 +86,9 @@ filetype plugin indent on		"required
 " Set theme
 colorscheme customtheme
 
-"""""""""""""""""""
-" Custom mappings "
-"""""""""""""""""""
+" ┏━━━━━━━━━━━━━━━━━┓
+" ┃ Custom mappings ┃
+" ┗━━━━━━━━━━━━━━━━━┛
 	let mapleader = "\<Space>"
 
 	noremap		Y		y$
@@ -106,6 +107,10 @@ colorscheme customtheme
 	noremap 	<leader>H yyP0Vr
 	" Line separator -- depends on NERDCommenter
 	noremap		<leader>S 60i#
+	" Create a nice Unicode box around the current line of text, and comment out
+	nmap <leader>b <leader>B#<esc>
+	" Same as above, but lets you specify a comment delimiter
+	nmap <leader>B I <esc>yyPhVr━jphVr━A┛<esc>kr┃kr┓I ┏<esc>j0i ┃<esc>jI ┗<esc>h<C-v>kkI
 
 	" Commands
 
@@ -131,10 +136,9 @@ colorscheme customtheme
 	endfunction
 	noremap		<M-m> :call ToggleMenubar()<CR>
 
-"""""""""""""""""
-" YouCompleteMe "
-"""""""""""""""""
-
+" ┏━━━━━━━━━━━━━━━┓
+" ┃ YouCompleteMe ┃
+" ┗━━━━━━━━━━━━━━━┛
 	if !exists('g:ycm_semantic_triggers')
 		let g:ycm_semantic_triggers = {}
 	endif
@@ -156,10 +160,9 @@ colorscheme customtheme
 	let g:ycm_autoclose_preview_window_after_insertion = 1
 	let g:ycm_confirm_extra_conf = 0
 
-"""""""""""""
-" UltiSnips "
-"""""""""""""
-
+" ┏━━━━━━━━━━━┓
+" ┃ UltiSnips ┃
+" ┗━━━━━━━━━━━┛
 	let g:UltiSnipsExpandTrigger = "<tab>"
 	let g:UltiSnipsJumpForwardTrigger = "<tab>"
 	let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
@@ -167,10 +170,9 @@ colorscheme customtheme
 	let g:UltiSnipsSnippetsDir = "~/.vim/snips"
 	let g:UltiSnipsSnippetDirectories = [ '/home/haris/.vim/snips', '/home/haris/templates/latex']
 
-""""""""""
-" Vimtex "
-""""""""""
-
+" ┏━━━━━━━━┓
+" ┃ Vimtex ┃
+" ┗━━━━━━━━┛
 	let g:vimtex_complete_enabled = 1
 	let g:vimtex_complete_close_braces = 1
     let g:vimtex_fold_enabled = 1
@@ -195,15 +197,14 @@ colorscheme customtheme
 	nmap ysc <plug>(vimtex-cmd-create)
 	vmap ysc <plug>(vimtex-cmd-create)
 
-""""""""""""""
-" EasyMotion "
-""""""""""""""
+" ┏━━━━━━━━━━━━┓
+" ┃ EasyMotion ┃
+" ┗━━━━━━━━━━━━┛
 	nmap \ <Plug>(easymotion-prefix)
 
-""""""""""""
-" NERDTree "
-""""""""""""
-
+" ┏━━━━━━━━━━┓
+" ┃ NERDTree ┃
+" ┗━━━━━━━━━━┛
 	let NERDTreeShowBookmarks   = 1 			" Show the bookmarks table
 	let NERDTreeShowHidden      = 1 			" Show hidden files
 	let NERDTreeShowLineNumbers = 0 			" Hide line numbers
@@ -211,20 +212,18 @@ colorscheme customtheme
 	let NERDTreeWinPos          = 'left' 		" Panel opens on the left side
 	let NERDTreeWinSize         = 31        	" Set panel width to 31 columns
 
-""""""""""
-" Tagbar "
-""""""""""
-
+" ┏━━━━━━━━┓
+" ┃ Tagbar ┃
+" ┗━━━━━━━━┛
 	let g:tagbar_autofocus   = 1 				" Focus the panel when opening
 	let g:tagbar_autoshowtag = 1				" Highlight the active tag
 	let g:tagbar_position = 'botright vertical' " Make vertical and place right
 	nmap <F8> :TagbarToggle<CR>
 	set tags=.tags
 
-""""""""""
-" CtrlFS "
-""""""""""
-
+" ┏━━━━━━━━┓
+" ┃ CtrlFS ┃
+" ┗━━━━━━━━┛
 	let g:ctrlsf_backend = 'ack' 							" Use the ack tool as the backend
 	let g:ctrlsf_auto_close = { "normal":0, "compact":0 } 	" Auto close the results panel when opening a file
 	let g:ctrlsf_auto_focus = { "at":"start" }				" Immediately switch focus to the search window
@@ -251,9 +250,9 @@ colorscheme customtheme
 	" (Ctrl-F + t) Toggle CtrlSF window (Insert Mode)
 	inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
 
-"""""""""""
-" FSwitch "
-"""""""""""
+" ┏━━━━━━━━━┓
+" ┃ FSwitch ┃
+" ┗━━━━━━━━━┛
 	au! BufEnter *.cpp let b:fswitchdst = 'hpp,h'
 	au! BufEnter *.h let b:fswitchdst = 'cpp,c'
 	nmap <silent> <Leader>of :FSHere<cr>
@@ -266,28 +265,33 @@ colorscheme customtheme
 	nmap <silent> <Leader>oK :FSAbove<cr>
 	nmap <silent> <Leader>oJ :FSBelow<cr>
 
-""""""""""""
-" Protodef "
-""""""""""""
+" ┏━━━━━━━━━━┓
+" ┃ Protodef ┃
+" ┗━━━━━━━━━━┛
 	" Pull in prototypes
 	nmap <buffer> <silent> <leader> ,PP
 	" Pull in prototypes without namespace definition
 	nmap <buffer> <silent> <leader> ,PN
 
-""""""""
-" Move "
-""""""""
+" ┏━━━━━━┓
+" ┃ Move ┃
+" ┗━━━━━━┛
     let g:move_key_modifier = 'C'
 
-"""""""
-" FZF "
-"""""""
+" ┏━━━━━━━┓
+" ┃ Align ┃
+" ┗━━━━━━━┛
+	xmap ga <Plug>(EasyAlign)
+	nmap ga <Plug>(EasyAlign)
+
+" ┏━━━━━┓
+" ┃ FZF ┃
+" ┗━━━━━┛
 	nmap <leader>/ :FZF<CR>
 
-"""""""
-" Riv "
-"""""""
-
+" ┏━━━━━┓
+" ┃ Riv ┃
+" ┗━━━━━┛
 	let g:riv_disable_folding = 0
 	let g:riv_fold_level = 1
 	let g:riv_fold_auto_update = 0

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+/usr/bin/dmenu -h 25 -nb '#1e1e1e' -nf '#dddddd' -sb '#99a3ff' -sf '#1e1e1e' $@
+

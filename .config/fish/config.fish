@@ -1,6 +1,9 @@
 set fish_greeting ''
 fish_vi_key_bindings
 
+# PATH
+set -gx PATH ~/{,projects,wiki}/scripts**/ ~/bin $PATH
+
 # Aliases
 source ~/.config/fish/alias.fish
 source ~/.config/fish/tmp.fish
@@ -10,12 +13,6 @@ source ~/.config/fish/completions/misc.fish
 # Load .profile
 bass source ~/.profile
 
-#########################
-# Environment variables #
-#########################
-
-set -gx PATH ~/{,projects,wiki}/scripts**/ ~/bin $PATH
-
 # Set default pager to vim
 set -gx MANPAGER 'nvim -c MANPAGER -'
 set -gx MANWIDTH 80
@@ -23,9 +20,9 @@ set -gx PAGER 'nvim -c PAGER -'
 set -gx EDITOR 'nvim'
 set -gx VISUAL 'gvim'
 
-###############################
-# Quasi-vim-like key bindings #
-###############################
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ Quasi-vim-like key bindings ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 bind -M default \el forward-char
 bind -M insert \el forward-char
@@ -36,9 +33,9 @@ bind -M insert \cp up-or-search
 bind -M default \cn down-or-search
 bind -M insert \cn down-or-search
 
-##################
-# Other bindings #
-##################
+# ┏━━━━━━━━━━━━━━━━┓
+# ┃ Other bindings ┃
+# ┗━━━━━━━━━━━━━━━━┛
 
 # Copy the current contents of the command line
 bind -M default \ec __copy_to_clipboard
@@ -56,9 +53,9 @@ bind -M insert \eo __prepend_o
 bind -M default \em __prepend_man
 bind -M insert \em __prepend_man
 
-#################
-# Custom colors #
-#################
+# ┏━━━━━━━━━━━━━━━┓
+# ┃ Custom colors ┃
+# ┗━━━━━━━━━━━━━━━┛
 
 set -U fish_color_command           brblue
 set -U fish_color_quote             brgreen
@@ -73,16 +70,16 @@ set -U fish_pager_color_progress    brgreen
 set -U fish_pager_color_description green
 set -U fish_color_end               yellow
 
-###########
-# Plugins #
-###########
+# ┏━━━━━━━━━┓
+# ┃ Plugins ┃
+# ┗━━━━━━━━━┛
 
 # pj - for projects @ oh-my-fish/plugin-pj
 set -gx PROJECT_PATHS ~/projects
 
-#################
-# Miscellaneous #
-#################
+# ┏━━━━━━━━━━━━━━━┓
+# ┃ Miscellaneous ┃
+# ┗━━━━━━━━━━━━━━━┛
 
 # Disable path shortening
 set fish_prompt_pwd_dir_length 0

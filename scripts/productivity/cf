@@ -24,14 +24,23 @@ case "$1" in
     vifm)
         echo $c/vifm/vifmrc
         ;;
+    git)
+        echo ~/.gitconfig
+        ;;
+    i3)
+        echo $c/i3/config
+        ;;
+    i3status)
+        echo $c/i3status/config
+        ;;
+    picom)
+        echo $c/picom.conf
+        ;;
     ff)
         echo ~/.mozilla/firefox/haris/chrome/userChrome.css
         ;;
     ff-min)
         echo ~/.mozilla/firefox/minimal/chrome/userChrome.css
-        ;;
-    git)
-        echo ~/.gitconfig
         ;;
     schim)
         echo $c/schim/schim.conf
