@@ -3,6 +3,9 @@
 c=~/.config
 
 case "$1" in
+    alacritty)
+        echo $c/alacritty/alacritty.yml
+        ;;
     fish)
         echo $c/fish/config.fish
         ;;

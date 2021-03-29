@@ -4,6 +4,7 @@ set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\
 set nocompatible				" required
 filetype off					" required
 filetype plugin on
+set noautoread
 set exrc
 set showcmd
 set breakindent
