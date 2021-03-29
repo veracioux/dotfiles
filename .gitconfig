@@ -3,13 +3,19 @@
 	name = Haris Gušić
 	signingkey = 0348E6D2D1D44A6D
 [alias]
-	doglog = log --graph --decorate --oneline
+	ldog = log --decorate --oneline --graph
 	whenadded = log --diff-filter=A
     i = init
 	s = status
 	c = commit -s
-	l = doglog --pretty=format:'%C(magenta bold)%h%Creset \
-		-%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
+	l = ldog --pretty=format:'%C(magenta bold)%h%Creset					\
+		-%C(auto)%d%Creset %s' 						                    \
+		--abbrev-commit --date=short
+	ll = ldog --pretty=format:'%C(magenta bold)%h%Creset 				\
+		-%C(auto)%d%Creset %s %C(brightcyan)(%ad)' 						\
+		--abbrev-commit --date=short
+	lll = ldog --pretty=format:'%C(magenta bold)%h%Creset 				\
+		-%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' 	\
 		--abbrev-commit --date=short
     p = push
     b = branch
@@ -50,6 +56,6 @@
 
 [color "decorate"]
 	head 			= brightblue bold
-	branch 			= brightblue bold
-	remoteBranch 	= brightred bold
+	branch 			= brightmagenta bold
+	remoteBranch 	= brightgreen bold
 

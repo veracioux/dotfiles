@@ -1,0 +1,42 @@
+#!/usr/bin/env sh
+
+c=~/.config
+
+case "$1" in
+    fish)
+        echo $c/fish/config.fish
+        ;;
+    alias)
+        echo $c/fish/alias.fish
+        ;;
+    fish-misc)
+        echo $c/fish/functions/misc.fish
+        ;;
+    fish-com)
+        echo $c/fish/completions/misc.fish
+        ;;
+    vim)
+        echo ~/.vimrc
+        ;;
+    nvim)
+        echo $c/nvim/init.vim
+        ;;
+    vifm)
+        echo $c/vifm/vifmrc
+        ;;
+    ff)
+        echo ~/.mozilla/firefox/haris/chrome/userChrome.css
+        ;;
+    ff-min)
+        echo ~/.mozilla/firefox/minimal/chrome/userChrome.css
+        ;;
+    git)
+        echo ~/.gitconfig
+        ;;
+    schim)
+        echo $c/schim/schim.conf
+        ;;
+    schim-v)
+        echo $c/schim/volatile.conf
+        ;;
+esac

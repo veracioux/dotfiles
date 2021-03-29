@@ -60,17 +60,18 @@ bind -M insert \em __prepend_man
 # Custom colors #
 #################
 
-set fish_color_command brblue
-set fish_color_quote brgreen
-set fish_color_param brcyan
-set fish_color_autosuggestion brblack
-set fish_color_cancel -r red
-set fish_color_error red
-set fish_color_comment green
-set fish_color_operator normal
-set fish_color_redirection brmagenta
-set fish_pager_color_progress brgreen
-set fish_pager_color_description green
+set -U fish_color_command           brblue
+set -U fish_color_quote             brgreen
+set -U fish_color_param             brcyan
+set -U fish_color_autosuggestion    brblack
+set -U fish_color_cancel         -r red
+set -U fish_color_error             red
+set -U fish_color_comment           green
+set -U fish_color_operator          normal
+set -U fish_color_redirection       brmagenta
+set -U fish_pager_color_progress    brgreen
+set -U fish_pager_color_description green
+set -U fish_color_end               yellow
 
 ###########
 # Plugins #

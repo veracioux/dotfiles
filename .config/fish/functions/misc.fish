@@ -8,7 +8,9 @@ function o; $argv & disown >/dev/null 2>/dev/null; end
 function open; for file in $argv; o xdg-open "$file"; end; end
 
 # Run emacs and disown
-function emacs; command emacsclient --create-frame $argv & disown >/dev/null 2>/dev/null; end
+function emacs
+    emacsclient --create-frame $argv & disown >/dev/null 2>/dev/null
+end
 
 # When you ls, save the argument so you can quickly cd to that folder.
 # It's not fool-proof, but it works in most situations and it's safe.
@@ -25,8 +27,24 @@ function cls
 end
 
 function chbg
-    feh --bg-fill /usr/share/backgrounds/"$argv[1]"
+    set path /usr/share/backgrounds/"$argv[1]"
+    feh --bg-fill "$path"
+    rm ~/.wallpaper
+    ln -s "$path" ~/.wallpaper
 end
+
+# Productivity shortcuts
+function cdcf;   set file (cf "$argv");   test -f "$file" && cd (dirname "$file"); end
+function catcf;  set file (cf "$argv");   test -f "$file" && cat         "$file" ; end
+function vicf;   set file (cf "$argv");   test -f "$file" && vim         "$file" ; end
+function ecf;    set file (cf "$argv");   test -f "$file" && emacs       "$file" ; end
+
+function fcmd;   echo (type "$argv" | awk '{print $3}')                          ; end
+
+function cdcmd;  set file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
+function catcmd; set file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
+function vicmd;  set file (fcmd "$argv"); test -f "$file" && vim         "$file" ; end
+function ecmd;   set file (fcmd "$argv"); test -f "$file" && emacs       "$file" ; end
 
 ####################################
 # Helper functions for keybindings #

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-emacsclient --create-frame "$(fcmd "$1")" & disown >/dev/null 2>/dev/null
