@@ -39,8 +39,6 @@ function catcf;  set file (cf "$argv");   test -f "$file" && cat         "$file"
 function vicf;   set file (cf "$argv");   test -f "$file" && vim         "$file" ; end
 function ecf;    set file (cf "$argv");   test -f "$file" && emacs       "$file" ; end
 
-function fcmd;   echo (type "$argv" | awk '{print $3}')                          ; end
-
 function cdcmd;  set file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
 function catcmd; set file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
 function vicmd;  set file (fcmd "$argv"); test -f "$file" && vim         "$file" ; end

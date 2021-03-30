@@ -6,13 +6,12 @@ complete --command chbg --no-files --arguments="$args"
 
 # Other commands
 
-set -l args (cat (fcmd cf) | sed -n 's/\s*\(.*\))/\1/p')
 for cmd in {,cd,vi,cat,e}cf
-    complete --command $cmd --no-files --arguments="$args"
+    complete --command $cmd --no-files --arguments=(lscf)
 end
 
 set -l args (ls -1 $PATH 2>/dev/null | grep -v ':$' | sed 's/->.*//g')
-for cmd in {,cd,vi,cat,e}cmd
+for cmd in {f,cd,vi,cat,e}cmd
     complete --command $cmd --no-files --arguments="$args"
 end
 

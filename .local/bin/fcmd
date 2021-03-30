@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+type $@ | awk '{print $3}'
+

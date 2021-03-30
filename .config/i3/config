@@ -85,11 +85,12 @@ set $mod Mod4
   bindsym $mod+w kill
 
   # Navigation
-  bindsym $mod+Shift+7  exec --no-startup-id "dmenu_run"
-  bindsym $mod+m scratchpad show
-  bindsym $mod+Shift+m move scratchpad
-  bindsym $mod+Tab exec --no-startup-id \
+  bindsym $mod+m            scratchpad show
+  bindsym $mod+Shift+m      move scratchpad
+  bindsym $mod+Tab          exec --no-startup-id \
     /home/haris/.local/share/i3/i3-cycle-focus.py --switch
+  bindsym $mod+Shift+7      exec --no-startup-id "dmenu_run"
+  bindsym $mod+c            exec --no-startup-id "~/.local/share/dmenu/cf"
 
   # Change focus
   bindsym $mod+h            focus left
@@ -124,7 +125,7 @@ set $mod Mod4
   bindsym $mod+f                  floating enable;                            \
                                   resize set    width   695   height 600;     \
                                   move position center
-  bindsym $mod+c                  move position center
+  bindsym $mod+g                  move position center
 
   mode "resize" {
 
@@ -228,6 +229,9 @@ bar {
   for_window [instance="Translator" class="Alacritty"]        floating enable
   for_window [instance="FloatingTerminal" class="Alacritty"]  floating enable
   for_window [instance="Vifm" class="Alacritty"]              floating enable
+  for_window [instance="CmdCf" class="Alacritty"]             floating enable
+  for_window [instance="CmdCf" class="Alacritty"]             floating enable
+  for_window [instance="FishCmd" class="Alacritty"]           floating enable
 
   for_window [class="Alacritty" floating] resize set width 695 height 600
   for_window [class="Alacritty" floating] move position center

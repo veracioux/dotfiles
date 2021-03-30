@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+list="$(lscf)"
+echo "$list"
+n="$(echo "$list" | wc -l)"
+
+choice="$(echo "$list" | dmenu -l $n -p 'Config:')"
+[ -z "$choice" ] && exit
+alacritty --class CmdCf,Alacritty -e fish -C "vicf $choice"

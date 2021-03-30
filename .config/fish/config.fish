@@ -4,14 +4,14 @@ fish_vi_key_bindings
 # PATH
 set -gx PATH ~/{,projects,wiki}/scripts**/ ~/bin $PATH
 
+# Load other shell's config
+bass source ~/.bashrc
 # Aliases
 source ~/.config/fish/alias.fish
 source ~/.config/fish/tmp.fish
 # Custom functions
 source ~/.config/fish/functions/misc.fish
 source ~/.config/fish/completions/misc.fish
-# Load .profile
-bass source ~/.profile
 
 # Set default pager to vim
 set -gx MANPAGER 'nvim -c MANPAGER -'

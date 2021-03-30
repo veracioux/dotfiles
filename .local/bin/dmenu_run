@@ -1,3 +1,57 @@
 #!/usr/bin/env sh
 
-dmenu_path | dmenu $@ | sh
+run_script() { ~/.local/share/dmenu/"$1"; }
+
+extract_aliases() {
+    sed "s_.* \(.*\)='.*'.*_\1_" $@
+}
+
+get_aliases() {
+    extract_aliases ~/.alias ~/.alias-tmp
+}
+get_gui_aliases() {
+    extract_aliases ~/.alias-gui ~/.alias-gui-tmp
+}
+
+aliases="$(get_aliases)"
+gui_aliases="$(get_gui_aliases)"
+
+# Place any additional dmenu entries in here (you will know where)
+get_commands() {
+    echo win                # Choose windows
+    echo "$aliases"
+    echo "$gui_aliases"
+    dmenu_path              # Regular commands
+}
+
+execute() {
+    case $1 in
+        # Commands that we have defined for dmenu exclusively
+        win)
+            ~/.local/share/i3/i3-container-commander.py ;;
+        cf)
+            run_script cf ;;
+        # The rest: aliases and regular commands
+        *)
+            # If the command is a GUI program, just run it
+            for al in $gui_aliases; do
+                if [ "$1" = "$al" ]; then
+                    fish -c "$@"    # Only fish works here
+                    exit
+                fi
+            done
+            # If the command is a CLI program, open it in a terminal
+            for al in $aliases; do
+                if [ "$1" = "$al" ]; then
+                    cmd="$@"    # Why I have to create this variable puzzles me
+                    alacritty --class FishCmd,Alacritty -e fish -C "$cmd"
+                    exit
+                fi
+            done
+            echo $1 | sh
+            ;;
+    esac
+}
+
+execute $(get_commands | dmenu $@)
+exit

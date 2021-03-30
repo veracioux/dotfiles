@@ -1,0 +1,2 @@
+alias calc='speedcrunch'
+alias term='alacritty -e fish -C "cd (pwd)" & disown >/dev/null'

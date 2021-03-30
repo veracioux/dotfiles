@@ -1,0 +1,19 @@
+
+alias 1sem='cd ~/data/etf/1'
+alias 2sem='cd ~/data/etf/2'
+alias 3sem='cd ~/data/etf/3'
+alias 4sem='cd ~/data/etf/4'
+alias 5sem='cd ~/data/etf/5'
+alias 6sem='cd ~/data/etf/6'
+alias 7sem='cd ~/data/etf/7'
+alias 8sem='cd ~/data/etf/8'
+
+alias rasp='8sem; zathura raspored*.pdf --page=21 & disown'
+
+alias is='8sem; cd is'
+alias ou='8sem; cd ou'
+alias rsus='8sem; cd rsus'
+alias nekis='8sem; cd nekis'
+alias rv='8sem; cd rv'
+
+alias pms='6sem; cd pms'
