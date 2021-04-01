@@ -1,2 +1,3 @@
+alias term='alacritty --working-directory $PWD & disown'
 alias calc='speedcrunch'
-alias term='alacritty -e fish -C "cd (pwd)" & disown >/dev/null'
+alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'

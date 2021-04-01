@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-cat $(fcmd cf) | sed -n 's/\s*\(.*\))/\1/p'
+cat $(fcmd cf) | sed -n 's/\s*\(.*\)).*/\1/p'

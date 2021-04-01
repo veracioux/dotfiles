@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+declare -A colors
+
+colors[',k black']='         #1e1e1e'
+colors[',r red']='           #ff5555'
+colors[',g green']='         #5ac2a8'
+colors[',y yellow']='        #f2b374'
+colors[',b blue']='          #6980fa'
+colors[',m magenta']='       #d098ff'
+colors[',c cyan']='          #8cceff' # TODO Change to something darker
+colors[',w white']='         #92aab7'
+colors['.k brblack']='      #6b746b'
+colors['.r brred']='        #ff8c8c'
+colors['.g brgreen']='      #98eb98'
+colors['.y bryellow']='     #e0d97b'
+colors['.b brblue']='       #99a3ff'
+colors['.m brmagenta']='    #f298c3'
+colors['.c brcyan']='       #a6d9ff'
+colors['.w brwhite']='      #dddddd'
+
+get_entries() {
+    echo ' Edit...' 
+    printf '%s\n' "${!colors[@]}" | sort | sed 's_.*_ &_'
+}
+
+entries=$(get_entries)
+
+let n=$(echo "$entries" | wc -l)
+
+choice="$(echo "$entries" | dmenu -l $n -p 'Color:')"
+
+[ -z "$choice" ] && exit
+
+if [ "$choice" = ' Edit...' ]; then
+    alacritty --class Float,Alacritty -e fish -C "cd $(dirname $0); vim $0"
+    exit
+fi
+
+# Remove decoration from the choice
+choice_filtered="$(echo $choice | sed 's_[^ ]* *\(.*\)_\1_')"
+# Copy the color, after removing whitespace
+echo -n "${colors["$choice_filtered"]}" | sed 's_[^ ]* *\(.*\)_\1_' | xsel -b

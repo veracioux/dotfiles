@@ -10,7 +10,7 @@ let colors_name = "customtheme"
 
 if has('gui_running') | let s:k  = '#1e1e1e' | else | let s:k  =  0 | endif
 if has('gui_running') | let s:r  = '#ff5555' | else | let s:r  =  1 | endif
-if has('gui_running') | let s:g  = '#5ac2a8' | else | let s:g  =  2 | endif
+if has('gui_running') | let s:g  = '#54d1bc' | else | let s:g  =  2 | endif
 if has('gui_running') | let s:y  = '#f2b374' | else | let s:y  =  3 | endif
 if has('gui_running') | let s:b  = '#6980fa' | else | let s:b  =  4 | endif
 if has('gui_running') | let s:m  = '#d098ff' | else | let s:m  =  5 | endif
@@ -63,6 +63,7 @@ exe "hi VertSplit       ".s:vmode."fg=".s:K."   ".s:vmode."bg=".s:K."           
 exe "hi Search          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:Y."   ".s:vmode."=bold        "
 exe "hi StatusLine      ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                           "
 exe "hi StatusLineNC    ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                           "
+exe "hi Visual          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."   ".s:vmode."=bold        "
 
 " VimDiff
 exe "hi DiffDelete      ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:r."                           "
@@ -74,3 +75,15 @@ exe "hi DiffText        ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:x."   ".s:vmod
 exe "hi Pmenu           ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                           "
 exe "hi PmenuSel        ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:B."                           "
 exe "hi PmenuSbar       ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                           "
+
+" vim-which-key
+highlight default link WhichKey           _WhichKey
+highlight default link WhichKeySeperator  _WhichKeySeperator
+highlight default link WhichKeyGroup      _WhichKeyGroup    
+highlight default link WhichKeyDesc       _WhichKeyDesc     
+highlight default link WhichKeyFloating   _WhichKeyFloating
+exe "hi _WhichKey           ".s:vmode."fg=".s:y."   ".s:vmode."bg=".s:k."                       "
+exe "hi _WhichKeySeparator  ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                       "
+exe "hi _WhichKeyFloating   ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                       "
+exe "hi _WhichKeyGroup      ".s:vmode."fg=".s:m."   ".s:vmode."bg=".s:k."                       "
+exe "hi _WhichKeyDesc       ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                       "

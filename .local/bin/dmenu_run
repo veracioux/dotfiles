@@ -6,6 +6,15 @@ extract_aliases() {
     sed "s_.* \(.*\)='.*'.*_\1_" $@
 }
 
+get_desktop_apps() {
+    sed -n -e '/^Exec=/p'                       \
+        /usr/share/applications/*.desktop       \
+        ~/.local/share/applications/*.desktop   |
+        sed 's/Exec=\(\S*\).*/\1/'              |
+    while read line; do
+        basename $line
+    done
+}
 get_aliases() {
     extract_aliases ~/.alias ~/.alias-tmp
 }
@@ -16,21 +25,45 @@ get_gui_aliases() {
 aliases="$(get_aliases)"
 gui_aliases="$(get_gui_aliases)"
 
-# Place any additional dmenu entries in here (you will know where)
+# ┏━━━━━━━━━━━━━━━┓
+# ┃ dmenu entries ┃
+# ┗━━━━━━━━━━━━━━━┛
 get_commands() {
-    echo win                # Choose windows
+    echo "Windows"          # Choose windows
+    echo "Config"           # Open documentation selection
+    echo "Doc"              # Open documentation selection
+    echo "Pacman"           # Package management
+    echo "Color"            # Pick a color
+    echo "Unicode"          # Pick an icon
+    echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
+    echo "Kill Process"     # Kill process
     echo "$aliases"
     echo "$gui_aliases"
-    dmenu_path              # Regular commands
+    get_desktop_apps        # Programs extracted from *.desktop files
 }
 
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ Actions based on user's choice ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 execute() {
-    case $1 in
+    case "$1" in
         # Commands that we have defined for dmenu exclusively
-        win)
+        "Windows")
             ~/.local/share/i3/i3-container-commander.py ;;
-        cf)
-            run_script cf ;;
+        "Doc")
+            run_script doc ;;
+        "Pacman")
+            run_script pkg ;;
+        "Color")
+            run_script color ;;
+        "Unicode")
+            run_script unicode.py ;;
+        "Kill Process")
+            run_script pkill ;;
+        "Fix Wifi")
+            rfkill block wifi && rfkill unblock wifi ;;
+        "Config")
+            run_script cf.py ;;
         # The rest: aliases and regular commands
         *)
             # If the command is a GUI program, just run it
@@ -40,7 +73,7 @@ execute() {
                     exit
                 fi
             done
-            # If the command is a CLI program, open it in a terminal
+            # If the command is a CLI program, open it in fish
             for al in $aliases; do
                 if [ "$1" = "$al" ]; then
                     cmd="$@"    # Why I have to create this variable puzzles me
@@ -53,5 +86,5 @@ execute() {
     esac
 }
 
-execute $(get_commands | dmenu $@)
+execute "$(get_commands | dmenu $@)"
 exit

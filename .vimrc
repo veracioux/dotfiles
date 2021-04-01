@@ -60,6 +60,7 @@ call vundle#begin()
 	Plugin 'preservim/nerdtree'
 	Plugin 'lambdalisue/vim-pager'
 	Plugin 'lambdalisue/vim-manpager'
+	Plugin 'liuchengxu/vim-which-key'
 
 	" Syntax highlighting
 	Plugin 'dag/vim-fish'
@@ -161,6 +162,10 @@ colorscheme customtheme
 	let g:ycm_show_diagnostics_ui = 0
 	let g:ycm_autoclose_preview_window_after_insertion = 1
 	let g:ycm_confirm_extra_conf = 0
+
+    " Make autocompletion work with css
+    let g:ycm_semantic_triggers['css'] = [ 're!^', 're!^\s+', ': ' ]
+    let g:ycm_semantic_triggers['scss'] = [ 're!^', 're!^\s+', ': ' ]
 
 " ┏━━━━━━━━━━━┓
 " ┃ UltiSnips ┃
@@ -274,6 +279,13 @@ colorscheme customtheme
 	nmap <buffer> <silent> <leader> ,PP
 	" Pull in prototypes without namespace definition
 	nmap <buffer> <silent> <leader> ,PN
+
+" ┏━━━━━━━━━━━━━━━┓
+" ┃ NERDCommenter ┃
+" ┗━━━━━━━━━━━━━━━┛
+	let g:NERDCompactSexyComs 			= 0
+	let g:NERDSpaceDelims 				= 1
+	let g:NERDTrimTrailingWhitespace 	= 1
 
 " ┏━━━━━━┓
 " ┃ Move ┃

@@ -53,6 +53,9 @@ bind -M insert \eo __prepend_o
 bind -M default \em __prepend_man
 bind -M insert \em __prepend_man
 
+bind -M default \et term
+bind -M insert \et term
+
 # ┏━━━━━━━━━━━━━━━┓
 # ┃ Custom colors ┃
 # ┗━━━━━━━━━━━━━━━┛

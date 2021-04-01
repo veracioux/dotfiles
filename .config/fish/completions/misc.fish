@@ -7,7 +7,7 @@ complete --command chbg --no-files --arguments="$args"
 # Other commands
 
 for cmd in {,cd,vi,cat,e}cf
-    complete --command $cmd --no-files --arguments=(lscf)
+    complete --command $cmd --no-files --arguments=(echo (lscf))
 end
 
 set -l args (ls -1 $PATH 2>/dev/null | grep -v ':$' | sed 's/->.*//g')

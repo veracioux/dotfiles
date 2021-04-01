@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+choice=$(echo "Install\nUpdate\nRemove\nKeyring" | dmenu -l 4)
+
+case "$choice" in
+    Install)
+        choice="$(pacman -Ssq | dmenu -l 20)"
+        [ -z "$choice" ] && exit
+        alacritty --class Float,Alacritty -e fish -C "sudo paru -S $choice" && exit
+        ;;
+    Update)
+        alacritty --class Float,Alacritty -e fish -C "sudo paru -Syu"
+        ;;
+    Remove)
+        choice="$(pacman -Qq | dmenu -l 20)"
+        [ -z "$choice" ] && exit
+        alacritty --class Float,Alacritty -e fish -C "sudo pacman -R $choice" && exit
+        ;;
+    Keyring)
+        alacritty --class Float,Alacritty -e fish -C "sudo pacman -Sy archlinux-keyring && exit"
+        ;;
+esac

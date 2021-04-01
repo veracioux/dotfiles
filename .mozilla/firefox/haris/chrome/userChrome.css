@@ -1,7 +1,9 @@
-/*Fix right-click bug*/
+/* Fix right-click bug */
 #contentAreaContextMenu{ margin: 2px 0 0 2px }
 
-/* Title bar settings */
+/* ┏━━━━━━━━━━━━━━━━━━━━┓
+   ┃ Title bar settings ┃
+   ┗━━━━━━━━━━━━━━━━━━━━┛ */
 
 #titlebar {
   height: 20px;
@@ -26,7 +28,9 @@
 
 #tabs-newtab-button, #new-tab-button { visibility: collapse !important }
 
-/* Tab settings */
+/* ┏━━━━━━━━━━━━━━┓
+   ┃ Tab settings ┃
+   ┗━━━━━━━━━━━━━━┛ */
 
 .tabbrowser-tab {
   font-size: 0.8em;
@@ -56,7 +60,9 @@
   transform: translateY(-1px);
 }
 
-/* Toolbar */
+/* ┏━━━━━━━━━┓
+   ┃ Toolbar ┃
+   ┗━━━━━━━━━┛ */
 
 #nav-bar {
   min-height: 0px;

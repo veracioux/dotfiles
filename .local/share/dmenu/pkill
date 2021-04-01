@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+choice="$(ps -A -o comm --no-headers | dmenu)"
+
+[ -z "$choice" ] && exit
+
+process="$choice"
+
+choice="$(echo " No\n Yes, kill $process" | dmenu -p 'Sure?' -l 2)"
+
+[ "$choice" = " Yes, kill $process" ] && pkill "$process"
+
