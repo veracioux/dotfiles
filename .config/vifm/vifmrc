@@ -1,26 +1,16 @@
 " vim: filetype=vifm :
 
-" Command used to edit files in various contexts.  The default is vim.
-
-set vicmd=vim
+set vicmd=nvim
 
 " This makes vifm perform file operations on its own instead of relying on
 " standard utilities like `cp`.
 
 set syscalls
-
-" Trash Directory
-" The default is to move files that are deleted with dd or :d to
-" the trash directory.  If you change this you will not be able to move
-" files by deleting them and then using p to put the file in the new location.
+set shell=/usr/bin/fish
 
 set trash
 
-" This is how many directories to store in the directory history.
-
 set history=100
-
-" Automatically resolve symbolic links on l or Enter.
 
 set nofollowlinks
 

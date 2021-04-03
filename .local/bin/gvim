@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+alacritty --class Float,Alacritty -e fish -C "cd (dirname '$1'); vim $1"

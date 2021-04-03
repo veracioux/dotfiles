@@ -1,30 +1,30 @@
 #!/usr/bin/env sh
 
-c=~/.config
-
 case "$1" in
-    alacritty)      echo $c/alacritty/alacritty.yml ;;
-    fish)           echo $c/fish/config.fish ;;
-    fish-misc)      echo $c/fish/functions/misc.fish ;;
-    fish-com)       echo $c/fish/completions/misc.fish ;;
-    fish-tmp)       echo $c/fish/tmp.fish ;;
-    fish-alias)     echo $c/fish/alias.fish ;;
+    alacritty)      echo ~/.config/alacritty/alacritty.yml ;;
+    fish)           echo ~/.config/fish/config.fish ;;
+    fish-misc)      echo ~/.config/fish/functions/misc.fish ;;
+    fish-com)       echo ~/.config/fish/completions/misc.fish ;;
+    fish-tmp)       echo ~/.config/fish/tmp.fish ;;
+    fish-alias)     echo ~/.config/fish/alias.fish ;;
     alias)          echo ~/.alias ;;
     alias-tmp)      echo ~/.alias-tmp ;;
     alias-gui)      echo ~/.alias-gui ;;
     alias-gui-tmp)  echo ~/.alias-gui-tmp ;;
     vim)            echo ~/.vimrc ;;
     vim-theme)      echo ~/.vim/colors/customtheme.vim ;;
-    nvim)           echo $c/nvim/init.vim ;;
-    vifm)           echo $c/vifm/vifmrc ;;
+    nvim)           echo ~/.config/nvim/init.vim ;;
+    vifm)           echo ~/.config/vifm/vifmrc ;;
+    vifm-theme)     echo ~/.config/vifm/colors/customtheme.vifm ;;
     git)            echo ~/.gitconfig ;;
-    i3)             echo $c/i3/config ;;
-    i3status)       echo $c/i3status/config ;;
-    picom)          echo $c/picom.conf ;;
+    i3)             echo ~/.config/i3/config ;;
+    i3status)       echo ~/.config/i3status/config ;;
+    picom)          echo ~/.config/picom.conf ;;
     dmenu)          echo ~/.local/bin/dmenu_run ;;
     ff)             echo ~/.mozilla/firefox/haris/chrome/userChrome.css ;;
     ff-min)         echo ~/.mozilla/firefox/minimal/chrome/userChrome.css ;;
     tridactyl)      echo ~/.config/tridactyl/tridactylrc ;;
-    schim)          echo $c/schim/schim.conf ;;
-    schim-volatile) echo $c/schim/volatile.conf ;;
+    schim)          echo ~/.config/schim/schim.conf ;;
+    schim-volatile) echo ~/.config/schim/volatile.conf ;;
+    dunst)          echo ~/.config/dunst/dunstrc ;;
 esac

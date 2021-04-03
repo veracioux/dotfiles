@@ -44,45 +44,52 @@ au BufNewFile,BufRead *.fish set ft=fish
 au BufNewFile,BufRead PKGBUILD set ft=sh
 au BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" ┏━━━━━━━━━┓
+" ┃ Plugins ┃
+" ┗━━━━━━━━━┛
+call plug#begin('~/.vim/plugged')
 
-	Plugin 'vifm/vifm.vim'
-	Plugin 'lervag/vimtex'
-	Plugin 'tpope/vim-abolish'
-	Plugin 'preservim/nerdcommenter'
-	Plugin 'sirver/ultisnips'
-	Plugin 'easymotion/vim-easymotion'
-	Plugin 'honza/vim-snippets'
-	Plugin 'ap/vim-css-color'
-	Plugin 'Rykka/InstantRst'
-	Plugin 'Rykka/riv.vim'
-	Plugin 'preservim/nerdtree'
-	Plugin 'lambdalisue/vim-pager'
-	Plugin 'lambdalisue/vim-manpager'
-	Plugin 'liuchengxu/vim-which-key'
+	Plug 'vifm/vifm.vim'
+	Plug 'lervag/vimtex', { 'for': 'tex' }
+	Plug 'tpope/vim-abolish'
+	Plug 'preservim/nerdcommenter'
+	Plug 'sirver/ultisnips' | Plug 'honza/vim-snippets'
+	Plug 'easymotion/vim-easymotion'
+	Plug 'ap/vim-css-color'
+	Plug 'Rykka/InstantRst'
+	Plug 'Rykka/riv.vim'
+	Plug 'tpope/vim-surround'
+	Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }           
+	Plug 'lambdalisue/vim-pager', { 'on': 'PAGER' }
+	Plug 'lambdalisue/vim-manpager'
+	Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKeyVisual'] }
 
 	" Syntax highlighting
-	Plugin 'dag/vim-fish'
+	Plug 'dag/vim-fish', { 'for': 'fish' }
 
-    " IDE 
-	Plugin 'ycm-core/YouCompleteMe'
-    Plugin 'sheerun/vim-polyglot'
-    Plugin 'preservim/tagbar' 			" NOTE: requires ctags installed
-    Plugin 'dyng/ctrlsf.vim'			" NOTE: requires ack installed
-    Plugin 'derekwyatt/vim-fswitch'
-    Plugin 'derekwyatt/vim-protodef'
-	Plugin 'matze/vim-move'
-	Plugin 'junegunn/vim-easy-align'
-	Plugin 'airblade/vim-gitgutter'
+	" IDE 
+	Plug 'ycm-core/YouCompleteMe'
+	Plug 'ervandew/supertab'			" Fixes problem with YCM and UltiSnips
+	Plug 'sheerun/vim-polyglot'
+	Plug 'preservim/tagbar' 			" NOTE: requires ctags installed
+	Plug 'dyng/ctrlsf.vim'				" NOTE: requires ack installed
+	Plug 'derekwyatt/vim-fswitch'
+	Plug 'derekwyatt/vim-protodef'
+	Plug 'matze/vim-move'
+	Plug 'junegunn/vim-peekaboo'
+	Plug 'kshenoy/vim-signature'
+	Plug 'Yilin-Yang/vim-markbar'
+	Plug 'junegunn/vim-easy-align'
+	Plug 'airblade/vim-gitgutter'
+	Plug 'davidhalter/jedi-vim', { 'for': 'python' }	" Python autocompletion
 
 	" Misc
 	if has('nvim')
-		Plugin 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+		Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 	endif
-	Plugin 'PotatoesMaster/i3-vim-syntax'
+	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'i3' }
 
-call vundle#end()
+call plug#end()
 
 filetype plugin indent on		"required
 
@@ -101,7 +108,6 @@ colorscheme customtheme
 	noremap		<leader>t :silent !term<CR>
     noremap     <M-j>   <C-e>
     noremap     <M-k>   <C-y>
-	noremap		<M-w>	<C-w><C-w>
 
 	""" Insertions
 
@@ -153,7 +159,7 @@ colorscheme customtheme
 	" Make YCM work with UltiSnips
     let g:ycm_key_list_select_completion = ['<C-n>']
     let g:ycm_key_list_previous_completion = ['<C-p>']
-    let g:SuperTabDefaultCompletionType = '<C-n>'
+	let g:SuperTabDefaultCompletionType = '<C-n>'
 
 	let g:ycm_auto_hover = ''
 	nmap <leader>D <plug>(YCMHover)
@@ -176,6 +182,12 @@ colorscheme customtheme
 
 	let g:UltiSnipsSnippetsDir = "~/.vim/snips"
 	let g:UltiSnipsSnippetDirectories = [ '/home/haris/.vim/snips', '/home/haris/templates/latex']
+
+" ┏━━━━━━━━━━┓
+" ┃ Supertab ┃
+" ┗━━━━━━━━━━┛
+	let g:SuperTabDefaultCompletionType    = '<tab>'
+	let g:SuperTabCrMapping                = 0
 
 " ┏━━━━━━━━┓
 " ┃ Vimtex ┃
@@ -207,7 +219,16 @@ colorscheme customtheme
 " ┏━━━━━━━━━━━━┓
 " ┃ EasyMotion ┃
 " ┗━━━━━━━━━━━━┛
-	nmap \ <Plug>(easymotion-prefix)
+	nmap \ 	    <Plug>(easymotion-prefix)
+    nmap <M-w>  <Plug>(easymotion-bd-w)
+    nmap <M-W>  <Plug>(easymotion-bd-W)
+    nmap <M-e>  <Plug>(easymotion-bd-e)
+    nmap <M-E>  <Plug>(easymotion-bd-E)
+    nmap <M-f>  <Plug>(easymotion-bd-f)
+    nmap <M-F>  <Plug>(easymotion-bd-F)
+    nmap <M-t>  <Plug>(easymotion-bd-t)
+    nmap <M-T>  <Plug>(easymotion-bd-T)
+    nmap <M-a>  <Plug>(easymotion-jumptoanywhere)
 
 " ┏━━━━━━━━━━┓
 " ┃ NERDTree ┃
@@ -286,12 +307,19 @@ colorscheme customtheme
 	let g:NERDCompactSexyComs 			= 0
 	let g:NERDSpaceDelims 				= 1
 	let g:NERDTrimTrailingWhitespace 	= 1
-
+" ┏━━━━━━━━━━┓
+" ┃ Peekaboo ┃
+" ┗━━━━━━━━━━┛
+	let g:peekaboo_delay 	= 300
+	let g:peekaboo_compact 	= 1
+" ┏━━━━━━━━━┓
+" ┃ Markbar ┃
+" ┗━━━━━━━━━┛
+	 nmap <Leader>m <Plug>ToggleMarkbar
 " ┏━━━━━━┓
 " ┃ Move ┃
 " ┗━━━━━━┛
     let g:move_key_modifier = 'C'
-
 " ┏━━━━━━━┓
 " ┃ Align ┃
 " ┗━━━━━━━┛

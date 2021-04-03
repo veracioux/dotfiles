@@ -87,3 +87,7 @@ exe "hi _WhichKeySeparator  ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."       
 exe "hi _WhichKeyFloating   ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                       "
 exe "hi _WhichKeyGroup      ".s:vmode."fg=".s:m."   ".s:vmode."bg=".s:k."                       "
 exe "hi _WhichKeyDesc       ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                       "
+
+" vim-easymotion
+exe "hi EasyMotionTarget    ".s:vmode."fg=".s:B."                       ".s:vmode."=bold        "
+

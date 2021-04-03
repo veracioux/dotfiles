@@ -2,10 +2,13 @@
 
 hi clear
 
-hi Border		cterm=none			ctermfg=0 			ctermbg=0
+hi Border		cterm=none 			ctermfg=0 			ctermbg=0
 hi TopLine		cterm=none			ctermfg=0			ctermbg=12
 hi TopLineSel	cterm=bold			ctermfg=0
 
 hi StatusLine	cterm=bold			ctermfg=0			ctermbg=12
 hi CmdLine		cterm=none			ctermfg=15			ctermbg=0
 " TODO
+"
+" Entry types
+hi Directory	cterm=bold			ctermfg=5			ctermbg=0

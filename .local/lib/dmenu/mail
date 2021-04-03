@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+edit=" Edit..."
+
+entries="$(echo "$edit"; cd ~/mail && command ls)"
+
+choice="$(echo "$entries" | dmenu -p mail -l $(echo "$entries" | wc -l))"
+
+[ -z "$choice" ] && exit
+
+if [ "$choice" = "$edit" ]; then
+    gvim "$0"
+elif [ "${choice//*@/}" = 'gmail.com' ]; then
+    firefox -P haris "mail.google.com/mail/?authuser=$choice"
+fi

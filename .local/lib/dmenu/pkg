@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+
+install=" Install..."
+search=" Search..."
+remove=" Remove..."
+manage=" Manage..."
+update=" Update..."
+keyring=" Keyring..."
+edit=" Edit..."
+
+choice=$(echo "$install\n$search\n$update\n$remove\n$manage\n$keyring\n$edit" | dmenu -l 7)
+
+case "$choice" in
+    "$install")
+        choice="$(pacman -Ssq | dmenu -l 20)"
+        [ -z "$choice" ] && exit
+        alacritty --class Float,Alacritty -e fish -C "paru $choice" && exit
+        ;;
+    "$search")
+        choice="$(echo -n '' | dmenu -p 'Search:')"
+        [ -z "$choice" ] && exit
+        alacritty --class Float,Alacritty -e fish -C "paru $choice" && exit
+        ;;
+    "$update")
+        alacritty --class Float,Alacritty -e fish -C "paru -Syu"
+        ;;
+    "$remove")
+        choice="$(pacman -Qq | dmenu -l 20)"
+        [ -z "$choice" ] && exit
+        alacritty --class Float,Alacritty -e fish -C "sudo pacman -R $choice" && exit
+        ;;
+    "$manage")
+        gvim "$(fcmd system-install)"
+        ;;
+    "$keyring")
+        alacritty --class Float,Alacritty -e fish -C "sudo pacman -Sy archlinux-keyring && exit"
+        ;;
+    "$edit")
+        gvim "$0"
+        ;;
+esac

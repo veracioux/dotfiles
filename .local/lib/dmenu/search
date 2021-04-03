@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris --search "$choice"

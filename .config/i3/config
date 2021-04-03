@@ -68,7 +68,7 @@ set $resize_term  resize set width 695
   focus_follows_mouse no
   popup_during_fullscreen leave_fullscreen
   workspace_auto_back_and_forth yes
-  for_window [instance="i3ConfigError" class="Alacritty"] floating enable
+  for_window [instance="Float" class="Alacritty"] floating enable
 
 # ┏━━━━━━━━━┓
 # ┃ STARTUP ┃
@@ -79,7 +79,7 @@ set $resize_term  resize set width 695
   exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
   exec_always --no-startup-id \
-    /home/haris/.local/share/i3/i3-cycle-focus.py --history 2
+    /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
 
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
@@ -100,7 +100,8 @@ set $resize_term  resize set width 695
   bindsym $mod+Tab          exec --no-startup-id \
     /home/haris/.local/share/i3/i3-cycle-focus.py --switch
   bindsym $mod+Shift+7      exec --no-startup-id "dmenu_run"
-  bindsym $mod+c            exec --no-startup-id "~/.local/share/dmenu/cf.py"
+  bindsym $mod+c            exec --no-startup-id "~/.local/lib/dmenu/cf.py"
+  bindsym $mod+o            exec --no-startup-id "~/.local/lib/dmenu/open"
 
   # Change focus
   bindsym $mod+h            focus left
@@ -119,7 +120,7 @@ set $resize_term  resize set width 695
 
   # Layout manipulation
   bindsym $mod+i            split h
-  bindsym $mod+o            split v
+  bindsym $mod+u            split v
   bindsym $mod+s            layout stacking
   bindsym $mod+t            layout tabbed
   bindsym $mod+period       layout toggle split
@@ -169,11 +170,6 @@ set $resize_term  resize set width 695
     bindsym $mod+r mode "default"
   }
   bindsym $mod+r mode " resize"
-
-  mode "float" {
-    #for_window [class=".*"] floating enable
-  }
-  bindsym $mod+u  mode "float"
 
   mode "run" {
   }
@@ -255,10 +251,11 @@ bar {
                               --class Float,Alacritty -e trans -shell"
 
   bindsym $mod+Shift+f      exec --no-startup-id "firefox -P haris"
+  bindsym $mod+Ctrl+f       exec --no-startup-id "~/.local/lib/dmenu/search"
   bindsym $mod+Shift+s      exec --no-startup-id "flameshot && flameshot gui"
   bindsym $mod+Shift+Print  exec --no-startup-id "flameshot && flameshot config"
 
-  bindsym $mod+v            exec --no-startup-id "/opt/vim-anywhere/bin/run"
+  bindsym $mod+v            exec --no-startup-id "gvim"
   bindsym $mod+Shift+e      exec --no-startup-id "emacsclient --create-frame"
   bindsym $mod+Shift+w      exec --no-startup-id "fish -c wiki"
   bindsym $mod+Shift+o      exec --no-startup-id "fish -c todo"

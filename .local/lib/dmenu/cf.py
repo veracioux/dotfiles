@@ -6,7 +6,7 @@ import os, os.path
 # Load regular configuration entries
 entries = run('lscf', stdout=PIPE, encoding='utf-8').stdout.replace('-', ' ')
 # Load dmenu scripts
-dmenu_scripts = os.listdir(os.path.expanduser('~/.local/share/dmenu/'))
+dmenu_scripts = os.listdir(os.path.expanduser('~/.local/lib/dmenu/'))
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Additional entries and customization ┃
@@ -36,7 +36,7 @@ def run_command(cmd):
 if choice.startswith('dmenu-'):
     run_command('cd (dirname ' + __file__ + '); vim ' + choice.replace(
         'dmenu-',
-        os.path.expanduser('~/.local/share/dmenu/')
+        os.path.expanduser('~/.local/lib/dmenu/')
     ))
 elif choice == 'Edit...':
     run_command('vicmd cf')

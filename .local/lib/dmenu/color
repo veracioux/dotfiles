@@ -33,7 +33,7 @@ choice="$(echo "$entries" | dmenu -l $n -p 'Color:')"
 [ -z "$choice" ] && exit
 
 if [ "$choice" = ' Edit...' ]; then
-    alacritty --class Float,Alacritty -e fish -C "cd $(dirname $0); vim $0"
+    gvim "$0"
     exit
 fi
 

@@ -79,7 +79,7 @@ elif choice[2:] == 'From code...':
     if choice:
         copy_to_clipboard(chr(int(code, base=16)))
 elif choice[2:] == 'Get code...':
-    p = run(['dmenu', '-p', 'Character:'], stdout=PIPE, input='', encoding='utf-8')
+    p = run(['dmenu', '-p', 'Character:'], stdout=PIPE, input=char_entries, encoding='utf-8')
     choice = p.stdout[:-1]
     if choice:
         copy_to_clipboard(str(ord(choice[0])))

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-run_script() { ~/.local/share/dmenu/"$1"; }
+run_script() { ~/.local/lib/dmenu/"$1"; }
 
 extract_aliases() {
     sed "s_.* \(.*\)='.*'.*_\1_" $@
@@ -29,9 +29,11 @@ gui_aliases="$(get_gui_aliases)"
 # ┃ dmenu entries ┃
 # ┗━━━━━━━━━━━━━━━┛
 get_commands() {
+    echo "Open"             # Choose windows
+    echo "Search"           # Web search
+    echo "Mail"             # View mail in browser
     echo "Windows"          # Choose windows
     echo "Config"           # Open documentation selection
-    echo "Doc"              # Open documentation selection
     echo "Pacman"           # Package management
     echo "Color"            # Pick a color
     echo "Unicode"          # Pick an icon
@@ -48,10 +50,15 @@ get_commands() {
 execute() {
     case "$1" in
         # Commands that we have defined for dmenu exclusively
+        "Open")
+            run_script open ;;
+        "Search")
+            choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
+            ;;
+        "Mail")
+            run_script mail ;;
         "Windows")
-            ~/.local/share/i3/i3-container-commander.py ;;
-        "Doc")
-            run_script doc ;;
+            ~/.local/lib/i3/i3-container-commander.py ;;
         "Pacman")
             run_script pkg ;;
         "Color")
@@ -66,22 +73,25 @@ execute() {
             run_script cf.py ;;
         # The rest: aliases and regular commands
         *)
-            # If the command is a GUI program, just run it
+            # If the command is an aliased GUI program, just run it
             for al in $gui_aliases; do
                 if [ "$1" = "$al" ]; then
                     fish -c "$@"    # Only fish works here
                     exit
                 fi
             done
-            # If the command is a CLI program, open it in fish
+            # If the command is an aliased CLI program, open it in fish
             for al in $aliases; do
                 if [ "$1" = "$al" ]; then
                     cmd="$@"    # Why I have to create this variable puzzles me
-                    alacritty --class FishCmd,Alacritty -e fish -C "$cmd"
+                    alacritty --class Float,Alacritty -e fish -C "$cmd"
                     exit
                 fi
             done
-            echo $1 | sh
+            # Fallback, if the entry matches none of the above, just run the
+            # command
+            sh -c "$1 && dunstify 'Success' 'Command $1 was successful.' ||
+                dunstify -u critical 'Error' \"Command $1 exited with error \$?.\""
             ;;
     esac
 }
