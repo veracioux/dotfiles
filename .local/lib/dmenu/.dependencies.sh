@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-paru -S buku
+paru -S buku clipmenu

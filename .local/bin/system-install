@@ -1,57 +1,55 @@
-#!/bin/bash
+#!/bin/sh
 
-custom_install() {
-	cd ~/scripts/local/pkgbuild
-	mkdir -p /tmp/"$1"/
-	cp $(echo $1 | tr [:lower:] [:upper:]) /tmp/"$1"/PKGBUILD
-	cd /tmp/"$1"
-	makepkg --skipinteg -f --install
+official() {
+	pacman -S $@
 }
 
-pacman -S neovim fish
+unofficial() {
+	paru -S $@
+}
 
-useradd -m -G log,lock,wheel,tty,audio,lp,uucp,video,haris -s fish haris
+# Essential
+official base-devel git dash doas fish neovim
+
+# Create user
+useradd -m -G log,lock,wheel,tty,audio,lp,uucp,video,haris -s dash haris
 
 # For dual-boot setups, configure the clock TODO
 
 # A list of packages to install on a fresh system install
 
 # System stuff
-pacman -S base-devel sudo
-pacman -S etckeeper
+official etckeeper
 # Network
-pacman -S networkmanager iw wpa_suplicant
+official networkmanager iw wpa_suplicant proton
 # Low-level
-pacman -S xorg acpilight qtile i3-gaps picom
-yay -S tdm polybar
+official xorg acpilight qtile i3-gaps picom
+unofficial tdm polybar
 
 # Editors and viewers
-pacman -S exa xarchiver ueberzug imagemagick python-sphinx emacs
-pacman -S vifm ueberzug ffmpegthumbnailer ranger nemo gsettings
-pacman -S zathura zathura-pdf-mupdf
-pacman -S gimp inkscape poppler xournalpp
+official lsd xarchiver ueberzug imagemagick python-sphinx emacs
+official vifm ueberzug ffmpegthumbnailer ranger nemo gsettings
+official zathura zathura-pdf-mupdf
+official gimp inkscape poppler xournalpp
 
 # Programming
-pacman -S python python-pip
+official python python-pip python-sphinx
 
 # Utilities
-pacman -S git xsel moreutils rsync findutils dialog fzf
-pacman -S neomutt translate-shell
-pacman -S speedcrunch
-yay -S urlview buku-git asciinema
+official xsel moreutils rsync findutils dialog fzf clipmenu
+official neomutt translate-shell
+official speedcrunch
+unofficial urlview buku-git asciinema
 
 # Plugins
-pacman -S fisher vundle firefox-tridactyl
+official fisher vundle firefox-tridactyl
 
 # Resources
-pacman -S adobe-source-code-pro-fonts ttf-lato
-yay -S dracula-gtk-theme
-
-## Additional installs using various methods
-	# spacemacs
+official adobe-source-code-pro-fonts ttf-lato ttf-font-awesome
+unofficial dracula-gtk-theme
 
 ## Dependencies
-~/.vim/pacman.sh
+~/.vim/.dependencies.sh
 ~/.mozilla/firefox/pacman.sh
 
 git clone 'https://github.com/syl20bnr/spacemacs' ~/.emacs.d

@@ -99,9 +99,11 @@ set $resize_term  resize set width 695
   bindsym $mod+Shift+m      move scratchpad
   bindsym $mod+Tab          exec --no-startup-id \
     /home/haris/.local/share/i3/i3-cycle-focus.py --switch
+
   bindsym $mod+Shift+7      exec --no-startup-id "dmenu_run"
   bindsym $mod+c            exec --no-startup-id "~/.local/lib/dmenu/cf.py"
   bindsym $mod+o            exec --no-startup-id "~/.local/lib/dmenu/open"
+  bindsym $mod+Shift+p      exec --no-startup-id clipmenu
 
   # Change focus
   bindsym $mod+h            focus left
@@ -261,6 +263,8 @@ bar {
   bindsym $mod+Shift+o      exec --no-startup-id "fish -c todo"
 
   for_window [instance="Float"      class="Alacritty"]  floating enable
+  for_window [instance="Float"      class="Alacritty"]  move scratchpad
+  for_window [instance="Float"      class="Alacritty"]  scratchpad show
 
   for_window [window_role="Float"   class="Gvim"]       floating enable
   for_window [floating              class="Gvim"]       $resize1

@@ -29,13 +29,15 @@ gui_aliases="$(get_gui_aliases)"
 # ┃ dmenu entries ┃
 # ┗━━━━━━━━━━━━━━━┛
 get_commands() {
-    echo "Open"             # Choose windows
+    echo "Open"             # Open an URL or bookmark
     echo "Search"           # Web search
+    echo "Clipboard"        # Clipboard using clipmenu
+    echo "Snippets"         # Text snippets
     echo "Mail"             # View mail in browser
     echo "Windows"          # Choose windows
+    echo "Color"            # Pick a color
     echo "Config"           # Open documentation selection
     echo "Pacman"           # Package management
-    echo "Color"            # Pick a color
     echo "Unicode"          # Pick an icon
     echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
     echo "Kill Process"     # Kill process
@@ -55,6 +57,10 @@ execute() {
         "Search")
             choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
             ;;
+        "Clipboard")
+            clipmenu ;;
+        "Snippets")
+            run_script snips ;;
         "Mail")
             run_script mail ;;
         "Windows")

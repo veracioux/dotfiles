@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+
+# TODO add snippets from drys
+
+edit=" Edit..."
+edit_snips=" Edit snips..."
+add=" Add..."
+
+print_options() {
+    echo "$edit"
+    echo "$add"
+    echo "$edit_clip"
+}
+
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ Edit this - these are your entries ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+print_entries() {
+    echo "$(cd ~/mail && command ls -1)"            # All my mail addresses
+    cat ~/.local/snippets.txt | awk '{print $1}'    # TODO Snippets (temporary)
+}
+
+options="$(print_options)"
+entries="$(print_entries)"
+
+choice="$(echo "$options\n$entries" | dmenu )"
+
+[ -z "$choice" ] && exit
+
+if [ "$choice" = "$edit" ]; then
+    gvim "$0"
+elif [ "$choice" = "$edit_snips" ]; then
+    gvim ~/.local/snippets.txt
+elif [ "$choice" = "$add" ]; then
+    choice="$(echo '' | dmenu)"
+    [ -n "$choice" ] && echo "$choice" >> ~/.local/snippets.txt
+else
+    match="$(sed -n "/$choice/p" ~/.local/snippets.txt | sed 's/\S*\s*//')"
+    [ -n "$match" ] && echo "$match" || echo "$choice"
+    : # TODO integrate with drys;
+fi

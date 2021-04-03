@@ -173,6 +173,9 @@ colorscheme customtheme
     let g:ycm_semantic_triggers['css'] = [ 're!^', 're!^\s+', ': ' ]
     let g:ycm_semantic_triggers['scss'] = [ 're!^', 're!^\s+', ': ' ]
 
+	" Alt+Tab inserts a tab character
+	inoremap <M-tab> <tab>
+
 " ┏━━━━━━━━━━━┓
 " ┃ UltiSnips ┃
 " ┗━━━━━━━━━━━┛
