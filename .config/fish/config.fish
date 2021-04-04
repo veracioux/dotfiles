@@ -56,6 +56,9 @@ bind -M insert \em __prepend_man
 bind -M default \et term
 bind -M insert \et term
 
+bind -M default \en __prepend_cmd_with_notify
+bind -M insert \en __prepend_cmd_with_notify
+
 # ┏━━━━━━━━━━━━━━━┓
 # ┃ Custom colors ┃
 # ┗━━━━━━━━━━━━━━━┛

@@ -61,16 +61,19 @@ function __run_in_bash
 end
 
 function __prepend_o
-    set -l cmd (commandline -b)
     commandline -C 0
     commandline -i 'o '
     commandline -f end-of-line
 end
 
-
 function __prepend_man
-    set -l cmd (commandline -b)
     commandline -C 0
     commandline -i 'man '
+    commandline -f end-of-line
+end
+
+function __prepend_cmd_with_notify
+    commandline -C 0
+    commandline -i 'cmd-with-notify '
     commandline -f end-of-line
 end

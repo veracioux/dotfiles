@@ -49,58 +49,53 @@ get_commands() {
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Actions based on user's choice ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-execute() {
-    case "$1" in
-        # Commands that we have defined for dmenu exclusively
-        "Open")
-            run_script open ;;
-        "Search")
-            choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
-            ;;
-        "Clipboard")
-            clipmenu ;;
-        "Snippets")
-            run_script snips ;;
-        "Mail")
-            run_script mail ;;
-        "Windows")
-            ~/.local/lib/i3/i3-container-commander.py ;;
-        "Pacman")
-            run_script pkg ;;
-        "Color")
-            run_script color ;;
-        "Unicode")
-            run_script unicode.py ;;
-        "Kill Process")
-            run_script pkill ;;
-        "Fix Wifi")
-            rfkill block wifi && rfkill unblock wifi ;;
-        "Config")
-            run_script cf.py ;;
-        # The rest: aliases and regular commands
-        *)
-            # If the command is an aliased GUI program, just run it
-            for al in $gui_aliases; do
-                if [ "$1" = "$al" ]; then
-                    fish -c "$@"    # Only fish works here
-                    exit
-                fi
-            done
-            # If the command is an aliased CLI program, open it in fish
-            for al in $aliases; do
-                if [ "$1" = "$al" ]; then
-                    cmd="$@"    # Why I have to create this variable puzzles me
-                    alacritty --class Float,Alacritty -e fish -C "$cmd"
-                    exit
-                fi
-            done
-            # Fallback, if the entry matches none of the above, just run the
-            # command
-            sh -c "$1 && dunstify 'Success' 'Command $1 was successful.' ||
-                dunstify -u critical 'Error' \"Command $1 exited with error \$?.\""
-            ;;
-    esac
-}
-
-execute "$(get_commands | dmenu $@)"
-exit
+choice="$(get_commands | dmenu $@)" 
+case "$choice" in
+    "")
+        echo lolz
+        exit ;;
+    "Open")
+        run_script open ;;
+    "Search")
+        choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
+        ;;
+    "Clipboard")
+        clipmenu ;;
+    "Snippets")
+        run_script snips ;;
+    "Mail")
+        run_script mail ;;
+    "Windows")
+        ~/.local/lib/i3/i3-container-commander.py ;;
+    "Pacman")
+        run_script pkg ;;
+    "Color")
+        run_script color ;;
+    "Unicode")
+        run_script unicode.py ;;
+    "Kill Process")
+        run_script pkill ;;
+    "Fix Wifi")
+        rfkill block wifi && rfkill unblock wifi ;;
+    "Config")
+        run_script cf.py ;;
+    # The rest: aliases and regular commands
+    *)
+        # If the command is an aliased GUI program, just run it
+        for al in $gui_aliases; do
+            if [ "$choice" = "$al" ]; then
+                fish -c "$choice"    # Only fish works here
+                exit
+            fi
+        done
+        # If the command is an aliased CLI program, open it in fish
+        for al in $aliases; do
+            if [ "$choice" = "$al" ]; then
+                guirun alacritty --class Float,Alacritty -e fish -C "$choice"
+                exit
+            fi
+        done
+        # Fallback, if the entry matches none of the above, just run the command
+        cmd-with-notify $choice
+        ;;
+esac

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Show clipboard contents as a QR code on the screen using feh.
+xsel -b -o | qrencode -s 20 -o - | feh -

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+$@ && notify-send "Command $(echo $@) exited successfully." ||
+    notify-send -u critical "Command $(echo $@) exited with error $?."

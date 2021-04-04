@@ -1,9 +1,11 @@
-feh --bg-fill ~/.wallpaper
-/home/haris/scripts/local/system_specific
-xset r rate 300 50
-setxkbmap -option caps:escape
-xbindkeys
+/home/haris/.local/bin/system_specific      # System specific config
+xset r rate 250 60                          # Increase key press rate
+setxkbmap -option caps:escape               # Bind caps_lock to escape
+xbindkeys                                   # Load bindings from .xbindkeysrc
 
-dunst &
-picom &
-i3
+feh --bg-fill ~/.wallpaper                  # Set wallpaper
+
+dunst &                                     # Notification daemon
+clipmenud &                                 # Daemon for dmenu clipboard
+picom &                                     # Compositor
+i3                                          # Window manager

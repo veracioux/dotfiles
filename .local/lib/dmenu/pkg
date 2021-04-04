@@ -1,14 +1,24 @@
 #!/usr/bin/env sh
 
 install=" Install..."
-search=" Search..."
+about=" About..."
 remove=" Remove..."
 manage=" Manage..."
 update=" Update..."
 keyring=" Keyring..."
 edit=" Edit..."
 
-choice=$(echo "$install\n$search\n$update\n$remove\n$manage\n$keyring\n$edit" | dmenu -l 7)
+print_options() {
+    echo "$install"
+    echo "$about"
+    echo "$update"
+    echo "$remove"
+    echo "$manage"
+    echo "$keyring"
+    echo "$edit"
+}
+
+choice="$(print_options | dmenu -l $(print_options | wc -l))"
 
 case "$choice" in
     "$install")
@@ -16,10 +26,10 @@ case "$choice" in
         [ -z "$choice" ] && exit
         alacritty --class Float,Alacritty -e fish -C "paru $choice" && exit
         ;;
-    "$search")
-        choice="$(echo -n '' | dmenu -p 'Search:')"
+    "$about")
+        choice="$(echo "$(pacman -Qq)" | dmenu -p 'About:' -l 20)"
         [ -z "$choice" ] && exit
-        alacritty --class Float,Alacritty -e fish -C "paru $choice" && exit
+        alacritty --class Float,Alacritty -e fish -C "pacman -Qi $choice" && exit
         ;;
     "$update")
         alacritty --class Float,Alacritty -e fish -C "paru -Syu"
