@@ -23,6 +23,8 @@ set foldmethod=syntax nofoldenable
 
 set textwidth=80 colorcolumn=81
 set virtualedit=all
+set splitright splitbelow
+
 set ignorecase smartcase incsearch
 
 if has('gui_running')
@@ -44,9 +46,9 @@ au BufNewFile,BufRead *.fish set ft=fish
 au BufNewFile,BufRead PKGBUILD set ft=sh
 au BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
 
-" ┏━━━━━━━━━┓
-" ┃ Plugins ┃
-" ┗━━━━━━━━━┛
+" 	┏━━━━━━━━━┓
+" 	┃ Plugins ┃
+" 	┗━━━━━━━━━┛
 call plug#begin('~/.vim/plugged')
 
 	Plug 'vifm/vifm.vim'
@@ -75,12 +77,12 @@ call plug#begin('~/.vim/plugged')
 	Plug 'dyng/ctrlsf.vim'				" NOTE: requires ack installed
 	Plug 'derekwyatt/vim-fswitch'
 	Plug 'derekwyatt/vim-protodef'
-	Plug 'matze/vim-move'
+	Plug 'junegunn/fzf.vim'
 	Plug 'junegunn/vim-peekaboo'
 	Plug 'kshenoy/vim-signature'
-	Plug 'Yilin-Yang/vim-markbar'
 	Plug 'junegunn/vim-easy-align'
 	Plug 'airblade/vim-gitgutter'
+	" Plug 'python-mode/python-mode'
 	Plug 'davidhalter/jedi-vim', { 'for': 'python' }	" Python autocompletion
 
 	" Misc
@@ -96,18 +98,29 @@ filetype plugin indent on		"required
 " Set theme
 colorscheme customtheme
 
-" ┏━━━━━━━━━━━━━━━━━┓
-" ┃ Custom mappings ┃
-" ┗━━━━━━━━━━━━━━━━━┛
+" 	┏━━━━━━━━━━━━━━━━━┓
+" 	┃ Custom mappings ┃
+" 	┗━━━━━━━━━━━━━━━━━┛
 	let mapleader = "\<Space>"
 
-	noremap		Y		y$
-	noremap		vv		V
-	noremap		V		v$
-	map			<C-c>	"+y
-	noremap		<leader>t :silent !term<CR>
-    noremap     <M-j>   <C-e>
-    noremap     <M-k>   <C-y>
+	noremap		Y			y$
+	noremap		vv			V
+	noremap		V			v$
+	map			<C-c>		"+y
+	noremap		<leader>t 	:silent !term<CR>
+    noremap     <M-j>   	<C-e>
+    noremap     <M-k>   	<C-y>
+
+	noremap		<M-h>		<C-w>h
+	noremap		<M-l>		<C-w>l
+
+	noremap 	<C-j>		<C-W>j
+	noremap 	<C-k>		<C-W>k
+	noremap 	<C-h>		<C-W>h
+	noremap 	<C-l>		<C-W>l
+
+    " Ctrl+/ calls :noh<CR>
+	noremap		<M-/>   	:noh<CR>
 
 	""" Insertions
 
@@ -128,7 +141,8 @@ colorscheme customtheme
 	cnoreabbrev S Subvert
 	command! Src so ~/.vimrc
 
-	nmap <leader>r :!./%<CR>
+	" Run the current buffer as a script
+	nmap <leader>r :w \| !./%<CR>
 	nmap <leader>m :make
 	nmap <leader>c :!cmake -S . -B _build && cmake --build _build<CR>
 
@@ -145,9 +159,9 @@ colorscheme customtheme
 	endfunction
 	noremap		<M-m> :call ToggleMenubar()<CR>
 
-" ┏━━━━━━━━━━━━━━━┓
-" ┃ YouCompleteMe ┃
-" ┗━━━━━━━━━━━━━━━┛
+" 	┏━━━━━┓
+" 	┃ YCM ┃
+" 	┗━━━━━┛
 	if !exists('g:ycm_semantic_triggers')
 		let g:ycm_semantic_triggers = {}
 	endif
@@ -164,10 +178,11 @@ colorscheme customtheme
 	let g:ycm_auto_hover = ''
 	nmap <leader>D <plug>(YCMHover)
 
-	set completeopt-=preview
 	let g:ycm_show_diagnostics_ui = 0
 	let g:ycm_autoclose_preview_window_after_insertion = 1
 	let g:ycm_confirm_extra_conf = 0
+	let g:ycm_min_num_of_chars_for_completion = 1
+	let g:ycm_add_preview_to_completeopt = 1
 
     " Make autocompletion work with css
     let g:ycm_semantic_triggers['css'] = [ 're!^', 're!^\s+', ': ' ]
@@ -176,9 +191,9 @@ colorscheme customtheme
 	" Alt+Tab inserts a tab character
 	inoremap <M-tab> <tab>
 
-" ┏━━━━━━━━━━━┓
-" ┃ UltiSnips ┃
-" ┗━━━━━━━━━━━┛
+" 	┏━━━━━━━━━━━┓
+" 	┃ UltiSnips ┃
+" 	┗━━━━━━━━━━━┛
 	let g:UltiSnipsExpandTrigger = "<tab>"
 	let g:UltiSnipsJumpForwardTrigger = "<tab>"
 	let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
@@ -186,15 +201,24 @@ colorscheme customtheme
 	let g:UltiSnipsSnippetsDir = "~/.vim/snips"
 	let g:UltiSnipsSnippetDirectories = [ '/home/haris/.vim/snips', '/home/haris/templates/latex']
 
-" ┏━━━━━━━━━━┓
-" ┃ Supertab ┃
-" ┗━━━━━━━━━━┛
+" 	┏━━━━━━━━━━┓
+" 	┃ Supertab ┃
+" 	┗━━━━━━━━━━┛
 	let g:SuperTabDefaultCompletionType    = '<tab>'
 	let g:SuperTabCrMapping                = 0
 
-" ┏━━━━━━━━┓
-" ┃ Vimtex ┃
-" ┗━━━━━━━━┛
+"   ┏━━━━━━┓
+"   ┃ Jedi ┃
+"   ┗━━━━━━┛
+	let g:jedi#popup_on_dot = 0
+	let g:jedi#auto_vim_configuration = 0
+	let g:jedi#show_call_signatures = 0
+    let g:jedi#usages_command = ""
+    let g:jedi#rename_command = "<leader>R"
+
+" 	┏━━━━━━━━┓
+" 	┃ Vimtex ┃
+" 	┗━━━━━━━━┛
 	let g:vimtex_complete_enabled = 1
 	let g:vimtex_complete_close_braces = 1
     let g:vimtex_fold_enabled = 1
@@ -219,9 +243,9 @@ colorscheme customtheme
 	nmap ysc <plug>(vimtex-cmd-create)
 	vmap ysc <plug>(vimtex-cmd-create)
 
-" ┏━━━━━━━━━━━━┓
-" ┃ EasyMotion ┃
-" ┗━━━━━━━━━━━━┛
+" 	┏━━━━━━━━━━━━┓
+" 	┃ EasyMotion ┃
+" 	┗━━━━━━━━━━━━┛
 	nmap \ 	    <Plug>(easymotion-prefix)
     nmap <M-w>  <Plug>(easymotion-bd-w)
     nmap <M-W>  <Plug>(easymotion-bd-W)
@@ -233,9 +257,9 @@ colorscheme customtheme
     nmap <M-T>  <Plug>(easymotion-bd-T)
     nmap <M-a>  <Plug>(easymotion-jumptoanywhere)
 
-" ┏━━━━━━━━━━┓
-" ┃ NERDTree ┃
-" ┗━━━━━━━━━━┛
+" 	┏━━━━━━━━━━┓
+" 	┃ NERDTree ┃
+" 	┗━━━━━━━━━━┛
 	let NERDTreeShowBookmarks   = 1 			" Show the bookmarks table
 	let NERDTreeShowHidden      = 1 			" Show hidden files
 	let NERDTreeShowLineNumbers = 0 			" Hide line numbers
@@ -243,18 +267,18 @@ colorscheme customtheme
 	let NERDTreeWinPos          = 'left' 		" Panel opens on the left side
 	let NERDTreeWinSize         = 31        	" Set panel width to 31 columns
 
-" ┏━━━━━━━━┓
-" ┃ Tagbar ┃
-" ┗━━━━━━━━┛
+" 	┏━━━━━━━━┓
+" 	┃ Tagbar ┃
+" 	┗━━━━━━━━┛
 	let g:tagbar_autofocus   = 1 				" Focus the panel when opening
 	let g:tagbar_autoshowtag = 1				" Highlight the active tag
 	let g:tagbar_position = 'botright vertical' " Make vertical and place right
 	nmap <F8> :TagbarToggle<CR>
 	set tags=.tags
 
-" ┏━━━━━━━━┓
-" ┃ CtrlFS ┃
-" ┗━━━━━━━━┛
+" 	┏━━━━━━━━┓
+" 	┃ CtrlFS ┃
+" 	┗━━━━━━━━┛
 	let g:ctrlsf_backend = 'ack' 							" Use the ack tool as the backend
 	let g:ctrlsf_auto_close = { "normal":0, "compact":0 } 	" Auto close the results panel when opening a file
 	let g:ctrlsf_auto_focus = { "at":"start" }				" Immediately switch focus to the search window
@@ -281,9 +305,9 @@ colorscheme customtheme
 	" (Ctrl-F + t) Toggle CtrlSF window (Insert Mode)
 	inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
 
-" ┏━━━━━━━━━┓
-" ┃ FSwitch ┃
-" ┗━━━━━━━━━┛
+" 	┏━━━━━━━━━┓
+" 	┃ FSwitch ┃
+" 	┗━━━━━━━━━┛
 	au! BufEnter *.cpp let b:fswitchdst = 'hpp,h'
 	au! BufEnter *.h let b:fswitchdst = 'cpp,c'
 	nmap <silent> <Leader>of :FSHere<cr>
@@ -296,47 +320,44 @@ colorscheme customtheme
 	nmap <silent> <Leader>oK :FSAbove<cr>
 	nmap <silent> <Leader>oJ :FSBelow<cr>
 
-" ┏━━━━━━━━━━┓
-" ┃ Protodef ┃
-" ┗━━━━━━━━━━┛
+" 	┏━━━━━━━━━━┓
+" 	┃ Protodef ┃
+" 	┗━━━━━━━━━━┛
 	" Pull in prototypes
 	nmap <buffer> <silent> <leader> ,PP
 	" Pull in prototypes without namespace definition
 	nmap <buffer> <silent> <leader> ,PN
 
-" ┏━━━━━━━━━━━━━━━┓
-" ┃ NERDCommenter ┃
-" ┗━━━━━━━━━━━━━━━┛
+" 	┏━━━━━━━━━━━━━━━┓
+" 	┃ NERDCommenter ┃
+" 	┗━━━━━━━━━━━━━━━┛
 	let g:NERDCompactSexyComs 			= 0
 	let g:NERDSpaceDelims 				= 1
 	let g:NERDTrimTrailingWhitespace 	= 1
-" ┏━━━━━━━━━━┓
-" ┃ Peekaboo ┃
-" ┗━━━━━━━━━━┛
+" 	┏━━━━━━━━━━┓
+" 	┃ Peekaboo ┃
+" 	┗━━━━━━━━━━┛
 	let g:peekaboo_delay 	= 300
 	let g:peekaboo_compact 	= 1
-" ┏━━━━━━━━━┓
-" ┃ Markbar ┃
-" ┗━━━━━━━━━┛
+" 	┏━━━━━━━━━┓
+" 	┃ Markbar ┃
+" 	┗━━━━━━━━━┛
 	 nmap <Leader>m <Plug>ToggleMarkbar
-" ┏━━━━━━┓
-" ┃ Move ┃
-" ┗━━━━━━┛
-    let g:move_key_modifier = 'C'
-" ┏━━━━━━━┓
-" ┃ Align ┃
-" ┗━━━━━━━┛
+" 	┏━━━━━━━┓
+" 	┃ Align ┃
+" 	┗━━━━━━━┛
 	xmap ga <Plug>(EasyAlign)
 	nmap ga <Plug>(EasyAlign)
 
-" ┏━━━━━┓
-" ┃ FZF ┃
-" ┗━━━━━┛
+" 	┏━━━━━┓
+" 	┃ FZF ┃
+" 	┗━━━━━┛
 	nmap <leader>/ :FZF<CR>
+	nmap <leader>? :Rg<CR>
 
-" ┏━━━━━┓
-" ┃ Riv ┃
-" ┗━━━━━┛
+" 	┏━━━━━┓
+" 	┃ Riv ┃
+" 	┗━━━━━┛
 	let g:riv_disable_folding = 0
 	let g:riv_fold_level = 1
 	let g:riv_fold_auto_update = 0

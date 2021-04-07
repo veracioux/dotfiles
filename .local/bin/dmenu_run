@@ -68,7 +68,7 @@ case "$choice" in
     "Windows")
         ~/.local/lib/i3/i3-container-commander.py ;;
     "Pacman")
-        run_script pkg ;;
+        run_script pacman ;;
     "Color")
         run_script color ;;
     "Unicode")
@@ -84,7 +84,7 @@ case "$choice" in
         # If the command is an aliased GUI program, just run it
         for al in $gui_aliases; do
             if [ "$choice" = "$al" ]; then
-                fish -c "$choice"    # Only fish works here
+                fish -C "$choice"    # Only fish works here
                 exit
             fi
         done

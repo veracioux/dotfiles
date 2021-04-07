@@ -35,7 +35,8 @@ elif [ "$choice" = "$add" ]; then
     choice="$(echo '' | dmenu)"
     [ -n "$choice" ] && echo "$choice" >> ~/.local/snippets.txt
 else
-    match="$(sed -n "/$choice/p" ~/.local/snippets.txt | sed 's/\S*\s*//')"
-    [ -n "$match" ] && echo "$match" || echo "$choice"
+    match="$(sed -n "/^$choice\[\s\|$\]/p" ~/.local/snippets.txt | sed 's/\S*\s*//')"
+    print_match() { [ -n "$match" ] && echo "$match" || echo "$choice"; }
+    print_match | xsel -b
     : # TODO integrate with drys;
 fi

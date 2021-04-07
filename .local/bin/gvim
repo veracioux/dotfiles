@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
 
-alacritty --class Float,Alacritty -e fish -C "cd (dirname '$1'); vim $1"
+# Fake gvim which will just launch a terminal with neovim
+
+for arg in "$@"; do
+    # Hacky solution that will open files in real gvim when opened by xdg-open
+     if [ "$arg" = "-f" ]; then /usr/bin/gvim "$@"; exit; fi
+done
+
+alacritty --class Float,Alacritty -e fish -C "cd (dirname '$@'); vim $@"

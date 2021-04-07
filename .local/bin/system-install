@@ -22,6 +22,7 @@ useradd -m -G log,lock,wheel,tty,audio,lp,uucp,video,haris -s dash haris
 official etckeeper
 # Network
 official networkmanager iw wpa_suplicant proton
+official bluez bluez-libs bluez-tools bluez-utils
 # Low-level
 official xorg acpilight qtile i3-gaps picom
 unofficial tdm polybar

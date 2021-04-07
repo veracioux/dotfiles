@@ -82,6 +82,8 @@ set $resize_term  resize set width 710
   exec_always --no-startup-id \
     /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
 
+  exec --no-startup-id "autotiling"
+
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
 
@@ -124,11 +126,15 @@ set $resize_term  resize set width 710
   # Layout manipulation
   bindsym $mod+i            split h
   bindsym $mod+u            split v
+  bindsym $mod+period       layout toggle split
   bindsym $mod+s            layout stacking
   bindsym $mod+t            layout tabbed
   bindsym $mod+e            fullscreen toggle
   bindsym $mod+Shift+space  floating toggle
   bindsym $mod+b            bar mode toggle
+  # Mod+equal
+  bindsym $mod+Shift+0      exec i3_balance_workspace
+  bindsym $mod+apostrophe   exec "pgrep autotiling && pkill autotiling || autotiling"
 
   # Resize window
   bindsym $mod+plus               resize grow   width   20;
@@ -244,7 +250,7 @@ bar {
 # ┃ APPLICATIONS ┃
 # ┗━━━━━━━━━━━━━━┛
 
-  bindsym $mod+period       exec "pidof picom && pkill picom || picom"
+  bindsym $mod+comma        exec "pgrep picom && pkill picom || picom"
 
   bindsym $mod+Return       exec --no-startup-id "alacritty"
   bindsym $mod+Shift+Return exec --no-startup-id "alacritty --class           \
@@ -282,5 +288,9 @@ bar {
 
   # I use feh to display a QR code, so I make it floating
   for_window [class="feh"]                              floating enable
-  for_window [class="feh" floating]                     $resize1
   for_window [class="feh" floating]                     move position center
+
+  # Matplotlib plots
+  for_window [class="matplotlib"]                       floating enable
+  for_window [class="matplotlib" floating]              move position center
+  

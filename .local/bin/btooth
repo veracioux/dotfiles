@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+device="$1"
+
+cmds() {
+    echo "power on"
+    echo "pairable on"
+    echo "discoverable on"
+    echo "trust $device"
+    echo "connect $device"
+}
+
+systemctl is-active --quiet bluetooth || systemctl start bluetooth
+cmds | bluetoothctl
