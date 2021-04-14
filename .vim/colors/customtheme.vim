@@ -57,7 +57,7 @@ exe "hi Conceal         ".s:vmode."fg=".s:C."   ".s:vmode."bg=".s:x."           
 exe "hi Error           ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:r."   ".s:vmode."=bold        "
                                                                                                  
 exe "hi ColorColumn     ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:x."                           "
-exe "hi SignColumn                              ".s:vmode."bg=".s:x."                           "
+exe "hi SignColumn                              ".s:vmode."bg=".s:k."                           "
 exe "hi VertSplit       ".s:vmode."fg=".s:K."   ".s:vmode."bg=".s:K."                           "
                                                                                                  
 exe "hi Search          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:Y."   ".s:vmode."=bold        "
@@ -76,18 +76,22 @@ exe "hi Pmenu           ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."           
 exe "hi PmenuSel        ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:B."                           "
 exe "hi PmenuSbar       ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                           "
 
+" gitgutter
+exe "hi GitGutterAdd    ".s:vmode."fg=".s:G."                           ".s:vmode."=bold        "
+exe "hi GitGutterDelete ".s:vmode."fg=".s:R."                           ".s:vmode."=bold        "
+exe "hi GitGutterChange ".s:vmode."fg=".s:m."                           ".s:vmode."=bold        "
+
+" vim-easymotion
+exe "hi EasyMotionTarget    ".s:vmode."fg=".s:B."                       ".s:vmode."=bold        "
+
 " vim-which-key
 highlight default link WhichKey           _WhichKey
 highlight default link WhichKeySeperator  _WhichKeySeperator
 highlight default link WhichKeyGroup      _WhichKeyGroup    
 highlight default link WhichKeyDesc       _WhichKeyDesc     
 highlight default link WhichKeyFloating   _WhichKeyFloating
-exe "hi _WhichKey           ".s:vmode."fg=".s:y."   ".s:vmode."bg=".s:k."                       "
-exe "hi _WhichKeySeparator  ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                       "
-exe "hi _WhichKeyFloating   ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                       "
-exe "hi _WhichKeyGroup      ".s:vmode."fg=".s:m."   ".s:vmode."bg=".s:k."                       "
-exe "hi _WhichKeyDesc       ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                       "
-
-" vim-easymotion
-exe "hi EasyMotionTarget    ".s:vmode."fg=".s:B."                       ".s:vmode."=bold        "
-
+exe "hi _WhichKey          ".s:vmode."fg=".s:y."   ".s:vmode."bg=".s:k."                       "
+exe "hi _WhichKeySeparator ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                       "
+exe "hi _WhichKeyFloating  ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                       "
+exe "hi _WhichKeyGroup     ".s:vmode."fg=".s:m."   ".s:vmode."bg=".s:k."                       "
+exe "hi _WhichKeyDesc      ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                       "

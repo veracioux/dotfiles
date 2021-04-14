@@ -82,7 +82,7 @@ set $resize_term  resize set width 710
   exec_always --no-startup-id \
     /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
 
-  exec --no-startup-id "autotiling"
+  exec_always --no-startup-id "autotiling"
 
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
@@ -106,6 +106,7 @@ set $resize_term  resize set width 710
   bindsym $mod+Shift+7      exec --no-startup-id "dmenu_run"
   bindsym $mod+c            exec --no-startup-id "~/.local/lib/dmenu/cf.py"
   bindsym $mod+o            exec --no-startup-id "~/.local/lib/dmenu/open"
+  bindsym $mod+Ctrl+o       exec --no-startup-id "~/.local/lib/dmenu/open --new-window"
   bindsym $mod+Shift+p      exec --no-startup-id clipmenu
 
   # Change focus
@@ -181,12 +182,12 @@ set $resize_term  resize set width 710
 
   mode "run" {
   }
-  bindsym $mod+x exec i3-dmenu-desktop
 
   # Execution
-  bindsym $mod+Shift+r reload
-  bindsym $mod+Ctrl+r restart
-  bindsym $mod+Shift+q exit
+  bindsym $mod+Shift+r  reload
+  bindsym $mod+Ctrl+r   restart
+  bindsym $mod+Shift+q  exit
+  bindsym $mod+Ctrl+q   exec "~/.local/lib/dmenu/system"
 
 # ┏━━━━━━━━━━━━┓
 # ┃ WORKSPACES ┃
@@ -231,7 +232,7 @@ bar {
 
   status_command i3status | ~/.config/i3status/custom-script.py
   # Trays are bloat
-  tray_output none
+  #tray_output none
 
   i3bar_command i3bar --transparency
   colors {
@@ -294,3 +295,7 @@ bar {
   for_window [class="matplotlib"]                       floating enable
   for_window [class="matplotlib" floating]              move position center
   
+  # Miscellaneous
+  for_window [class="SpeedCrunch"]                      floating enable
+  for_window [class="SpeedCrunch" floating]             $resize1
+  for_window [class="SpeedCrunch" floating]             move position center

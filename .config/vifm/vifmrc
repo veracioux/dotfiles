@@ -379,7 +379,7 @@ nnoremap cc cw<c-u>
 nnoremap A cw
 
 " Open console in current directory
-nnoremap <space>t :!term & <cr>
+nnoremap <M-t> :!term & <cr>
 " Open current directory in nemo
 nnoremap <space>n :!nemo . & disown<cr>
 

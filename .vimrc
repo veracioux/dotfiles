@@ -68,6 +68,8 @@ call plug#begin('~/.vim/plugged')
 
 	" Syntax highlighting
 	Plug 'dag/vim-fish', { 'for': 'fish' }
+	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'i3' }
+	Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
 
 	" IDE 
 	Plug 'ycm-core/YouCompleteMe'
@@ -89,7 +91,6 @@ call plug#begin('~/.vim/plugged')
 	if has('nvim')
 		Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 	endif
-	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'i3' }
 
 call plug#end()
 
@@ -106,13 +107,18 @@ colorscheme customtheme
 	noremap		Y			y$
 	noremap		vv			V
 	noremap		V			v$
+
+	nmap		<C-n>		/{<>}<CR>va}
+	vmap		<C-n>		<esc>/{<>}<CR>va}
+	nmap		<C-p>		?{<>}<CR>va}
+	vmap		<C-p>		O<esc>?{<>}<CR>va}
+
 	map			<C-c>		"+y
-	noremap		<leader>t 	:silent !term<CR>
+	noremap		<M-t> 		:silent !term<CR>
     noremap     <M-j>   	<C-e>
     noremap     <M-k>   	<C-y>
 
-	noremap		<M-h>		<C-w>h
-	noremap		<M-l>		<C-w>l
+	nmap		<leader>w	:w<CR>
 
 	noremap 	<C-j>		<C-W>j
 	noremap 	<C-k>		<C-W>k
@@ -143,8 +149,8 @@ colorscheme customtheme
 
 	" Run the current buffer as a script
 	nmap <leader>r :w \| !./%<CR>
-	nmap <leader>m :make
-	nmap <leader>c :!cmake -S . -B _build && cmake --build _build<CR>
+	nmap <leader>m :make<CR>
+	nmap <leader>c :w \| !cmake -S . -B _build && cmake --build _build<CR>
 
 	" NERDTree
 	noremap		<leader>n :NERDTreeToggle<CR>
@@ -162,6 +168,8 @@ colorscheme customtheme
 " 	┏━━━━━┓
 " 	┃ YCM ┃
 " 	┗━━━━━┛
+" TODO Temporary
+
 	if !exists('g:ycm_semantic_triggers')
 		let g:ycm_semantic_triggers = {}
 	endif
@@ -182,7 +190,9 @@ colorscheme customtheme
 	let g:ycm_autoclose_preview_window_after_insertion = 1
 	let g:ycm_confirm_extra_conf = 0
 	let g:ycm_min_num_of_chars_for_completion = 1
-	let g:ycm_add_preview_to_completeopt = 1
+
+	" Otherwise completion is very very slow
+	set completeopt=menu,menuone
 
     " Make autocompletion work with css
     let g:ycm_semantic_triggers['css'] = [ 're!^', 're!^\s+', ': ' ]
@@ -212,7 +222,7 @@ colorscheme customtheme
 "   ┗━━━━━━┛
 	let g:jedi#popup_on_dot = 0
 	let g:jedi#auto_vim_configuration = 0
-	let g:jedi#show_call_signatures = 0
+	let g:jedi#show_call_signatures = 2
     let g:jedi#usages_command = ""
     let g:jedi#rename_command = "<leader>R"
 
@@ -253,9 +263,19 @@ colorscheme customtheme
     nmap <M-E>  <Plug>(easymotion-bd-E)
     nmap <M-f>  <Plug>(easymotion-bd-f)
     nmap <M-F>  <Plug>(easymotion-bd-F)
-    nmap <M-t>  <Plug>(easymotion-bd-t)
     nmap <M-T>  <Plug>(easymotion-bd-T)
     nmap <M-a>  <Plug>(easymotion-jumptoanywhere)
+
+	vmap \ 	    <Plug>(easymotion-prefix)
+    vmap <M-w>  <Plug>(easymotion-bd-w)
+    vmap <M-W>  <Plug>(easymotion-bd-W)
+    vmap <M-e>  <Plug>(easymotion-bd-e)
+    vmap <M-E>  <Plug>(easymotion-bd-E)
+    vmap <M-f>  <Plug>(easymotion-bd-f)
+    vmap <M-F>  <Plug>(easymotion-bd-F)
+    vmap <M-t>  <Plug>(easymotion-bd-t)
+    vmap <M-T>  <Plug>(easymotion-bd-T)
+    vmap <M-a>  <Plug>(easymotion-jumptoanywhere)
 
 " 	┏━━━━━━━━━━┓
 " 	┃ NERDTree ┃
@@ -339,10 +359,6 @@ colorscheme customtheme
 " 	┗━━━━━━━━━━┛
 	let g:peekaboo_delay 	= 300
 	let g:peekaboo_compact 	= 1
-" 	┏━━━━━━━━━┓
-" 	┃ Markbar ┃
-" 	┗━━━━━━━━━┛
-	 nmap <Leader>m <Plug>ToggleMarkbar
 " 	┏━━━━━━━┓
 " 	┃ Align ┃
 " 	┗━━━━━━━┛

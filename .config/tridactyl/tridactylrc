@@ -1,3 +1,10 @@
 command colo colorscheme
 
 colorscheme custom
+
+bind ,p open about:preferences
+bind ,P open about:profiles
+bind ,a open about:addons
+bind ,c open about:config
+bind ,d open about:downloads
+bind ,g tabopen google.com

@@ -66,17 +66,17 @@
 
 #nav-bar {
   min-height: 0px;
-  max-height: 14px;
+  max-height: 0px; /* was 14px */
 }
 
 #navigator-toolbox {
 	min-height: 0px;
-	max-height: 35px;
+	max-height: 22px; /* was 35px */
 }
 
 #downloads-button, #library-button, #sidebar-button, #PanelUI-button,
 #back-button, #forward-button, .webextension-browser-action {
-  scale: 45%;
+  scale: 0%; /* was 45% */
   transform: translateX(70px) translateY(-15px);
 }
 

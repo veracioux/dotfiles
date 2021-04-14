@@ -9,16 +9,16 @@
 
  :sgr-original-dictionary-detailed-word-class "light blue"
  :sgr-original-dictionary-detailed-explanation ["white" "bold"]
- :sgr-original-dictionary-detailed-example ["light red" "bold"]
+ :sgr-original-dictionary-detailed-example ["magenta" "bold"]
  :sgr-original-dictionary-detailed-synonyms "light blue"
  :sgr-original-dictionary-detailed-synonyms-item ["light blue" "bold"]
  :sgr-original-dictionary-synonyms "light blue"
  :sgr-original-dictionary-synonyms-word-class "light blue"
  :sgr-original-dictionary-synonyms-synonyms "light blue"
- :sgr-original-dictionary-synonyms-synonyms-item ["light yellow" "bold"]
+ :sgr-original-dictionary-synonyms-synonyms-item ["yellow" "bold"]
  :sgr-original-dictionary-examples "light blue"
- :sgr-original-dictionary-examples-example ["gray" "bold"]
- :sgr-original-dictionary-examples-original ["gray" "bold" "negative"]
+ :sgr-original-dictionary-examples-example ["light green" "bold"]
+ :sgr-original-dictionary-examples-original ["light cyan" "bold" "negative"]
  :sgr-original-dictionary-see-also "light blue"
  :sgr-original-dictionary-see-also-phrases "light blue"
  :sgr-original-dictionary-see-also-phrases-item ["light cyan" "bold" "underline"]

@@ -25,9 +25,9 @@ text/x-arduino=arduino-arduinoide.desktop
 text/x-bibtex=gvim.desktop;texstudio.desktop
 text/x-org=emacs.desktop
 text/x-script.python=gvim.desktop
-text/html=firefox.desktop
-x-scheme-handler/http=firefox.desktop;
-x-scheme-handler/https=firefox.desktop;
+text/html=librewolf.desktop
+x-scheme-handler/http=librewolf.desktop;
+x-scheme-handler/https=librewolf.desktop;
 text/x-shellscript=gvim.desktop
 text/doc=libreoffice-writer.desktop
 
@@ -50,3 +50,4 @@ application/x-gnome-saved-search=nemo.desktop
 application/x-dxf=librecad.desktop
 x-scheme-handler/viber=viber.desktop
 x-scheme-handler/eclipse+command=_usr_lib_papyrus_.desktop
+x-scheme-handler/msteams=teams.desktop

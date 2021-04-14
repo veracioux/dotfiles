@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+# Open a GUI window in the correct workspace
+# Depends: i3
+
+i3-msg exec "\"$*\""
+return $?

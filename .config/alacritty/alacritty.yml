@@ -13,17 +13,17 @@ window:
 font:
   # The normal (roman) font face to use.
   normal:
-    family: monospace
+    family: Ubuntu Mono
     style: Regular
 
   # The bold font face
   bold:
-    family: monospace
+    family: Ubuntu Mono
     style: Bold
 
   # The italic font face
   italic:
-    family: monospace
+    family: Ubuntu Mono
     style: Italic
 
   # Point size of the font

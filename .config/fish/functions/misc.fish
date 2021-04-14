@@ -7,10 +7,11 @@ function o; $argv & disown >/dev/null 2>/dev/null; end
 # Open a GUI app and disown
 function open; for file in $argv; o xdg-open "$file"; end; end
 
-# Run emacs and disown
-function emacs
-    emacsclient --create-frame $argv & disown >/dev/null 2>/dev/null
-end
+# Vim help
+function vh; vim -c ":h $argv | only"; end
+
+# Save the path of the argument to the clipboard
+function copypath; realpath $argv | xsel -b; end
 
 # When you ls, save the argument so you can quickly cd to that folder.
 # It's not fool-proof, but it works in most situations and it's safe.

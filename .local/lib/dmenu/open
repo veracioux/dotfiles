@@ -3,6 +3,9 @@
 # Open a website in Firefox
 # Suggests bookmarks managed by buku, but you can input any URL
 
+new_window=''
+[ "$1" = '--new-window' ] && new_window=--new-window
+
 edit=" Edit..."
 sync=" Sync..."
 
@@ -22,7 +25,7 @@ elif [ "$choice" = "$sync" ]; then
         buku --import ~/.mozilla/firefox/haris/bookmarks.html"
 else
     # Try to open it as a bookmark in firefox
-    url="$(buku --sreg "^$choice\$" -n 1 --format 10)"
+    url="$(buku --sreg "^$choice\$" -n 1 --format 10 | grep -v 'waiting for input')"
     [ -z "$url" ] && url="$choice"
-    firefox -P haris "$url"
+    echo "$url" | grep -q 'meet\.google' && /bin/firefox $new_window -P haris "$url" || firefox $new_window -P haris "$url"
 fi

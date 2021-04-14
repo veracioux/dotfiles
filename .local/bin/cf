@@ -17,6 +17,7 @@ case "$1" in
     vifm)           echo ~/.config/vifm/vifmrc ;;
     vifm-theme)     echo ~/.config/vifm/colors/customtheme.vifm ;;
     git)            echo ~/.gitconfig ;;
+    gh)             echo ~/.config/gh/config.yml ;;
     i3)             echo ~/.config/i3/config ;;
     i3status)       echo ~/.config/i3status/config ;;
     picom)          echo ~/.config/picom.conf ;;
@@ -27,4 +28,6 @@ case "$1" in
     schim)          echo ~/.config/schim/schim.conf ;;
     schim-volatile) echo ~/.config/schim/volatile.conf ;;
     dunst)          echo ~/.config/dunst/dunstrc ;;
+    drys)           echo ~/.config/drys/config ;;
+    mime)           echo ~/.config/mimeapps.list ;;
 esac

@@ -35,12 +35,13 @@ get_commands() {
     echo "Snippets"         # Text snippets
     echo "Mail"             # View mail in browser
     echo "Windows"          # Choose windows
-    echo "Color"            # Pick a color
-    echo "Config"           # Open documentation selection
     echo "Pacman"           # Package management
+    echo "Color"            # Pick a color
     echo "Unicode"          # Pick an icon
-    echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
     echo "Kill Process"     # Kill process
+    echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
+    echo "Config"           # Open documentation selection
+    echo "System"           # System actions
     echo "$aliases"
     echo "$gui_aliases"
     get_desktop_apps        # Programs extracted from *.desktop files
@@ -76,9 +77,11 @@ case "$choice" in
     "Kill Process")
         run_script pkill ;;
     "Fix Wifi")
-        rfkill block wifi && rfkill unblock wifi ;;
+        nmcli networking off; sleep 6; nmcli networking on ;;
     "Config")
         run_script cf.py ;;
+    "System")
+        run_script system ;;
     # The rest: aliases and regular commands
     *)
         # If the command is an aliased GUI program, just run it
