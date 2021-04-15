@@ -30,4 +30,5 @@ case "$1" in
     dunst)          echo ~/.config/dunst/dunstrc ;;
     drys)           echo ~/.config/drys/config ;;
     mime)           echo ~/.config/mimeapps.list ;;
+    links)          echo ~/.local/bin/links ;;
 esac

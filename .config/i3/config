@@ -106,7 +106,6 @@ set $resize_term  resize set width 710
   bindsym $mod+Shift+7      exec --no-startup-id "dmenu_run"
   bindsym $mod+c            exec --no-startup-id "~/.local/lib/dmenu/cf.py"
   bindsym $mod+o            exec --no-startup-id "~/.local/lib/dmenu/open"
-  bindsym $mod+Ctrl+o       exec --no-startup-id "~/.local/lib/dmenu/open --new-window"
   bindsym $mod+Shift+p      exec --no-startup-id clipmenu
 
   # Change focus

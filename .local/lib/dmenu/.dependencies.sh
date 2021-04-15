@@ -1,3 +1,7 @@
 #!/usr/bin/env sh
 
-paru -S buku clipmenu
+# Root menu (from dmenu_run)
+sudo pacman -S clipmenu
+# Open
+paru -S buku
+sudo pacman -S xdotool xorg-xprop
