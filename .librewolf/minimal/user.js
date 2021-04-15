@@ -1,0 +1,1 @@
+../../.mozilla/firefox/haris/user.js

@@ -6,6 +6,7 @@ user_pref("places.history.enabled", true);
 user_pref("privacy.clearOnShutdown.history", false);
 user_pref("browser.download.useDownloadDir", false);
 
+// LibreWolf: these should be commented out in /usr/lib/librewolf/librewolf.cfg
 user_pref("signon.storeSignons", true);
 user_pref("signon.rememberSignons", true);
 user_pref("signon.storeWhenAutocompleteOff", true);
