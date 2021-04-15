@@ -1,0 +1,35 @@
+set selection-clipboard clipboard
+
+set default-bg "#1e1e1e"
+set default-fg "#dddddd"
+
+set recolor             true
+set recolor-darkcolor   "#cccccc"
+set recolor-lightcolor  "#161616"
+set recolor-keephue     true
+
+set notification-fg     "#1e1e1e"
+set notification-bg     "#d098ff"
+set notification-error-fg     "#1e1e1e"
+set notification-error-bg     "#ff5555"
+set notification-warning-fg     "#1e1e1e"
+set notification-warning-bg     "#f2b374"
+
+set statusbar-fg "#dddddd"
+set statusbar-bg "#161616"
+
+set inputbar-fg "#dddddd"
+set inputbar-bg "#1e1e1e"
+
+set completion-fg           "#dddddd"
+set completion-bg           "#1e1e1e"
+set completion-group-fg     "#dddddd"
+set completion-group-bg     "#161616"
+set completion-highlight-bg "#f2b374"
+set completion-highlight-fg "#1e1e1e"
+
+set index-fg "#dddddd"
+set index-bg "#1e1e1e"
+set index-active-fg "#1e1e1e"
+set index-active-bg "#99a3ff"
+

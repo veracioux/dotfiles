@@ -22,8 +22,10 @@ case "$1" in
     i3status)       echo ~/.config/i3status/config ;;
     picom)          echo ~/.config/picom.conf ;;
     dmenu)          echo ~/.local/bin/dmenu_run ;;
-    ff)             echo ~/.mozilla/firefox/haris/chrome/userChrome.css ;;
-    ff-min)         echo ~/.mozilla/firefox/minimal/chrome/userChrome.css ;;
+    firefox)        echo ~/.mozilla/firefox/haris/user.js ;;
+    ff-chrome)      echo ~/.mozilla/firefox/haris/chrome/userChrome.css ;;
+    librewolf)      echo ~/.mozilla/firefox/haris/user.js ;;
+    lw-chrome)      echo ~/.librewolf/haris/user.js ;;
     tridactyl)      echo ~/.config/tridactyl/tridactylrc ;;
     schim)          echo ~/.config/schim/schim.conf ;;
     schim-volatile) echo ~/.config/schim/volatile.conf ;;
@@ -31,4 +33,5 @@ case "$1" in
     drys)           echo ~/.config/drys/config ;;
     mime)           echo ~/.config/mimeapps.list ;;
     links)          echo ~/.local/bin/links ;;
+    zathura)        echo ~/.config/zathura/zathurarc ;;
 esac

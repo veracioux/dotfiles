@@ -3,11 +3,14 @@
 # Open a website in Firefox
 # Suggests bookmarks managed by buku, but you can input any URL
 
+browser='librewolf'
+where='--new-window'
 # If a librewolf window is currently active, open the link in the active window
-if xprop -id "$(xdotool getactivewindow)" | grep -qi 'librewolf'; then
-    new_window=''
-else
-    new_window=--new-window
+if xprop -id "$(xdotool getactivewindow)" | grep -qi 'firefox'; then
+    browser='/bin/firefox'
+    where='--new-tab'
+elif xprop -id "$(xdotool getactivewindow)" | grep -qi 'librewolf'; then 
+    where='--new-tab'
 fi
 
 edit=" Edit..."
@@ -31,5 +34,7 @@ else
     # Try to open it as a bookmark in firefox
     url="$(buku --sreg "^$choice\$" -n 1 --format 10 | grep -v 'waiting for input')"
     [ -z "$url" ] && url="$choice"
-    echo "$url" | grep -q 'meet\.google' && /bin/firefox $new_window -P haris "$url" || firefox $new_window -P haris "$url"
+    # All google links shall be opened in firefox
+    echo "$url" | grep -q 'google' && browser=/bin/firefox
+    $browser $where -P haris "$url"
 fi

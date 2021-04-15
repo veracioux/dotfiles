@@ -1,10 +1,14 @@
 #!/usr/bin/env sh
 
+browser='librewolf'
+where='--new-window'
 # If a librewolf window is currently active, open the link in the active window
-if xprop -id "$(xdotool getactivewindow)" | grep -qi 'librewolf'; then
-    new_window=''
-else
-    new_window=--new-window
+if xprop -id "$(xdotool getactivewindow)" | grep -qi 'firefox'; then
+    browser='/bin/firefox'
+    where='--new-tab'
+elif not xprop -id "$(xdotool getactivewindow)" | grep -qi 'librewolf'; then
+    where='--new-tab'
 fi
-choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris $new_window \
+
+choice="$(echo -n '' | dmenu -p 'Search:')" && $browser -P haris $where \
     "$(printf "$(links | grep duckduckgo)" "$choice")"

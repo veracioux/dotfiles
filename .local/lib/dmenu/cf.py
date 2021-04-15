@@ -16,8 +16,7 @@ entries = ' Edit...\n' +                               \
           'dmenu ' + '\n dmenu '.join(dmenu_scripts)
 
 # Run dmenu
-n = entries.count('\n')
-choice = run(['dmenu', '-l', str(n),  '-p', 'Config:'],
+choice = run(['dmenu', '-l', '20',  '-p', 'Config:'],
              input=entries, encoding='utf-8', stdout=PIPE).stdout
 
 if not choice:
