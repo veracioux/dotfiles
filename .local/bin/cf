@@ -23,9 +23,8 @@ case "$1" in
     picom)          echo ~/.config/picom.conf ;;
     dmenu)          echo ~/.local/bin/dmenu_run ;;
     firefox)        echo ~/.mozilla/firefox/haris/user.js ;;
-    ff-chrome)      echo ~/.mozilla/firefox/haris/chrome/userChrome.css ;;
-    librewolf)      echo ~/.mozilla/firefox/haris/user.js ;;
-    lw-chrome)      echo ~/.librewolf/haris/user.js ;;
+    librewolf)      echo ~/.librewolf/haris/user.js ;;
+    lw-chrome)      echo ~/.librewolf/haris/chrome/userChrome.css ;;
     tridactyl)      echo ~/.config/tridactyl/tridactylrc ;;
     schim)          echo ~/.config/schim/schim.conf ;;
     schim-volatile) echo ~/.config/schim/volatile.conf ;;
