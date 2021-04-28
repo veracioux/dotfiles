@@ -19,6 +19,12 @@
 (define-key evil-normal-state-map (kbd "M-j") 'evil-scroll-line-down)
 (define-key evil-insert-state-map (kbd "M-j") 'evil-scroll-line-down)
 
+;; Move windows
+(define-key evil-insert-state-map (kbd "C-j") 'evil-window-down)
+(define-key evil-insert-state-map (kbd "C-k") 'evil-window-up)
+(define-key evil-insert-state-map (kbd "C-h") 'evil-window-left)
+(define-key evil-insert-state-map (kbd "C-l") 'evil-window-right)
+
 ;; Toggle emphasis markers
 (defun org-toggle-emphasis ()
   "Toggle hiding/showing of org emphasize markers."

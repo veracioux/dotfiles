@@ -3,20 +3,18 @@ text/x-tex=texstudio.desktop;
 text/plain=gvim.desktop;
 text/x-bibtex=vimiv.desktop;sxiv.desktop;
 text/markdown=atom.desktop;
-
 image/svg+xml=inkscape.desktop;org.inkscape.Inkscape.desktop;
 image/vnd.dwg=inkscape.desktop;
 image/vnd.dxf=inkscape.desktop;org.inkscape.Inkscape.desktop;
 image/jpeg=vimiv.desktop;sxiv.desktop;
 image/png=vimiv.desktop;sxiv.desktop;
 image/tiff=vimiv.desktop;sxiv.desktop;
-
 inode/directory=nemo.desktop;
 x-scheme-handler/trash=nemo.desktop;
-
 application/pdf=zathura.desktop;
 application/x-bibtex=gvim.desktop;texstudio.desktop;
 application/x-schim=schim.desktop
+application/msword=libreoffice-writer.desktop;org.pwmt.zathura.desktop;
 
 [Default Applications]
 text/plain=gvim.desktop;texstudio.desktop
@@ -30,20 +28,17 @@ x-scheme-handler/http=librewolf.desktop;
 x-scheme-handler/https=librewolf.desktop;
 text/x-shellscript=gvim.desktop
 text/doc=libreoffice-writer.desktop
-
 image/vnd.dwg=inkscape.desktop
 image/vnd.dxf=org.inkscape.Inkscape.desktop
 image/jpeg=vimiv.desktop;sxiv.desktop
 image/png=vimiv.desktop;sxiv.desktop
 image/tiff=vimiv.desktop;sxiv.desktop
 image/svg+xml=vimiv.desktop;sxiv.desktop
-
 inode/directory=nemo.desktop
 x-scheme-handler/lbry=lbry.desktop
 x-directory/normal=nemo.desktop
 x-directory/gnome-default-handler=nemo.desktop
 x-scheme-handler/file=nemo.desktop
-
 application/octet-stream=gvim.desktop
 application/pdf=org.pwmt.zathura.desktop
 application/x-gnome-saved-search=nemo.desktop

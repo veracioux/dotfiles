@@ -6,14 +6,24 @@ extract_aliases() {
     sed "s_.* \(.*\)='.*'.*_\1_" $@
 }
 
-get_desktop_apps() {
+pull_desktop_apps() {
+    # Print out desktop apps by reading *.desktop files and also cache them
     sed -n -e '/^Exec=/p'                       \
         /usr/share/applications/*.desktop       \
         ~/.local/share/applications/*.desktop   |
         sed 's/Exec=\(\S*\).*/\1/'              |
     while read line; do
         basename $line
-    done
+    done                                        |
+    sort | uniq | tee "$cache_file"
+}
+get_desktop_apps() {
+    cache_file=~/.cache/.desktop-apps.txt
+    age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
+    # Refresh the cache only if the file is older than a specified age (seconds)
+    [ ! -f "$cache_file" ] || [ $age -gt 36000 ]    \
+        && pull_desktop_apps                        \
+        || cat "$cache_file"
 }
 get_aliases() {
     extract_aliases ~/.alias ~/.alias-tmp
@@ -42,6 +52,7 @@ get_commands() {
     echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
     echo "Config"           # Open documentation selection
     echo "System"           # System actions
+    echo "Update cache"     # Update desktop app cache
     echo "$aliases"
     echo "$gui_aliases"
     get_desktop_apps        # Programs extracted from *.desktop files
@@ -59,7 +70,7 @@ case "$choice" in
         run_script open ;;
     "Search")
         choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
-        ;;
+        ;; 
     "Clipboard")
         clipmenu ;;
     "Snippets")
@@ -77,11 +88,14 @@ case "$choice" in
     "Kill Process")
         run_script pkill ;;
     "Fix Wifi")
-        nmcli networking off; sleep 6; nmcli networking on ;;
+        rfkill block wifi && rfkill unblock wifi ;;
+        #nmcli networking off; sleep 6; nmcli networking on ;;
     "Config")
         run_script cf.py ;;
     "System")
         run_script system ;;
+    "Update cache")
+        rm ~/.cache/.desktop-apps.txt ;;
     # The rest: aliases and regular commands
     *)
         # If the command is an aliased GUI program, just run it

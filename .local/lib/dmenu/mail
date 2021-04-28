@@ -11,5 +11,5 @@ choice="$(echo "$entries" | dmenu -p mail -l $(echo "$entries" | wc -l))"
 if [ "$choice" = "$edit" ]; then
     gvim "$0"
 elif [ "${choice//*@/}" = 'gmail.com' ] || [ "${choice//*@/}" = 'etf.unsa.ba' ]; then
-    firefox -P haris "mail.google.com/mail/?authuser=$choice"
+    auto-browser -P haris "mail.google.com/mail/?authuser=$choice"
 fi

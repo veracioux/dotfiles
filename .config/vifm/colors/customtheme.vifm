@@ -12,3 +12,4 @@ hi CmdLine		cterm=none			ctermfg=15			ctermbg=0
 "
 " Entry types
 hi Directory	cterm=bold			ctermfg=5			ctermbg=0
+hi Selected     cterm=bold          ctermfg=0           ctermbg=3

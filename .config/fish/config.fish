@@ -13,6 +13,11 @@ source ~/.config/fish/tmp.fish
 source ~/.config/fish/functions/misc.fish
 source ~/.config/fish/completions/misc.fish
 
+# z.lua
+set _ZL_CMD z
+lua /usr/share/z.lua/z.lua --init fish | source
+set -gx _ZL_CD cd
+
 # Set default pager to vim
 set -gx MANPAGER 'nvim -c MANPAGER -'
 set -gx MANWIDTH 80

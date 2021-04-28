@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# auto-browser
+sudo pacman -S xdotool xorg-xprop

@@ -51,6 +51,7 @@ def add_custom(char):
 add_custom('├ |-')
 add_custom('└ |_')
 add_custom('─ --')
+add_custom('┃┗━┛┏━┓ ||')
 
 # Form entry lists as multi-line strings
 char_entries = '\n'.join(char_entries)
@@ -84,4 +85,4 @@ elif choice[2:] == 'Get code...':
     if choice:
         copy_to_clipboard(str(ord(choice[0])))
 elif choice:
-    copy_to_clipboard(choice[0])
+    copy_to_clipboard(choice.split(' ')[0])

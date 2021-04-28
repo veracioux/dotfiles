@@ -365,6 +365,7 @@ static char *gnus-pointer[] = {
    '("#FFEE58" "#C5E1A5" "#80DEEA" "#64B5F6" "#E1BEE7" "#FFCC80"))
  '(highlight-symbol-foreground-color "#E0E0E0")
  '(highlight-tail-colors '(("#ed0547ad8099" . 0) ("#424242" . 100)))
+ '(inferior-octave-startup-args '("-i" "--line-editing")) ;; Make plot windows responsive
  '(nrepl-message-colors
    '("#336c6c" "#205070" "#0f2050" "#806080" "#401440" "#6c1f1c" "#6b400c" "#23733c"))
  '(org-preview-latex-process-alist

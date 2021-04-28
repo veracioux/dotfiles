@@ -8,6 +8,7 @@ abbr tdm 'tdm --disable-xrunning-check'
 abbr g 'git'
 abbr v 'vim'
 abbr s 'sudo'
+
 # Pacman commands
 abbr p   'pacman'
 abbr pqi 'pacman -Qi'

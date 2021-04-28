@@ -9,6 +9,8 @@
 	s = status
 	a = add
 	c = commit -s
+	d = diff
+	ds = diff --staged
 	l = ldog --pretty=format:'%C(magenta bold)%h%Creset					\
 		-%C(auto)%d%Creset %s' 						                    \
 		--abbrev-commit --date=short
@@ -59,4 +61,3 @@
 	head 			= brightblue bold
 	branch 			= brightmagenta bold
 	remoteBranch 	= brightgreen bold
-

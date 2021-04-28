@@ -4,6 +4,21 @@ function ndir;  mkdir -p "$argv"; cd "$argv"; end
 # Run a command and disown
 function o; $argv & disown >/dev/null 2>/dev/null; end
 
+# Run z through fzf
+function a
+    z -l $argv | read -z options
+    set -l count (echo "$options" | wc -l)
+    if [ "$count" = 1 ]
+        set dest "$options"
+    else if [ "$count" -gt 1 ]
+        set dest (echo "$options" | sed '/^$/d' | tac | fzf) 
+    else
+        return
+    end
+
+    cd (echo "$dest" | sed -E -e '/^$/d' -e 's/^\S+\s+//')
+end
+
 # Open a GUI app and disown
 function open; for file in $argv; o xdg-open "$file"; end; end
 

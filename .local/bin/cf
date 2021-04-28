@@ -34,4 +34,7 @@ case "$1" in
     mime)           echo ~/.config/mimeapps.list ;;
     links)          echo ~/.local/bin/links ;;
     zathura)        echo ~/.config/zathura/zathurarc ;;
+    emacs)          echo ~/.emacs.d/haris-config.el ;;
+    spacemacs)      echo ~/.spacemacs ;;
+    cron)           echo ~/.crontab ;;
 esac

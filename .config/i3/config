@@ -5,9 +5,11 @@
 # ┗━━━━━━━━━━━━━┛
 
 set $mod          Mod4
-set $resize0      resize set width 400 height   300
-set $resize1      resize set width 710 height   600
-set $resize2      resize set width 900 height   700
+#set $resize0      resize set width 400 height   300
+set $resizeW0     resize set width 20
+set $resizeH0     resize set height 20
+set $resize1      resize set width 710  height   600
+set $resize2      resize set width 900  height   700
 set $resize3      resize set width 1100 height  800
 set $resize4      resize set width 1400 height  900
 set $resize_term  resize set width 710
@@ -95,7 +97,8 @@ set $resize_term  resize set width 710
   floating_modifier $mod
 
   # kill focused window
-  bindsym $mod+w kill
+  bindsym $mod+w      kill
+  bindsym $mod+Ctrl+w exec xdotool getactivewindow windowkill
 
   # Navigation
   bindsym $mod+m            scratchpad show
@@ -161,8 +164,8 @@ set $resize_term  resize set width 710
     bindsym t           $resize_term; mode "default"
 
     # Some standard sizes
-    bindsym 0           $resize0; move position center
-    bindsym Shift+0     $resize0
+    bindsym 0           $resizeW0
+    bindsym Shift+0     $resizeH0
     bindsym 1           $resize1; move position center
     bindsym Shift+1     $resize1
     bindsym 2           $resize2; move position center
@@ -230,8 +233,8 @@ bar {
   strip_workspace_numbers yes
 
   status_command i3status | ~/.config/i3status/custom-script.py
-  # Trays are bloat
-  #tray_output none
+  # Trays are bloat, but they are sometimes necessary
+  tray_output none
 
   i3bar_command i3bar --transparency
   colors {
@@ -260,7 +263,7 @@ bar {
   bindsym $mod+Shift+t      exec --no-startup-id "alacritty                   \
                               --class Float,Alacritty -e trans -shell"
 
-  bindsym $mod+Shift+f      exec "firefox -P haris"
+  bindsym $mod+Shift+f      exec "librewolf -P haris"
   bindsym $mod+Ctrl+f       exec --no-startup-id "~/.local/lib/dmenu/search"
   bindsym $mod+Shift+s      exec --no-startup-id "flameshot && flameshot gui"
   bindsym $mod+Shift+Print  exec --no-startup-id "flameshot && flameshot config"
@@ -293,6 +296,10 @@ bar {
   # Matplotlib plots
   for_window [class="matplotlib"]                       floating enable
   for_window [class="matplotlib" floating]              move position center
+
+  # Octave plots
+  for_window [class="GNU Octave"]                       floating enable
+  for_window [class="GNU Octave" floating]              move position center
   
   # Miscellaneous
   for_window [class="SpeedCrunch"]                      floating enable
