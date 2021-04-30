@@ -1,5 +1,6 @@
 alias src_fish='source ~/.config/fish/config.fish'
 alias emacs 'o emacsclient --create-frame'
+alias octave 'OCTAVE_BASIC=true command octave'
 
 abbr rm 'rm -i'
 abbr mv 'mv -i'

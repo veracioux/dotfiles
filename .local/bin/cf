@@ -36,4 +36,5 @@ case "$1" in
     emacs)          echo ~/.emacs.d/haris-config.el ;;
     spacemacs)      echo ~/.spacemacs ;;
     cron)           echo ~/.crontab ;;
+    octave)         echo ~/.octaverc ;;
 esac

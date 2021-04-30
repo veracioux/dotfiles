@@ -1,3 +1,5 @@
+" vim: foldmethod=marker
+" {{{
 set shell=/usr/bin/fish
 syntax on
 set number relativenumber
@@ -45,10 +47,11 @@ au BufNewFile,BufRead *.py set foldmethod=indent
 au BufNewFile,BufRead *.fish set ft=fish
 au BufNewFile,BufRead PKGBUILD set ft=sh
 au BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
-
+" }}}
 " 	┏━━━━━━━━━┓
 " 	┃ Plugins ┃
 " 	┗━━━━━━━━━┛
+" 	{{{
 call plug#begin('~/.vim/plugged')
 
 	Plug 'vifm/vifm.vim'
@@ -70,6 +73,8 @@ call plug#begin('~/.vim/plugged')
 	Plug 'dag/vim-fish', { 'for': 'fish' }
 	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'i3' }
 	Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
+
+	Plug 'itspriddle/vim-shellcheck'
 
 	" IDE 
 	Plug 'ycm-core/YouCompleteMe'
@@ -96,12 +101,15 @@ call plug#end()
 
 filetype plugin indent on		"required
 
+" }}}
+
 " Set theme
 colorscheme customtheme
 
 " 	┏━━━━━━━━━━━━━━━━━┓
 " 	┃ Custom mappings ┃
 " 	┗━━━━━━━━━━━━━━━━━┛
+" 	{{{
 	let mapleader = "\<Space>"
 
 	noremap		Y			y$
@@ -164,11 +172,11 @@ colorscheme customtheme
 		endif
 	endfunction
 	noremap		<M-m> :call ToggleMenubar()<CR>
-
+"	}}}
 " 	┏━━━━━┓
 " 	┃ YCM ┃
 " 	┗━━━━━┛
-" TODO Temporary
+" 	{{{
 
 	if !exists('g:ycm_semantic_triggers')
 		let g:ycm_semantic_triggers = {}
@@ -200,35 +208,37 @@ colorscheme customtheme
 
 	" Alt+Tab inserts a tab character
 	inoremap <M-tab> <tab>
-
+" 	}}}
 " 	┏━━━━━━━━━━━┓
 " 	┃ UltiSnips ┃
 " 	┗━━━━━━━━━━━┛
+" 	{{{
 	let g:UltiSnipsExpandTrigger = "<tab>"
 	let g:UltiSnipsJumpForwardTrigger = "<tab>"
 	let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 	let g:UltiSnipsSnippetsDir = "~/.vim/snips"
 	let g:UltiSnipsSnippetDirectories = [ '/home/haris/.vim/snips', '/home/haris/templates/latex']
-
+" 	}}}
 " 	┏━━━━━━━━━━┓
 " 	┃ Supertab ┃
 " 	┗━━━━━━━━━━┛
 	let g:SuperTabDefaultCompletionType    = '<tab>'
 	let g:SuperTabCrMapping                = 0
-
 "   ┏━━━━━━┓
 "   ┃ Jedi ┃
 "   ┗━━━━━━┛
+"   {{{
 	let g:jedi#popup_on_dot = 0
 	let g:jedi#auto_vim_configuration = 0
 	let g:jedi#show_call_signatures = 2
     let g:jedi#usages_command = ""
     let g:jedi#rename_command = "<leader>R"
-
+"	}}}
 " 	┏━━━━━━━━┓
 " 	┃ Vimtex ┃
 " 	┗━━━━━━━━┛
+" 	{{{
 	let g:vimtex_complete_enabled = 1
 	let g:vimtex_complete_close_braces = 1
     let g:vimtex_fold_enabled = 1
@@ -252,10 +262,11 @@ colorscheme customtheme
 				\}
 	nmap ysc <plug>(vimtex-cmd-create)
 	vmap ysc <plug>(vimtex-cmd-create)
-
+" 	}}}
 " 	┏━━━━━━━━━━━━┓
 " 	┃ EasyMotion ┃
 " 	┗━━━━━━━━━━━━┛
+" 	{{{
 	nmap \ 	    <Plug>(easymotion-prefix)
     nmap <M-w>  <Plug>(easymotion-bd-w)
     nmap <M-W>  <Plug>(easymotion-bd-W)
@@ -276,29 +287,32 @@ colorscheme customtheme
     vmap <M-t>  <Plug>(easymotion-bd-t)
     vmap <M-T>  <Plug>(easymotion-bd-T)
     vmap <M-a>  <Plug>(easymotion-jumptoanywhere)
-
+" 	}}}
 " 	┏━━━━━━━━━━┓
 " 	┃ NERDTree ┃
 " 	┗━━━━━━━━━━┛
+" 	{{{
 	let NERDTreeShowBookmarks   = 1 			" Show the bookmarks table
 	let NERDTreeShowHidden      = 1 			" Show hidden files
 	let NERDTreeShowLineNumbers = 0 			" Hide line numbers
 	let NERDTreeMinimalMenu     = 1 			" Use the minimal menu (m)
 	let NERDTreeWinPos          = 'left' 		" Panel opens on the left side
 	let NERDTreeWinSize         = 31        	" Set panel width to 31 columns
-
+" 	}}}
 " 	┏━━━━━━━━┓
 " 	┃ Tagbar ┃
 " 	┗━━━━━━━━┛
+" 	{{{
 	let g:tagbar_autofocus   = 1 				" Focus the panel when opening
 	let g:tagbar_autoshowtag = 1				" Highlight the active tag
 	let g:tagbar_position = 'botright vertical' " Make vertical and place right
 	nmap <F8> :TagbarToggle<CR>
 	set tags=.tags
-
+" 	}}}
 " 	┏━━━━━━━━┓
 " 	┃ CtrlFS ┃
 " 	┗━━━━━━━━┛
+" 	{{{
 	let g:ctrlsf_backend = 'ack' 							" Use the ack tool as the backend
 	let g:ctrlsf_auto_close = { "normal":0, "compact":0 } 	" Auto close the results panel when opening a file
 	let g:ctrlsf_auto_focus = { "at":"start" }				" Immediately switch focus to the search window
@@ -324,10 +338,11 @@ colorscheme customtheme
 	nnoremap <C-F>t :CtrlSFToggle<CR>
 	" (Ctrl-F + t) Toggle CtrlSF window (Insert Mode)
 	inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
-
+" 	}}}
 " 	┏━━━━━━━━━┓
 " 	┃ FSwitch ┃
 " 	┗━━━━━━━━━┛
+" 	{{{
 	au! BufEnter *.cpp let b:fswitchdst = 'hpp,h'
 	au! BufEnter *.h let b:fswitchdst = 'cpp,c'
 	nmap <silent> <Leader>of :FSHere<cr>
@@ -339,21 +354,24 @@ colorscheme customtheme
 	nmap <silent> <Leader>oH :FSLeft<cr>
 	nmap <silent> <Leader>oK :FSAbove<cr>
 	nmap <silent> <Leader>oJ :FSBelow<cr>
-
+" 	}}}
 " 	┏━━━━━━━━━━┓
 " 	┃ Protodef ┃
 " 	┗━━━━━━━━━━┛
+" 	{{{
 	" Pull in prototypes
 	nmap <buffer> <silent> <leader> ,PP
 	" Pull in prototypes without namespace definition
 	nmap <buffer> <silent> <leader> ,PN
-
+" 	}}}
 " 	┏━━━━━━━━━━━━━━━┓
 " 	┃ NERDCommenter ┃
 " 	┗━━━━━━━━━━━━━━━┛
+" 	{{{
 	let g:NERDCompactSexyComs 			= 0
 	let g:NERDSpaceDelims 				= 1
 	let g:NERDTrimTrailingWhitespace 	= 1
+" 	}}}
 " 	┏━━━━━━━━━━┓
 " 	┃ Peekaboo ┃
 " 	┗━━━━━━━━━━┛
@@ -374,8 +392,10 @@ colorscheme customtheme
 " 	┏━━━━━┓
 " 	┃ Riv ┃
 " 	┗━━━━━┛
+" 	{{{
 	let g:riv_disable_folding = 0
 	let g:riv_fold_level = 1
 	let g:riv_fold_auto_update = 0
 	let g:riv_auto_fold_force = 0
 	let g:riv_auto_format_table = 0
+" 	}}}

@@ -7,7 +7,7 @@ function o; $argv & disown >/dev/null 2>/dev/null; end
 # Run z through fzf
 function a
     z -l $argv | read -z options
-    set -l count (echo "$options" | wc -l)
+    set -l count (echo "$options" | sed '/^$/d' | wc -l)
     if [ "$count" = 1 ]
         set dest "$options"
     else if [ "$count" -gt 1 ]

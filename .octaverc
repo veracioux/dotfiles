@@ -1,5 +1,4 @@
 
-
 % So I don't accidentally clear the workspace
 function clear()
 	system('fish -c clear');
@@ -15,20 +14,19 @@ end
 setenv PYTHON python2
 
 % Packages
-pkg load symbolic
-pkg load control
-pkg load signal
-pkg load communications
-pkg load miscellaneous
-pkg load io
-pkg load struct
-pkg load statistics
-pkg load optim
-pkg load image
+if ~strcmp(getenv('OCTAVE_BASIC'), 'true')
+	pkg load symbolic
+	pkg load control
+	pkg load signal
+	pkg load communications
+	pkg load miscellaneous
+	pkg load io
+	pkg load struct
+	pkg load statistics
+	pkg load optim
+	pkg load image
+end
 
 octave_core_file_name('.octave-workspace')
-edit mode sync
-edit home .
-EDITOR('vim > /dev/tty 2>&1 < /dev/tty %s')
 
 clear
