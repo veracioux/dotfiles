@@ -47,7 +47,9 @@ au BufNewFile,BufRead *.py set foldmethod=indent
 au BufNewFile,BufRead *.fish set ft=fish
 au BufNewFile,BufRead PKGBUILD set ft=sh
 au BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
+au FileType cpp set keywordprg=cppman
 " }}}
+
 " 	┏━━━━━━━━━┓
 " 	┃ Plugins ┃
 " 	┗━━━━━━━━━┛
@@ -91,6 +93,7 @@ call plug#begin('~/.vim/plugged')
 	Plug 'airblade/vim-gitgutter'
 	" Plug 'python-mode/python-mode'
 	Plug 'davidhalter/jedi-vim', { 'for': 'python' }	" Python autocompletion
+	" Plug 'vim-scripts/OmniCppComplete', { 'for': 'cpp' }
 
 	" Misc
 	if has('nvim')
@@ -116,10 +119,10 @@ colorscheme customtheme
 	noremap		vv			V
 	noremap		V			v$
 
-	nmap		<C-n>		/{<>}<CR>va}
-	vmap		<C-n>		<esc>/{<>}<CR>va}
-	nmap		<C-p>		?{<>}<CR>va}
-	vmap		<C-p>		O<esc>?{<>}<CR>va}
+	nmap		<C-n>		/{<.*>}<CR>va}
+	vmap		<C-n>		<esc>/{<.*>}<CR>va}
+	nmap		<C-p>		?{<.*>}<CR>va}
+	vmap		<C-p>		O<esc>?{<.*>}<CR>va}
 
 	map			<C-c>		"+y
 	noremap		<M-t> 		:silent !term<CR>

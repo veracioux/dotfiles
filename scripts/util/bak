@@ -17,7 +17,7 @@ do
 	esac
 done
 
-for file in $@ ; do
+for file in "$@"; do
 
 	if [ "${file:0:1}" != '-' ] &&
 		{ [ -n "$a" ] || [ "$file" = "${file/.bak/}" ]; };
