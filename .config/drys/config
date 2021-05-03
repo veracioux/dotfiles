@@ -1,0 +1,6 @@
+[general]
+default_repo = ~/.local/share/drys/repo
+editor = vim
+
+[ls]
+command = lsd --icon=always --color=always
