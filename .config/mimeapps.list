@@ -15,6 +15,7 @@ application/pdf=zathura.desktop;
 application/x-bibtex=gvim.desktop;texstudio.desktop;
 application/x-schim=schim.desktop
 application/msword=libreoffice-writer.desktop;org.pwmt.zathura.desktop;
+application/octet-stream=gvim.desktop;
 
 [Default Applications]
 text/plain=gvim.desktop;texstudio.desktop

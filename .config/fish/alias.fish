@@ -31,7 +31,7 @@ abbr copy 'xsel -b'
 abbr paste 'xsel -b -o'
 
 abbr yt 'ytfzf -t -s'
-abbr d  'drys'
+abbr t  'tem'
 abbr vf 'vim (fzf)'
 abbr fm 'vifm'
 abbr c  'conf'

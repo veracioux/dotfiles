@@ -8,4 +8,5 @@ feh --bg-fill ~/.wallpaper                  # Set wallpaper
 dunst &                                     # Notification daemon
 clipmenud &                                 # Daemon for dmenu clipboard
 picom &                                     # Compositor
+redshift &                                  # Blue light filter
 i3                                          # Window manager

@@ -29,7 +29,7 @@ case "$1" in
     schim)          echo ~/.config/schim/schim.conf ;;
     schim-volatile) echo ~/.config/schim/volatile.conf ;;
     dunst)          echo ~/.config/dunst/dunstrc ;;
-    drys)           echo ~/.config/drys/config ;;
+    tem)            echo ~/.config/tem/config ;;
     mime)           echo ~/.config/mimeapps.list ;;
     links)          echo ~/.local/bin/links ;;
     zathura)        echo ~/.config/zathura/zathurarc ;;

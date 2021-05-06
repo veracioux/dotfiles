@@ -47,7 +47,7 @@ official fisher vundle firefox-tridactyl
 
 # Resources
 official adobe-source-code-pro-fonts ttf-lato ttf-font-awesome
-unofficial dracula-gtk-theme
+unofficial dracula-gtk-theme ttf-spacemono
 
 ## Dependencies
 ~/.vim/.dependencies.sh
