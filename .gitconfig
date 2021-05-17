@@ -11,6 +11,7 @@
 	c = commit -s
 	d = diff
 	ds = diff --staged
+	ltm = ls-tree -r master
 	l = ldog --pretty=format:'%C(magenta bold)%h%Creset					\
 		-%C(auto)%d%Creset %s' 						                    \
 		--abbrev-commit --date=short

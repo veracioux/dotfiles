@@ -157,6 +157,7 @@ colorscheme customtheme
 	" Subvert is part of Abolish plugin
 	cnoreabbrev S Subvert
 	command! Src so ~/.vimrc
+	command! Chmod !chmod u+x %
 
 	" Run the current buffer as a script
 	nmap <leader>r :w \| !./%<CR>

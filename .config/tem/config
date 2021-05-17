@@ -1,7 +1,9 @@
 [general]
-default_repos = ~/.local/share/tem/repo
-    ~/.local/share/tem/tmp
-editor = vim
+repo_path = ~/.local/share/tem/repo
+	/home/haris/.local/share/tem/tmp
+	/home/haris/.local/share/camscripts/clips
+	/run/media/haris/D/my-data/projects/tem/repo
+editor = nvim
 
 [ls]
 command = lsd --icon=always --color=always
