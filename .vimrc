@@ -7,6 +7,7 @@ set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\
 set nocompatible				" required
 filetype off					" required
 filetype plugin on
+syntax enable
 set noautoread
 set exrc
 set showcmd
@@ -37,6 +38,9 @@ if !has('nvim')
 	set noesckeys
 endif
 
+let g:sh_fold_enabled = 3
+let g:is_bash = 1
+
 " Special buffers and syntax highlighting
 
 au BufEnter * if &syntax == '' && expand('%:e') == '' | set ft=sh | endif
@@ -48,6 +52,7 @@ au BufNewFile,BufRead *.fish set ft=fish
 au BufNewFile,BufRead PKGBUILD set ft=sh
 au BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
 au FileType cpp set keywordprg=cppman
+au FileType sh set foldmethod=syntax
 " }}}
 
 " 	┏━━━━━━━━━┓
@@ -56,19 +61,18 @@ au FileType cpp set keywordprg=cppman
 " 	{{{
 call plug#begin('~/.vim/plugged')
 
-	Plug 'vifm/vifm.vim'
 	Plug 'lervag/vimtex', { 'for': 'tex' }
 	Plug 'tpope/vim-abolish'
 	Plug 'preservim/nerdcommenter'
-	Plug 'sirver/ultisnips' | Plug 'honza/vim-snippets'
+	Plug 'sirver/ultisnips'
+	Plug 'honza/vim-snippets'
 	Plug 'easymotion/vim-easymotion'
 	Plug 'ap/vim-css-color'
-	Plug 'Rykka/InstantRst'
-	Plug 'Rykka/riv.vim'
+	Plug 'Rykka/InstantRst', { 'for': 'rst' }
+	Plug 'Rykka/riv.vim', { 'for': 'rst' }
 	Plug 'tpope/vim-surround'
 	Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }           
-	Plug 'lambdalisue/vim-pager', { 'on': 'PAGER' }
-	Plug 'lambdalisue/vim-manpager'
+	Plug 'vim-utils/vim-man', { 'for': 'man'}
 	Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKeyVisual'] }
 
 	" Syntax highlighting
@@ -87,13 +91,9 @@ call plug#begin('~/.vim/plugged')
 	Plug 'derekwyatt/vim-fswitch'
 	Plug 'derekwyatt/vim-protodef'
 	Plug 'junegunn/fzf.vim'
-	Plug 'junegunn/vim-peekaboo'
-	Plug 'kshenoy/vim-signature'
 	Plug 'junegunn/vim-easy-align'
 	Plug 'airblade/vim-gitgutter'
-	" Plug 'python-mode/python-mode'
 	Plug 'davidhalter/jedi-vim', { 'for': 'python' }	" Python autocompletion
-	" Plug 'vim-scripts/OmniCppComplete', { 'for': 'cpp' }
 
 	" Misc
 	if has('nvim')
@@ -403,3 +403,10 @@ colorscheme customtheme
 	let g:riv_auto_fold_force = 0
 	let g:riv_auto_format_table = 0
 " 	}}}
+
+" 	┏━━━━━┓
+" 	┃ Man ┃
+" 	┗━━━━━┛
+" 	{{{
+	let g:ft_man_folding_enable = 1
+"	}}}
