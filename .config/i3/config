@@ -1,7 +1,4 @@
 # vim: filetype=i3
-# TMP
-bindsym Mod4+Ctrl+Shift+c exec ~/scripts/camscripts/camswitch
-bindsym Mod1+i             exec browser-google-search
 
 set $mod Mod4
 mode " Camera" {
@@ -28,7 +25,6 @@ bindsym $mod+Tab mode " Camera"
 # ┗━━━━━━━━━━━━━┛
 
 set $mod          Mod4
-#set $resize0      resize set width 400 height   300
 set $resizeW0     resize set width 20
 set $resizeH0     resize set height 20
 set $resize1      resize set width 710  height   600
@@ -150,69 +146,78 @@ set $resize_term  resize set width 710
   bindsym $mod+Shift+l      move right    30
 
   # Layout manipulation
-  bindsym $mod+i            split h
-  bindsym $mod+u            split v
-  bindsym $mod+period       layout toggle split
-  bindsym $mod+s            layout stacking
-  bindsym $mod+t            layout tabbed
   bindsym $mod+e            fullscreen toggle
   bindsym $mod+Shift+space  floating toggle
   bindsym $mod+b            bar mode toggle
-  # Mod+equal
-  bindsym $mod+Shift+0      exec i3_balance_workspace
-  bindsym $mod+apostrophe   exec "pgrep autotiling && pkill autotiling || autotiling"
 
   # Resize window
-  bindsym $mod+plus               resize grow   width   20;
-  bindsym $mod+minus              resize shrink width   20;
-  bindsym $mod+Shift+plus         resize grow                 height  20;
-  bindsym $mod+Shift+minus        resize shrink               height  20;
-  bindsym $mod+f                  floating enable;                            \
-                                  $resize2;                                   \
-                                  move position center
-  bindsym $mod+g                  move position center
+  bindsym $mod+plus         resize grow   width   20;
+  bindsym $mod+minus        resize shrink width   20;
+  bindsym $mod+Shift+plus   resize grow                 height  20;
+  bindsym $mod+Shift+minus  resize shrink               height  20;
+  bindsym $mod+f            floating enable;                            \
+                            $resize2;                                   \
+                            move position center
+  bindsym $mod+g            move position center
 
   mode " resize" {
 
-    bindsym w           resize  shrink  width   1
-    bindsym Shift+w     resize  grow    width   1
-    bindsym h           resize  shrink  height  1
-    bindsym Shift+h     resize  grow    height  1
+    bindsym w               resize  shrink  width   1
+    bindsym Shift+w         resize  grow    width   1
+    bindsym h               resize  shrink  height  1
+    bindsym Shift+h         resize  grow    height  1
 
-    bindsym plus        resize  grow    width   20; move position center
-    bindsym Shift+plus  resize  grow    height  20; move position center
-    bindsym minus       resize  shrink  width   20; move position center
-    bindsym Shift+minus resize  shrink  height  20; move position center
+    bindsym plus            resize  grow    width   20; move position center
+    bindsym Shift+plus      resize  grow    height  20; move position center
+    bindsym minus           resize  shrink  width   20; move position center
+    bindsym Shift+minus     resize  shrink  height  20; move position center
 
-    bindsym t           $resize_term; mode "default"
+    bindsym t               $resize_term; mode "default"
 
     # Some standard sizes
-    bindsym 0           $resizeW0
-    bindsym Shift+0     $resizeH0
-    bindsym 1           $resize1; move position center
-    bindsym Shift+1     $resize1
-    bindsym 2           $resize2; move position center
-    bindsym Shift+2     $resize2
-    bindsym 3           $resize3; move position center
-    bindsym Shift+3     $resize3
-    bindsym 4           $resize4; move position center
-    bindsym Shift+4     $resize4
+    bindsym 0               $resizeW0
+    bindsym Shift+0         $resizeH0
+    bindsym 1               $resize1; move position center
+    bindsym Shift+1         $resize1
+    bindsym 2               $resize2; move position center
+    bindsym Shift+2         $resize2
+    bindsym 3               $resize3; move position center
+    bindsym Shift+3         $resize3
+    bindsym 4               $resize4; move position center
+    bindsym Shift+4         $resize4
 
     # Back to normal: Enter or Escape or $mod+r
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
+    bindsym Return          mode "default"
+    bindsym Escape          mode "default"
+    bindsym $mod+r          mode "default"
   }
-  bindsym $mod+r mode " resize"
+  bindsym $mod+r            mode " resize"
 
-  mode "run" {
+  mode "Session" {
+    bindsym r               reload
+    bindsym Ctrl+r          restart
+    bindsym q               exit
+
+    bindsym Escape          mode "default"
+    bindsym $mod+period     mode "default"
   }
+  bindsym $mod+period       mode "Session"
 
-  # Execution
-  bindsym $mod+Shift+r  reload
-  bindsym $mod+Ctrl+r   restart
-  bindsym $mod+Shift+q  exit
-  bindsym $mod+Ctrl+q   exec "~/.local/lib/dmenu/system"
+  mode " WM" {
+    bindsym h               split h
+    bindsym v               split v
+    bindsym period          layout toggle split
+    bindsym s               layout stacking
+    bindsym t               layout tabbed
+    bindsym c               exec "pgrep picom && pkill picom || picom"
+    # Mod+equal
+    bindsym Shift+0         exec i3_balance_workspace
+    bindsym a               exec "pgrep autotiling && pkill autotiling || autotiling"
+
+    bindsym Escape          mode "default"
+    bindsym $mod+s          mode "default"
+  }
+  bindsym $mod+s            mode " WM"
 
 # ┏━━━━━━━━━━━━┓
 # ┃ WORKSPACES ┃
@@ -226,23 +231,23 @@ set $resize_term  resize set width 710
   set $ws6 "6:extra"
 
   # Switch to workspace
-  bindsym $mod+1 workspace $ws1
-  bindsym $mod+2 workspace $ws2
-  bindsym $mod+3 workspace $ws3
-  bindsym $mod+4 workspace $ws4
-  bindsym $mod+5 workspace $ws5
-  bindsym $mod+6 workspace $ws6
+  bindsym $mod+1            workspace $ws1
+  bindsym $mod+2            workspace $ws2
+  bindsym $mod+3            workspace $ws3
+  bindsym $mod+4            workspace $ws4
+  bindsym $mod+5            workspace $ws5
+  bindsym $mod+6            workspace $ws6
 
   # Move focused container to workspace
-  bindsym $mod+Shift+1  move  container to  workspace $ws1
-  bindsym $mod+Shift+2  move  container to  workspace $ws2
-  bindsym $mod+Shift+3  move  container to  workspace $ws3
-  bindsym $mod+Shift+4  move  container to  workspace $ws4
-  bindsym $mod+Shift+5  move  container to  workspace $ws5
-  bindsym $mod+Shift+6  move  container to  workspace $ws6
+  bindsym $mod+Shift+1      move  container to  workspace $ws1
+  bindsym $mod+Shift+2      move  container to  workspace $ws2
+  bindsym $mod+Shift+3      move  container to  workspace $ws3
+  bindsym $mod+Shift+4      move  container to  workspace $ws4
+  bindsym $mod+Shift+5      move  container to  workspace $ws5
+  bindsym $mod+Shift+6      move  container to  workspace $ws6
 
-  bindsym $mod+n        workspace next
-  bindsym $mod+p        workspace prev
+  bindsym $mod+n            workspace next
+  bindsym $mod+p            workspace prev
   
 # ┏━━━━━━━━━┓
 # ┃ The bar ┃
@@ -277,8 +282,6 @@ bar {
 # ┃ APPLICATIONS ┃
 # ┗━━━━━━━━━━━━━━┛
 
-  bindsym $mod+comma        exec "pgrep picom && pkill picom || picom"
-
   bindsym $mod+Return       exec --no-startup-id "alacritty"
   bindsym $mod+Shift+Return exec --no-startup-id "alacritty --class           \
                               Float,Alacritty"
@@ -296,6 +299,8 @@ bar {
   bindsym $mod+Shift+e      exec "emacsclient --create-frame"
   bindsym $mod+Shift+w      exec --no-startup-id "fish -c wiki"
   bindsym $mod+Shift+o      exec --no-startup-id "fish -c todo"
+
+  bindsym $mod+q            exec "~/.local/lib/dmenu/system"
 
   for_window [instance="Float"      class="Alacritty"]  floating enable
   for_window [instance="Float"      class="Alacritty"]  move scratchpad
