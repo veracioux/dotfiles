@@ -5,7 +5,6 @@ alias octave 'OCTAVE_BASIC=true command octave'
 abbr rm 'rm -i'
 abbr mv 'mv -i'
 
-abbr tdm 'tdm --disable-xrunning-check'
 abbr g 'git'
 abbr v 'vim'
 abbr s 'sudo'
@@ -35,5 +34,8 @@ abbr t  'tem'
 abbr vf 'vim (fzf)'
 abbr fm 'vifm'
 abbr c  'conf'
+
+abbr tb 'nc termbin.com 9999'
+abbr asc 'asciinema'
 
 set aur 'aur@aur.archlinux.org'

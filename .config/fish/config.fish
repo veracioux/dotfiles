@@ -22,7 +22,7 @@ set -gx _ZL_CD cd
 tem fish-init
 
 # Set default pager to vim
-set -gx MANPAGER 'nvim -c MANPAGER -'
+set -gx MANPAGER 'nvim +Man!'
 set -gx MANWIDTH 80
 set -gx PAGER 'nvim -c PAGER -'
 set -gx EDITOR 'nvim'

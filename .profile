@@ -14,4 +14,3 @@ $PATH:\
 [ -f ~/.alias-gui ]     && . ~/.alias-gui
 [ -f ~/.alias-gui-tmp ] && . ~/.alias-gui-tmp
 
-alias tdm='tdm --disable-xrunning-check'

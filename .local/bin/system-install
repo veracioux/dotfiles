@@ -37,7 +37,7 @@ official gimp inkscape poppler xournalpp
 official python python-pip python-sphinx
 
 # Utilities
-official xsel moreutils rsync findutils dialog fzf clipmenu entr
+official xsel moreutils rsync findutils dialog fzf clipmenu entr gnu-netcat
 official neomutt translate-shell
 official speedcrunch
 unofficial urlview buku-git asciinema
