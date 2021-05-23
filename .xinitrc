@@ -2,6 +2,7 @@ system-specific                             # System specific config
 xset r rate 250 60                          # Increase key press rate
 setxkbmap -option caps:escape               # Bind caps_lock to escape
 xbindkeys                                   # Load bindings from .xbindkeysrc
+xbindkeys -f .xbindkeysrc.tmp
 xrdb /home/haris/.Xresources
 
 feh --bg-fill ~/.wallpaper                  # Set wallpaper
