@@ -1,9 +1,9 @@
 [general]
 repo_path = ~/.local/share/tem/repo
-	/home/haris/.local/share/tem/tmp
-	/home/haris/.local/share/camscripts/clips
-	/run/media/haris/D/my-data/projects/tem/repo
+	~/.local/share/tem/tmp
+	~/.local/share/camscripts/clips
+	~/projects/tem/repo
 editor = nvim
 
 [ls]
-command = lsd --icon=always --color=always
+command = lsd --icon=always --color=always -1

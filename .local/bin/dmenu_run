@@ -53,6 +53,7 @@ get_commands() {
     echo "Config"           # Open documentation selection
     echo "System"           # System actions
     echo "Update cache"     # Update desktop app cache
+    echo "tem"              # Launch tem development environment
     echo "$aliases"
     echo "$gui_aliases"
     get_desktop_apps        # Programs extracted from *.desktop files
@@ -64,7 +65,6 @@ get_commands() {
 choice="$(get_commands | dmenu $@)" 
 case "$choice" in
     "")
-        echo lolz
         exit ;;
     "Open")
         run_script open ;;
@@ -96,6 +96,8 @@ case "$choice" in
         run_script system ;;
     "Update cache")
         rm ~/.cache/.desktop-apps.txt ;;
+    "tem")
+        alacritty -e fish -C 'pj tem; clear' ;;
     # The rest: aliases and regular commands
     *)
         # If the command is an aliased GUI program, just run it
