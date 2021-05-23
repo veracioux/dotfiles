@@ -67,9 +67,9 @@
 # }}}
 
 [shortcuts]
-    close                = mod4+shift+comma     # Close notification.
-    close_all            = mod4+shift+period    # Close all notifications.
-    history              = mod4+shift+n         # Redisplay last message(s).
+    close                = mod4+shift+comma         # Close notification
+    close_all            = mod4+shift+period        # Close all notifications
+    history              = mod4+shift+apostrophe    # Redisplay last message(s)
 
 [urgency_low]
     background           = "#222222"
