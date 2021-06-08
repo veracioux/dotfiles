@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+if [ "$1" = 'in' ]; then
+    output="$(timeout 10s zbarcam /dev/video1 -1 | sed 's/^QR-Code://')"
+    notify-send 'QR Code:' "$output"
+    echo "$output" | xsel -b
+    if echo "$output" | grep -q '^https://'; then
+        librewolf "$output"
+    fi
+else # out
+    [ -t 0 ] && input="$(xsel -b -o)" || input="$(cat)"
+    echo "$input" | qrencode -s 10 -o - | feh -
+fi
