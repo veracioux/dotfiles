@@ -39,4 +39,6 @@ case "$1" in
     octave)         echo ~/.octaverc ;;
     gtk2)           echo ~/.gtkrc-2.0.mine ;;
     gtk3)           echo ~/.config/gtk-3.0/settings.ini ;;
+    tuterm)         echo ~/.config/tuterm/config.sh ;;
+    bash)           echo ~/.bashrc ;;
 esac

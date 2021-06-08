@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+press() {
+    for key in "$@"; do
+        xdotool key "$key"
+        # sleep 0.1
+    done
+}
+
+xprop -id "$(xdotool getactivewindow)" | grep -qi 'firefox\|librewolf' && {
+    sleep 0.2
+    press g i Home exclam g space
+}
+

@@ -43,6 +43,7 @@ get_commands() {
     echo "Search"           # Web search
     echo "Clipboard"        # Clipboard using clipmenu
     echo "Snippets"         # Text snippets
+    echo "TODO"             # Open TODO file of a project
     echo "Mail"             # View mail in browser
     echo "Windows"          # Choose windows
     echo "Pacman"           # Package management
@@ -62,7 +63,7 @@ get_commands() {
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Actions based on user's choice ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-choice="$(get_commands | dmenu $@)" 
+choice="$(get_commands | dmenu $@)"
 case "$choice" in
     "")
         exit ;;
@@ -70,11 +71,13 @@ case "$choice" in
         run_script open ;;
     "Search")
         choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
-        ;; 
+        ;;
     "Clipboard")
         clipmenu ;;
     "Snippets")
         run_script snips ;;
+    "TODO")
+        run_script todo ;;
     "Mail")
         run_script mail ;;
     "Windows")

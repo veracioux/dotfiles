@@ -40,7 +40,7 @@ official python python-pip python-sphinx
 official xsel moreutils rsync findutils dialog fzf clipmenu entr gnu-netcat
 official neomutt translate-shell
 official speedcrunch
-unofficial urlview buku-git asciinema
+unofficial urlview buku-git asciinema dragon-drag-and-drop
 
 # Plugins
 official fisher vundle firefox-tridactyl

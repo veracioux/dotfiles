@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+rfkill block wifi && rfkill unblock wifi

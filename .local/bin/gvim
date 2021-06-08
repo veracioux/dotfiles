@@ -1,10 +1,20 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-# Fake gvim which will just launch a terminal with neovim
+# Fake gvim which will just launch a terminal with neovim in it
 
 for arg in "$@"; do
     # Hacky solution that will open files in real gvim when opened by xdg-open
      if [ "$arg" = "-f" ]; then /usr/bin/gvim "$@"; exit; fi
 done
 
-alacritty --class Float,Alacritty -e fish -C "cd (dirname '$@'); vim $@"
+# nvim is launched through the shell because otherwise it behaves weirdly
+FISH_CMD="nvim $*"
+
+[ -t 0 ] || {
+    cat > /dev/shm/gvim_pipe
+    FISH_CMD="cat /dev/shm/gvim_pipe | $FISH_CMD"
+}
+
+alacritty --class Float,Alacritty -e fish -C "$FISH_CMD"
+
+[ -t 0 ] || rm -f /dev/shm/gvim_pipe

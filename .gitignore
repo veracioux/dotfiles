@@ -10,3 +10,4 @@ scripts/tmp
 ~/.mozilla/firefox/*/prefs.js
 # savePath in flameshot's config keeps changing, which is annoying
 .config/flameshot/flameshot.ini
+!.local/bin/
