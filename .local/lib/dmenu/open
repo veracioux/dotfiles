@@ -26,5 +26,6 @@ else
     [ -z "$url" ] && url="$choice"
     # All google links shall be opened in firefox
     echo "$url" | grep -q 'google' && browser="$(echo "$browser" | sed 's_librewolf_/bin/firefox/')"
+    echo "$url"
     auto-browser -P haris "$url"
 fi

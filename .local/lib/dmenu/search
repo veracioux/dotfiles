@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-
-choice="$(echo -n '' | dmenu -p 'Search:')" && auto-browser -P haris \
-    "$(printf "$(links | grep duckduckgo)" "$choice")"
