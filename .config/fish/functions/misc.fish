@@ -1,6 +1,9 @@
 # Create a new dir and cd
 function ndir;  mkdir -p "$argv"; cd "$argv"; end
 
+# Print first argument
+function 1; echo $argv[1]; end
+
 # Run a command and disown
 function o; $argv & disown >/dev/null 2>/dev/null; end
 
@@ -11,7 +14,7 @@ function a
     if [ "$count" = 1 ]
         set dest "$options"
     else if [ "$count" -gt 1 ]
-        set dest (echo "$options" | sed '/^$/d' | tac | fzf) 
+        set dest (echo "$options" | sed '/^$/d' | tac | fzf)
     else
         return
     end
@@ -30,7 +33,7 @@ function copypath; realpath -z $argv | xsel -b; end
 
 # When you ls, save the argument so you can quickly cd to that folder.
 # It's not fool-proof, but it works in most situations and it's safe.
-function ls 
+function ls
 	lsd --color=auto $argv
 	set -g __last_ls_folder "$argv"
 end

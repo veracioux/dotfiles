@@ -2,7 +2,7 @@ set fish_greeting ''
 fish_vi_key_bindings
 
 # PATH
-set -gx PATH ~/{,projects,wiki}/scripts**/ ~/bin $PATH
+set -gx PATH ~/scripts** $PATH
 
 # Load other shell's config
 bass source ~/.bashrc
@@ -22,9 +22,8 @@ set -gx _ZL_CD cd
 tem fish-init
 
 # Set default pager to vim
-set -gx MANPAGER 'nvim +Man!'
+set -gx MANPAGER 'viman +Man!'
 set -gx MANWIDTH 80
-set -gx PAGER 'nvim -c PAGER -'
 set -gx EDITOR 'nvim'
 set -gx VISUAL 'gvim'
 
