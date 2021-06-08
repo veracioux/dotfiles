@@ -209,15 +209,28 @@ set $resize_term  resize set width 710
     bindsym period          layout toggle split
     bindsym s               layout stacking
     bindsym t               layout tabbed
-    bindsym c               exec "pgrep picom && pkill picom || picom"
-    # Mod+equal
-    bindsym Shift+0         exec i3_balance_workspace
-    bindsym a               exec "pgrep autotiling && pkill autotiling || autotiling"
+    bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
+    bindsym x               exec --no-startup-id "xrandr-toggle"
+    # equal key on my keyboard
+    bindsym Shift+0         exec --no-startup-id i3_balance_workspace
+    bindsym a               exec --no-startup-id \
+                              "pgrep autotiling && pkill autotiling || autotiling"
+    bindsym i               move workspace to output eDP-1
+    bindsym u               move workspace to output HDMI-1-0
 
     bindsym Escape          mode "default"
     bindsym $mod+s          mode "default"
   }
   bindsym $mod+s            mode " WM"
+
+  mode " QR" {
+    bindsym i               exec --no-startup-id "qr in"
+    bindsym o               exec --no-startup-id "qr out"
+
+    bindsym Escape          mode "default"
+    bindsym $mod+Shift+q    mode "default"
+  }
+  bindsym $mod+Shift+q      mode " QR"
 
 # ┏━━━━━━━━━━━━┓
 # ┃ WORKSPACES ┃
@@ -248,7 +261,7 @@ set $resize_term  resize set width 710
 
   bindsym $mod+n            workspace next
   bindsym $mod+p            workspace prev
-  
+
 # ┏━━━━━━━━━┓
 # ┃ The bar ┃
 # ┗━━━━━━━━━┛
@@ -270,7 +283,7 @@ bar {
     # class             border    backgr.   text
     focused_workspace   $col_b_b  $col_b_b  $col_n_k
     inactive_workspace  $col_a_k  $col_a_k  $col_n_m
-    urgent_workspace    $col_n_y  $col_n_y  $col_n_k      
+    urgent_workspace    $col_n_y  $col_n_y  $col_n_k
 
     background          $col_a_k
     statusline          $col_b_c
@@ -282,23 +295,22 @@ bar {
 # ┃ APPLICATIONS ┃
 # ┗━━━━━━━━━━━━━━┛
 
-  bindsym $mod+Return       exec --no-startup-id "alacritty"
-  bindsym $mod+Shift+Return exec --no-startup-id "alacritty --class           \
+  bindsym $mod+Return       exec "alacritty"
+  bindsym $mod+Shift+Return exec "alacritty --class           \
                               Float,Alacritty"
-  bindsym $mod+Shift+v      exec --no-startup-id "alacritty                   \
+  bindsym $mod+Shift+v      exec "alacritty                   \
                               --class Float,Alacritty -e fish -C vifm"
-  bindsym $mod+Shift+t      exec --no-startup-id "alacritty                   \
+  bindsym $mod+Shift+t      exec "alacritty                   \
                               --class Float,Alacritty -e trans -shell"
 
   bindsym $mod+Shift+f      exec "librewolf -P haris"
-  bindsym $mod+Ctrl+f       exec --no-startup-id "~/.local/lib/dmenu/search"
   bindsym $mod+Shift+s      exec --no-startup-id "flameshot && flameshot gui"
   bindsym $mod+Shift+Print  exec --no-startup-id "flameshot && flameshot config"
 
-  bindsym $mod+v            exec --no-startup-id "gvim"
+  bindsym $mod+v            exec "gvim"
   bindsym $mod+Shift+e      exec "emacsclient --create-frame"
-  bindsym $mod+Shift+w      exec --no-startup-id "fish -c wiki"
-  bindsym $mod+Shift+o      exec --no-startup-id "fish -c todo"
+  bindsym $mod+Shift+w      exec "fish -c wiki"
+  bindsym $mod+Shift+o      exec "fish -c todo"
 
   bindsym $mod+q            exec "~/.local/lib/dmenu/system"
 
@@ -329,8 +341,10 @@ bar {
   # Octave plots
   for_window [class="GNU Octave"]                       floating enable
   for_window [class="GNU Octave" floating]              move position center
-  
+
   # Miscellaneous
   for_window [class="SpeedCrunch"]                      floating enable
   for_window [class="SpeedCrunch" floating]             $resize1
   for_window [class="SpeedCrunch" floating]             move position center
+
+  for_window [instance="zbar" class="zbar"]             floating enable

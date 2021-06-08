@@ -6,4 +6,4 @@ repo_path = ~/.local/share/tem/repo
 editor = nvim
 
 [ls]
-command = lsd --icon=always --color=always -1
+command = lsd --icon=auto --color=auto -1

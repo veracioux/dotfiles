@@ -51,7 +51,7 @@
 # ┗━━━━━━━━━━━━━━━┛
 # {{{
     dmenu                = dmenu -p Dunst:
-    browser              = /usr/bin/firefox --new-tab
+    browser              = /usr/bin/librewolf --new-tab
 
     always_run_script    = true
     startup_notification = true

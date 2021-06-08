@@ -3,11 +3,13 @@
 set shell=/usr/bin/fish
 syntax on
 set number relativenumber
-set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\ 
+set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\
 set nocompatible				" required
-filetype off					" required
-filetype plugin on
+filetype plugin indent on		"required
 syntax enable
+
+source ~/.vimrc.tmp
+
 set noautoread
 set exrc
 set showcmd
@@ -43,71 +45,100 @@ let g:is_bash = 1
 
 " Special buffers and syntax highlighting
 
-au BufEnter * if &syntax == '' && expand('%:e') == '' | set ft=sh | endif
-au BufNewFile,BufRead *.spacemacs set syntax=lisp
-au BufNewFile,BufRead .octaverc set syntax=matlab
-au BufNewFile,BufRead *.snippets set ft=snippets
-au BufNewFile,BufRead *.py set foldmethod=indent
-au BufNewFile,BufRead *.fish set ft=fish
-au BufNewFile,BufRead PKGBUILD set ft=sh
-au BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
-au FileType cpp set keywordprg=cppman
-au FileType sh set foldmethod=syntax
+augroup custom_syntax
+	autocmd!
+	autocmd BufEnter * if &syntax == '' && expand('%:e') == '' | set ft=sh | endif
+	autocmd BufNewFile,BufRead *.spacemacs set syntax=lisp
+	autocmd BufNewFile,BufRead .octaverc set syntax=matlab
+	autocmd BufNewFile,BufRead *.snippets set ft=snippets
+	autocmd BufNewFile,BufRead *.py set foldmethod=indent
+	autocmd BufNewFile,BufRead *.fish set ft=fish
+	autocmd BufNewFile,BufRead PKGBUILD set ft=sh
+	autocmd BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
+	autocmd FileType cpp set keywordprg=cppman
+	" autocmd FileType python set keywordprg=:Pydoc
+	autocmd FileType sh set foldmethod=syntax
+augroup END
 " }}}
+
+" function! g:Haris_Pydoc_(name, type)
+	" if a:type == 2
+		" execute '!vipydoc ' . a:name
+	" else
+		" :Pydoc a:name
+	" endif
+" endfunction
+" command! -nargs=1 HarisPydoc	:call g:Haris_Pydoc_('<args>', 2)
+" noremap <leader>k	:HarisPydoc<CR>
+
+" Pydoc
+" command! -nargs=1 Haris_Pydoc :call s:haris#Pydoc
 
 " 	┏━━━━━━━━━┓
 " 	┃ Plugins ┃
 " 	┗━━━━━━━━━┛
 " 	{{{
+
+" NOTE: When I use vim as my MANPAGER, loading all the plugins would slow things down
+
+" This is always loaded
+
+" These plugins are loaded except when I'm using vim as MANPAGER.
 call plug#begin('~/.vim/plugged')
 
-	Plug 'lervag/vimtex', { 'for': 'tex' }
-	Plug 'tpope/vim-abolish'
-	Plug 'preservim/nerdcommenter'
-	Plug 'sirver/ultisnips'
-	Plug 'honza/vim-snippets'
-	Plug 'easymotion/vim-easymotion'
-	Plug 'ap/vim-css-color'
-	Plug 'Rykka/InstantRst', { 'for': 'rst' }
-	Plug 'Rykka/riv.vim', { 'for': 'rst' }
-	Plug 'tpope/vim-surround'
-	Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }           
-	Plug 'vim-utils/vim-man', { 'for': 'man'}
-	Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKeyVisual'] }
+	if !exists('g:haris_man')
+		Plug 'lervag/vimtex', { 'for': 'tex' }
+		Plug 'tpope/vim-abolish'
+		Plug 'preservim/nerdcommenter'
+		Plug 'sirver/ultisnips'
+		Plug 'honza/vim-snippets'
+		Plug 'ap/vim-css-color'
+		Plug 'Rykka/InstantRst', { 'for': 'rst' }
+		Plug 'Rykka/riv.vim', { 'for': 'rst' }
+		Plug 'tpope/vim-surround'
+		Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+		Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKeyVisual'] }
+		Plug 'alx741/vinfo', { 'on': ['Vinfo'] }
 
-	" Syntax highlighting
-	Plug 'dag/vim-fish', { 'for': 'fish' }
-	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'i3' }
-	Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
+		" Syntax highlighting
+		Plug 'dag/vim-fish', { 'for': 'fish' }
+		Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'i3' }
+		Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
+		Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
 
-	Plug 'itspriddle/vim-shellcheck'
+		Plug 'itspriddle/vim-shellcheck'
 
-	" IDE 
-	Plug 'ycm-core/YouCompleteMe'
-	Plug 'ervandew/supertab'			" Fixes problem with YCM and UltiSnips
-	Plug 'sheerun/vim-polyglot'
-	Plug 'preservim/tagbar' 			" NOTE: requires ctags installed
-	Plug 'dyng/ctrlsf.vim'				" NOTE: requires ack installed
-	Plug 'derekwyatt/vim-fswitch'
-	Plug 'derekwyatt/vim-protodef'
-	Plug 'junegunn/fzf.vim'
-	Plug 'junegunn/vim-easy-align'
-	Plug 'airblade/vim-gitgutter'
-	Plug 'davidhalter/jedi-vim', { 'for': 'python' }	" Python autocompletion
+		" IDE
+		Plug 'ycm-core/YouCompleteMe'
+		Plug 'ervandew/supertab'			" Fixes problem with YCM and UltiSnips
+		Plug 'sheerun/vim-polyglot'
+		Plug 'preservim/tagbar' 			" NOTE: requires ctags installed
+		Plug 'dyng/ctrlsf.vim'				" NOTE: requires ack installed
+		Plug 'derekwyatt/vim-fswitch'
+		Plug 'derekwyatt/vim-protodef'
+		Plug 'junegunn/fzf.vim'
+		Plug 'junegunn/vim-easy-align'
+		Plug 'airblade/vim-gitgutter'
+		" Python
+		Plug 'davidhalter/jedi-vim', { 'for': 'python' }	" autocompletion
+		Plug 'fs111/pydoc.vim'
 
-	" Misc
-	if has('nvim')
-		Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+		" Misc
+		if has('nvim')
+			Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+		endif
 	endif
+	" Always loaded
+	Plug 'vim-utils/vim-man', { 'for': 'man'}
+	Plug 'easymotion/vim-easymotion'
 
 call plug#end()
-
-filetype plugin indent on		"required
 
 " }}}
 
 " Set theme
 colorscheme customtheme
+if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 
 " 	┏━━━━━━━━━━━━━━━━━┓
 " 	┃ Custom mappings ┃
@@ -158,6 +189,9 @@ colorscheme customtheme
 	cnoreabbrev S Subvert
 	command! Src so ~/.vimrc
 	command! Chmod !chmod u+x %
+	command! RmWs %s/\s\+$// 	  		" remove trailing whitespaces
+	" display highlight group of current text
+	command! WhichHi :echo synIDattr(synID(line("."), col("."), 1), "name")
 
 	" Run the current buffer as a script
 	nmap <leader>r :w \| !./%<CR>
@@ -189,7 +223,7 @@ colorscheme customtheme
 	if !has('nvim') " TODO Why do I have this problem
 		au VimEnter * let g:ycm_semantic_triggers.tex=g:vimtex#re#youcompleteme
 	endif
-	
+
 	" Make YCM work with UltiSnips
     let g:ycm_key_list_select_completion = ['<C-n>']
     let g:ycm_key_list_previous_completion = ['<C-p>']
@@ -376,11 +410,6 @@ colorscheme customtheme
 	let g:NERDSpaceDelims 				= 1
 	let g:NERDTrimTrailingWhitespace 	= 1
 " 	}}}
-" 	┏━━━━━━━━━━┓
-" 	┃ Peekaboo ┃
-" 	┗━━━━━━━━━━┛
-	let g:peekaboo_delay 	= 300
-	let g:peekaboo_compact 	= 1
 " 	┏━━━━━━━┓
 " 	┃ Align ┃
 " 	┗━━━━━━━┛
@@ -409,4 +438,9 @@ colorscheme customtheme
 " 	┗━━━━━┛
 " 	{{{
 	let g:ft_man_folding_enable = 1
+	let g:man_hardwrap = 0
 "	}}}
+"   ┏━━━━━━━━━━━┓
+"   ┃ pydoc.vim ┃
+"   ┗━━━━━━━━━━━┛
+	let g:pydoc_open_cmd = 'vsplit'

@@ -4,8 +4,9 @@ export QT_QPA_PLATFORMTHEME=gtk2
 
 export PATH=\
 ~/.local/bin:\
+$(echo ~/.local/share/gem/ruby/*/bin):\
 $PATH:\
-~/scripts/**/:\
+$(echo ~/scripts/*/):\
 ~/.pyenv/versions/3.8.3/bin:\
 /opt/anaconda/bin
 
