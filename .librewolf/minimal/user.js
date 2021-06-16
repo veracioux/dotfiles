@@ -1,1 +1,1 @@
-../../.mozilla/firefox/haris/user.js
+/home/haris/.mozilla/firefox/minimal/user.js

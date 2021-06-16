@@ -1,1 +1,1 @@
-user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+/home/haris/.mozilla/firefox/common/user.js
