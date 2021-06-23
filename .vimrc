@@ -105,7 +105,7 @@ call plug#begin('~/.vim/plugged')
 		Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'i3' }
 		Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
 		Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
-
+		Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
 		Plug 'itspriddle/vim-shellcheck'
 
 		" IDE
@@ -150,11 +150,6 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 	noremap		vv			V
 	noremap		V			v$
 
-	nmap		<C-n>		/{<.*>}<CR>va}
-	vmap		<C-n>		<esc>/{<.*>}<CR>va}
-	nmap		<C-p>		?{<.*>}<CR>va}
-	vmap		<C-p>		O<esc>?{<.*>}<CR>va}
-
 	map			<C-c>		"+y
 	noremap		<M-t> 		:silent !term<CR>
     noremap     <M-j>   	<C-e>
@@ -188,14 +183,14 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 	" Subvert is part of Abolish plugin
 	cnoreabbrev S Subvert
 	command! Src so ~/.vimrc
-	command! Chmod !chmod u+x %
+	command! Chx !chmod u+x %
 	command! RmWs %s/\s\+$// 	  		" remove trailing whitespaces
 	" display highlight group of current text
 	command! WhichHi :echo synIDattr(synID(line("."), col("."), 1), "name")
 
 	" Run the current buffer as a script
 	nmap <leader>r :w \| !./%<CR>
-	nmap <leader>m :make<CR>
+	nmap <leader>m :!make<CR>
 	nmap <leader>c :w \| !cmake -S . -B _build && cmake --build _build<CR>
 
 	" NERDTree
