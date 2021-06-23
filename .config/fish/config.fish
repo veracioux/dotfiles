@@ -27,44 +27,50 @@ set -gx MANWIDTH 80
 set -gx EDITOR 'nvim'
 set -gx VISUAL 'gvim'
 
+function fish_user_key_bindings                     # Start bindings
+
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Quasi-vim-like key bindings ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-bind -M default \el forward-char
-bind -M insert \el forward-char
-bind -M default \eh backward-char
-bind -M insert \eh backward-char
-bind -M default \cp up-or-search
-bind -M insert \cp up-or-search
-bind -M default \cn down-or-search
-bind -M insert \cn down-or-search
+    bind -M default \el forward-char
+    bind -M insert \el forward-char
+    bind -M default \eh backward-char
+    bind -M insert \eh backward-char
+    bind -M default \cp up-or-search
+    bind -M insert \cp up-or-search
+    bind -M default \cn down-or-search
+    bind -M insert \cn down-or-search
 
 # ┏━━━━━━━━━━━━━━━━┓
 # ┃ Other bindings ┃
 # ┗━━━━━━━━━━━━━━━━┛
 
-# Copy the current contents of the command line
-bind -M default \ec __copy_to_clipboard
-bind -M insert \ec __copy_to_clipboard
+    # Copy the current contents of the command line
+    bind -M default \ec 'commandline -b | xsel -b'
+    bind -M insert  \ec 'commandline -b | xsel -b'
 
-# Run the current command in bash
-bind -M default \eb __run_in_bash
-bind -M insert \eb __run_in_bash
+    # Run the current command in bash
+    bind -M default \eb __haris_run_in_bash
+    bind -M insert  \eb __haris_run_in_bash
 
-# Prepend o in front of current command
-bind -M default \eo __prepend_o
-bind -M insert \eo __prepend_o
+    # Prepend o in front of current command
+    bind -M default \eo '__haris_prepend_cmdline o'
+    bind -M insert  \eo '__haris_prepend_cmdline o'
 
-# Prepend o in front of current command
-bind -M default \em __prepend_man
-bind -M insert \em __prepend_man
+    # Prepend o in front of current command
+    bind -M default \em '__haris_prepend_cmdline man'
+    bind -M insert  \em '__haris_prepend_cmdline man'
 
-bind -M default \et term
-bind -M insert \et term
+    bind -M default \et term
+    bind -M insert  \et term
 
-bind -M default \en __prepend_cmd_with_notify
-bind -M insert \en __prepend_cmd_with_notify
+    bind -M default \en '__haris_prepend_cmdline cmd-with-notify'
+    bind -M insert  \en '__haris_prepend_cmdline cmd-with-notify'
+
+    bind -M default \ef 'dragon (command ls | fzf --multi)'
+    bind -M insert  \ef 'dragon (command ls | fzf --multi)'
+end                                                 # End bindings
 
 # ┏━━━━━━━━━━━━━━━┓
 # ┃ Custom colors ┃

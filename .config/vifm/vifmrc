@@ -339,8 +339,12 @@ nnoremap A cw
 
 " Open console in current directory
 nnoremap <M-t> :!term & <cr>
+" Open selected files in dragon-drag-and-drop
+noremap <M-f> :!dragon %f & <cr>
+" Open selected files in dragon-drag-and-drop
+noremap <M-f> :!dragon %f & <cr>
 " Open current directory in nemo
-nnoremap <space>n :!nemo . & disown<cr>
+nnoremap <M-n> :![ -f %f ] && nemo %f || nemo . & disown<cr>
 
 " Open editor to edit vifmrc and apply settings after returning to vifm
 nnoremap <space>c :write | edit $MYVIFMRC | restart<cr>

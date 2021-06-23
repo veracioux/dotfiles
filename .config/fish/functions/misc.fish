@@ -9,21 +9,21 @@ function o; $argv & disown >/dev/null 2>/dev/null; end
 
 # Run z through fzf
 function a
-    z -l $argv | read -z options
-    set -l count (echo "$options" | sed '/^$/d' | wc -l)
-    if [ "$count" = 1 ]
-        set dest "$options"
-    else if [ "$count" -gt 1 ]
-        set dest (echo "$options" | sed '/^$/d' | tac | fzf)
-    else
-        return
-    end
+    z -l $argv | read -z choices
+    set -l count (echo "$choices" | sed '/^$/d' | wc -l)
+    set dest (echo "$choices" | sed '/^$/d' | tac | fzf --select-1)
 
     cd (echo "$dest" | sed -E -e '/^$/d' -e 's/^\S+\s+//')
 end
 
 # Open a GUI app and disown
 function open; for file in $argv; o xdg-open "$file"; end; end
+
+# Wrapper around imount script so I can cd to the mount directory
+function imount
+    command imount $argv
+    cd (cat /tmp/imount_directory)
+end
 
 # Vim help
 function vh; vim -c ":h $argv | only"; end
@@ -80,15 +80,11 @@ function vicmd
     end
 end
 
-####################################
-# Helper functions for keybindings #
-####################################
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ Helper functions for keybindings ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-function __copy_to_clipboard
-    echo (commandline -b) | xsel -b
-end
-
-function __run_in_bash
+function __haris_run_in_bash
     set -l cmd (commandline -b)
     echo
     eval bash -c "'source ~/.bashrc; $cmd'"
@@ -96,20 +92,9 @@ function __run_in_bash
     commandline -r ''
 end
 
-function __prepend_o
-    commandline -C 0
-    commandline -i 'o '
-    commandline -f end-of-line
+function __haris_prepend_cmdline
+    commandline --cursor 0
+    commandline --insert "$argv "
+    commandline --function end-of-line
 end
 
-function __prepend_man
-    commandline -C 0
-    commandline -i 'man '
-    commandline -f end-of-line
-end
-
-function __prepend_cmd_with_notify
-    commandline -C 0
-    commandline -i 'cmd-with-notify '
-    commandline -f end-of-line
-end

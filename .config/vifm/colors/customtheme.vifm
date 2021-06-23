@@ -2,14 +2,18 @@
 
 hi clear
 
-hi Border		cterm=none 			ctermfg=0 			ctermbg=0
-hi TopLine		cterm=none			ctermfg=0			ctermbg=12
-hi TopLineSel	cterm=bold			ctermfg=0
+hi Border       cterm=none              ctermfg=0       ctermbg=none
+hi TopLine      cterm=none              ctermfg=0       ctermbg=12
+hi TopLineSel   cterm=bold              ctermfg=0
+hi StatusLine   cterm=bold              ctermfg=0       ctermbg=12
+hi CmdLine      cterm=none              ctermfg=15      ctermbg=none
 
-hi StatusLine	cterm=bold			ctermfg=0			ctermbg=12
-hi CmdLine		cterm=none			ctermfg=15			ctermbg=0
-" TODO
-"
+hi Selected     cterm=bold              ctermfg=0       ctermbg=3
+
 " Entry types
-hi Directory	cterm=bold			ctermfg=5			ctermbg=0
-hi Selected     cterm=bold          ctermfg=0           ctermbg=3
+hi Link         cterm=underline         ctermfg=14      ctermbg=none
+hi Directory    cterm=bold              ctermfg=5       ctermbg=none
+hi BrokenLink   cterm=bold              ctermfg=9       ctermbg=none
+hi Executable   cterm=bold              ctermfg=10      ctermbg=none
+hi HardLink     cterm=bold,underline    ctermfg=none    ctermbg=none
+hi Fifo         cterm=none              ctermfg=3       ctermbg=none
