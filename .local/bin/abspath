@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+pushd "$(dirname "$1")" >/dev/null
+echo "$PWD/$(basename "$1")"
+popd >/dev/null

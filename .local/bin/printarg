@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Print commandline arguments passed to this function
+printf "%s\n" "$@"

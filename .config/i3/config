@@ -1,22 +1,6 @@
 # vim: filetype=i3
 
 set $mod Mod4
-mode " Camera" {
-
-  bindsym s           exec --no-startup-id "camclip show"
-  bindsym $mod+s      exec --no-startup-id "camclip show"
-  bindsym r           exec --no-startup-id "camclip start"
-  bindsym $mod+r      exec --no-startup-id "camclip start"
-  bindsym h           exec --no-startup-id "camclip hide"
-  bindsym $mod+h      exec --no-startup-id "camclip hide"
-  bindsym x           exec --no-startup-id "camclip stop"
-  bindsym $mod+x      exec --no-startup-id "camclip stop"
-  bindsym p           exec --no-startup-id "camclip play"
-  bindsym $mod+p      exec --no-startup-id "camclip play"
-
-  bindsym Escape mode "default"
-}
-bindsym $mod+Tab mode " Camera"
 
 # ┏━━━━━━━━━━━━━┓
 # ┃ Definitions ┃
