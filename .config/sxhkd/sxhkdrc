@@ -1,0 +1,61 @@
+# Dmenu stuff
+mod4 + slash
+   dmenu_run
+mod4 + c
+   dmenu_run cf
+mod4 + o
+   dmenu_run open
+mod4 + shift + p
+   clipmenu
+mod4 + q
+   dmenu_run system
+
+# Applications
+mod4 + Return
+	alacritty
+mod4 + shift + Return
+	alacritty --class Float,Alacritty
+mod4 + shift + f
+	firefox -P haris
+mod4 + shift + v
+	alacritty --class Float,Alacritty -e fish -C vifm
+mod4 + shift + t
+	alacritty --class Float,Alacritty -e trans -shell
+mod4 + shift + s
+	flameshot && flameshot gui
+mod4 + shift + Print
+	flameshot && flameshot config
+mod4 + v
+	gvim
+mod4 + shift + e
+	emacsclient --create-frame
+mod4 + shift + w
+	fish -c wiki
+mod4 + shift + o
+	fish -c todo
+
+# Increase volume
+XF86AudioRaiseVolume
+   	amixer set Master 5%+
+
+# Decrease volume
+XF86AudioLowerVolume
+   	amixer set Master 5%-
+
+# Mute
+XF86AudioMute
+   	amixer set Master toggle
+
+# Increase backlight
+XF86MonBrightnessUp
+   	xbacklight -inc 10
+
+# Decrease backlight
+XF86MonBrightnessDown
+   	xbacklight -dec 10
+
+# Browser: switch to google search
+mod1 + i
+   	browser-google-search
+
+# vim: ft=sxhkd

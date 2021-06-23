@@ -5,7 +5,7 @@ if [ "$1" = 'in' ]; then
     notify-send 'QR Code:' "$output"
     echo "$output" | xsel -b
     if echo "$output" | grep -q '^https://'; then
-        librewolf "$output"
+        firefox "$output"
     fi
 else # out
     [ -t 0 ] && input="$(xsel -b -o)" || input="$(cat)"

@@ -24,7 +24,7 @@ official etckeeper
 official networkmanager iw wpa_suplicant proton
 official bluez bluez-libs bluez-tools bluez-utils
 # Low-level
-official xorg acpilight qtile i3-gaps picom
+official xorg acpilight qtile i3-gaps picom xbindkeys sxhkd
 unofficial tdm polybar
 
 # Editors and viewers

@@ -36,5 +36,6 @@ abbr c  'conf'
 
 abbr tb 'nc termbin.com 9999'
 abbr asc 'asciinema'
+abbr mic 'amixer set Capture toggle'
 
 set aur 'aur@aur.archlinux.org'

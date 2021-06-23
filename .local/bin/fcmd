@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-type $@ | awk '{print $3}'
-
+type "$@" 2>/dev/null | awk '{print $3}'
+exit "${PIPESTATUS[0]}"

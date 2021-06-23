@@ -41,4 +41,6 @@ case "$1" in
     gtk3)           echo ~/.config/gtk-3.0/settings.ini ;;
     tuterm)         echo ~/.config/tuterm/config.sh ;;
     bash)           echo ~/.bashrc ;;
+    xinit)          echo ~/.xinitrc ;;
+    sxhkd)          echo ~/.config/sxhkd/sxhkdrc ;;
 esac

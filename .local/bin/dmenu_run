@@ -1,5 +1,10 @@
 #!/usr/bin/env sh
 
+# If an argument is provided, run corresponding custom dmenu script
+[ -n "$1" ] && ~/.local/lib/dmenu/"$1"
+# Otherwise open a generic dmenu where the user will choose what dmenu script
+# or other program to run
+
 run_script() { ~/.local/lib/dmenu/"$1"; }
 
 extract_aliases() {
@@ -87,14 +92,14 @@ case "$choice" in
     "Color")
         run_script color ;;
     "Unicode")
-        run_script unicode.py ;;
+        run_script unicode ;;
     "Kill Process")
         run_script pkill ;;
     "Fix Wifi")
         rfkill block wifi && rfkill unblock wifi ;;
         #nmcli networking off; sleep 6; nmcli networking on ;;
     "Config")
-        run_script cf.py ;;
+        run_script cf ;;
     "System")
         run_script system ;;
     "Update cache")
@@ -118,6 +123,6 @@ case "$choice" in
             fi
         done
         # Fallback, if the entry matches none of the above, just run the command
-        cmd-with-notify $choice
+        fish -C "cmd-with-notify $choice"
         ;;
 esac

@@ -11,9 +11,9 @@ complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:
 for cmd in {,cd,vi,cat,e}cf
     complete --command $cmd --no-files -a '(lscf)'
 end
-for cmd in {f,cd,vi,cat,e}cmd
+for cmd in {f,cd,vi,cat,e, rm}cmd
     complete -c $cmd -f \
-        -a '(ls -1 $PATH 2>/dev/null | grep -v \':$\' | sed "s/->.*//g")'
+        -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
 end
 
 complete -c snip -f -a \

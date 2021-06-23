@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+
+edit=" Edit..."
+
+entries="$(ls ~/projects/*/TODO.org | while read p; do basename "$(dirname "$p")"; done)"
+
+choice="$(
+    ls ~/projects/*/TODO.org \
+    | while read p;do
+        basename "$(dirname "$p")"
+    done \
+    | dmenu -p TODO:
+)"
+
+fish -c "emacs $HOME/projects/$choice/TODO.org"

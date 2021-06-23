@@ -14,8 +14,6 @@ mode " Camera" {
   bindsym p           exec --no-startup-id "camclip play"
   bindsym $mod+p      exec --no-startup-id "camclip play"
 
-  # Back to normal: Enter or Escape or $mod+r
-  bindsym Return mode "default"
   bindsym Escape mode "default"
 }
 bindsym $mod+Tab mode " Camera"
@@ -95,11 +93,6 @@ set $resize_term  resize set width 710
 # ┃ STARTUP ┃
 # ┗━━━━━━━━━┛
 
-  # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-  # screen before suspend. Use loginctl lock-session to lock your screen.
-  # TODO temporarily commented out
-  #exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
   exec_always --no-startup-id \
     /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
 
@@ -122,13 +115,6 @@ set $resize_term  resize set width 710
   # Navigation
   bindsym $mod+m            scratchpad show
   bindsym $mod+Shift+m      move scratchpad
-  # bindsym $mod+Tab          exec --no-startup-id \
-    # /home/haris/.local/share/i3/i3-cycle-focus.py --switch
-
-  bindsym $mod+Shift+7      exec --no-startup-id "dmenu_run"
-  bindsym $mod+c            exec --no-startup-id "~/.local/lib/dmenu/cf.py"
-  bindsym $mod+o            exec --no-startup-id "~/.local/lib/dmenu/open"
-  bindsym $mod+Shift+p      exec --no-startup-id clipmenu
 
   # Change focus
   bindsym $mod+h            focus left
@@ -187,9 +173,7 @@ set $resize_term  resize set width 710
     bindsym Shift+4         $resize4
 
     # Back to normal: Enter or Escape or $mod+r
-    bindsym Return          mode "default"
     bindsym Escape          mode "default"
-    bindsym $mod+r          mode "default"
   }
   bindsym $mod+r            mode " resize"
 
@@ -197,9 +181,9 @@ set $resize_term  resize set width 710
     bindsym r               reload
     bindsym Ctrl+r          restart
     bindsym q               exit
+    bindsym k               exec --no-startup-id kbind
 
     bindsym Escape          mode "default"
-    bindsym $mod+period     mode "default"
   }
   bindsym $mod+period       mode "Session"
 
@@ -215,11 +199,10 @@ set $resize_term  resize set width 710
     bindsym Shift+0         exec --no-startup-id i3_balance_workspace
     bindsym a               exec --no-startup-id \
                               "pgrep autotiling && pkill autotiling || autotiling"
-    bindsym i               move workspace to output eDP-1
-    bindsym u               move workspace to output HDMI-1-0
+    bindsym 1               move workspace to output eDP-1
+    bindsym 2               move workspace to output HDMI-1-0
 
     bindsym Escape          mode "default"
-    bindsym $mod+s          mode "default"
   }
   bindsym $mod+s            mode " WM"
 
@@ -228,7 +211,6 @@ set $resize_term  resize set width 710
     bindsym o               exec --no-startup-id "qr out"
 
     bindsym Escape          mode "default"
-    bindsym $mod+Shift+q    mode "default"
   }
   bindsym $mod+Shift+q      mode " QR"
 
@@ -291,28 +273,9 @@ bar {
   }
 }
 
-# ┏━━━━━━━━━━━━━━┓
-# ┃ APPLICATIONS ┃
-# ┗━━━━━━━━━━━━━━┛
-
-  bindsym $mod+Return       exec "alacritty"
-  bindsym $mod+Shift+Return exec "alacritty --class           \
-                              Float,Alacritty"
-  bindsym $mod+Shift+v      exec "alacritty                   \
-                              --class Float,Alacritty -e fish -C vifm"
-  bindsym $mod+Shift+t      exec "alacritty                   \
-                              --class Float,Alacritty -e trans -shell"
-
-  bindsym $mod+Shift+f      exec "librewolf -P haris"
-  bindsym $mod+Shift+s      exec --no-startup-id "flameshot && flameshot gui"
-  bindsym $mod+Shift+Print  exec --no-startup-id "flameshot && flameshot config"
-
-  bindsym $mod+v            exec "gvim"
-  bindsym $mod+Shift+e      exec "emacsclient --create-frame"
-  bindsym $mod+Shift+w      exec "fish -c wiki"
-  bindsym $mod+Shift+o      exec "fish -c todo"
-
-  bindsym $mod+q            exec "~/.local/lib/dmenu/system"
+# ┏━━━━━━━━━━━━━━━━━━━┓
+# ┃ APPLICATION RULES ┃
+# ┗━━━━━━━━━━━━━━━━━━━┛
 
   for_window [instance="Float"      class="Alacritty"]  floating enable
   for_window [instance="Float"      class="Alacritty"]  move scratchpad

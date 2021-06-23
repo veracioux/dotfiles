@@ -60,8 +60,25 @@ function ecf;    set file (cf "$argv");   test -f "$file" && emacs       "$file"
 
 function cdcmd;  set file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
 function catcmd; set file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
-function vicmd;  set file (fcmd "$argv"); test -f "$file" && vim         "$file" ; end
 function ecmd;   set file (fcmd "$argv"); test -f "$file" && emacs       "$file" ; end
+function rmcmd;  set file (fcmd "$argv"); rm "$file";                              end
+function vicmd
+    set file (fcmd "$argv");
+    if [ -f "$file" ]
+        vim "$file"
+    else
+        read -n 1 -P "Create new script? [Y/n]: " choice
+        if [ -z "$choice" -o "$choice" = 'y' ]
+            set file ~/.local/bin/"$argv[1]"
+            tem put sh -o "$file"
+            chx "$file"
+            vim +'$' "$file"
+        else
+            echo 'Aborting...'
+            return 1
+        end
+    end
+end
 
 ####################################
 # Helper functions for keybindings #
