@@ -10,4 +10,4 @@ else
 	rm -f ${extarray[*]/#/\*.} # **/*.extension
 fi
 
-exit 
+exit
