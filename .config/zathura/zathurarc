@@ -34,3 +34,4 @@ set index-active-fg "#1e1e1e"
 set index-active-bg "#99a3ff"
 
 map b toggle_statusbar
+map <M-f> exec "zathura %"

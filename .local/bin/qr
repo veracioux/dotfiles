@@ -1,12 +1,17 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+
+copy_show_open() {
+    notify-send 'QR Code:' "$@"
+    echo "$1" | xsel -b
+    if echo "$1" | grep -q '^https://'; then
+        firefox --new-tab "$@"
+    fi
+}
 
 if [ "$1" = 'in' ]; then
-    output="$(timeout 10s zbarcam /dev/video1 -1 | sed 's/^QR-Code://')"
-    notify-send 'QR Code:' "$output"
-    echo "$output" | xsel -b
-    if echo "$output" | grep -q '^https://'; then
-        firefox "$output"
-    fi
+    copy_show_open "$(timeout 10s zbarcam /dev/video1 -1 | sed 's/^QR-Code://')"
+elif [ "$1" = 'screen' -o "$1" = 's' ]; then
+    copy_show_open "$(zbarimg -q <(maim | cat) | sed 's/^QR-Code://')"
 else # out
     [ -t 0 ] && input="$(xsel -b -o)" || input="$(cat)"
     echo "$input" | qrencode -s 10 -o - | feh -

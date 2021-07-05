@@ -5,7 +5,7 @@ syntax on
 set number relativenumber
 set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\
 set nocompatible				" required
-filetype plugin indent on		"required
+filetype plugin indent on		" required
 syntax enable
 
 source ~/.vimrc.tmp
@@ -49,7 +49,7 @@ augroup custom_syntax
 	autocmd!
 	autocmd BufEnter * if &syntax == '' && expand('%:e') == '' | set ft=sh | endif
 	autocmd BufNewFile,BufRead *.spacemacs set syntax=lisp
-	autocmd BufNewFile,BufRead .octaverc set syntax=matlab
+	autocmd BufNewFile,BufRead .octaverc* set syntax=matlab | set ft=matlab
 	autocmd BufNewFile,BufRead *.snippets set ft=snippets
 	autocmd BufNewFile,BufRead *.py set foldmethod=indent
 	autocmd BufNewFile,BufRead *.fish set ft=fish
@@ -189,9 +189,10 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 	command! WhichHi :echo synIDattr(synID(line("."), col("."), 1), "name")
 
 	" Run the current buffer as a script
-	nmap <leader>r :w \| !./%<CR>
+	nmap <leader>r :w \| !%:p<CR>
 	nmap <leader>m :!make<CR>
 	nmap <leader>c :w \| !cmake -S . -B _build && cmake --build _build<CR>
+	nmap <leader>f :!gvim '%:p'<CR>
 
 	" NERDTree
 	noremap		<leader>n :NERDTreeToggle<CR>
@@ -236,7 +237,7 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 	set completeopt=menu,menuone
 
     " Make autocompletion work with css
-    let g:ycm_semantic_triggers['css'] = [ 're!^', 're!^\s+', ': ' ]
+	let g:ycm_semantic_triggers['css'] = [ 're!^', 're!^\s+', ': ' ]
     let g:ycm_semantic_triggers['scss'] = [ 're!^', 're!^\s+', ': ' ]
 
 	" Alt+Tab inserts a tab character
@@ -401,9 +402,13 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 " 	┃ NERDCommenter ┃
 " 	┗━━━━━━━━━━━━━━━┛
 " 	{{{
-	let g:NERDCompactSexyComs 			= 0
-	let g:NERDSpaceDelims 				= 1
-	let g:NERDTrimTrailingWhitespace 	= 1
+    let g:NERDCreateDefaultMappings  = 1
+	let g:NERDCompactSexyComs        = 0
+	let g:NERDSpaceDelims            = 1
+    let g:NERDTrimTrailingWhitespace = 1
+    " TODO WHY DON'T THESE WORK???
+    " nmap <Leader>cl <plug>(NERDCommenterToggle)
+    " vmap <Leader>cl <plug>(NERDCommenterToggle)
 " 	}}}
 " 	┏━━━━━━━┓
 " 	┃ Align ┃

@@ -82,10 +82,10 @@ key_bindings:
 
 - { key: U,     mods: Alt,      action: ScrollPageUp,   mode: ~AppCursor }
 - { key: D,     mods: Alt,      action: ScrollPageDown, mode: ~AppCursor }
-- { key: H,     mods: Alt,      chars: "\x1b[D",        mode: ~AppCursor }
 - { key: J,     mods: Alt,      action: ScrollLineDown, mode: ~AppCursor }
 - { key: K,     mods: Alt,      action: ScrollLineUp,   mode: ~AppCursor }
-- { key: L,     mods: Alt,      chars: "\x1b[C",        mode: ~AppCursor }
+- { key: H,     mods: Alt,      chars: "\x1b[D"                          }
+- { key: L,     mods: Alt,      chars: "\x1b[C"                          }
   #- { key: P,     mods: Control,  chars: "\x1b[A",        mode: ~AppCursor }
   #- { key: N,     mods: Control,  chars: "\x1b[B",        mode: ~AppCursor }
 - { key: Space, mods: Control,  action: ToggleViMode,   mode: ~AppCursor }

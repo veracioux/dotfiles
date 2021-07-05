@@ -178,11 +178,11 @@ set $resize_term  resize set width 710
     bindsym s               layout stacking
     bindsym t               layout tabbed
     bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
-    bindsym x               exec --no-startup-id "xrandr-toggle"
     # equal key on my keyboard
     bindsym Shift+0         exec --no-startup-id i3_balance_workspace
     bindsym a               exec --no-startup-id \
                               "pgrep autotiling && pkill autotiling || autotiling"
+    bindsym x               exec xrandr-toggle; mode "default"
     bindsym 1               move workspace to output eDP-1
     bindsym 2               move workspace to output HDMI-1-0
 

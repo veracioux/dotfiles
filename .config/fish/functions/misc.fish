@@ -29,7 +29,7 @@ end
 function vh; vim -c ":h $argv | only"; end
 
 # Save the path of the argument to the clipboard
-function copypath; realpath -z $argv | xsel -b; end
+function copypath; realpath $argv | xsel -b; end
 
 # When you ls, save the argument so you can quickly cd to that folder.
 # It's not fool-proof, but it works in most situations and it's safe.

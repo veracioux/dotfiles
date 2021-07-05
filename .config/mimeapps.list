@@ -49,3 +49,4 @@ application/x-dxf=librecad.desktop
 x-scheme-handler/http=firefox.desktop;
 x-scheme-handler/https=firefox.desktop;
 x-scheme-handler/file=nemo.desktop
+x-scheme-handler/viber=viber.desktop

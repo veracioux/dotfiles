@@ -10,8 +10,12 @@
 (define-key evil-visual-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
 (define-key evil-visual-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
+
 ;; Evil-nerd-commenter
 (evilnc-default-hotkeys)
+(add-hook 'octave-mode-hook
+  (lambda ()
+    (setq comment-start "% " comment-end "")))
 
 ;; Scroll with Alt
 (define-key evil-normal-state-map (kbd "M-k") 'evil-scroll-line-up)
@@ -24,6 +28,16 @@
 (define-key evil-insert-state-map (kbd "C-k") 'evil-window-up)
 (define-key evil-insert-state-map (kbd "C-h") 'evil-window-left)
 (define-key evil-insert-state-map (kbd "C-l") 'evil-window-right)
+
+;; Octave mode
+;; TODO
+(defun octave-write-and-source ()
+  (interactive
+    (octave-source-file)
+  )
+)
+
+(define-key evil-normal-state-map (kbd ",ss") 'octave-write-and-source)
 
 ;; Toggle emphasis markers
 (defun org-toggle-emphasis ()

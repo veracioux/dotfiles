@@ -38,12 +38,13 @@ official python python-pip python-sphinx
 
 # Utilities
 official xsel moreutils rsync findutils dialog fzf clipmenu entr gnu-netcat
+official flameshot maim zbar
 official neomutt translate-shell
 official speedcrunch
 unofficial urlview buku-git asciinema dragon-drag-and-drop
 
 # Plugins
-official fisher vundle firefox-tridactyl
+official fisher firefox-tridactyl
 
 # Resources
 official adobe-source-code-pro-fonts ttf-lato ttf-font-awesome

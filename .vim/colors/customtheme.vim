@@ -68,9 +68,9 @@ exe "hi Visual          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."   ".s:vmod
 exe "hi vimCommentTitle ".s:vmode."fg=".s:G."                           ".s:vmode."=bold      "
 
 " VimDiff
-exe "hi DiffDelete      ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:r."                         "
-exe "hi DiffAdd         ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:g."                         "
-exe "hi DiffChange      ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                         "
+exe "hi DiffDelete      ".s:vmode."fg=".s:R."   ".s:vmode."bg=none""    ".s:vmode."=bold      "
+exe "hi DiffAdd         ".s:vmode."fg=".s:G."   ".s:vmode."bg=none""    ".s:vmode."=bold      "
+exe "hi DiffChange      ".s:vmode."fg=".s:M."   ".s:vmode."bg=none""    ".s:vmode."=bold      "
 exe "hi DiffText        ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:x."   ".s:vmode."=bold      "
 
 " YouCompleteMe

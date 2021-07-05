@@ -50,7 +50,6 @@
 # ┃ Misc/Advanced ┃
 # ┗━━━━━━━━━━━━━━━┛
 # {{{
-    dmenu                = dmenu -p Dunst:
     browser              = /usr/bin/firefox --new-tab
 
     always_run_script    = true

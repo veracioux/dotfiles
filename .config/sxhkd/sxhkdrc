@@ -34,23 +34,15 @@ mod4 + shift + w
 mod4 + shift + o
 	fish -c todo
 
-# Increase volume
+# Volume and brightness
 XF86AudioRaiseVolume
    	amixer set Master 5%+
-
-# Decrease volume
 XF86AudioLowerVolume
    	amixer set Master 5%-
-
-# Mute
 XF86AudioMute
    	amixer set Master toggle
-
-# Increase backlight
 XF86MonBrightnessUp
    	xbacklight -inc 10
-
-# Decrease backlight
 XF86MonBrightnessDown
    	xbacklight -dec 10
 

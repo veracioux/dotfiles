@@ -29,6 +29,7 @@ get_desktop_apps() {
     [ ! -f "$cache_file" ] || [ $age -gt 36000 ]    \
         && pull_desktop_apps                        \
         || cat "$cache_file"
+    find ~/.local/bin -executable -type f -printf '%f\n'
 }
 get_aliases() {
     extract_aliases ~/.alias ~/.alias-tmp

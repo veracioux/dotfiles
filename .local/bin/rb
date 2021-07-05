@@ -10,7 +10,7 @@ index="$(grep "menuentry '\|submenu '" /boot/grub/grub.cfg |\
 
 if [ -z $index ]; then
   echo "No entry found"
-else 
+else
   index=$(( $index - 1 ))
   echo "Selected menuentry: $index. Proceed?"
   read response

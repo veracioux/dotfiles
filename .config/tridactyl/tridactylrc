@@ -8,3 +8,8 @@ bind ,a open about:addons
 bind ,c open about:config
 bind ,d open about:downloads
 bind ,g tabopen google.com
+bind <C-.> tabdetach
+
+autocmd DocStart savannah.gnu.org mode ignore
+autocmd DocStart octave.sourceforge.io mode ignore
+autocmd DocStart gnu.org mode ignore

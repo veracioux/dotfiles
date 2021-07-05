@@ -1,7 +1,11 @@
+% These commandline arguments shall make the rest of this file skipped
+if any(strcmp(argv(), '--eval')) && ~any(strcmp(argv(), '--persist'))
+	return
+end
 
 % So I don't accidentally clear the workspace
 function clear()
-	system('fish -c clear');
+	system('clear');
 end
 
 function CLEAR(varargin)
@@ -12,6 +16,7 @@ end
 
 % Required for symbolic package
 setenv PYTHON python2
+more on
 
 % Packages
 if ~strcmp(getenv('OCTAVE_BASIC'), 'true')
@@ -29,4 +34,4 @@ end
 
 octave_core_file_name('.octave-workspace')
 
-clear
+source ~/.octaverc.private
