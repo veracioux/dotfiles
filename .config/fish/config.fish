@@ -9,6 +9,7 @@ bass source ~/.bashrc
 # Aliases
 source ~/.config/fish/alias.fish
 source ~/.config/fish/tmp.fish
+source ~/.config/fish/private.fish
 # Custom functions
 source ~/.config/fish/functions/misc.fish
 source ~/.config/fish/completions/misc.fish
@@ -22,7 +23,7 @@ set -gx _ZL_CD cd
 tem fish-init
 
 # Set default pager to vim
-set -gx MANPAGER 'viman +Man!'
+set -gx MANPAGER 'viman'
 set -gx MANWIDTH 80
 set -gx EDITOR 'nvim'
 set -gx VISUAL 'gvim'

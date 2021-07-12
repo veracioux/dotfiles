@@ -5,6 +5,12 @@
 (add-hook 'prog-mode-hook #'auto-fill-mode)
 (add-hook 'org-mode-hook 'org-fragtog-mode)
 
+;; ERC
+(load (locate-user-emacs-file "ercrc.el") nil :nomessage)
+
+;; Evil
+(setq evil-undo-system 'undo-tree)
+
 ;; Evil numbers
 (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 (define-key evil-visual-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
@@ -30,12 +36,10 @@
 (define-key evil-insert-state-map (kbd "C-l") 'evil-window-right)
 
 ;; Octave mode
-;; TODO
 (defun octave-write-and-source ()
-  (interactive
-    (octave-source-file)
-  )
-)
+  (interactive)
+  (write-file (buffer-file-name))
+  (octave-source-file (buffer-file-name)))
 
 (define-key evil-normal-state-map (kbd ",ss") 'octave-write-and-source)
 

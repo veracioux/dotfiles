@@ -10,6 +10,8 @@ bind ,d open about:downloads
 bind ,g tabopen google.com
 bind <C-.> tabdetach
 
+unbind <C-b>
+
 autocmd DocStart savannah.gnu.org mode ignore
 autocmd DocStart octave.sourceforge.io mode ignore
 autocmd DocStart gnu.org mode ignore

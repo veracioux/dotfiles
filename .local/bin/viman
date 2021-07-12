@@ -9,9 +9,9 @@
     shift
     cat > /dev/shm/viman
     alacritty --class Float,Alacritty -e fish \
-        -C "cat /dev/shm/viman | nvim --cmd 'let g:haris_man = \"true\"' $*"
+        -C "cat /dev/shm/viman | nvim --cmd 'let g:haris_man = \"true\"' +Man! $*"
     rm -f /dev/shm/viman
 } || {
-    nvim --cmd 'let g:haris_man = "true"' "$@"
+    nvim --cmd 'let g:haris_man = "true"' +Man! "$@"
 }
 

@@ -9,8 +9,9 @@ case "$1" in
     fish)           echo ~/.config/fish/config.fish ;;
     fish-misc)      echo ~/.config/fish/functions/misc.fish ;;
     fish-com)       echo ~/.config/fish/completions/misc.fish ;;
-    fish-tmp)       echo ~/.config/fish/tmp.fish ;;
     fish-alias)     echo ~/.config/fish/alias.fish ;;
+    fish-private)   echo ~/.config/fish/private.fish ;;
+    fish-tmp)       echo ~/.config/fish/tmp.fish ;;
     vim)            echo ~/.vimrc ;;
     vim-theme)      echo ~/.vim/colors/customtheme.vim ;;
     nvim)           echo ~/.config/nvim/init.vim ;;
@@ -43,4 +44,5 @@ case "$1" in
     bash)           echo ~/.bashrc ;;
     xinit)          echo ~/.xinitrc ;;
     sxhkd)          echo ~/.config/sxhkd/sxhkdrc ;;
+    erc)            echo ~/.emacs.d/ercrc.el ;;
 esac

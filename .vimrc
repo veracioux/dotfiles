@@ -48,16 +48,20 @@ let g:is_bash = 1
 augroup custom_syntax
 	autocmd!
 	autocmd BufEnter * if &syntax == '' && expand('%:e') == '' | set ft=sh | endif
+
 	autocmd BufNewFile,BufRead *.spacemacs set syntax=lisp
-	autocmd BufNewFile,BufRead .octaverc* set syntax=matlab | set ft=matlab
+	autocmd BufNewFile,BufRead .octaverc* set syntax=octave | set ft=octave
 	autocmd BufNewFile,BufRead *.snippets set ft=snippets
 	autocmd BufNewFile,BufRead *.py set foldmethod=indent
 	autocmd BufNewFile,BufRead *.fish set ft=fish
 	autocmd BufNewFile,BufRead PKGBUILD set ft=sh
 	autocmd BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
+
 	autocmd FileType cpp set keywordprg=cppman
-	" autocmd FileType python set keywordprg=:Pydoc
 	autocmd FileType sh set foldmethod=syntax
+	autocmd FileType nroff set filetype=troff
+	autocmd FileType groff set filetype=troff
+	" autocmd FileType python set keywordprg=:Pydoc
 augroup END
 " }}}
 
@@ -107,6 +111,7 @@ call plug#begin('~/.vim/plugged')
 		Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
 		Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
 		Plug 'itspriddle/vim-shellcheck'
+		Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
 
 		" IDE
 		Plug 'ycm-core/YouCompleteMe'
@@ -157,10 +162,12 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 
 	nmap		<leader>w	:w<CR>
 
+	" Window navigation
 	noremap 	<C-j>		<C-W>j
 	noremap 	<C-k>		<C-W>k
 	noremap 	<C-h>		<C-W>h
 	noremap 	<C-l>		<C-W>l
+	noremap		<tab>		<C-w><C-w>
 
     " Ctrl+/ calls :noh<CR>
 	noremap		<M-/>   	:noh<CR>
@@ -264,8 +271,8 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 "   ┗━━━━━━┛
 "   {{{
 	let g:jedi#popup_on_dot = 0
-	let g:jedi#auto_vim_configuration = 0
-	let g:jedi#show_call_signatures = 2
+	let g:jedi#auto_vim_configuration = 1
+	let g:jedi#show_call_signatures = 1
     let g:jedi#usages_command = ""
     let g:jedi#rename_command = "<leader>R"
 "	}}}

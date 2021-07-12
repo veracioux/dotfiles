@@ -295,3 +295,7 @@ bar {
   for_window [class="SpeedCrunch" floating]             move position center
 
   for_window [instance="zbar" class="zbar"]             floating enable
+
+  for_window [class="Gimp.*"]                           move container to workspace $ws6
+
+# "gimp-2.10", "Gimp-2.10"

@@ -8,7 +8,7 @@
 run_script() { ~/.local/lib/dmenu/"$1"; }
 
 extract_aliases() {
-    sed "s_.* \(.*\)='.*'.*_\1_" $@
+    sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_" $@
 }
 
 pull_desktop_apps() {
@@ -26,7 +26,7 @@ get_desktop_apps() {
     cache_file=~/.cache/.desktop-apps.txt
     age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
     # Refresh the cache only if the file is older than a specified age (seconds)
-    [ ! -f "$cache_file" ] || [ $age -gt 36000 ]    \
+    [ ! -f "$cache_file" -o  $age -gt 36000 ]    \
         && pull_desktop_apps                        \
         || cat "$cache_file"
     find ~/.local/bin -executable -type f -printf '%f\n'
