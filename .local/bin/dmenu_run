@@ -100,7 +100,7 @@ case "$choice" in
         rfkill block wifi && rfkill unblock wifi ;;
         #nmcli networking off; sleep 6; nmcli networking on ;;
     "Config")
-        run_script cf ;;
+        run_script config ;;
     "System")
         run_script system ;;
     "Update cache")

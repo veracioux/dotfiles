@@ -2,7 +2,7 @@
 mod4 + slash
    dmenu_run
 mod4 + c
-   dmenu_run cf
+   dmenu_run config
 mod4 + o
    dmenu_run open
 mod4 + shift + p
