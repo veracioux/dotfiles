@@ -151,10 +151,12 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 " 	{{{
 	let mapleader = "\<Space>"
 
-	noremap		Y			y$
-	noremap		vv			V
-	noremap		V			v$
+	nnoremap		Y			y$
+	nnoremap		vv			V
+	nnoremap		V			v$
+	nnoremap		<M-.>		:<up><CR>
 
+	" Navigation
 	map			<C-c>		"+y
 	noremap		<M-t> 		:silent !term<CR>
     noremap     <M-j>   	<C-e>
@@ -169,7 +171,7 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 	noremap 	<C-l>		<C-W>l
 	noremap		<tab>		<C-w><C-w>
 
-    " Ctrl+/ calls :noh<CR>
+    " Alt+/ runs :noh
 	noremap		<M-/>   	:noh<CR>
 
 	""" Insertions
@@ -409,13 +411,17 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 " 	┃ NERDCommenter ┃
 " 	┗━━━━━━━━━━━━━━━┛
 " 	{{{
-    let g:NERDCreateDefaultMappings  = 1
+	let g:NERDCreateDefaultMappings  = 1
 	let g:NERDCompactSexyComs        = 0
 	let g:NERDSpaceDelims            = 1
     let g:NERDTrimTrailingWhitespace = 1
-    " TODO WHY DON'T THESE WORK???
-    " nmap <Leader>cl <plug>(NERDCommenterToggle)
-    " vmap <Leader>cl <plug>(NERDCommenterToggle)
+
+    function! NERDCommenter_after()
+		map <leader>cl <plug>NERDCommenterToggle
+		map <leader>cc yyP:call NERDComment('', 'Comment')<CR>j
+		map <leader>ci <plug>NERDCommenterInsert
+		map <leader>C <plug>NERDCommenterToEOL
+    endfunction
 " 	}}}
 " 	┏━━━━━━━┓
 " 	┃ Align ┃

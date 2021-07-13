@@ -24,16 +24,17 @@
     (setq comment-start "% " comment-end "")))
 
 ;; Scroll with Alt
-(define-key evil-normal-state-map (kbd "M-k") 'evil-scroll-line-up)
-(define-key evil-insert-state-map (kbd "M-k") 'evil-scroll-line-up)
-(define-key evil-normal-state-map (kbd "M-j") 'evil-scroll-line-down)
-(define-key evil-insert-state-map (kbd "M-j") 'evil-scroll-line-down)
+(define-key evil-normal-state-map (kbd "M-k")   'evil-scroll-line-up)
+(define-key evil-insert-state-map (kbd "M-k")   'evil-scroll-line-up)
+(define-key evil-normal-state-map (kbd "M-j")   'evil-scroll-line-down)
+(define-key evil-insert-state-map (kbd "M-j")   'evil-scroll-line-down)
 
-;; Move windows
-(define-key evil-insert-state-map (kbd "C-j") 'evil-window-down)
-(define-key evil-insert-state-map (kbd "C-k") 'evil-window-up)
-(define-key evil-insert-state-map (kbd "C-h") 'evil-window-left)
-(define-key evil-insert-state-map (kbd "C-l") 'evil-window-right)
+;; Evil miscellanous
+(define-key evil-normal-state-map (kbd "v v")   'evil-visual-line)
+(define-key evil-normal-state-map (kbd "<tab>") 'other-window)
+(define-key evil-normal-state-map (kbd "M-/")   'evil-ex-nohighlight)
+(global-undo-tree-mode 1)
+(evil-set-undo-system 'undo-tree)
 
 ;; Octave mode
 (defun octave-write-and-source ()
@@ -43,14 +44,18 @@
 
 (define-key evil-normal-state-map (kbd ",ss") 'octave-write-and-source)
 
+;; Inferiors in general
+(define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer)
+(define-key erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
+
 ;; Toggle emphasis markers
 (defun org-toggle-emphasis ()
   "Toggle hiding/showing of org emphasize markers."
   (interactive)
   (if org-hide-emphasis-markers
-      (set-variable 'org-hide-emphasis-markers nil)
+    (set-variable 'org-hide-emphasis-markers nil)
     (set-variable 'org-hide-emphasis-markers t))
-  	(org-mode-restart))
+    (org-mode-restart))
 (global-set-key (kbd "C-c e") 'org-toggle-emphasis)
 (set-variable 'org-hide-emphasis-markers t)
 
@@ -73,23 +78,23 @@
 (require 'ob-python)
 (require 'ob-ipython)
 (org-babel-do-load-languages 'org-babel-load-languages
-  '((shell . t)
-	(C . t)
-	(ipython . t)
-	(python . t)
-	)
+  '((shell    . t)
+    (C 		  . t)
+    (ipython  . t)
+    (python   . t))
 )
 
 ;; C support
-(setq-default dotspacemacs-configuration-layers
-  '((c-c++ :variables c-c++-enable-clang-support t)))
-(setq c-default-style "bsd"
-	  c-basic-offset 4)
+(setq-default
+  dotspacemacs-configuration-layers
+    '((c-c++ :variables c-c++-enable-clang-support t)))
+(setq c-default-style
+  "bsd" c-basic-offset 4)
 
 ;; Show snippets in auto-completion popup
 (setq-default dotspacemacs-configuration-layers
-              '((auto-completion :variables
-                                 auto-completion-enable-snippets-in-popup t)))
+  '((auto-completion :variables
+     auto-completion-enable-snippets-in-popup t)))
 
 (org-agenda-files '("~/data/personal/todo.org"))
 
@@ -101,3 +106,5 @@
 (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
 (setq imaxima-use-maxima-mode-flag t)
 (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
+
+;; vim: shiftwidth=2
