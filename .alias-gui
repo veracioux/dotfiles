@@ -1,4 +1,3 @@
 alias calc='speedcrunch'
 alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
-alias octave="emacs --eval '(progn (run-octave) (delete-other-windows) (comint-clear-buffer))'"
-alias irc="emacs --eval '(erc-tls)'"
+alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"

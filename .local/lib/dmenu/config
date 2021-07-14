@@ -40,7 +40,9 @@ if choice.startswith('dmenu-'):
 elif choice == 'Edit...':
     run_command('cd (dirname (fcmd ' + __file__ + ')); vicmd cf')
 else:
-    run_command('cdcf ' + choice + '; vicf ' + choice)
-
+    if 'emacs' in choice or choice.endswith('.el'):
+        run('fish -c "cdcf {0}; ecf {0}"'.format(choice), shell=True)
+    else:
+        run_command('cdcf {0}; vicf {0}'.format(choice))
 quit()
 

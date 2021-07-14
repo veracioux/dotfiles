@@ -44,5 +44,5 @@ case "$1" in
     bash)           echo ~/.bashrc ;;
     xinit)          echo ~/.xinitrc ;;
     sxhkd)          echo ~/.config/sxhkd/sxhkdrc ;;
-    erc)            echo ~/.emacs.d/ercrc.el ;;
+    erc.el)         echo ~/.emacs.d/ercrc.el ;;
 esac

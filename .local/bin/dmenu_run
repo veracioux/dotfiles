@@ -60,7 +60,9 @@ get_commands() {
     echo "Config"           # Open documentation selection
     echo "System"           # System actions
     echo "Update cache"     # Update desktop app cache
-    echo "tem"              # Launch tem development environment
+    echo "Tem"              # Launch tem development environment
+    echo "Octave"           # Launch octave in emacs
+    echo "Python"           # Launch python interpreter in emacs
     echo "$aliases"
     echo "$gui_aliases"
     get_desktop_apps        # Programs extracted from *.desktop files
@@ -105,8 +107,12 @@ case "$choice" in
         run_script system ;;
     "Update cache")
         rm ~/.cache/.desktop-apps.txt ;;
-    "tem")
+    "Tem")
         alacritty -e fish -C 'pj tem; clear' ;;
+    "Octave")
+        emacsclient --create-frame --eval '(progn (run-octave) (delete-other-windows))' ;;
+    "Python")
+        emacsclient --create-frame --eval '(progn (run-python) (delete-other-windows))' ;;
     # The rest: aliases and regular commands
     *)
         # If the command is an aliased GUI program, just run it
