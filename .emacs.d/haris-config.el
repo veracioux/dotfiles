@@ -33,7 +33,8 @@
 ;; Evil miscellanous
 ;; TODO sort this out
 (define-key evil-normal-state-map (kbd "v")   	'evil-visual-char)
-(define-key evil-normal-state-map (kbd "v v")   'evil-visual-line)
+;; TODO learn how to do this
+;; (define-key evil-normal-state-map (kbd "v v")   'evil-visual-line)
 (define-key evil-normal-state-map (kbd "<tab>") 'other-window)
 (define-key evil-normal-state-map (kbd "M-/")   '(lambda () (interactive)
                                                    (evil-ex-call-command "" "noh" "")))
@@ -85,6 +86,7 @@
 (require 'ob-shell)
 (require 'ob-C)
 (require 'ob-python)
+;; TODO
 ;; (require 'ob-ipython)
 (org-babel-do-load-languages 'org-babel-load-languages
   '((shell    . t)

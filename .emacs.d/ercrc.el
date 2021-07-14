@@ -1,5 +1,4 @@
-; (erc :server "irc.libera.chat" :port "6697" :nick "veracioux")
-
+(require 'erc)
 (setq erc-server "irc.libera.chat"
       erc-nick "veracioux"
       erc-user-full-name "Haris Gušić"
@@ -8,6 +7,7 @@
       erc-kill-buffer-on-part t
       erc-auto-query 'bury)
 
+;; For some reason erc-modules is undefined
 (add-to-list 'erc-modules 'notifications)
 (delete 'readonly erc-modules)
 (erc-services-mode 1)
