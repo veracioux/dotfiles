@@ -50,8 +50,9 @@ augroup custom_syntax
 	autocmd BufEnter * if &syntax == '' && expand('%:e') == '' | set ft=sh | endif
 
 	autocmd BufNewFile,BufRead *.spacemacs set syntax=lisp
-	autocmd BufNewFile,BufRead .octaverc* set syntax=octave | set ft=octave
-	autocmd BufNewFile,BufRead *.snippets set ft=snippets
+	autocmd BufNewFile,BufRead .octave* set syntax=octave | set filetype=octave
+	autocmd BufNewFile,BufRead *.m set filetype=octave
+	autocmd BufNewFile,BufRead *.snippets set filetype=snippets
 	autocmd BufNewFile,BufRead *.py set foldmethod=indent
 	autocmd BufNewFile,BufRead *.fish set ft=fish
 	autocmd BufNewFile,BufRead PKGBUILD set ft=sh
