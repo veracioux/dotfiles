@@ -1,8 +1,11 @@
 command colo colorscheme
 
+command Src  source ~/.config/tridactyl/tridactylrc
+
 colorscheme custom
 
 bind ,p open about:preferences
+bind ,s open about:preferences#search
 bind ,P open about:profiles
 bind ,a open about:addons
 bind ,c open about:config
