@@ -2,6 +2,8 @@
 
 case "$1" in
     alacritty)      echo ~/.config/alacritty/alacritty.yml ;;
+    profile)        echo ~/.profile ;;
+    bash)           echo ~/.bashrc ;;
     alias)          echo ~/.alias ;;
     alias-tmp)      echo ~/.alias-tmp ;;
     alias-gui)      echo ~/.alias-gui ;;
@@ -19,6 +21,7 @@ case "$1" in
     vifm-theme)     echo ~/.config/vifm/colors/customtheme.vifm ;;
     git)            echo ~/.gitconfig ;;
     gh)             echo ~/.config/gh/config.yml ;;
+    hg)             echo ~/.hgrc ;;
     i3)             echo ~/.config/i3/config ;;
     i3status)       echo ~/.config/i3status/config ;;
     picom)          echo ~/.config/picom.conf ;;
@@ -41,7 +44,6 @@ case "$1" in
     gtk2)           echo ~/.gtkrc-2.0.mine ;;
     gtk3)           echo ~/.config/gtk-3.0/settings.ini ;;
     tuterm)         echo ~/.config/tuterm/config.sh ;;
-    bash)           echo ~/.bashrc ;;
     xinit)          echo ~/.xinitrc ;;
     sxhkd)          echo ~/.config/sxhkd/sxhkdrc ;;
     erc.el)         echo ~/.emacs.d/ercrc.el ;;
