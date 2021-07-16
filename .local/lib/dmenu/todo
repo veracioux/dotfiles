@@ -2,14 +2,18 @@
 
 edit=" Edit..."
 
-entries="$(ls ~/projects/*/TODO.org | while read p; do basename "$(dirname "$p")"; done)"
+entries="$(echo "$edit"
+            ls ~/projects/*/TODO.org |
+                while read p; do
+                    basename "$(dirname "$p")"
+                done)"
 
 choice="$(
-    ls ~/projects/*/TODO.org \
-    | while read p;do
-        basename "$(dirname "$p")"
-    done \
-    | dmenu -p TODO:
+    echo "$entries" | dmenu -p TODO:
 )"
 
-fish -c "emacs $HOME/projects/$choice/TODO.org"
+if [ "$choice" = " Edit..." ]; then
+    cd "$(dirname "$0")"; gvim "$0"
+else
+    emacsclient --create-frame "$HOME/projects/$choice/TODO.org"
+fi
