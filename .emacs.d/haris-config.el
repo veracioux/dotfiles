@@ -4,6 +4,39 @@
 (add-hook 'text-mode-hook #'auto-fill-mode)
 (add-hook 'prog-mode-hook #'auto-fill-mode)
 (add-hook 'org-mode-hook 'org-fragtog-mode)
+;; TODO test this out
+(if (not (boundp 'haris-prepended-path))
+    (progn
+      (setq haris-prepended-path "yes")
+      (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))))
+
+;; General bindings
+(global-set-key
+ (kbd "M-t")
+ '(lambda () (interactive)
+    (start-process "" nil
+                   "alacritty"
+                   "--working-directory"
+                   (expand-file-name "."))))
+(global-set-key
+ (kbd "M-e")
+ '(lambda () (interactive)
+    (start-process "" nil
+                   "emacsclient"
+                   "--create-frame"
+                   (buffer-file-name (window-buffer)))))
+(global-set-key
+ (kbd "M-v")
+ '(lambda () (interactive)
+    (start-process "" nil
+                   "gvim"
+                   (buffer-file-name (window-buffer)))))
+(define-key evil-normal-state-map
+ (kbd "SPC f e h")
+ '(lambda () (interactive)
+    (find-file "~/.emacs.d/haris-config.el")))
+
+;; TODO (require 'translate-shell)
 
 ;; Ivy
 (setq ivy-initial-inputs-alist ())
@@ -35,9 +68,14 @@
 (define-key evil-normal-state-map (kbd "v")   	'evil-visual-char)
 ;; TODO learn how to do this
 ;; (define-key evil-normal-state-map (kbd "v v")   'evil-visual-line)
-(define-key evil-normal-state-map (kbd "<tab>") 'other-window)
+(define-key evil-normal-state-map (kbd "TAB") 'other-window)
 (define-key evil-normal-state-map (kbd "M-/")   '(lambda () (interactive)
                                                    (evil-ex-call-command "" "noh" "")))
+(define-key evil-insert-state-map (kbd "M-TAB") 'insert-tab)
+;; Consistent vim navigation
+(define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
+(define-key evil-normal-state-map (kbd "V") (kbd "v$"))
+
 (global-undo-tree-mode 1)
 (evil-set-undo-system 'undo-tree)
 
@@ -56,7 +94,11 @@
   (comint-clear-buffer) (evil-goto-line))
 
 (define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer-goto)
-(define-key erc-mode-map    (kbd "C-l") 'comint-clear-buffer))
+(define-key erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
+
+;; Remove Info mode annoying keybindings
+(define-key Info-mode-map (kbd "l") nil)
+(define-key Info-mode-map (kbd "h") nil)
 
 ;; Toggle emphasis markers
 (defun org-toggle-emphasis ()
@@ -102,8 +144,8 @@
 (setq c-default-style
   "bsd" c-basic-offset 4)
 
-;; Python
-(python :variables python-backend 'lsp python-lsp-server 'pylsp)
+;; Python TODO
+;; (python :variables python-backend 'lsp python-lsp-server 'pylsp)
 
 ;; Show snippets in auto-completion popup
 (setq-default dotspacemacs-configuration-layers

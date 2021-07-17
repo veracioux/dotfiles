@@ -1,5 +1,7 @@
 alias src_fish='source ~/.config/fish/config.fish'
-alias emacs 'o emacsclient --create-frame'
+alias emacs 'emacsclient -t'
+alias octave 'emacs --eval "(progn (run-octave) (delete-other-windows))"'
+alias python 'emacs --eval "(progn (run-python) (delete-other-windows))"'
 function dragon; dragon-drag-and-drop $argv & disown; end
 
 abbr rm 'rm -i'
@@ -21,6 +23,7 @@ abbr spr 'cmd-with-notify sudo pacman -R'
 
 abbr g 'git'
 abbr v 'vim'
+abbr e 'emacs'
 abbr s 'sudo'
 abbr paru 'cmd-with-notify paru'
 abbr py 'python'
