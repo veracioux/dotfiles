@@ -47,4 +47,5 @@ case "$1" in
     xinit)          echo ~/.xinitrc ;;
     sxhkd)          echo ~/.config/sxhkd/sxhkdrc ;;
     erc.el)         echo ~/.emacs.d/ercrc.el ;;
+    mpv)            echo ~/.config/mpv/input.conf ;;
 esac
