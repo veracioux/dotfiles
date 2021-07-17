@@ -11,6 +11,7 @@ bind ,a open about:addons
 bind ,c open about:config
 bind ,d open about:downloads
 bind ,g tabopen google.com
+bind ,m composite get_current_url | mpvsafe
 bind <C-.> tabdetach
 
 unbind <C-b>
