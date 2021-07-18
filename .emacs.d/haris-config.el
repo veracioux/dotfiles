@@ -3,7 +3,7 @@
 (setq default-tab-width 4)
 (add-hook 'text-mode-hook #'auto-fill-mode)
 (add-hook 'prog-mode-hook #'auto-fill-mode)
-(add-hook 'org-mode-hook 'org-fragtog-mode)
+(add-hook 'org-mode-hook   'org-fragtog-mode)
 ;; TODO test this out
 (if (not (boundp 'haris-prepended-path))
     (progn
@@ -35,6 +35,10 @@
  (kbd "SPC f e h")
  '(lambda () (interactive)
     (find-file "~/.emacs.d/haris-config.el")))
+(define-key evil-normal-state-map
+  (kbd "SPC f e r")
+  '(lambda () (interactive)
+     (load-file "~/.emacs.d/haris-config.el")))
 
 ;; TODO (require 'translate-shell)
 
@@ -45,10 +49,10 @@
 (load (locate-user-emacs-file "ercrc.el") nil :nomessage)
 
 ;; Evil numbers
-(define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
-(define-key evil-visual-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
-(define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
-(define-key evil-visual-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
+(define-key evil-normal-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
+(define-key evil-visual-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
+(define-key evil-visual-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
 
 ;; Evil-nerd-commenter
 (evilnc-default-hotkeys)
@@ -65,16 +69,21 @@
 
 ;; Evil miscellanous
 ;; TODO sort this out
-(define-key evil-normal-state-map (kbd "v")   	'evil-visual-char)
+(define-key evil-normal-state-map (kbd "v")     'evil-visual-char)
 ;; TODO learn how to do this
-;; (define-key evil-normal-state-map (kbd "v v")   'evil-visual-line)
-(define-key evil-normal-state-map (kbd "TAB") 'other-window)
+(define-key evil-normal-state-map (kbd "TAB")   'other-window)
 (define-key evil-normal-state-map (kbd "M-/")   '(lambda () (interactive)
                                                    (evil-ex-call-command "" "noh" "")))
-(define-key evil-insert-state-map (kbd "M-TAB") 'insert-tab)
+;; Pressing TAB inserts tab-width spaces
+(define-key evil-insert-state-map (kbd "M-TAB")
+  '(lambda () (interactive)
+     (insert "\t")
+     (untabify
+      (line-beginning-position)
+      (line-end-position))))
 ;; Consistent vim navigation
-(define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
-(define-key evil-normal-state-map (kbd "V") (kbd "v$"))
+(define-key evil-visual-state-map (kbd "v")     'evil-visual-line)
+(define-key evil-normal-state-map (kbd "V")     (kbd "v$"))
 
 (global-undo-tree-mode 1)
 (evil-set-undo-system 'undo-tree)
@@ -97,8 +106,8 @@
 (define-key erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
 
 ;; Remove Info mode annoying keybindings
-(define-key Info-mode-map (kbd "l") nil)
-(define-key Info-mode-map (kbd "h") nil)
+(define-key Info-mode-map   (kbd "l")   nil)
+(define-key Info-mode-map   (kbd "h")   nil)
 
 ;; Toggle emphasis markers
 (defun org-toggle-emphasis ()
@@ -112,9 +121,9 @@
 (set-variable 'org-hide-emphasis-markers t)
 
 ;; LaTeX image preview + fragtog
-(setq org-preview-latex-default-process 'dvisvgm)
-(setq org-latex-create-formula-image-program 'dvisvgm)
-(setq org-preview-latex-image-directory "/tmp/org-mode/ltximg/")
+(setq org-preview-latex-default-process        'dvisvgm)
+(setq org-latex-create-formula-image-program   'dvisvgm)
+(setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
 ;(org-babel-load-file "org-ref.org")
 
 ;; Disable org-mode-indent
@@ -132,10 +141,30 @@
 ;; (require 'ob-ipython)
 (org-babel-do-load-languages 'org-babel-load-languages
   '((shell    . t)
-    (C 		  . t)
-    ;; (ipython  . t)
+    (C        . t)
     (python   . t))
+;;    (ipython  . t)
 )
+
+;; mu4e
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+;;; Set up some common mu4e variables
+(setq mu4e-maildir "~/mail"
+      mu4e-inbox-folder "/INBOX"
+      mu4e-drafts-folder "/[Gmail].Drafts"
+      mu4e-sent-folder "/[Gmail].Sent Mail"
+      mu4e-refile-folder "/[Gmail].All Mail"
+      mu4e-trash-folder "/[Gmail].Trash"
+      mu4e-get-mail-command "mbsync -a"
+      mu4e-update-interval nil
+      mu4e-change-filenames-when-moving t
+      mu4e-compose-signature-auto-include nil
+      mu4e-view-show-images t
+      mu4e-view-show-addresses t)
+
+;;; Mail directory shortcuts
+(setq mu4e-maildir-shortcuts
+      '(("/INBOX" . ?i)))
 
 ;; C support
 (setq-default

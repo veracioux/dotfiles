@@ -46,7 +46,7 @@ values."
      git
      ;; markdown
      org
-     mu4e
+     '((mu4e :variables mu4e-use-maildirs-extension t))
 	   ;; ipython-notebook
      ;; (shell :variables
      ;;        shell-default-height 30
