@@ -1,7 +1,7 @@
 alias src_fish='source ~/.config/fish/config.fish'
 alias emacs 'emacsclient -t'
-alias octave 'emacs --eval "(progn (run-octave) (delete-other-windows))"'
-alias python 'emacs --eval "(progn (run-python) (delete-other-windows))"'
+alias octave 'eoctave -t'
+alias python 'epython -t'
 function dragon; dragon-drag-and-drop $argv & disown; end
 
 abbr rm 'rm -i'

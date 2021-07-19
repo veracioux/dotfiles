@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+emacsclient --eval "(progn (run-octave) (delete-other-windows))" "$@"

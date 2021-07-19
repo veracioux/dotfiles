@@ -110,9 +110,9 @@ case "$choice" in
     "Tem")
         alacritty -e fish -C 'pj tem; clear' ;;
     "Octave")
-        emacsclient --create-frame --eval '(progn (run-octave) (delete-other-windows))' ;;
+        eoctave --create-frame;;
     "Python")
-        emacsclient --create-frame --eval '(progn (run-python) (delete-other-windows))' ;;
+        epython --create-frame;;
     # The rest: aliases and regular commands
     *)
         # If the command is an aliased GUI program, just run it
