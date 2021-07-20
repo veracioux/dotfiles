@@ -20,7 +20,7 @@ set $resize_term  resize set width 710
 # ┗━━━━━━━━━┛
 
   font pango:Source Code Pro, Icons bold 10
-  default_border pixel 3
+  default_border pixel 2
   hide_edge_borders none
   gaps inner 6
   gaps outer 0
@@ -142,6 +142,9 @@ set $resize_term  resize set width 710
     bindsym minus           resize  shrink  width   20; move position center
     bindsym Shift+minus     resize  shrink  height  20; move position center
 
+    # equal key on my keyboard
+    bindsym Shift+0         exec --no-startup-id i3_balance_workspace
+
     bindsym t               $resize_term; mode "default"
 
     # Some standard sizes
@@ -178,8 +181,6 @@ set $resize_term  resize set width 710
     bindsym s               layout stacking
     bindsym t               layout tabbed
     bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
-    # equal key on my keyboard
-    bindsym Shift+0         exec --no-startup-id i3_balance_workspace
     bindsym a               exec --no-startup-id \
                               "pgrep autotiling && pkill autotiling || autotiling"
     bindsym x               exec xrandr-toggle; mode "default"
