@@ -12,3 +12,5 @@
 (delete 'readonly erc-modules)
 (erc-services-mode 1)
 (erc-update-modules)
+
+(define-key evil-normal-state-map (kbd "SPC b j") 'erc-switch-to-buffer)

@@ -11,3 +11,5 @@ shopt -s extglob
 shopt -s autocd
 shopt -s globstar
 unset HISTFILE
+
+export SHELL='/usr/bin/fish'

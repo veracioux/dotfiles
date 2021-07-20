@@ -4,6 +4,7 @@
 (add-hook 'text-mode-hook #'auto-fill-mode)
 (add-hook 'prog-mode-hook #'auto-fill-mode)
 (add-hook 'org-mode-hook   'org-fragtog-mode)
+
 ;; TODO test this out
 (if (not (boundp 'haris-prepended-path))
     (progn
@@ -11,13 +12,9 @@
       (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))))
 
 ;; General bindings
-(global-set-key
- (kbd "M-t")
- '(lambda () (interactive)
-    (start-process "" nil
-                   "alacritty"
-                   "--working-directory"
-                   (expand-file-name "."))))
+(global-set-key (kbd "M-t")
+                '(lambda () (interactive)
+                   (start-process-shell-command "" nil "eterm -t &")))
 (global-set-key
  (kbd "M-e")
  '(lambda () (interactive)
@@ -104,6 +101,20 @@
 
 (define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer-goto)
 (define-key erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
+
+;; Vterm
+(defun vterm-exit () (interactive) (delete-frame))
+
+(setq varson "harry")
+(setq vterm-shell "/usr/bin/fish")
+(setq vterm-exit-functions 'delete-frame)
+(setenv "EMACS_VTERM" "true")
+(add-hook 'vterm-mode-hook (lambda () (read-only-mode -1)))
+(define-key vterm-mode-map (kbd "C-l") 'vterm-clear-scrollback)
+(define-key vterm-mode-map (kbd "C-l") 'erase-buffer)
+(define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
+(evil-define-key 'normal vterm-mode-map (kbd "A")   'evil-append-line)
+(evil-define-key 'normal vterm-mode-map (kbd "TAB") 'other-window)
 
 ;; Remove Info mode annoying keybindings
 (define-key Info-mode-map   (kbd "l")   nil)
