@@ -22,7 +22,7 @@ case "$1" in
     git)            echo ~/.gitconfig ;;
     gh)             echo ~/.config/gh/config.yml ;;
     hg)             echo ~/.hgrc ;;
-    i3)             echo ~/.config/i3/config ;;
+    i3.org)         echo ~/.config/i3/README.org ;;
     i3status)       echo ~/.config/i3status/config ;;
     picom)          echo ~/.config/picom.conf ;;
     dmenu)          echo ~/.local/bin/dmenu_run ;;
