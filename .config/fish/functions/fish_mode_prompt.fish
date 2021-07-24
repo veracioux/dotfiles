@@ -1,5 +1,5 @@
 function fish_mode_prompt
-	[ -n "$EMACS_VTERM" ] && return
+	[ -n "$EMACS_VTERM_PATH" ] && return
 	switch $fish_bind_mode
 		case default
 			set_color --bold brred

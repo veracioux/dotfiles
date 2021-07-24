@@ -1,7 +1,8 @@
 alias src_fish='source ~/.config/fish/config.fish'
-alias emacs 'emacsclient -t'
+alias emacs  'emacs -t'
 alias octave 'eoctave -t'
 alias python 'epython -t'
+alias term   'term & disown'
 function dragon; dragon-drag-and-drop $argv & disown; end
 
 abbr rm 'rm -i'
