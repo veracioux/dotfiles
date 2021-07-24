@@ -24,9 +24,9 @@ mod4 + shift + v
 mod4 + shift + t
 	alacritty --class Float,Alacritty -e trans -shell
 mod4 + shift + s
-	flameshot && flameshot gui
+	dbus-launch flameshot gui
 mod4 + shift + Print
-	flameshot && flameshot config
+	dbus-launch flameshot config
 mod4 + v
 	gvim
 mod4 + shift + e

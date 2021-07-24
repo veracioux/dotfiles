@@ -113,6 +113,7 @@ call plug#begin('~/.vim/plugged')
 		Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
 		Plug 'itspriddle/vim-shellcheck'
 		Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
+		Plug 'axvr/org.vim', { 'for': ['org'] }
 
 		" IDE
 		Plug 'ycm-core/YouCompleteMe'
@@ -170,7 +171,7 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 	noremap 	<C-k>		<C-W>k
 	noremap 	<C-h>		<C-W>h
 	noremap 	<C-l>		<C-W>l
-	noremap		<tab>		<C-w><C-w>
+	noremap		<M-tab>		<C-w><C-w>
 
     " Alt+/ runs :noh
 	noremap		<M-/>   	:noh<CR>
