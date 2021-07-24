@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+eval "$(cat /tmp/dependencies/*.sh)"
+
