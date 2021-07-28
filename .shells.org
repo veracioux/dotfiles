@@ -1,0 +1,361 @@
+#+TITLE: Shell Config
+
+This is a config for the shells I use:
+
+- *dash* as the system shell (because it's faster)
+- *fish* as my interactive shell
+- *bash* for some scripts because it's more convenient
+
+~~.profile~ is sourced by login, making it available everywhere. ~~/.bashrc~ is
+sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ and
+~~/.alias-gui~ contain aliases that I want available everywhere.
+
+* Fish
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle ~/.config/fish/config.fish
+  :END:
+  Note: I keep fish aliases in [[#alias-fish][Aliases]].
+  #+begin_src fish
+    set fish_greeting ''
+    [ -z "$EMACS_VTERM_PATH" ] && fish_vi_key_bindings || fish_default_key_bindings
+    
+    # Disable path shortening
+    set fish_prompt_pwd_dir_length 0
+    
+    bass source ~/.bashrc                         # Load other shell's config
+    source ~/.config/fish/tmp.fish                # Temporary aliases
+    source ~/.config/fish/private.fish            # Private aliases
+    
+    set -gx MANPAGER 'viman'                      # Set default pager to vim
+    set -gx MANWIDTH 80
+    set -gx EDITOR 'nvim'
+    set -gx VISUAL 'gvim'
+    
+    function fish_user_key_bindings               # Start bindings
+  #+end_src
+** Quasi-vim-like key bindings
+   #+begin_src fish
+     bind -M default \el forward-char
+     bind -M insert \el forward-char
+     bind -M default \eh backward-char
+     bind -M insert \eh backward-char
+     bind -M default \cp up-or-search
+     bind -M insert \cp up-or-search
+     bind -M default \cn down-or-search
+     bind -M insert \cn down-or-search
+   #+end_src
+** Other bindings
+   #+begin_src fish
+     # Copy the current contents of the command line
+     bind -M default \ec 'commandline -b | xsel -b'
+     bind -M insert  \ec 'commandline -b | xsel -b'
+     
+     # Run the current command in bash
+     bind -M default \eb __haris_run_in_bash
+     bind -M insert  \eb __haris_run_in_bash
+     
+     # Prepend o in front of current command
+     bind -M default \eo '__haris_prepend_cmdline o'
+     bind -M insert  \eo '__haris_prepend_cmdline o'
+     
+     # Prepend o in front of current command
+     bind -M default \em '__haris_prepend_cmdline man'
+     bind -M insert  \em '__haris_prepend_cmdline man'
+     
+     bind -M default \et term
+     bind -M insert  \et term
+     
+     bind -M default \en '__haris_prepend_cmdline cmd-with-notify'
+     bind -M insert  \en '__haris_prepend_cmdline cmd-with-notify'
+     
+     bind -M default \ef 'dragon (command ls | fzf --multi)'
+     bind -M insert  \ef 'dragon (command ls | fzf --multi)'
+     end                                          # End fish_user_key_bindings
+   #+end_src
+*** Helper functions
+    #+begin_src fish
+      function __haris_run_in_bash
+          set -l cmd (commandline -b)
+          echo
+          eval bash -c "'source ~/.bashrc; $cmd'"
+          commandline -f repaint
+          commandline -r ''
+      end
+      
+      function __haris_prepend_cmdline
+          commandline --cursor 0
+          commandline --insert "$argv "
+          commandline --function end-of-line
+      end
+    #+end_src
+** Custom colors
+   #+begin_src fish
+     set -U fish_color_command           brblue
+     set -U fish_color_quote             brgreen
+     set -U fish_color_param             brcyan
+     set -U fish_color_autosuggestion    brblack
+     set -U fish_color_cancel         -r red
+     set -U fish_color_error             red
+     set -U fish_color_comment           green
+     set -U fish_color_operator          normal
+     set -U fish_color_redirection       brmagenta
+     set -U fish_pager_color_progress    brgreen
+     set -U fish_pager_color_description green
+     set -U fish_color_end               yellow
+   #+end_src
+** Plugins 
+   #+begin_src fish
+     # pj plugin
+     set -gx PROJECT_PATHS ~/projects
+     
+     # z.lua
+     set _ZL_CMD z
+     lua /usr/share/z.lua/z.lua --init fish | source
+     set -gx _ZL_CD cd
+     
+     # tem
+     tem fish-init
+   #+end_src
+*** Dependencies
+    #+begin_src shell :tangle /tmp/dependencies/fish.sh :mkdirp yes
+      paru -S fisher
+      fisher install edc/bass \
+             oh-my-fish/plugin-pj
+    #+end_src
+** Functions
+   #+begin_src fish
+     # Create a new dir and cd
+     function ndir;  mkdir -p "$argv"; cd "$argv"; end
+     
+     # Print first argument
+     function 1; echo $argv[1]; end
+     
+     # Run a command and disown
+     function o; $argv & disown >/dev/null 2>/dev/null; end
+     
+     # Run z through fzf
+     function a
+         z -l $argv | read -z choices
+         set -l count (echo "$choices" | sed '/^$/d' | wc -l)
+         set dest (echo "$choices" | sed '/^$/d' | tac | fzf --select-1)
+     
+         cd (echo "$dest" | sed -E -e '/^$/d' -e 's/^\S+\s+//')
+     end
+     
+     # Open a GUI app and disown
+     function open; for file in $argv; o xdg-open "$file"; end; end
+     
+     # Wrapper around imount script so I can cd to the mount directory
+     function imount
+         command imount $argv
+         cd (cat /tmp/imount_directory)
+     end
+     
+     # Vim help
+     function vh; vim -c ":h $argv | only"; end
+     
+     # Save the path of the argument to the clipboard
+     function copypath; realpath $argv | xsel -b; end
+     
+     # When you ls, save the argument so you can quickly cd to that folder.
+     # It's not fool-proof, but it works in most situations and it's safe.
+     function ls
+         lsd --color=auto $argv
+         set -g __last_ls_folder "$argv"
+     end
+     
+     # cd to the last directory you have ls-ed
+     function cls
+         if test -n "$__last_ls_folder"
+             cd "$__last_ls_folder"
+         end
+     end
+     
+     function chbg
+         set path /usr/share/backgrounds/"$argv[1]"
+         feh --bg-fill "$path"
+         rm ~/.wallpaper
+         ln -s "$path" ~/.wallpaper
+     end
+     
+     # Productivity shortcuts
+     function cdcf;   set file (cf "$argv");   test -f "$file" && cd (dirname "$file"); end
+     function catcf;  set file (cf "$argv");   test -f "$file" && cat         "$file" ; end
+     function vicf;   set file (cf "$argv");   test -f "$file" && vim         "$file" ; end
+     function ecf;    set file (cf "$argv");   test -f "$file" && emacs       "$file" ; end
+     
+     function cdcmd;  set file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
+     function catcmd; set file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
+     function ecmd;   set file (fcmd "$argv"); test -f "$file" && emacs       "$file" ; end
+     function rmcmd;  set file (fcmd "$argv"); rm "$file";                              end
+     function vicmd
+         set file (fcmd "$argv");
+         if [ -f "$file" ]
+             vim "$file"
+         else
+             read -n 1 -P "Create new script? [Y/n]: " choice
+             if [ -z "$choice" -o "$choice" = 'y' ]
+                 set file ~/.local/bin/"$argv[1]"
+                 tem put sh -o "$file"
+                 chx "$file"
+                 vim +'$' "$file"
+             else
+                 echo 'Aborting...'
+                 return 1
+             end
+         end
+     end
+   #+end_src
+** Completions
+   Completions for the functions defined in [[Functions]].
+   #+begin_src fish
+     complete --command chbg --no-files --arguments="(pushd /usr/share/backgrounds/; command ls -1; popd)"
+     complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
+     complete -c snip -f -a \
+         "(pushd ~/.vim/snips; command ls | sed 's_\(.*\)\.snippets_\1_g'; popd)"
+     
+     # *cf and *cmd style commands
+     for cmd in {,cd,vi,cat,e}cf
+         complete --command $cmd --no-files -a '(lscf)'
+     end
+     for cmd in {f,cd,vi,cat,e, rm}cmd
+         complete -c $cmd -f \
+             -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
+     end
+   #+end_src
+* Bash
+  Note: ~~/.bashrc~ is sourced by fish as well.
+  #+begin_src bash :tangle ~/.bashrc
+    PS1='\[\e[1;36m\]\u\[\e[1;31m\]@\[\e[1;34m\]\h \[\e[1;32m\]\W \[\e[1;31m\]\$ \[\e[0;32m\]\[\e[0m\]'
+    
+    source ~/.alias
+    source ~/.alias-tmp
+    source ~/.alias-gui
+    source ~/.alias-gui-tmp
+    
+    # Shell options
+    shopt -s extglob
+    shopt -s autocd
+    shopt -s globstar
+    unset HISTFILE
+    
+    export SHELL='/usr/bin/fish'
+  #+end_src
+* Aliases
+  There are some aliases that I want to have available in all shells. I break
+  them up into two groups: aliases for CLI (~~/.alias~) and aliases GUI programs
+  (~~/.alias-gui~). I make this distinction because my custom ~dmenu_run~ script
+  takes all the aliases from the latter and I can run them as normal programs.
+  Both files have a variant suffixed by ~-tmp~ in which I keep temporary aliases
+  and I do not keep them under version control.
+
+  It makes no sense to launch CLI programs from dmenu. Still, I make aliases
+  from ~~/.alias~ available in ~dmenu_run~. When I enter them in dmenu, it launches
+  a terminal and runs the aliased command.
+** CLI
+   #+begin_src shell :tangle ~/.alias
+     alias x='startx'
+     alias sudo='doas'
+     alias conf='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+     alias sconf='git --git-dir=$HOME/.secret/ --work-tree=$HOME'
+     alias vifm='SHELL=fish ~/.config/vifm/scripts/vifmrun'
+     alias vim='nvim'
+     alias vi='command vim'
+     alias snips='cd ~/.vim/snips'
+     alias vidir='VISUAL=nvim command vidir'
+     alias wkpd='wikicurses'
+     alias SSH='eval (ssh-agent -c) && ssh-add'
+     alias SSHaur='eval (ssh-agent -c) && ssh-add ~/.ssh/aur'
+     alias cppman='PAGER=viman command cppman'
+     alias aurvote='ssh aur@aur.archlinux.org vote'
+     alias ...='cd ../..'
+     alias l1='ls -1'
+     alias src='cd ~/src'
+     alias tmp='cd /tmp'
+     alias stage='mkdir -p /tmp/stage; cd /tmp/stage'
+     alias bin='cd ~/.local/bin'
+   #+end_src
+** GUI
+   #+begin_src shell :tangle ~/.alias-gui
+     alias calc='speedcrunch'
+     alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
+     alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
+   #+end_src
+** Fish
+   :PROPERTIES:
+   :CUSTOM_ID: alias-fish
+   :HEADER-ARGS: :tangle ~/.config/fish/config.fish
+   :END:
+*** Aliases
+    #+begin_src fish
+      alias src_fish   'source ~/.config/fish/config.fish'
+      alias emacs      'emacs'
+      alias octave     'eoctave -t'
+      alias python     'epython -t'
+      alias term       'term & disown'
+      
+      function dragon; dragon-drag-and-drop $argv & disown; end
+    #+end_src
+*** Abbreviations
+    #+begin_src fish
+      # Safety precautions
+      abbr rm 'rm -i'
+      abbr mv 'mv -i'
+      
+      # Pacman commands
+      abbr p   'pacman'
+      abbr pqi 'pacman -Qi'
+      abbr pql 'pacman -Ql'
+      abbr pqm 'pacman -Qm'
+      abbr pqm 'pacman -Qm'
+      abbr pqo 'pacman -Qo'
+      abbr pqs 'pacman -Qs'
+      abbr psi 'pacman -Si'
+      abbr pss 'pacman -Ss'
+      abbr sp  'cmd-with-notify sudo pacman'
+      abbr sps 'cmd-with-notify sudo pacman -S'
+      abbr spr 'cmd-with-notify sudo pacman -R'
+      
+      abbr g 'git'
+      abbr v 'vim'
+      abbr e 'emacs'
+      abbr s 'sudo'
+      abbr paru 'cmd-with-notify paru'
+      abbr py 'python'
+      abbr copy 'xsel -b'
+      abbr paste 'xsel -b -o'
+      abbr oct 'octave'
+      abbr octb 'OCTAVE_BASIC=true command octave'
+      
+      abbr yt 'ytfzf -t -s'
+      abbr t  'tem'
+      abbr vf 'vim (fzf)'
+      abbr fm 'vifm'
+      abbr fb 'facebook-cli'
+      abbr c  'conf'
+      
+      abbr tb 'nc termbin.com 9999'
+      abbr asc 'asciinema'
+      abbr mic 'amixer set Capture toggle'
+    #+end_src
+*** Variables
+    #+begin_src fish
+      set aur 'aur@aur.archlinux.org'
+    #+end_src
+* .profile
+  #+begin_src shell :tangle ~/.profile
+    export MAKEFLAGS='-j4'
+    export GPG_TTY=$(tty)
+    export QT_QPA_PLATFORMTHEME=gtk2
+    
+    export PATH=~/.local/bin:$(echo ~/.local/share/gem/ruby/*/bin):$PATH:~/.pyenv/versions/3.8.3/bin
+    
+    [ -f ~/.alias ]         && . ~/.alias
+    [ -f ~/.alias-tmp ]     && . ~/.alias-tmp
+    [ -f ~/.alias-gui ]     && . ~/.alias-gui
+    [ -f ~/.alias-gui-tmp ] && . ~/.alias-gui-tmp
+  #+end_src
+* Dependencies
+  #+begin_src shell :tangle /tmp/dependencies/shells.sh :mkdirp yes
+    sudo pacman -S dash fish
+  #+end_src

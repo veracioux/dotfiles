@@ -1,3 +1,0 @@
-alias calc='speedcrunch'
-alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
-alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
