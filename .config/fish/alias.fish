@@ -1,5 +1,5 @@
 alias src_fish='source ~/.config/fish/config.fish'
-alias emacs  'emacs -t'
+alias emacs  'emacs'
 alias octave 'eoctave -t'
 alias python 'epython -t'
 alias term   'term & disown'

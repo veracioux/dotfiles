@@ -103,10 +103,10 @@
     (require 'ob-C)
     (require 'ob-python)
     (require 'org-tempo)
-
-    (setq 'org-indent-mode nil)
-    (setq 'org-M-RET-may-split-line nil)
-    (setq 'org-hide-emphasis-markers t)
+    
+    (setq org-indent-mode           nil)
+    (setq org-M-RET-may-split-line  nil)
+    (setq org-hide-emphasis-markers t)
     (setq org-file-apps
           (quote
            ((        . emacs)
@@ -150,11 +150,31 @@
     (erc-services-mode 1)
     (erc-update-modules)
     
-    (define-key evil-normal-state-map (kbd "SPC b j") 'erc-switch-to-buffer)
-    (define-key erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
     (erc-notify-mode t)
     (erc-notifications-mode t)
+    
+    (define-key              erc-mode-map           (kbd "C-l") 'comint-clear-buffer)
+    (evil-define-key 'normal erc-mode-map           (kbd ",b")  'erc-switch-to-buffer)
+    (evil-define-key 'normal erc-mode-map           (kbd ",j")  'erc-join-channel)
+    (evil-define-key 'normal erc-list-menu-mode-map (kbd ",j")  'erc-list-join)
   #+end_src
+** Theme tweak
+   #+begin_src emacs-lisp
+     (setq erc-track-faces-priority-list
+           '(erc-error-face
+             erc-notice-face
+             (erc-nick-default-face erc-current-nick-face)
+             erc-current-nick-face erc-keyword-face
+             (erc-nick-default-face erc-pal-face)
+             erc-pal-face erc-nick-msg-face erc-direct-msg-face
+             (erc-button erc-default-face)
+             (erc-nick-default-face erc-dangerous-host-face)
+             erc-dangerous-host-face erc-nick-default-face
+             (erc-nick-default-face erc-default-face)
+             erc-default-face erc-action-face
+             (erc-nick-default-face erc-fool-face)
+             erc-fool-face erc-input-face erc-prompt-face))
+   #+end_src
 * Octave mode
   #+begin_src emacs-lisp
     (defun octave-write-and-source () (interactive)
