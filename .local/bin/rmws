@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+[ ! -t 0 ] &&\
+    cat | sed 's:\s\+$::' ||\
+    sed 's:\s\+$::' -i "$@"
+

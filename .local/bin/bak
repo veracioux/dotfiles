@@ -22,7 +22,7 @@ for file in "$@"; do
 	if [ "${file:0:1}" != '-' ] &&
 		{ [ -n "$a" ] || [ "$file" = "${file/.bak/}" ]; };
 	then
-		cp "$file" "$file.bak"
+		cp -r "$file" "$file.bak"
 	fi
 
 done
