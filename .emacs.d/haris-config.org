@@ -9,9 +9,12 @@
 * General settings
   #+begin_src emacs-lisp
     (setq fill-column 80)
+    (visual-line-mode)
     (setq default-tab-width 4)
     (setq custom-theme-directory "~/.emacs.d/private/themes")
     (setq browse-url-generic-program (executable-find "firefox"))
+    (setq image-auto-resize 'fit-width)
+    (setq image-auto-resize-on-window-resize t)
     
     (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
     (if (not (boundp 'haris-prepended-path))
@@ -23,7 +26,7 @@
     (add-hook 'text-mode-hook #'auto-fill-mode)
     (add-hook 'prog-mode-hook #'auto-fill-mode)
     
-    ;; TODO needed only in spacemacs
+    ;; NOTE: needed only in spacemacs
     (disable-theme 'spacemacs-dark)
     (load-theme 'dracula t)
   #+end_src
@@ -48,9 +51,9 @@
       (global-set-key
        (kbd "M-e")
        '(lambda () (interactive)
-          (start-process "" nil
-                         "emacs"
-                         (buffer-file-name (window-buffer)))))
+          (start-process-shell-command "" nil
+                                       "emacs -c"
+                                       (buffer-file-name (window-buffer)))))
       (global-set-key
        (kbd "M-v")
        '(lambda () (interactive)
@@ -104,15 +107,30 @@
     (require 'ob-python)
     (require 'org-tempo)
     
-    (setq org-indent-mode           nil)
-    (setq org-M-RET-may-split-line  nil)
-    (setq org-hide-emphasis-markers t)
+    (defun org-mode-visual-fill ()
+           (setq visual-fill-column-width        90
+                 visual-fill-column-center-text  t)
+           (visual-fill-column-mode 1))
+    
+    (add-hook 'org-mode-hook 'org-appear-mode)
+    (add-hook 'org-mode-hook 'org-mode-visual-fill)
+    
+    (setq org-indent-mode           nil
+          org-M-RET-may-split-line  nil
+          org-ellipsis              " ▾")
+    
     (setq org-file-apps
           (quote
            ((        . emacs)
             ("\\.x?html?\\'"  . "firefox %s"))))
   #+end_src
-** Babel 
+** Block templates
+   #+begin_src emacs-lisp
+     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+     (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+     (add-to-list 'org-structure-template-alist '("dep" . "src shell :mkdirp yes :tangle /tmp/dependencies/"))
+   #+end_src
+** Babel
    #+begin_src emacs-lisp
      (org-babel-do-load-languages 'org-babel-load-languages
                                   '((shell    . t)
@@ -122,13 +140,13 @@
 ** LaTeX preview
   #+begin_src emacs-lisp
     (org-agenda-files '("~/data/personal/todo.org"))
-    
+
     (setq org-preview-latex-default-process        'dvisvgm)
     (setq org-latex-create-formula-image-program   'dvisvgm)
     (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
     (setq org-image-actual-width 400)
   #+end_src
-** Bindings 
+** Bindings
    #+begin_src emacs-lisp
      (evil-define-key 'normal org-mode-map (kbd "C-c e") 'visible-mode)
      (evil-define-key 'normal org-mode-map (kbd ",S")    'org-attach-screenshot)
@@ -143,16 +161,16 @@
           erc-autojoin-channels-alist '((".*" "#archlinux" "#octave"))
           erc-kill-buffer-on-part t
           erc-auto-query 'bury)
-    
+
     ;; For some reason erc-modules is undefined
     (add-to-list 'erc-modules 'notifications)
     (delete 'readonly erc-modules)
     (erc-services-mode 1)
     (erc-update-modules)
-    
+
     (erc-notify-mode t)
     (erc-notifications-mode t)
-    
+
     (define-key              erc-mode-map           (kbd "C-l") 'comint-clear-buffer)
     (evil-define-key 'normal erc-mode-map           (kbd ",b")  'erc-switch-to-buffer)
     (evil-define-key 'normal erc-mode-map           (kbd ",j")  'erc-join-channel)
@@ -175,12 +193,17 @@
              (erc-nick-default-face erc-fool-face)
              erc-fool-face erc-input-face erc-prompt-face))
    #+end_src
+* Git
+** GitHub
+   #+begin_src emacs-lisp
+     (setq auth-sources '("~/.authinfo.dev.gpg"))
+   #+end_src
 * Octave mode
   #+begin_src emacs-lisp
     (defun octave-write-and-source () (interactive)
            (write-file (buffer-file-name))
            (octave-source-file (buffer-file-name)))
-    
+
     (evil-define-key 'normal octave-mode-map
       (kbd ",ss") 'octave-write-and-source)
     (evil-define-key 'normal inferior-octave-mode-map
@@ -194,7 +217,7 @@
   #+end_src
 * EAF
 ** Dependencies
-   #+begin_src shell :tangle /tmp/dependencies/emacs-eaf.sh
+   #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs-eaf.sh
      sudo pacman -S git nodejs npm python-pyqt5 python-pyqt5-sip \
           python-pyqtwebengine wmctrl python-pymupdf
      paru -S python-epc
@@ -203,9 +226,9 @@
   #+begin_src emacs-lisp
     (setq vterm-shell "/usr/bin/fish")
     (setq vterm-exit-functions 'delete-frame)
-    
+
     (add-hook 'vterm-mode-hook (lambda () (read-only-mode -1)))
-    
+
     (evil-define-key 'normal vterm-mode-map (kbd "A")   'evil-append-line)
     (evil-define-key 'normal vterm-mode-map (kbd "M-TAB") 'other-window)
   #+end_src
@@ -216,7 +239,7 @@
      ;; (define-key vterm-mode-map (kbd "C-l") 'erase-buffer)
      ;; (define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
    #+end_src
-* TODO Mu4e 
+* TODO Mu4e
  #+begin_src emacs-lisp
    (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
    ;;; Set up some common mu4e variables
@@ -232,12 +255,12 @@
          mu4e-compose-signature-auto-include nil
          mu4e-view-show-images t
          mu4e-view-show-addresses t)
-    
+
    ;;; Mail directory shortcuts
    (setq mu4e-maildir-shortcuts
          '(("/INBOX" . ?i)))
  #+end_src
-* Programming languages 
+* Programming languages
 ** TODO C/C++
    #+begin_src emacs-lisp
      (setq-default
@@ -246,9 +269,10 @@
      (setq c-default-style
            "bsd" c-basic-offset 4)
    #+end_src
-** Python 
-   #+begin_src emacs-lisp
-     ;; (python :variables python-backend 'lsp python-lsp-server 'pylsp)
+** Python
+   #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs-python.sh
+     sudo pacman -S python-language-server yapf
+     sudo pip install pyls-isort pyls-mypy pyls-black pyls-memestra flake8 autoflake
    #+end_src
 * TODO Yasnippet
   #+begin_src emacs-lisp
@@ -280,4 +304,3 @@
     (evil-define-key 'motion-state Info-mode-map   (kbd "[ [")  'Info-prev)
     (evil-define-key 'motion-state Info-mode-map   (kbd "] ]")  'Info-next)
   #+end_src
-
