@@ -77,7 +77,7 @@
   #+begin_src i3wm-config
     exec_always --no-startup-id \
       /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
-    exec_always --no-startup-id "autotiling"
+    # TODO exec_always --no-startup-id "autotiling"
     # Use pactl to adjust volume in PulseAudio.
     set $refresh_i3status killall -SIGUSR1 i3status
   #+end_src
@@ -273,6 +273,12 @@
     for_window [class="matplotlib"]                       floating enable
     for_window [class="matplotlib" floating]              move position center
 
+    # Emacs config editor
+    for_window [title="EmacsConf"]                        floating enable
+    for_window [title="EmacsConf" floating]               move position center
+    for_window [title="EmacsConf"]                        move scratchpad
+    for_window [title="EmacsConf"]                        scratchpad show
+
     # Octave plots
     for_window [class="GNU Octave"]                       floating enable
     for_window [class="GNU Octave" floating]              move position center
@@ -284,7 +290,7 @@
 
     for_window [instance="zbar" class="zbar"]             floating enable
 
-    for_window [class="Gimp.*"]                           move container to workspace $ws6
+    assign [class="Gimp.*"] number $ws6
   #+end_src
 * Dependencies
   #+begin_src shell :tangle no
