@@ -41,7 +41,7 @@ elif choice == 'Edit...':
     run_command('cd (dirname (fcmd ' + __file__ + ')); vicmd cf')
 else:
     if 'emacs' in choice or choice.endswith('.el') or choice.endswith('.org'):
-        run_command('ecf ' + choice)
+        run("fish -c 'ecf {}'".format(choice), shell=True)
     else:
         run_command('cdcf {0}; vicf {0}'.format(choice))
 quit()

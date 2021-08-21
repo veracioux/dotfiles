@@ -11,4 +11,5 @@ dunst &                                     # Notification daemon
 clipmenud &                                 # Daemon for dmenu clipboard
 picom &                                     # Compositor
 redshift &                                  # Blue light filter
+autotiling &                                # Autotiling for i3
 i3                                          # Window manager
