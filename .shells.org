@@ -281,6 +281,8 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     } 2>/dev/null
 
     export SHELL='/usr/bin/fish'
+    export MPD_HOST="localhost"
+    export MPD_PORT="6601"
   #+end_src
 * Aliases
   There are some aliases that I want to have available in all shells. I break
@@ -334,6 +336,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       alias octave     'eoctave -t'
       alias python     'epython -t'
       alias term       'term & disown'
+      alias git        '[ -z $SSH_AGENT_PID ] && SSH; command git'
 
       function dragon; dragon-drag-and-drop $argv & disown; end
     #+end_src
