@@ -203,7 +203,7 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 	nmap <leader>r :w \| !%:p<CR>
 	nmap <leader>m :!make<CR>
 	nmap <leader>c :w \| !cmake -S . -B _build && cmake --build _build<CR>
-	nmap <leader>f :!gvim '%:p'<CR>
+	nmap <leader>f :silent !gvim '%:p' & disown<CR>
 
 	" NERDTree
 	noremap		<leader>n :NERDTreeToggle<CR>
