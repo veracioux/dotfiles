@@ -1,66 +1,74 @@
 [user]
-	email = harisgusic.dev@gmail.com
-	name = Haris Gušić
-	signingkey = 0348E6D2D1D44A6D
+    email = harisgusic.dev@gmail.com
+    name = Haris Gušić
+    signingkey = 0348E6D2D1D44A6D
+[include]
+    path = ~/.gitconfig.private
 [alias]
-	ldog = log --decorate --oneline --graph
-	whenadded = log --diff-filter=A
+    ldog = log --decorate --oneline --graph
+    whenadded = log --diff-filter=A
     i = init
-	s = status
-	a = add
-	c = commit -s
-	d = diff
-	ds = diff --staged
-	ls = ls-tree -r master --name-only
-	lss = ls-tree -r master
-	l = ldog --pretty=format:'%C(magenta bold)%h%Creset					\
-		-%C(auto)%d%Creset %s' 						                    \
-		--abbrev-commit --date=short
-	ll = ldog --pretty=format:'%C(magenta bold)%h%Creset 				\
-		-%C(auto)%d%Creset %s %C(brightcyan)(%ad)' 						\
-		--abbrev-commit --date=short
-	lll = ldog --pretty=format:'%C(magenta bold)%h%Creset 				\
-		-%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' 	\
-		--abbrev-commit --date=short
+    s = status
+    a = add
+    c = commit -s
+    d = diff
+    ds = diff --staged
+    dd = diff HEAD~1..HEAD
+    ls = ls-tree -r master --name-only
+    lss = ls-tree -r master
+    l = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+        -%C(auto)%d%Creset %s' \
+        --abbrev-commit --date=short
+    ll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+        -%C(auto)%d%Creset %s %C(brightcyan)(%ad)' \
+        --abbrev-commit --date=short
+    lll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+        -%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
+        --abbrev-commit --date=short
     p = push
     b = branch
     po = push origin
-	pom = push origin master
+    pom = push origin master
+    poh = push origin HEAD
     pa = push all
-	pam = push all master
+    pam = push all master
     ppo = pull origin
     ppom = pull origin master
+    ppu = pull upstream
+    ppum = pull upstream master
     co = checkout
+    coh = checkout HEAD
     com = checkout master
-	tweak = commit --amend --no-edit
+    tweak = commit --amend --no-edit
+    sub = submodule
 [core]
-	autocrlf = input
-	pager = less -F -X
-	editor = vim
-	whitespace = trailing-space
-	filemode = false
+    autocrlf      = input
+    pager         = less -F -X
+    editor        = vim
+    whitespace    = trailing-space
+    filemode      = false
 [apply]
-	whitespace = fix
+    whitespace    = fix
 [init]
-	defaultBranch = master
+    defaultBranch = master
 
 [color "diff"]
-	context 		= white
-	frag 			= magenta
-	meta 			= brightblue bold
-	hunk 			= red
-	old 			= brightred
-	new 			= brightgreen
-	oldMoved 		= yellow
-	newMoved 		= brightcyan
+    context       = white
+    frag          = magenta
+    meta          = brightblue bold
+    hunk          = red
+    old           = brightred
+    new           = brightgreen
+    oldMoved      = yellow
+    newMoved      = brightcyan
 
 [color "branch"]
-	current 		= blue bold
-	local 			= brightcyan
-	remote 			= brightmagenta
-	upstream 		= magenta
+    current       = blue bold
+    local         = brightcyan
+    remote        = brightmagenta
+    upstream      = magenta
 
 [color "decorate"]
-	head 			= brightblue bold
-	branch 			= brightmagenta bold
-	remoteBranch 	= brightgreen bold
+    head          = brightblue bold
+    branch        = brightmagenta bold
+    remoteBranch  = brightgreen bold
