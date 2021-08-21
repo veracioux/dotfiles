@@ -16,3 +16,7 @@ user_pref("devtools.chrome.enabled", true);
 user_pref("devtools.debugger.remote-enabled", true);
 
 user_pref("tridactyl.unfixedamo_removed", true);
+
+user_pref("dom.security.https_only_mode_ever_enabled_pbm", true);
+user_pref("dom.security.https_only_mode_pbm", true);
+user_pref("signon.generation.enabled", false);
