@@ -7,3 +7,11 @@ editor = nvim
 
 [ls]
 command = lsd --icon=auto --color=auto -1
+
+[alias]
+a = add
+r = repo
+p = path
+e = env
+c = config
+g = git
