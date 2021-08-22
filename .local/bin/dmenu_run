@@ -99,7 +99,7 @@ case "$choice" in
     "Kill Process")
         run_script pkill ;;
     "Fix Wifi")
-        rfkill block wifi && rfkill unblock wifi ;;
+        fix-wifi ;;
         #nmcli networking off; sleep 6; nmcli networking on ;;
     "Config")
         run_script config ;;
