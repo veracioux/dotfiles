@@ -123,7 +123,8 @@
 
     (setq org-indent-mode           nil
           org-M-RET-may-split-line  nil
-          org-ellipsis              " ▾")
+          org-ellipsis              " ▾"
+          org-superstar-headline-bullets-list '("◉" "○" "■" "◆"))
 
     (setq org-file-apps
           (quote
@@ -268,6 +269,14 @@
          '(("/INBOX" . ?i)))
  #+end_src
 * Programming languages
+** LSP
+   #+begin_src emacs-lisp
+     (setq lsp-auto-guess-root t)
+   #+end_src
+** DAP
+   #+begin_src emacs-lisp
+     (setq dap-auto-show-output nil)
+   #+end_src
 ** TODO C/C++
    #+begin_src emacs-lisp
      (setq c-default-style
@@ -373,3 +382,41 @@
     #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs_emms.sh
       sudo pacman -S mpd
     #+end_src
+* Spacemacs
+  #+begin_src emacs-lisp :tangle ~/.spacemacs-init.el
+    (setq-default
+     dotspacemacs-configuration-layers
+     '(syntax-checking
+       octave
+       markdown
+       html
+       spacemacs-language
+       spacemacs-navigation
+       ivy
+       imenu-list
+       auto-completion
+       (c-c++ :variables c-c++-backend 'lsp-clangd c-c++-enable-clang-support t)
+       (cmake :variables cmake-backend 'lsp cmake-enable-cmake-ide-support t)
+       (python :variables python-formatter 'black python-backend 'lsp)
+       dap
+       ;; elpy
+       ;; pythonp
+       ipython-notebook
+       emacs-lisp
+       shell
+       git
+       github
+       (org :variables org-enable-appear-support t)
+       mu4e
+       eaf
+       ;; emms
+       debug))
+
+    (setq-default
+     dotspacemacs-additional-packages
+     '(
+       org-fragtog org-drill org-ref org-attach-screenshot org-special-blocks ob-ipython
+       yasnippet-snippets vterm multi-vterm
+       i3wm-config-mode rainbow-mode fish-mode
+       evil-easymotion reddigg md4rd pydoc pylint))
+  #+end_src
