@@ -333,12 +333,11 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     #+begin_src fish
       alias src_fish   'source ~/.config/fish/config.fish'
       alias emacs      'emacs'
-      alias octave     'eoctave -t'
-      alias python     'epython -t'
       alias term       'term & disown'
       alias git        '[ -z $SSH_AGENT_PID ] && SSH; command git'
 
       function dragon; dragon-drag-and-drop $argv & disown; end
+      function vrg; vim (rg -l $argv); end
     #+end_src
 *** Abbreviations
     #+begin_src fish
@@ -374,10 +373,11 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 
       abbr yt 'ytfzf -t -s'
       abbr t  'tem'
-      abbr vf 'vim (fzf)'
+      abbr v 'vim (fzf)'
       abbr fm 'vifm'
       abbr fb 'facebook-cli'
       abbr c  'conf'
+      abbr fl 'flameshot'
 
       abbr tb 'nc termbin.com 9999'
       abbr asc 'asciinema'
