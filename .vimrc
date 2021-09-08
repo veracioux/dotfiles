@@ -16,7 +16,6 @@ set showcmd
 set breakindent
 set clipboard^=unnamed
 set maxmempattern=2000
-set updatetime=90				" used by gitgutter
 
 set tabstop=4 shiftwidth=4
 set expandtab
@@ -97,23 +96,18 @@ call plug#begin('~/.vim/plugged')
 		Plug 'preservim/nerdcommenter'
 		Plug 'sirver/ultisnips'
 		Plug 'honza/vim-snippets'
-		Plug 'ap/vim-css-color'
 		Plug 'Rykka/InstantRst', { 'for': 'rst' }
 		Plug 'Rykka/riv.vim', { 'for': 'rst' }
 		Plug 'tpope/vim-surround'
-		Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-		Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKeyVisual'] }
 		Plug 'alx741/vinfo', { 'on': ['Vinfo'] }
 
 		" Syntax highlighting
 		Plug 'dag/vim-fish', { 'for': 'fish' }
-		Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'i3' }
 		Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
 		Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
 		Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
 		Plug 'itspriddle/vim-shellcheck'
 		Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
-		Plug 'axvr/org.vim', { 'for': ['org'] }
 
 		" IDE
 		Plug 'ycm-core/YouCompleteMe'
@@ -125,9 +119,7 @@ call plug#begin('~/.vim/plugged')
 		Plug 'derekwyatt/vim-protodef'
 		Plug 'junegunn/fzf.vim'
 		Plug 'junegunn/vim-easy-align'
-		Plug 'airblade/vim-gitgutter'
 		" Python
-		Plug 'davidhalter/jedi-vim', { 'for': 'python' }	" autocompletion
 		Plug 'fs111/pydoc.vim'
 
 		" Misc
@@ -172,6 +164,8 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 	noremap 	<C-h>		<C-W>h
 	noremap 	<C-l>		<C-W>l
 	noremap		<M-tab>		<C-w><C-w>
+
+	noremap		Q			:q<CR>
 
     " Alt+/ runs :noh
 	noremap		<M-/>   	:noh<CR>
