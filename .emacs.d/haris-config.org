@@ -40,10 +40,10 @@
    #+end_src
 ** Avy
 *** Try to make evil-easymotion work bidirectionally
-   #+begin_src emacs-lisp
-     (define-key evil-normal-state-map (kbd "M-w") 'avy-goto-word-0)
-     (define-key evil-normal-state-map (kbd "M-f") 'avy-goto-char)
-   #+end_src
+    #+begin_src emacs-lisp
+      (define-key evil-normal-state-map (kbd "M-w") 'avy-goto-word-0)
+      (define-key evil-normal-state-map (kbd "M-f") 'avy-goto-char)
+    #+end_src
 ** Bindings
    #+begin_src emacs-lisp
      ;; M-TAB in insert mode inserts a tab and converts it to a space
@@ -90,18 +90,22 @@
         'spacemacs/search-project-ag-region-or-symbol)
     #+end_src
 *** Consistent vim navigation
-   #+begin_src emacs-lisp
-     (define-key evil-visual-state-map (kbd "v")     'evil-visual-line)
-     (define-key evil-normal-state-map (kbd "V")     (kbd "v$"))
+    #+begin_src emacs-lisp
+      (define-key evil-normal-state-map (kbd "Q")     'delete-window)
+      (define-key evil-motion-state-map (kbd "Q")     'delete-window)
 
-     (define-key evil-normal-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
-     (define-key evil-visual-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
-     (define-key evil-normal-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
-     (define-key evil-visual-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
+      (define-key evil-visual-state-map (kbd "v")     'evil-visual-line)
+      (define-key evil-normal-state-map (kbd "V")     (kbd "v$"))
 
-     (define-key evil-normal-state-map (kbd "M-/")   '(lambda () (interactive)
-                                                       (evil-ex-call-command "" "noh" "")))
-   #+end_src
+      (define-key evil-normal-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
+      (define-key evil-visual-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
+      (define-key evil-normal-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
+      (define-key evil-visual-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
+
+      (defun haris/nohighlight () (interactive)       (evil-ex-call-command "" "noh" ""))
+      (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
+      (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
+    #+end_src
 * Ivy
   #+begin_src emacs-lisp
     (setq ivy-initial-inputs-alist ())
@@ -114,9 +118,9 @@
     (require 'org-tempo)
 
     (defun org-mode-visual-fill ()
-           (setq visual-fill-column-width        90
-                 visual-fill-column-center-text  t)
-           (visual-fill-column-mode 1))
+      (setq visual-fill-column-width        90
+            visual-fill-column-center-text  t)
+      (visual-fill-column-mode 1))
 
     (add-hook 'org-mode-hook 'org-appear-mode)
     (add-hook 'org-mode-hook 'org-mode-visual-fill)
@@ -130,13 +134,16 @@
           (quote
            ((        . emacs)
             ("\\.x?html?\\'"  . "firefox %s"))))
+
+    (add-to-list 'org-export-backends 'md)
   #+end_src
 ** Block templates
    #+begin_src emacs-lisp
      (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
      (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
      (add-to-list 'org-structure-template-alist '("py" . "src python"))
-     (add-to-list 'org-structure-template-alist '("dep" . "src shell :mkdirp yes :tangle /tmp/dependencies/"))
+     (add-to-list 'org-structure-template-alist
+                  '("dep" . "src shell :mkdirp yes :tangle /tmp/dependencies/"))
    #+end_src
 ** Babel
    #+begin_src emacs-lisp
@@ -146,14 +153,14 @@
                                     (python   . t)))
    #+end_src
 ** LaTeX preview
-  #+begin_src emacs-lisp
-    (org-agenda-files '("~/data/personal/todo.org"))
+   #+begin_src emacs-lisp
+     (org-agenda-files '("~/data/personal/todo.org"))
 
-    (setq org-preview-latex-default-process        'dvisvgm)
-    (setq org-latex-create-formula-image-program   'dvisvgm)
-    (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
-    (setq org-image-actual-width 400)
-  #+end_src
+     (setq org-preview-latex-default-process        'dvisvgm)
+     (setq org-latex-create-formula-image-program   'dvisvgm)
+     (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
+     (setq org-image-actual-width 400)
+   #+end_src
 ** Bindings
    #+begin_src emacs-lisp
      (evil-define-key 'normal org-mode-map (kbd "C-c e") 'visible-mode)
@@ -248,30 +255,32 @@
      ;; (define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
    #+end_src
 * TODO Mu4e
- #+begin_src emacs-lisp
-   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-   ;;; Set up some common mu4e variables
-   (setq mu4e-maildir "~/mail"
-         mu4e-inbox-folder "/INBOX"
-         mu4e-drafts-folder "/[Gmail].Drafts"
-         mu4e-sent-folder "/[Gmail].Sent Mail"
-         mu4e-refile-folder "/[Gmail].All Mail"
-         mu4e-trash-folder "/[Gmail].Trash"
-         mu4e-get-mail-command "mbsync -a"
-         mu4e-update-interval nil
-         mu4e-change-filenames-when-moving t
-         mu4e-compose-signature-auto-include nil
-         mu4e-view-show-images t
-         mu4e-view-show-addresses t)
+  #+begin_src emacs-lisp
+    (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+    ;;; Set up some common mu4e variables
+    (setq mu4e-maildir "~/mail"
+          mu4e-inbox-folder "/INBOX"
+          mu4e-drafts-folder "/[Gmail].Drafts"
+          mu4e-sent-folder "/[Gmail].Sent Mail"
+          mu4e-refile-folder "/[Gmail].All Mail"
+          mu4e-trash-folder "/[Gmail].Trash"
+          mu4e-get-mail-command "mbsync -a"
+          mu4e-update-interval nil
+          mu4e-change-filenames-when-moving t
+          mu4e-compose-signature-auto-include nil
+          mu4e-view-show-images t
+          mu4e-view-show-addresses t)
 
-   ;;; Mail directory shortcuts
-   (setq mu4e-maildir-shortcuts
-         '(("/INBOX" . ?i)))
- #+end_src
+    ;;; Mail directory shortcuts
+    (setq mu4e-maildir-shortcuts
+          '(("/INBOX" . ?i)))
+  #+end_src
 * Programming languages
 ** LSP
    #+begin_src emacs-lisp
-     (setq lsp-auto-guess-root t)
+     ;;(add-to-list 'projectile-project-root-files-functions 'custom/lsp-default-dir)(setq lsp-auto-guess-root t)
+     (setq projectile-require-project-root t)
+     ;; (add-hook 'lsp-mode-hook (lambda () (cd (file-name-directory buffer-file-name))))
    #+end_src
 ** DAP
    #+begin_src emacs-lisp
@@ -285,6 +294,20 @@
      (add-hook 'c-mode-hook    (lambda () (setq tab-width 4)))
      (add-hook 'c++-mode-hook  (lambda () (setq tab-width 4)))
    #+end_src
+*** CMake
+    #+begin_src emacs-lisp
+      (defun haris/cmake-info () (interactive)
+             (info-display-manual "cmake")
+             (Info-top-node))
+      (defun haris/cmake-help () (interactive)
+             (split-window-right-and-focus)
+             (let ((symbol (cmake-symbol-at-point)))
+               (haris/cmake-info)
+               (Info-menu symbol)))
+
+      (evil-define-key 'normal cmake-mode-map (kbd ",hc") 'haris/cmake-info)
+      (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
+    #+end_src
 ** Dependencies
    #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs_c-c++.sh
      sudo pip install cmake-language-server
@@ -295,7 +318,7 @@
      (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
 
      (setq python-shell-interpreter "python3")
-           ;; python-shell-interpreter-args "-i")
+     ;; python-shell-interpreter-args "-i")
 
      (setq lsp-pylsp-plugins-pylint-enabled t
            lsp-pylsp-plugins-flake8-enabled nil
@@ -321,16 +344,17 @@
     #+end_src
 *** Dependencies
     #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs-python.sh
-      sudo pacman -S python-language-server epc flake8 python-typing_extensions
+      sudo pacman -S python-language-server flake8 python-typing_extensions \
+           python-pyls-black python-pylint
       sudo pip install pyls-isort pyls-mypy pyls-black pyls-memestra \
-           autoflake importmagic
+           autoflake importmagic epc ptvsd
     #+end_src
 * TODO Yasnippet
   #+begin_src emacs-lisp
     ;; Show snippets in auto-completion popup
     (setq-default dotspacemacs-configuration-layers
                   '((auto-completion :variables
-                       auto-completion-enable-snippets-in-popup t)))
+                                     auto-completion-enable-snippets-in-popup t)))
   #+end_src
 * Maxima
   I used this mode like 2-3 times, but I'm keeping it in case I have to use it
@@ -347,14 +371,19 @@
 * Info mode
   Remove Info mode annoying keybindings.
   #+begin_src emacs-lisp
-    ;; (define-key Info-mode-map   (kbd "l")   nil)
-    ;; (define-key Info-mode-map   (kbd "h")   nil)
+    (evil-define-key 'motion Info-mode-map (kbd "C-o")  'Info-history-back)
+    (evil-define-key 'motion Info-mode-map (kbd "C-i")  'Info-history-forward)
+    (evil-define-key 'motion Info-mode-map (kbd "[")    'Info-prev)
+    (evil-define-key 'motion Info-mode-map (kbd "]")    'Info-next)
+    (evil-define-key 'motion Info-mode-map (kbd "RET")  'Info-follow-nearest-node)
+    (evil-define-key 'motion Info-mode-map (kbd "TAB")  'Info-next-reference)
+    (evil-define-key 'motion Info-mode-map (kbd "p")    nil)
   #+end_src
 ** TODO Fix bindings that were messed up by evil.
-  #+begin_src emacs-lisp
-    ;; (evil-define-key 'motion-state Info-mode-map   (kbd "[ [")  'Info-prev)
-    ;; (evil-define-key 'motion-state Info-mode-map   (kbd "] ]")  'Info-next)
-  #+end_src
+   #+begin_src emacs-lisp
+     ;; (evil-define-key 'motion-state Info-mode-map   (kbd "[ [")  'Info-prev)
+     ;; (evil-define-key 'motion-state Info-mode-map   (kbd "] ]")  'Info-next)
+   #+end_src
 * Miscellaneous
 ** Reddit
 *** md4rd
@@ -366,7 +395,7 @@
     This is a very elegant reader for reddit that uses org-mode.
     #+begin_src emacs-lisp
       (defun reddit-view-linux () (interactive)
-        (reddigg-view-sub "linux+linuxquestions+opensource"))
+             (reddigg-view-sub "linux+linuxquestions+opensource"))
       (defun reddit-view-elec () (interactive)
              (reddigg-view-sub "plc+ElectricalEngineering+embedded"))
     #+end_src
