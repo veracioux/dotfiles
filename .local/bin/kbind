@@ -3,7 +3,6 @@
 # Temporarily bind keys
 
 pkill sxhkd.tmp
-# gvim -c 'set ft=sxhkd | execute "normal! Go\<tab>\<esc>O" | startinsert' ~/.sxhkd.tmp
-gvim -c 'set ft=sxhkd | execute "normal! Go\<tab>\<esc>O" | startinsert' ~/.sxhkd.tmp
+gvim -c 'set ft=sxhkd' ~/.sxhkd.tmp
 
 sxhkd.tmp -c ~/.sxhkd.tmp &
