@@ -11,6 +11,7 @@
     s = status
     a = add
     c = commit -s
+    ca = commit -s -a -m
     d = diff
     ds = diff --staged
     dd = diff HEAD~1..HEAD
@@ -25,6 +26,9 @@
     lll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
         -%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
         --abbrev-commit --date=short
+    f = fetch
+    fo = fetch origin
+    fu = fetch upstream
     p = push
     b = branch
     po = push origin
@@ -41,6 +45,9 @@
     com = checkout master
     tweak = commit --amend --no-edit
     sub = submodule
+    remaster = reset --hard upstream/master
+    res = restore
+    uns = restore --staged
 [core]
     autocrlf      = input
     pager         = less -F -X
@@ -51,6 +58,11 @@
     whitespace    = fix
 [init]
     defaultBranch = master
+
+[url "https://github.com/"]
+    insteadOf = gh:
+[url "https://gitlab.com/"]
+    insteadOf = gl:
 
 [color "diff"]
     context       = white
