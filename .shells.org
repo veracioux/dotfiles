@@ -175,14 +175,16 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      # It's not fool-proof, but it works in most situations and it's safe.
      function ls
          lsd --color=auto $argv
-         set -g __last_ls_folder "$argv"
+         set -g __last_ls_arg "$argv"
      end
 
-     # cd to the last directory you have ls-ed
-     function cls
-         if test -n "$__last_ls_folder"
-             cd "$__last_ls_folder"
-         end
+     # cd the last directory you have ls-ed
+     function cdls
+         [ -n "$__last_ls_arg" ] && cd "$__last_ls_arg"
+     end
+     # vim the last file you have ls-ed
+     function vils
+         [ -n "$__last_ls_arg" ] && vim "$__last_ls_arg"
      end
 
      function chbg
@@ -230,7 +232,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
            pkill ssh-agent
            return
          end
-         if [ ! -f ~/.cache/ssh_session ]
+         if [ ! -s ~/.cache/ssh_session ]
              ssh-agent -c > ~/.cache/ssh_session
              source ~/.cache/ssh_session
              ssh-add
@@ -335,6 +337,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       alias emacs      'emacs'
       alias term       'term & disown'
       alias git        '[ -z $SSH_AGENT_PID ] && SSH; command git'
+      alias gh         '[ -z $SSH_AGENT_PID ] && SSH; command gh'
 
       function dragon; dragon-drag-and-drop $argv & disown; end
       function vrg; vim (rg -l $argv); end

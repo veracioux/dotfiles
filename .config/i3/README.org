@@ -269,6 +269,10 @@
     for_window [class="feh"]                              floating enable
     for_window [class="feh" floating]                     move position center
 
+    # Display command too sometimes
+    for_window [class="Display"]                          floating enable
+    for_window [class="Display" floating]                 move position center
+
     # Matplotlib plots
     for_window [class="matplotlib"]                       floating enable
     for_window [class="matplotlib" floating]              move position center
@@ -282,6 +286,8 @@
     # Octave plots
     for_window [class="GNU Octave"]                       floating enable
     for_window [class="GNU Octave" floating]              move position center
+    for_window [class="GNU Octave"]                       move scratchpad
+    for_window [class="GNU Octave"]                       scratchpad show
 
     # Miscellaneous
     for_window [class="SpeedCrunch"]                      floating enable
@@ -289,6 +295,9 @@
     for_window [class="SpeedCrunch" floating]             move position center
 
     for_window [instance="zbar" class="zbar"]             floating enable
+
+    for_window [class="Typora"]                           floating enable
+    for_window [class="Typora" floating]                  move position center
 
     assign [class="Gimp.*"] number $ws6
   #+end_src

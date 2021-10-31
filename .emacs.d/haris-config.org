@@ -32,7 +32,6 @@
   #+end_src
 ** Nerd commenter
    #+begin_src emacs-lisp
-     (evilnc-default-hotkeys)
      (add-hook 'octave-mode-hook
                (lambda ()
                  (setq comment-start "% " comment-end "")))
@@ -161,6 +160,12 @@
      (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
      (setq org-image-actual-width 400)
    #+end_src
+** Exporters
+   #+begin_src emacs-lisp
+     (use-package ox-altacv
+       :load-path "/home/haris/repo/org-cv"
+       :init (require 'ox-altacv))
+   #+end_src
 ** Bindings
    #+begin_src emacs-lisp
      (evil-define-key 'normal org-mode-map (kbd "C-c e") 'visible-mode)
@@ -186,9 +191,13 @@
     (erc-notify-mode t)
     (erc-notifications-mode t)
 
+    (defun haris/erc-quit-channel () (interactive)
+           (erc-part-from-channel ""))
+
     (define-key              erc-mode-map           (kbd "C-l") 'comint-clear-buffer)
     (evil-define-key 'normal erc-mode-map           (kbd ",b")  'erc-switch-to-buffer)
     (evil-define-key 'normal erc-mode-map           (kbd ",j")  'erc-join-channel)
+    (evil-define-key 'normal erc-mode-map           (kbd ",q")  'haris/erc-quit-channel)
     (evil-define-key 'normal erc-list-menu-mode-map (kbd ",j")  'erc-list-join)
   #+end_src
 ** Theme tweak
@@ -308,10 +317,10 @@
       (evil-define-key 'normal cmake-mode-map (kbd ",hc") 'haris/cmake-info)
       (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
     #+end_src
-** Dependencies
-   #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs_c-c++.sh
-     sudo pip install cmake-language-server
-   #+end_src
+*** Dependencies
+    #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs_c-c++.sh
+      sudo pip install cmake-language-server
+    #+end_src
 ** Python
    Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
    #+begin_src emacs-lisp
@@ -349,6 +358,13 @@
       sudo pip install pyls-isort pyls-mypy pyls-black pyls-memestra \
            autoflake importmagic epc ptvsd
     #+end_src
+** RST
+   #+begin_src emacs-lisp
+     (defun haris/rst-heading () (interactive)
+            (evil-execute-macro 1 "\"yyyp^v$"))
+
+     (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
+   #+end_src
 * TODO Yasnippet
   #+begin_src emacs-lisp
     ;; Show snippets in auto-completion popup
@@ -445,7 +461,14 @@
      dotspacemacs-additional-packages
      '(
        org-fragtog org-drill org-ref org-attach-screenshot org-special-blocks ob-ipython
+       ox-extra
        yasnippet-snippets vterm multi-vterm
        i3wm-config-mode rainbow-mode fish-mode
-       evil-easymotion reddigg md4rd pydoc pylint))
+       evil-easymotion reddigg md4rd pydoc pylint python-info))
+  #+end_src
+
+* Appendix
+  I use this variable to check if the config loaded correctly.
+  #+begin_src emacs-lisp
+    (setq haris/config_loaded_fine "true")
   #+end_src
