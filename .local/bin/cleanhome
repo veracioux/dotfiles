@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# Clean home of directories like Downloads, Documents, regularly created by who
+# knows.
+
+rmdir ~/Downloads ~/Documents ~/Pictures
