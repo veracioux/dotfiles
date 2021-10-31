@@ -46,8 +46,15 @@
     tweak = commit --amend --no-edit
     sub = submodule
     remaster = reset --hard upstream/master
+    remain = reset --hard upstream/main
     res = restore
     uns = restore --staged
+    rb = rebase
+    rbc = rebase --continue
+    rba = rebase --abort
+
+    good = bisect good
+    bad = bisect bad
 [core]
     autocrlf      = input
     pager         = less -F -X
@@ -61,8 +68,14 @@
 
 [url "https://github.com/"]
     insteadOf = gh:
+[url "git@github.com:veracioux/"]
+    insteadOf = mygh:
+[url "git@github.com:"]
+    insteadOf = ghg:
 [url "https://gitlab.com/"]
     insteadOf = gl:
+[url "git@gitlab.com:veracioux/"]
+    insteadOf = mygl:
 
 [color "diff"]
     context       = white

@@ -44,9 +44,9 @@ XF86AudioLowerVolume
 XF86AudioMute
    	amixer set Master toggle
 XF86MonBrightnessUp
-   	xbacklight -inc 10
+   	brightnessctl set 5%+
 XF86MonBrightnessDown
-   	xbacklight -dec 10
+   	brightnessctl set 5%-
 
 # Browser: switch to google search
 mod1 + i

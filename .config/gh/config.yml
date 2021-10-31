@@ -4,7 +4,10 @@ pager:
 # Aliases allow you to create nicknames for gh commands
 aliases:
     co: pr checkout
-    cl: repo clone
+    clone: repo clone
     web: repo view --web
     v: repo view
     ls: repo list
+    rel: release create
+    prc: pr create
+    co: pr checkout

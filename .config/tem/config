@@ -1,12 +1,16 @@
 [general]
-repo_path = ~/.local/share/tem/repo
-	~/.local/share/tem/tmp
-	~/.local/share/camscripts/clips
-	~/projects/tem/repo
+repo_path = /home/haris/.local/share/tem/repo
+	/home/haris/.local/share/tem/tmp
+	/home/haris/.local/share/camscripts/clips
+	/home/haris/projects/tem/repo
+	/home/haris/repo/src
+	/home/haris/repo/mbed
 editor = nvim
 
 [ls]
-command = lsd --icon=auto --color=auto -1
+command = lsd -1
+
+[git]
 
 [alias]
 a = add
@@ -15,3 +19,7 @@ p = path
 e = env
 c = config
 g = git
+s = path -ne
+f = find
+v = var
+

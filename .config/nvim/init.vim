@@ -40,10 +40,12 @@ if exists('g:started_by_firenvim') && g:started_by_firenvim
 
 	let fc = g:firenvim_config['localSettings']
 
+	let fc['.*'] = {'takeover': 'never'}
 	let fc['localhost:.*'] = { 'takeover': 'never' }
 	let fc['facebook.*'] = { 'takeover': 'never' }
 	let fc['mail\.google.*'] = { 'takeover': 'never' }
 	let fc['desmos.com*'] = { 'takeover': 'never' }
+	let fc['github.com*'] = { 'takeover': 'never' }
 	let fc['exam.net*'] = { 'takeover': 'never' }
 
 	au BufEnter localhost* silent set ft=python
