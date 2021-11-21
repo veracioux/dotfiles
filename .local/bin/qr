@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-copy_show_open() {
+# Copy, show or open the argument based on its content
+copy_or_show_or_open() {
     notify-send 'QR Code:' "$@"
     echo "$1" | xsel -b
     if echo "$1" | grep -q '^https://'; then
@@ -9,10 +10,12 @@ copy_show_open() {
 }
 
 if [ "$1" = 'in' ]; then
-    copy_show_open "$(timeout 10s zbarcam /dev/video1 -1 | sed 's/^QR-Code://')"
+    copy_or_show_or_open "$(timeout 10s zbarcam /dev/video1 -1 | sed 's/^QR-Code://')"
 elif [ "$1" = 'screen' -o "$1" = 's' ]; then
-    copy_show_open "$(zbarimg -q <(maim | cat) | sed 's/^QR-Code://')"
+    copy_or_show_or_open "$(zbarimg -q <(flameshot screen --raw) | sed 's/^QR-Code://')"
 else # out
-    [ -t 0 ] && input="$(xsel -b -o)" || input="$(cat)"
+    if [ -t 0 ] || [ "$TERM" = 'linux' ]; then
+        input="$(xsel -b -o)" || input="$(cat)"
+    fi
     echo "$input" | qrencode -s 10 -o - | feh -
 fi
