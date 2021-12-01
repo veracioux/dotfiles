@@ -1,5 +1,11 @@
 #+TITLE: Haris' Config
 
+* Set up for use
+  - Custom scripts are located in [[.haris-bin][~.haris-bin/~]]. In order to have them available
+    in your PATH, you must run copy them over to ~.local/bin/~:
+    #+begin_src shell
+      cp --link --interactive ~/.haris-bin/* ~/.local/bin/
+    #+end_src
 * Installing all dependencies
   Each configuration file contains a list of dependencies for the program it
   configures. These dependencies are conveniently placed in a shell source block

@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 case "$1" in
+    README.org)     echo ~/README.org ;;
     alacritty)      echo ~/.config/alacritty/alacritty.yml ;;
     shells.org)     echo ~/.shells.org ;;
     alias-tmp)      echo ~/.alias-tmp ;;

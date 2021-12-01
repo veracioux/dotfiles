@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+[ "$TERM" = "linux" ] && "$@"
+
 "$@" && notify-send "Command $(echo $@) exited successfully." || {
     err=$?
     notify-send -u critical "Command $(echo $@) exited with error $err."

@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# The folder where the source files reside
+source=~/wiki/
+# The folder where the Sphinx HTML build resides
+build=~/wiki/.build/html/
+
+[ -z "$@" ] && { emacsclient --create-frame $source/index.org & disown; exit; }
+[ "$@" == "-v" ] && { firefox -P minimal $build/index.html & disown; exit; }
+
+# By default, sections are opened for editing, not for viewing
+view=''
+
+function usage {
+	echo 'Description: A convenience script for easier navigation of my wiki'
+	echo;
+	echo 'Usage: wiki [OPTIONS] [SECTION-NAME]'
+	echo;
+	echo -e '\t-h\tPrint this help'
+	echo -e '\t-l\tPrint a list of available sections'
+	echo -e '\t-m\tMake the wiki'
+	echo -e '\t-v\tView the generated HTML in firefox'
+}
+
+# SECTIONS is a map of section names and corresponding files.
+# The file is specified relative to the source directory of the wiki
+SECTIONS="
+	knowledge	knowledge/index
+"
+
+while getopts "vhlm" arg; do
+	case $arg in
+		v) # The section will be opened for viewing instead of editing
+			view='true'
+			;;
+		h) # Help
+			usage
+			;;
+		l) # List
+			echo 'Available sections:'
+			echo "$SECTIONS"
+			;;
+		m) # Make
+			cd $source
+			make html
+			exit
+			;;
+	esac
+done
+
+for arg in $@; do
+
+	# Ignore options
+	[ "${arg:0:1}" == '-' ] && continue
+
+	mapresult="$(echo $SECTIONS | grep "$arg" | awk '{print $2}')"
+
+	if [ -n "$mapresult" ]; then # successfully found the corresponding file
+		file="$mapresult"
+	else # hasn't found the file in $SECTIONS, perform find command instead
+		file="$(find -iname "*$arg*" | grep -v ^'\.\/\.' | head -1)"
+		# If the path is a directory, open the index file inside the directory
+		[ -d "$file" ] && file="$file/index.rst"
+		file="$(echo $file | sed 's/\.rst//')"
+	fi
+
+	echo $file
+
+	if [ -z "$view" ]; then
+		gvim "$source/$file".rst
+	else
+		# Requires the existence of a minimal profile for firefox
+		firefox -P minimal "$build/$file".html
+	fi & disown
+done

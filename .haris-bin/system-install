@@ -38,6 +38,7 @@ official python python-pip python-sphinx
 
 # Utilities
 official xsel moreutils rsync findutils dialog fzf clipmenu entr gnu-netcat
+official xss-lock
 official flameshot maim zbar
 official neomutt translate-shell
 official speedcrunch
