@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# A script to clean tex build files
+
+shopt -s globstar
+
+rm **/*.aux **/*.log **/*.toc **/*.bbl **/*.fls **/*.idx **/*.ilg **/*.ind \
+	**/*.nlo **/*.out **/*.synctex.gz **/*.fdb_latexmk 2>&1 | grep -v \
+	'No such file or directory'

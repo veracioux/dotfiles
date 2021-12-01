@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# Run rg and fzf to search through file contents and jump to a file
+
+where="$1"
+[ -z "$where" ] && where='.'
+
+rg --column --line-number --no-heading --color=always --smart-case . | fzf --ansi

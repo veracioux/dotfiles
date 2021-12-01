@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# Open alacritty with pydoc in it
+# - All arguments are passed to pydoc
+# - Alacritty window class tracks those defined in my i3 config
+
+alacritty --class Float,Alacritty -e fish -C "pydoc $*" &

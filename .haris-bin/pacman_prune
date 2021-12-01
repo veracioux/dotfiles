@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+# Prune unneeded pacman packages that were installed as dependencies
+
+prune() {
+    cmd-with-notify sudo pacman -R $(pacman -Qdtq)
+}
+
+while prune
+do
+    :
+done
+
+notify-send "PACMAN PRUNING COMPLETE"

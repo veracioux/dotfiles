@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+# Create a branch backup-<branchname> which is an exact copy of <branchname>
+
+branch="$(git branch --show-current)"
+git branch backup-"$branch"
+git checkout backup-"$branch"
+git reset --soft "$branch"
+git checkout "$branch"

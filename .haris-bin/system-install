@@ -19,7 +19,7 @@ useradd -m -G log,lock,wheel,tty,audio,lp,uucp,video,haris -s dash haris
 # A list of packages to install on a fresh system install
 
 # System stuff
-official etckeeper
+official pacman-contrib etckeeper
 # Network
 official networkmanager iw wpa_suplicant proton
 official bluez bluez-libs bluez-tools bluez-utils
