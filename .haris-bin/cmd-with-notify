@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 
-[ "$TERM" = "linux" ] && "$@"
+if [ "$TERM" = "linux" ]; then
+    "$@"
+    exit
+fi
 
 "$@" && notify-send "Command $(echo $@) exited successfully." || {
     err=$?
