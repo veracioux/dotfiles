@@ -15,6 +15,7 @@ bind ,m composite get_current_url | mpvsafe
 bind <C-.> tabdetach
 
 unbind <C-b>
+unbind <C-f>
 
 autocmd DocStart savannah.gnu.org mode ignore
 autocmd DocStart octave.sourceforge.io mode ignore

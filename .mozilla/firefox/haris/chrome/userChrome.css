@@ -38,11 +38,9 @@
     font-size: 0.8em;
 }
 
-.tab-background {
-    transform: translateY(-16px);
-}
-
-.tab-close-button { display: none; }
+/* .tab-line {
+    height: 0.5px;
+} */
 
 .tab-content {
     min-height: 0px;
@@ -67,7 +65,8 @@
    ┗━━━━━━━━━┛ */
 
 #nav-bar {
-    visibility: hidden;
+    min-height: 0px;
+    max-height: 0px; /* was 14px */
 }
 
 #navigator-toolbox {
@@ -90,9 +89,3 @@
     scale: 0;
 }
 
-/* ┏━━━━━━━┓
-   ┃ Fixes ┃
-   ┗━━━━━━━┛ */
-#OtherBookmarks, #PersonalToolbar {
-    display: none;
-}

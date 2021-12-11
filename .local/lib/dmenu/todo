@@ -1,19 +1,24 @@
 #!/usr/bin/env sh
 
 edit=" Edit..."
+lookup="$(ls ~/projects/*/TODO.org \
+    ~/evolt/TODO.org \
+    ~/data/personal/todos/*/TODO.org)"
 
 entries="$(echo "$edit"
-            ls ~/projects/*/TODO.org |
-                while read p; do
-                    basename "$(dirname "$p")"
-                done)"
+           echo "$lookup" |
+           while read p; do
+               basename "$(dirname "$p")"
+           done)"
 
 choice="$(
     echo "$entries" | dmenu -p TODO:
 )"
 
+[ "$?" != 0 ] && exit 1
+
 if [ "$choice" = " Edit..." ]; then
     cd "$(dirname "$0")"; gvim "$0"
 else
-    emacsclient --create-frame "$HOME/projects/$choice/TODO.org"
+    emacsclient --create-frame $(echo "$lookup" | grep "$choice/TODO.org")
 fi

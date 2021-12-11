@@ -76,7 +76,7 @@
 * Startup
   #+begin_src i3wm-config
     exec_always --no-startup-id \
-      /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
+    /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
     # TODO exec_always --no-startup-id "autotiling"
     # Use pactl to adjust volume in PulseAudio.
     set $refresh_i3status killall -SIGUSR1 i3status
@@ -158,37 +158,37 @@
     bindsym $mod+r            mode " resize"
 
     mode "Session" {
-    bindsym r               reload
-    bindsym Ctrl+r          restart
-    bindsym q               exit
-    bindsym k               exec --no-startup-id kbind
+      bindsym r               reload
+      bindsym Ctrl+r          restart
+      bindsym q               exit
+      bindsym k               exec --no-startup-id kbind
 
-    bindsym Escape          mode "default"
+      bindsym Escape          mode "default"
     }
     bindsym $mod+period       mode "Session"
 
     mode " WM" {
-    bindsym h               split h
-    bindsym v               split v
-    bindsym period          layout toggle split
-    bindsym s               layout stacking
-    bindsym t               layout tabbed
-    bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
-    bindsym a               exec --no-startup-id \
-    "pgrep autotiling && pkill autotiling || autotiling"
-    bindsym x               exec xrandr-toggle; mode "default"
-    bindsym 1               move workspace to output eDP-1
-    bindsym 2               move workspace to output HDMI-1-0
+      bindsym h               split h
+      bindsym v               split v
+      bindsym period          layout toggle split
+      bindsym s               layout stacking
+      bindsym t               layout tabbed
+      bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
+      bindsym a               exec --no-startup-id \
+      "pgrep autotiling && pkill autotiling || autotiling"
+      bindsym x               exec xrandr-toggle; mode "default"
+      bindsym 1               move workspace to output eDP-1
+      bindsym 2               move workspace to output HDMI-1-0
 
-    bindsym Escape          mode "default"
+      bindsym Escape          mode "default"
     }
     bindsym $mod+s            mode " WM"
 
     mode " QR" {
-    bindsym i               exec --no-startup-id "qr in"
-    bindsym o               exec --no-startup-id "qr out"
+      bindsym i               exec --no-startup-id "qr in"
+      bindsym o               exec --no-startup-id "qr out"
 
-    bindsym Escape          mode "default"
+      bindsym Escape          mode "default"
     }
     bindsym $mod+Shift+q      mode " QR"
   #+end_src
@@ -223,30 +223,30 @@
 * Status bar
   #+begin_src i3wm-config
     bar {
-      font pango:Source Code Pro, Icons bold 10
-      position top
-      modifier none
-      workspace_buttons yes
-      strip_workspace_numbers yes
+    font pango:Source Code Pro, Icons bold 10
+    position top
+    modifier none
+    workspace_buttons yes
+    strip_workspace_numbers yes
 
-      # TODO status_command i3status | ~/.config/i3status/custom-script.py
-      status_command i3status
-      # Trays are bloat, but they are sometimes necessary
-      tray_output primary
+    # TODO status_command i3status | ~/.config/i3status/custom-script.py
+    status_command i3status
+    # Trays are bloat, but they are sometimes necessary
+    tray_output primary
 
-      i3bar_command i3bar --transparency
-      colors {
-        # class             border    backgr.   text
-        focused_workspace   $col_b_b  $col_b_b  $col_n_k
-        inactive_workspace  $col_a_k  $col_a_k  $col_n_m
-        urgent_workspace    $col_n_y  $col_n_y  $col_n_k
+    i3bar_command i3bar --transparency
+    colors {
+    # class             border    backgr.   text
+    focused_workspace   $col_b_b  $col_b_b  $col_n_k
+    inactive_workspace  $col_a_k  $col_a_k  $col_n_m
+    urgent_workspace    $col_n_y  $col_n_y  $col_n_k
 
-        background          $col_a_k
-        statusline          $col_b_c
-        separator           $col_a_m
-      }
-  }
- #+end_src
+    background          $col_a_k
+    statusline          $col_b_c
+    separator           $col_a_m
+    }
+    }
+  #+end_src
 * Window rules
   #+begin_src i3wm-config
     for_window [instance="Float"      class="Alacritty"]  floating enable

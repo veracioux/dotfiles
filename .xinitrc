@@ -12,4 +12,6 @@ clipmenud &                                 # Daemon for dmenu clipboard
 picom &                                     # Compositor
 redshift &                                  # Blue light filter
 autotiling &                                # Autotiling for i3
+xset s 1000                                 # Set lock timeout
+xss-lock -- xlock &                         # Lock screen daemon
 i3                                          # Window manager

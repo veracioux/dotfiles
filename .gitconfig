@@ -1,7 +1,7 @@
 [user]
     email = harisgusic.dev@gmail.com
     name = Haris Gušić
-    signingkey = 0348E6D2D1D44A6D
+    signingkey = 2333BDF9F505C46F2E3F5FDB0348E6D2D1D44A6D
 [include]
     path = ~/.gitconfig.private
 [alias]
@@ -34,6 +34,8 @@
     po = push origin
     pom = push origin master
     poh = push origin HEAD
+    pu = push upstream
+    puh = push upstream HEAD
     pa = push all
     pam = push all master
     ppo = pull origin
@@ -72,10 +74,16 @@
     insteadOf = mygh:
 [url "git@github.com:"]
     insteadOf = ghg:
+
 [url "https://gitlab.com/"]
     insteadOf = gl:
+[url "git@gitlab.com:"]
+    insteadOf = glg:
 [url "git@gitlab.com:veracioux/"]
     insteadOf = mygl:
+
+[url "ssh://git@heroku.com/"]
+    insteadOf = https://git.heroku.com/
 
 [color "diff"]
     context       = white

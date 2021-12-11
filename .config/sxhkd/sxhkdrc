@@ -1,3 +1,7 @@
+# Lock screen
+mod4 + ctrl + l
+   xlock
+
 # Dmenu stuff
 mod4 + slash
    dmenu_run

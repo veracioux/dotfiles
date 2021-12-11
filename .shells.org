@@ -130,10 +130,12 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
    #+end_src
 *** Dependencies
     #+begin_src shell :tangle /tmp/dependencies/fish.sh :mkdirp yes
-      paru -S fisher
-      fisher install  edc/bass \
-                      oh-my-fish/plugin-pj \
-                      PatrickF1/fzf.fish
+      paru -S fish fisher
+      touch ~/.config/fish/{private,tmp}.fish
+      fish -c 'fisher install edc/bass \
+                              oh-my-fish/plugin-pj \
+                              PatrickF1/fzf.fish \
+                              evanlucas/fish-kubectl-completions'
       sudo pacman -S fd bat # Dependencies for fzf.fish
     #+end_src
 ** Functions
@@ -227,17 +229,24 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      end
 
      function SSH
+         set -l session ~/.cache/ssh_session.gpg
+         set -l tmpfile /dev/shm/gpg_decrypt_target
          if [ "$argv" = '-r' ]
-           rm ~/.cache/ssh_session
+           rm $session
            pkill ssh-agent
            return
          end
-         if [ ! -s ~/.cache/ssh_session ]
-             ssh-agent -c > ~/.cache/ssh_session
-             source ~/.cache/ssh_session
-             ssh-add
+         if [ ! -s $session ]
+             ssh-agent -c > $tmpfile
+             source $tmpfile
+             gpg --encrypt -r B97C0CA3BD9790A48EAA6EC9E64CF503559BB9E2 \
+               -o $session $tmpfile
+             rm $tmpfile
+             ssh-add ~/.ssh/$argv
          else
-             source ~/.cache/ssh_session
+             gpg --decrypt -o $tmpfile $session
+             source $tmpfile
+             rm $tmpfile
          end
      end
 
@@ -300,7 +309,6 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 ** CLI
    #+begin_src shell :tangle ~/.alias
      alias x='startx'
-     alias sudo='doas'
      alias conf='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
      alias sconf='git --git-dir=$HOME/.secret/ --work-tree=$HOME'
      alias vifm='SHELL=fish ~/.config/vifm/scripts/vifmrun'
@@ -319,12 +327,20 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      alias stage='mkdir -p /tmp/stage; cd /tmp/stage'
      alias bin='cd ~/.local/bin'
      alias usb='cd ~/mnt/usb'
+
+     export me='veracioux.herokuapp.com'
+     export api="$me/api"
    #+end_src
 ** GUI
    #+begin_src shell :tangle ~/.alias-gui
      alias calc='speedcrunch'
      alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
      alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
+     alias ff="firefox"
+
+     # Virtual machines
+     alias ubuntu-21.10='fish -c "cd ~/mnt/vm && command ubuntu-21.10"'
+     alias ubuntu-20.04='fish -c "cd ~/mnt/vm && command ubuntu-20.04"'
    #+end_src
 ** Fish
    :PROPERTIES:
@@ -334,10 +350,9 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 *** Aliases
     #+begin_src fish
       alias src_fish   'source ~/.config/fish/config.fish'
-      alias emacs      'emacs'
       alias term       'term & disown'
-      alias git        '[ -z $SSH_AGENT_PID ] && SSH; command git'
       alias gh         '[ -z $SSH_AGENT_PID ] && SSH; command gh'
+      alias alpine     'docker run -it -a stdout alpine'
 
       function dragon; dragon-drag-and-drop $argv & disown; end
       function vrg; vim (rg -l $argv); end
@@ -345,47 +360,66 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 *** Abbreviations
     #+begin_src fish
       # Safety precautions
-      abbr rm 'rm -i'
-      abbr mv 'mv -i'
+      abbr -g rm 'rm -i'
+      abbr -g mv 'mv -i'
 
       # Pacman commands
-      abbr p   'pacman'
-      abbr pqi 'pacman -Qi'
-      abbr pql 'pacman -Ql'
-      abbr pqm 'pacman -Qm'
-      abbr pqm 'pacman -Qm'
-      abbr pqo 'pacman -Qo'
-      abbr pqs 'pacman -Qs'
-      abbr psi 'pacman -Si'
-      abbr pss 'pacman -Ss'
-      abbr sp  'cmd-with-notify sudo pacman'
-      abbr sps 'cmd-with-notify sudo pacman -S'
-      abbr spr 'cmd-with-notify sudo pacman -R'
+      abbr -g p   'pacman'
+      abbr -g pqi 'pacman -Qi'
+      abbr -g pql 'pacman -Ql'
+      abbr -g pqm 'pacman -Qm'
+      abbr -g pqm 'pacman -Qm'
+      abbr -g pqo 'pacman -Qo'
+      abbr -g pqs 'pacman -Qs'
+      abbr -g psi 'pacman -Si'
+      abbr -g pss 'pacman -Ss'
+      abbr -g sp  'cmd-with-notify sudo pacman'
+      abbr -g sps 'cmd-with-notify sudo pacman -S'
+      abbr -g spr 'cmd-with-notify sudo pacman -R'
 
-      abbr g 'git'
-      abbr v 'vim'
-      abbr e 'emacs'
-      abbr E 'emacs -c'
-      abbr s 'sudo'
-      abbr paru 'cmd-with-notify paru'
-      abbr py 'python'
-      abbr copy 'xsel -b'
-      abbr paste 'xsel -b -o'
-      abbr oct 'octave'
-      abbr octb 'OCTAVE_BASIC=true command octave'
+      # Systemd
+      abbr -g ctl       'systemctl'
+      abbr -g startd    'systemctl start'
+      abbr -g enabled   'systemctl enable'
+      abbr -g statusd   'systemctl status'
+      #   --user versions
+      abbr -g ctlu      'systemctl        --user'
+      abbr -g startdu   'systemctl start  --user'
+      abbr -g enabledu  'systemctl enable --user'
+      abbr -g statusdu  'systemctl status --user'
 
-      abbr yt 'ytfzf -t -s'
-      abbr t  'tem'
-      abbr v 'vim (fzf)'
-      abbr fm 'vifm'
-      abbr fb 'facebook-cli'
-      abbr c  'conf'
-      abbr fl 'flameshot'
+      # Docker
+      abbr -g d    'docker'
+      abbr -g db   'docker build'
+      abbr -g dr   'docker run'
+      abbr -g drit 'docker run -it -a stdout'
+      abbr -g dc   'docker-compose'
 
-      abbr tb 'nc termbin.com 9999'
-      abbr asc 'asciinema'
-      abbr mic 'amixer set Capture toggle'
-      abbr priv 'fish --private'
+      abbr -g g 'git'
+      abbr -g v 'vim'
+      abbr -g e 'emacs'
+      abbr -g E 'emacs -c'
+      abbr -g s 'sudo'
+      abbr -g paru 'cmd-with-notify paru'
+      abbr -g py 'python'
+      abbr -g copy 'xsel -b'
+      abbr -g paste 'xsel -b -o'
+      abbr -g oct 'octave'
+      abbr -g octb 'OCTAVE_BASIC=true command octave'
+
+      abbr -g yt 'ytfzf -t -s'
+      abbr -g t  'tem'
+      abbr -g v  'vim (fzf)'
+      abbr -g fm 'vifm'
+      abbr -g fb 'facebook-cli'
+      abbr -g c  'conf'
+      abbr -g fl 'flameshot'
+
+      abbr -g tb 'nc termbin.com 9999'
+      abbr -g asc 'asciinema'
+      abbr -g mic 'amixer set Capture toggle'
+      abbr -g priv 'fish --private'
+      abbr -g hk 'heroku'
     #+end_src
 *** Variables
     #+begin_src fish
@@ -397,7 +431,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     export GPG_TTY=$(tty)
     export QT_QPA_PLATFORMTHEME=gtk2
 
-    export PATH=~/.local/bin:$(echo ~/.local/share/gem/ruby/*/bin):$PATH:~/.pyenv/versions/3.8.3/bin
+    export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path
 
     [ -f ~/.alias ]         && . ~/.alias
     [ -f ~/.alias-tmp ]     && . ~/.alias-tmp

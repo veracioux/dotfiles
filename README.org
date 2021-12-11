@@ -1,11 +1,39 @@
 #+TITLE: Haris' Config
 
+* Notes
+  - This repository uses tem to make some things easier
 * Set up for use
   - Custom scripts are located in [[.haris-bin][~.haris-bin/~]]. In order to have them available
     in your PATH, you must run copy them over to ~.local/bin/~:
     #+begin_src shell
       cp --link --interactive ~/.haris-bin/* ~/.local/bin/
     #+end_src
+** Vim configuration
+   Install vim-plug:
+   #+begin_src shell
+     curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+     touch ~/.vimrc.tmp
+   #+end_src
+   After that, open vim and run ~:PlugInstall~.
+*** YouCompleteMe
+    After installing using vim-plug, go to the directory where YouCompleteMe is
+    located and run ~./setup.py --all~.
+*** Dependencies
+    First complete the above steps.
+    #+begin_src shell :tangle /tmp/dependencies/vim
+      sudo pacman -S gvim neovim fzf
+      rm -rf ~/.config/nvim/*/
+      ln -sf -t ~/.config/nvim/ $(realpath ~/.vim/*/)
+      touch ~/.vimrc.tmp ~/.config/nvim/init.tmp.vim
+      # YouCompleteMe
+      sudo pacman -S go nodejs npm jdk-openjdk
+      cd ~/.vim/plugged/YouCompleteMe && python install.py --all
+    #+end_src
+* Docker
+  To test how everything works, docker can be used. The dockerfile is written to
+  [[.Dockerfile][.Dockerfile]].
+* Firefox
 * Installing all dependencies
   Each configuration file contains a list of dependencies for the program it
   configures. These dependencies are conveniently placed in a shell source block
