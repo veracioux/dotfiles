@@ -250,6 +250,10 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
          end
      end
 
+     function git
+         SSH 1>/dev/null 2>/dev/null
+         command git $argv
+     end
    #+end_src
 ** Completions
    Completions for the functions defined in [[Functions]].
