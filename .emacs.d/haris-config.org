@@ -1,6 +1,6 @@
 #+TITLE: Emacs Config
-#+PROPERTY: header-args :tangle haris-config.el
-#+begin_src emacs-lisp :exports none
+#+PROPERTY: header-args :tangle /tmp/.haris/.emacs.d/haris-config.el
+#+begin_src emacs-lisp :exports none :mkdirp yes
   ;; -*- mode: emacs-lisp-mode; -*- vim: ft=lisp sw=2
 #+end_src
 
@@ -428,7 +428,7 @@
       sudo pacman -S mpd
     #+end_src
 * Spacemacs
-  #+begin_src emacs-lisp :tangle ~/.spacemacs-init.el
+  #+begin_src emacs-lisp :tangle /tmp/.haris/.spacemacs-init.el
     (setq-default
      dotspacemacs-configuration-layers
      '(syntax-checking
