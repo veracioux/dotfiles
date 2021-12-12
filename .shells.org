@@ -349,7 +349,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 ** Fish
    :PROPERTIES:
    :CUSTOM_ID: alias-fish
-   :HEADER-ARGS: :tangle ~/.config/fish/config.fish
+   :HEADER-ARGS: :tangle /tmp/.haris/.config/fish/config.fish
    :END:
 *** Aliases
     #+begin_src fish
@@ -431,7 +431,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     #+end_src
 * .profile
   #+begin_src shell :tangle /tmp/.haris/.profile
-    export MAKEFLAGS='-j4'
+    export MAKEFLAGS='-j6'
     export GPG_TTY=$(tty)
     export QT_QPA_PLATFORMTHEME=gtk2
 
