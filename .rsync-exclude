@@ -1,0 +1,11 @@
+*.tmp
+*.bak
+
+*.toc
+*.aux
+*.synctex.gz
+*.log
+
+*.o
+**/.*Trash-*/
+
