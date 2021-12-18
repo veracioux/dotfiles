@@ -52,6 +52,11 @@ add_custom('├ |-')
 add_custom('└ |_')
 add_custom('─ --')
 add_custom('┃┗━┛┏━┓ ||')
+add_custom('š .sh')
+add_custom('ć .ch meko')
+add_custom('č .ch tvrdo')
+add_custom('đ .dj')
+add_custom('ž .zj')
 
 # Form entry lists as multi-line strings
 char_entries = '\n'.join(char_entries)

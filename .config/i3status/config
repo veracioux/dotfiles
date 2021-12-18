@@ -17,7 +17,7 @@ order += "wireless _first_"
 order += "ethernet _first_"
 order += "battery all"
 order += "disk /"
-order += "disk /run/media/haris/D"
+order += "disk /home/haris/data"
 order += "memory"
 order += "cpu_usage"
 order += "cpu_temperature 3"
@@ -41,7 +41,7 @@ ethernet _first_ {
 }
 
 battery all {
-format_down = ""
+  format_down   = ""
   status_full   = "<span color='#98eb98'> </span>"
   status_bat    = " "
   status_chr    = "<span color='#f2b374'></span>"
@@ -59,7 +59,7 @@ disk "/" {
   separator_block_width = -6
 }
 
-disk "/run/media/haris/D" {
+disk "/home/haris/data" {
   format = " <span color='#f298c3'>D:</span> %avail "
   prefix_type = binary
   low_threshold = 30
@@ -67,14 +67,14 @@ disk "/run/media/haris/D" {
 }
 
 memory {
-  format = "  %available "
-  threshold_degraded = "3G"
+  format = "  %available"
+  threshold_degraded = "2G"
   threshold_critical = "1G"
   format_degraded = " M: %available "
 }
 
 cpu_usage {
-  format = "  %usage "
+  format = " %usage "
   max_threshold = "90"
   degraded_threshold = "60"
   separator = false
@@ -82,17 +82,15 @@ cpu_usage {
 }
 
 cpu_temperature 3 {
-  format = " <span color='#6980fa'></span> %degrees °C "
+  format = "<span color='#6980fa'></span> %degrees °C"
   format_above_threshold = " <span color='#ff8c8c'></span> %degrees °C "
   max_threshold = 70
 }
 
 tztime localdate {
-  format = " <span color='#d098ff'> %time</span> "
-  format_time = "%Y-%m-%d"
+  format = " <span color='#d098ff'> %Y-%m-%d</span>"
 }
 
 tztime localtime {
-  format = " <span color='#f298c3'> %time</span> "
-  format_time = "%H:%M:%S"
+  format = " <span color='#f298c3'>  %H:%M:%S</span> "
 }

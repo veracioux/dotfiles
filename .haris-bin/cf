@@ -43,4 +43,6 @@ case "$1" in
     sxhkd)          echo ~/.config/sxhkd/sxhkdrc ;;
     mpv)            echo ~/.config/mpv/input.conf ;;
     flameshot)      echo ~/.config/flameshot/flameshot.ini ;;
+    monero)         echo ~/.config/monero-project/monero-core.conf ;;
+    xmig)           echo ~/.config/xmrig.json ;;
 esac

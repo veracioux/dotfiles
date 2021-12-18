@@ -10,9 +10,8 @@ colorscheme customtheme
 if exists('g:started_by_firenvim') && g:started_by_firenvim
 
     set laststatus=0 nonumber noruler noshowcmd relativenumber!
-	noremap <C-CR> :wq<CR>
 	noremap <CR> :wq<CR>
-	inoremap <C-CR> <C-o>:wq<CR>
+	inoremap <CR> <C-o>:wq<CR>
 
 	fu! AutoResize()
 		if expand('%') !~ '.*overleaf.*'

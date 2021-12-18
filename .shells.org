@@ -384,13 +384,17 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       # Systemd
       abbr -g ctl       'systemctl'
       abbr -g startd    'systemctl start'
+      abbr -g stopd     'systemctl stop'
       abbr -g enabled   'systemctl enable'
       abbr -g statusd   'systemctl status'
+      abbr -g restartd  'systemctl restart'
       #   --user versions
-      abbr -g ctlu      'systemctl        --user'
-      abbr -g startdu   'systemctl start  --user'
-      abbr -g enabledu  'systemctl enable --user'
-      abbr -g statusdu  'systemctl status --user'
+      abbr -g ctlu      'systemctl          --user'
+      abbr -g startdu   'systemctl start    --user'
+      abbr -g stopdu    'systemctl stop     --user'
+      abbr -g enabledu  'systemctl enable   --user'
+      abbr -g statusdu  'systemctl status   --user'
+      abbr -g restartdu 'systemctl restart  --user'
 
       # Docker
       abbr -g d    'docker'

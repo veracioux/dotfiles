@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# Suspend when battery low
+
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+
+if acpi | grep -q '\s[0-9]\{0,1\}[0-9]%' && acpi | grep -q 'Discharging'; then
+    notify-send 'Low battery' 'Suspending in 5s'
+    sleep 5s
+    sudo systemctl suspend
+fi

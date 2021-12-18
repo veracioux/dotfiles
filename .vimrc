@@ -31,9 +31,10 @@ set splitright splitbelow
 
 set ignorecase smartcase incsearch
 
+set mouse=a
+
 if has('gui_running')
     set guioptions -=T guioptions -=m
-    set mouse=a
 endif
 if !has('nvim')
     set noesckeys
