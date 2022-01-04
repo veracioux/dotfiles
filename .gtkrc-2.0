@@ -1,3 +1,4 @@
+gtk-enable-animations=0
 gtk-theme-name = "Dracula"
 gtk-icon-theme-name = "Flat-Remix-Blue"
 gtk-font-name = "Ubuntu 10"
