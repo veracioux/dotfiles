@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<VirtualBox xmlns="http://www.virtualbox.org/" version="1.12-linux">
+  <Global>
+    <ExtraData>
+      <ExtraDataItem name="GUI/Input/AutoCapture" value="false"/>
+      <ExtraDataItem name="GUI/RecentFolderCD" value="/home/haris/mnt/vm/lib"/>
+      <ExtraDataItem name="GUI/SuppressMessages" value="remindAboutAutoCapture"/>
+      <ExtraDataItem name="GUI/Toolbar" value="false"/>
+    </ExtraData>
+    <SystemProperties defaultMachineFolder="/home/haris/mnt/vm/vbox" defaultHardDiskFormat="VDI" VRDEAuthLibrary="VBoxAuth" webServiceAuthLibrary="VBoxAuth" LogHistoryCount="3" proxyMode="0" exclusiveHwVirt="true"/>
+  </Global>
+</VirtualBox>
