@@ -1,11 +1,13 @@
 #+TITLE: i3 config
-#+PROPERTY: header-args :tangle /tmp/.haris/.config/i3/config
 #+begin_src :filetype:
   # -*- mode: i3wm-config; -*- vim: ft=i3
 #+end_src
 
 * Variable definitions
-  #+begin_src i3wm-config
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle /tmp/.haris/.config/i3/config :mkdirp yes
+  :END:
+  #+begin_src i3wm-config :mkdirp yes
     # vim: filetype=i3
 
     # Default mod key
@@ -300,6 +302,7 @@
     for_window [class="Typora" floating]                  move position center
 
     assign [class="Gimp.*"] number $ws6
+    assign [class="VirtualBox Manager"] number $ws6
   #+end_src
 * Dependencies
   #+begin_src shell :tangle no

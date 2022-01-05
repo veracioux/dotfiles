@@ -1,8 +1,7 @@
 [general]
 repo_path = /home/haris/.local/share/tem/repo
 	/home/haris/.local/share/tem/tmp
-	/home/haris/.local/share/camscripts/clips
-	/home/haris/projects/tem/repo
+	/home/haris/proj/tem/repo
 	/home/haris/repo/src
 	/home/haris/repo/mbed
 editor = nvim

@@ -55,6 +55,8 @@
     rbc = rebase --continue
     rba = rebase --abort
 
+    ic = commit -m 'Initial commit'
+
     good = bisect good
     bad = bisect bad
 [core]
