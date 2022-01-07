@@ -115,7 +115,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 ** Plugins
    #+begin_src fish
      # pj plugin
-     set -gx PROJECT_PATHS ~/projects
+     set -gx PROJECT_PATHS ~/proj
 
      # z.lua
      set _ZL_CMD z
@@ -217,9 +217,10 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
          else
              read -n 1 -P "Create new script? [Y/n]: " choice
              if [ -z "$choice" -o "$choice" = 'y' ]
-                 set file ~/.local/bin/"$argv[1]"
+                 set file ~/.haris-bin/"$argv[1]"
                  tem put sh -o "$file"
                  chx "$file"
+                 cp --link "$file" ~/.local/bin/
                  vim +'$' "$file"
              else
                  echo 'Aborting...'
@@ -256,21 +257,49 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      end
    #+end_src
 ** Completions
+   Function(s) that will be used by many completions.
    Completions for the functions defined in [[Functions]].
    #+begin_src fish
-     complete --command chbg --no-files --arguments="(pushd /usr/share/backgrounds/; command ls -1; popd)"
-     complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
-     complete -c snip -f -a \
-         "(pushd ~/.vim/snips; command ls | sed 's_\(.*\)\.snippets_\1_g'; popd)"
+     # Return success if the command line contains no positional arguments
+     function no_positional_args
+         set -l -- args    (commandline -po)         # cmdline broken up into list
+         set -l -- cmdline (commandline -p)          # single string
+         set -l -- n       (count $args)             # number of cmdline tokens
+         for i in (seq 2 $n)
+             set -l arg $args[$i]
+             [ -z "$arg" ] && continue               # can be caused by '--' argument
 
-     # *cf and *cmd style commands
-     for cmd in {,cd,vi,cat,e}cf
-         complete --command $cmd --no-files -a '(lscf)'
+             # If the the last token is a positional argument and there is no
+             # trailing space, we ignore it
+             [ "$i" = "$n" ] && [ (string sub -s -1 "$cmdline") != ' ' ] && break
+
+             if string match -rvq '^-' -- "$arg"     # doesn't start with -
+                 return 1
+             end
+         end
+         # contains a '--' argument
+         string match -r -- '\s--\s' "$cmdline" && return 1
+         return 0
      end
-     for cmd in {f,cd,vi,cat,e, rm}cmd
-         complete -c $cmd -f \
-             -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
-     end
+
+          complete --command chbg --no-files --arguments="(pushd /usr/share/backgrounds/; command ls -1; popd)"
+          complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
+          complete -c snip -f -a \
+              "(pushd ~/.vim/snips; command ls | sed 's_\(.*\)\.snippets_\1_g'; popd)"
+
+          # *cf and *cmd style commands
+          for cmd in {,cd,vi,cat,e}cf
+              complete --command $cmd --no-files -a '(lscf)'
+          end
+          for cmd in {f,cd,vi,cat,e, rm}cmd
+              complete -c $cmd -f \
+                  -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
+          end
+   #+end_src
+   #+begin_src fish :tangle /tmp/.haris/.config/fish/completions/pass.fish :mkdirp yes
+     source /usr/share/fish/vendor_completions.d/pass.fish
+     complete -c pass -a 'add' -n "no_positional_args"
+     complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
    #+end_src
 * Bash
   Note: ~~/.bashrc~ is sourced by fish as well.
@@ -359,7 +388,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       alias alpine     'docker run -it -a stdout alpine'
 
       function dragon; dragon-drag-and-drop $argv & disown; end
-      function vrg; vim (rg -l $argv); end
+      function vrg --wraps rg; vim (rg -l $argv); end
     #+end_src
 *** Abbreviations
     #+begin_src fish
@@ -403,17 +432,18 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       abbr -g drit 'docker run -it -a stdout'
       abbr -g dc   'docker-compose'
 
-      abbr -g g 'git'
-      abbr -g v 'vim'
-      abbr -g e 'emacs'
-      abbr -g E 'emacs -c'
-      abbr -g s 'sudo'
-      abbr -g paru 'cmd-with-notify paru'
-      abbr -g py 'python'
-      abbr -g copy 'xsel -b'
+      abbr -g g     'git'
+      abbr -g v     'vim'
+      abbr -g e     'emacs'
+      abbr -g E     'emacs -c'
+      abbr -g s     'sudo'
+      abbr -g paru  'cmd-with-notify paru'
+      abbr -g py    'python'
+      abbr -g copy  'xsel -b'
       abbr -g paste 'xsel -b -o'
-      abbr -g oct 'octave'
-      abbr -g octb 'OCTAVE_BASIC=true command octave'
+      abbr -g oct   'octave'
+      abbr -g octb  'OCTAVE_BASIC=true command octave'
+      abbr -g va    'vagrant'
 
       abbr -g yt 'ytfzf -t -s'
       abbr -g t  'tem'
