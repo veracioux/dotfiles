@@ -8,7 +8,7 @@
 run_script() { ~/.local/lib/dmenu/"$1"; }
 
 extract_aliases() {
-    sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_" $@
+    grep -v '^\s*#' "$@" | sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_"
 }
 
 pull_desktop_apps() {

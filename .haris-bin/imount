@@ -40,6 +40,6 @@ echo # newline
 [ "$choice" != "y" ] && exit 1
 
 # Mount the device at last
-doas mount "$device" "$mount_dir" -o umask=002,uid=$(id -u),gid=$(id -g)
+sudo mount "$device" "$mount_dir" -o umask=002,uid=$(id -u),gid=$(id -g)
 
 echo -e "$mount_dir" > /tmp/imount_directory

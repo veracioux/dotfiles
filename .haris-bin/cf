@@ -38,6 +38,7 @@ case "$1" in
     octave)         echo ~/.octaverc ;;
     gtk2)           echo ~/.gtkrc-2.0.mine ;;
     gtk3)           echo ~/.config/gtk-3.0/settings.ini ;;
+    gtk3-bookmarks) echo ~/.config/gtk-3.0/bookmarks ;;
     tuterm)         echo ~/.config/tuterm/config.sh ;;
     xinit)          echo ~/.xinitrc ;;
     sxhkd)          echo ~/.config/sxhkd/sxhkdrc ;;

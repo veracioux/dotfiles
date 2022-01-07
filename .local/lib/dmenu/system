@@ -28,5 +28,5 @@ elif [ "$choice" = "Reboot..." ]; then
     [ -z "$choice" ] && exit
     # grub-reboot should be allowed passwordless in sudo (or doas)
     sudo grub-reboot "$(echo "$choice" | cut -c 1)"
-    reboot
+    sudo reboot
 fi

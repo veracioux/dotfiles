@@ -90,7 +90,7 @@ official gimp inkscape poppler xournalpp
 official python python-pip python-sphinx
 
 # Utilities
-official xsel moreutils rsync findutils dialog fzf clipmenu entr gnu-netcat cronie
+official xsel xclip moreutils rsync findutils dialog fzf clipmenu entr gnu-netcat cronie
 official xss-lock pass
 official flameshot zbar
 official neomutt translate-shell transmission-cli

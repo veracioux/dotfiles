@@ -7,4 +7,4 @@
 export TERM='xterm-256color'
 extra_args=''
 printarg "$@" | grep -- '-c' && extra_args='-n' || extra_args='-t'
-emacsclient $extra_args "$@"
+emacsclient --alternate-editor /usr/bin/emacs $extra_args "$@"

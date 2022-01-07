@@ -3,4 +3,5 @@
 # Clean home of directories like Downloads, Documents, regularly created by who
 # knows.
 
-rmdir ~/Downloads ~/Documents ~/Pictures
+rmdir ~/Desktop ~/Downloads ~/Documents ~/Pictures ~/Videos ~/Music \
+    ~/Templates ~/Public ~/'VirtualBox VMs'

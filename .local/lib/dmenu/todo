@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 edit=" Edit..."
-lookup="$(ls ~/projects/*/TODO.org \
+lookup="$(ls ~/proj/*/TODO.org \
     ~/evolt/TODO.org \
     ~/data/personal/todos/*/TODO.org)"
 
