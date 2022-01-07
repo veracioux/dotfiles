@@ -150,6 +150,13 @@
                                   '((shell    . t)
                                     (C        . t)
                                     (python   . t)))
+     (defun haris/tangle ()
+       (interactive)
+       (shell-command "rm -rf /tmp/.haris")
+       (org-babel-tangle)
+       (shell-command "rsync -ru /tmp/.haris/ ~/" t))
+
+     (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle)
    #+end_src
 ** LaTeX preview
    #+begin_src emacs-lisp
@@ -343,9 +350,6 @@
 
      ;; elpy
      (setq elpy-modules nil)
-
-     ;; flycheck
-     (add-to-list 'flycheck-enabled-checkers 'python-flake8)
    #+end_src
 *** Bindings
     #+begin_src emacs-lisp
@@ -353,9 +357,9 @@
     #+end_src
 *** Dependencies
     #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs-python.sh
-      sudo pacman -S python-language-server flake8 python-typing_extensions \
-           python-pyls-black python-pylint
-      sudo pip install pyls-isort pyls-mypy pyls-black pyls-memestra \
+      sudo pacman -S python-lsp-server flake8 python-typing_extensions \
+           python-lsp-black python-pylint
+      sudo pip install pyls-isort pyls-mypy pyls-memestra \
            autoflake importmagic epc ptvsd
     #+end_src
 ** RST
@@ -444,6 +448,7 @@
        (cmake :variables cmake-backend 'lsp cmake-enable-cmake-ide-support t)
        (python :variables python-formatter 'black python-backend 'lsp)
        dap
+       vagrant
        ;; elpy
        ;; pythonp
        ipython-notebook
@@ -452,7 +457,7 @@
        git
        github
        (org :variables org-enable-appear-support t)
-       mu4e
+       ;; mu4e
        eaf
        ;; emms
        debug))
