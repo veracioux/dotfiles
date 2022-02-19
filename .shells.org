@@ -1,4 +1,5 @@
 #+TITLE: Shell Config
+#+PROPERTY: header-args :tangle /tmp/.haris/.config/fish/config.fish :mkdirp yes
 
 This is a config for the shells I use:
 
@@ -11,9 +12,6 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 ~~/.alias-gui~ contain aliases that I want available everywhere.
 
 * Fish
-  :PROPERTIES:
-  :HEADER-ARGS: :tangle /tmp/.haris/.config/fish/config.fish :mkdirp yes
-  :END:
   Note: I keep fish aliases in [[#alias-fish][Aliases]].
   #+begin_src fish
     set fish_greeting ''
@@ -22,9 +20,10 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     # Disable path shortening
     set fish_prompt_pwd_dir_length 0
 
-    bass source ~/.bashrc                         # Load other shell's config
-    source ~/.config/fish/tmp.fish                # Temporary aliases
-    source ~/.config/fish/private.fish            # Private aliases
+    # I'm setting HOME to prevent errors when running inside tuterm
+    HOME=/home/haris bass source ~/.bashrc        # Load bash's config
+    source "$__fish_config_dir"/tmp.fish          # Temporary aliases
+    source "$__fish_config_dir"/private.fish      # Private aliases
 
     set -gx MANPAGER 'viman'                      # Set default pager to vim
     set -gx MANWIDTH 80
@@ -126,7 +125,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      tem fish-init
 
      # fzf bindings
-     fzf_configure_bindings --directory=\ef
+     fzf_configure_bindings
    #+end_src
 *** Dependencies
     #+begin_src shell :tangle /tmp/dependencies/fish.sh :mkdirp yes
@@ -429,7 +428,8 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       abbr -g d    'docker'
       abbr -g db   'docker build'
       abbr -g dr   'docker run'
-      abbr -g drit 'docker run -it -a stdout'
+      abbr -g drit 'docker run -it'
+      abbr -g deit 'docker exec -it'
       abbr -g dc   'docker-compose'
 
       abbr -g g     'git'
@@ -468,6 +468,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     export MAKEFLAGS='-j6'
     export GPG_TTY=$(tty)
     export QT_QPA_PLATFORMTHEME=gtk2
+    export PYTHONSTARTUP=~/.startup.py
 
     export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path
 

@@ -18,6 +18,7 @@ order += "ethernet _first_"
 order += "battery all"
 order += "disk /"
 order += "disk /home/haris/data"
+order += "disk /home/haris/mnt/vm"
 order += "memory"
 order += "cpu_usage"
 order += "cpu_temperature 3"
@@ -64,7 +65,17 @@ disk "/home/haris/data" {
   prefix_type = binary
   low_threshold = 30
   threshold_type = "gbytes_avail"
+  separator = false
+  separator_block_width = -6
 }
+
+disk "/home/haris/mnt/vm" {
+  format = " <span color='#f2b374'></span> %avail "
+  prefix_type = binary
+  low_threshold = 15
+  threshold_type = "gbytes_avail"
+}
+
 
 memory {
   format = "  %available"
@@ -78,7 +89,7 @@ cpu_usage {
   max_threshold = "90"
   degraded_threshold = "60"
   separator = false
-  separator_block_width = -6
+  separator_block_width = -2
 }
 
 cpu_temperature 3 {

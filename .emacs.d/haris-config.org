@@ -297,6 +297,9 @@
      ;;(add-to-list 'projectile-project-root-files-functions 'custom/lsp-default-dir)(setq lsp-auto-guess-root t)
      (setq projectile-require-project-root t)
      ;; (add-hook 'lsp-mode-hook (lambda () (cd (file-name-directory buffer-file-name))))
+
+     ;; Diagnostic mode doesn't work well with flycheck
+     (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
    #+end_src
 ** DAP
    #+begin_src emacs-lisp
@@ -333,16 +336,13 @@
    #+begin_src emacs-lisp
      (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
 
-     (setq python-shell-interpreter "python3")
+     (setq python-shell-interpreter "ipython")
      ;; python-shell-interpreter-args "-i")
 
      (setq lsp-pylsp-plugins-pylint-enabled t
            lsp-pylsp-plugins-flake8-enabled nil
            lsp-pyls-plugins-flake8-enabled  nil
            lsp-diagnostics--flycheck-enabled t)
-
-     ;; Diagnostic mode doesn't work well with flycheck
-     (setq lsp-diagnostics-disabled-modes '(python-mode))
 
      ;; (add-hook 'python-mode-hook 'lsp)
      (add-hook 'lsp-mode-hook (lambda ()
@@ -458,7 +458,7 @@
        github
        (org :variables org-enable-appear-support t)
        ;; mu4e
-       eaf
+       ;; eaf
        ;; emms
        debug))
 
@@ -469,7 +469,8 @@
        ox-extra
        yasnippet-snippets vterm multi-vterm
        i3wm-config-mode rainbow-mode fish-mode
-       evil-easymotion reddigg md4rd pydoc pylint python-info))
+       evil-easymotion reddigg md4rd pydoc pylint python-info
+       nodejs-repl))
   #+end_src
 
 * Appendix

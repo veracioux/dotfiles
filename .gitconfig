@@ -54,6 +54,12 @@
     rb = rebase
     rbc = rebase --continue
     rba = rebase --abort
+    # Stash
+    ss = stash
+    sl = stash list
+    sa = stash apply
+    sp = stash pop
+    sd = stash drop
 
     ic = commit -m 'Initial commit'
 
@@ -107,3 +113,5 @@
     head          = brightblue bold
     branch        = brightmagenta bold
     remoteBranch  = brightgreen bold
+[github]
+	user = veracioux

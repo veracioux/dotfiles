@@ -4,6 +4,10 @@ command Src source ~/.config/tridactyl/tridactylrc
 
 colorscheme custom
 
+bind j scrollline 3
+bind k scrollline -3
+bind D tabduplicate
+
 bind ,p open about:preferences
 bind ,s open about:preferences#search
 bind ,P open about:profiles

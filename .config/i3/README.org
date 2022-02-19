@@ -1,12 +1,10 @@
 #+TITLE: i3 config
-#+begin_src :filetype:
-  # -*- mode: i3wm-config; -*- vim: ft=i3
+#+PROPERTY: header-args :tangle /tmp/.haris/.config/i3/config
+#+begin_src i3wm-config :exports none :mkdirp yes
+  # -*- mode: emacs-lisp-mode; -*- vim: filetype=i3 shiftwidth=2
 #+end_src
 
 * Variable definitions
-  :PROPERTIES:
-  :HEADER-ARGS: :tangle /tmp/.haris/.config/i3/config :mkdirp yes
-  :END:
   #+begin_src i3wm-config :mkdirp yes
     # vim: filetype=i3
 
@@ -202,6 +200,7 @@
     set $ws4 "4:org"
     set $ws5 "5:media"
     set $ws6 "6:extra"
+    set $ws7 "7:vm"
 
     # Switch to workspace
     bindsym $mod+1            workspace $ws1
@@ -210,6 +209,7 @@
     bindsym $mod+4            workspace $ws4
     bindsym $mod+5            workspace $ws5
     bindsym $mod+6            workspace $ws6
+    bindsym $mod+7            workspace $ws7
 
     # Move focused container to workspace
     bindsym $mod+Shift+1      move  container to  workspace $ws1
@@ -302,7 +302,7 @@
     for_window [class="Typora" floating]                  move position center
 
     assign [class="Gimp.*"] number $ws6
-    assign [class="VirtualBox Manager"] number $ws6
+    assign [class="VirtualBox Manager"] number $ws7
   #+end_src
 * Dependencies
   #+begin_src shell :tangle no
