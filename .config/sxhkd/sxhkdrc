@@ -14,6 +14,14 @@ mod4 + shift + p
 mod4 + q
    dmenu_run system
 
+# Dunst stuff
+mod4 + shift + comma
+   dunstctl close
+mod4 + shift + period
+   dunstctl close-all
+mod4 + shift + apostrophe
+   dunstctl history
+
 # Applications
 mod4 + Return
 	alacritty
