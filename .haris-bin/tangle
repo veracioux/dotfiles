@@ -1,3 +1,14 @@
-#!/usr/bin/env sh
+#!/usr/bin/emacs --script
 
-emacs --eval '(org-babel-tangle-file "~/.emacs.d/haris-config.el")'
+(shell-command "rm -rf /tmp/.haris")
+
+(require 'ob-tangle)
+
+(org-babel-tangle-file "~/README.org")
+(org-babel-tangle-file "~/.shells.org")
+(org-babel-tangle-file "~/.emacs.d/haris-config.org")
+(org-babel-tangle-file "~/.config/i3.org")
+
+(shell-command "rsync -rvu /tmp/.haris/ ~/")
+
+; vim: filetype=lisp
