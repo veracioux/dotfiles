@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+[ "$#" != 1 ] && exit 1
+
+ln -sf .xinitrc-"$1" ~/.xinitrc

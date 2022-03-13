@@ -1,0 +1,11 @@
+~/.xinitrc.common
+
+sxhkd &                                     # Load default bindings
+sxhkd.private -c ~/.sxhkd.private &         # Load private bindings
+xrdb ~/.Xresources
+
+dunst &                                     # Notification daemon
+clipmenud &                                 # Daemon for dmenu clipboard
+picom &                                     # Compositor
+autotiling &                                # Autotiling for i3
+i3                                          # Window manager

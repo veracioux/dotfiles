@@ -33,6 +33,11 @@
 * Docker
   To test how everything works, docker can be used. The dockerfile is written to
   [[.Dockerfile][.Dockerfile]].
+* X11
+  I store a couple of ~.xinitrc~ presets in my dotfiles, for different WMs, DEs etc.
+  They are named ~.xinitrc-<identifier>~. I switch among them using ~xpreset
+  <identifier>~. There is also the ~.xinitrc.common-x11~ file which contains some
+  common commands for all presets.
 * Firefox
 * Installing all dependencies
   Each configuration file contains a list of dependencies for the program it
