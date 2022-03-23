@@ -46,6 +46,7 @@
     coh = checkout HEAD
     com = checkout master
     tweak = commit --amend --no-edit
+    t = commit --amend --no-edit
     sub = submodule
     remaster = reset --hard upstream/master
     remain = reset --hard upstream/main
@@ -62,6 +63,9 @@
     sd = stash drop
 
     ic = commit -m 'Initial commit'
+
+    # Miscellaneous
+    chx = update-index --chmod=+x
 
     good = bisect good
     bad = bisect bad
@@ -89,6 +93,9 @@
     insteadOf = glg:
 [url "git@gitlab.com:veracioux/"]
     insteadOf = mygl:
+
+[url "ssh://aur@aur.archlinux.org/"]
+    insteadOf = aurg:
 
 [url "ssh://git@heroku.com/"]
     insteadOf = https://git.heroku.com/

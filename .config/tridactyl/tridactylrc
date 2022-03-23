@@ -28,5 +28,7 @@ autocmd DocStart gnu.org mode ignore
 # Flameshot delete imgur upload
 bind ,D js document.querySelectorAll(".button-big")[1].click();
 
-# GitHub remove check_suite_focus from URL
+# GitHub
+
+# Remove check_suite_focus from URL
 command artifact js location.href = location.href.replace("?check_suite_focus=true", "");

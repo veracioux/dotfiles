@@ -88,6 +88,9 @@ call plug#begin('~/.vim/plugged')
         Plug 'Rykka/riv.vim', { 'for': 'rst' }
         Plug 'tpope/vim-surround'
         Plug 'alx741/vinfo', { 'on': ['Vinfo'] }
+        Plug 'KabbAmine/vCoolor.vim', { 'on': ['VCoolor'] }
+        Plug 'ap/vim-css-color'
+
 
         " Syntax highlighting
         Plug 'dag/vim-fish', { 'for': 'fish' }
@@ -141,24 +144,24 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
     nnoremap        <M-.>        :<up><CR>
 
     " Navigation
-    map            <C-c>        "+y
-    noremap        <M-t>         :silent !term<CR>
-    noremap     <M-j>       <C-e>
-    noremap     <M-k>       <C-y>
+    map             <C-c>        "+y
+    noremap         <M-t>         :silent !term<CR>
+    noremap         <M-j>       <C-e>
+    noremap         <M-k>       <C-y>
 
-    nmap        <leader>w    :w<CR>
+    nmap            <leader>w    :w<CR>
 
     " Window navigation
-    noremap     <C-j>        <C-W>j
-    noremap     <C-k>        <C-W>k
-    noremap     <C-h>        <C-W>h
-    noremap     <C-l>        <C-W>l
-    noremap        <M-tab>        <C-w><C-w>
+    noremap         <C-j>       <C-W>j
+    noremap         <C-k>       <C-W>k
+    noremap         <C-h>       <C-W>h
+    noremap         <C-l>       <C-W>l
+    noremap         <M-tab>     <C-w><C-w>
 
-    noremap        Q            :q<CR>
+    noremap         Q           :q<CR>
 
     " Alt+/ runs :noh
-    noremap        <M-/>       :noh<CR>
+    noremap         <M-/>       :noh<CR>
 
     """ Insertions
 
@@ -448,3 +451,9 @@ if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 " ┃ Markdown Preview ┃
 " ┗━━━━━━━━━━━━━━━━━━┛
     let g:mkdp_auto_close = 0
+
+" ┏━━━━━━━━━┓
+" ┃ vCoolor ┃
+" ┗━━━━━━━━━┛
+    let g:vcoolor_map='<M-c>'
+    let g:vcoolor_disable_mappings = 1

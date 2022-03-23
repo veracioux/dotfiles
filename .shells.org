@@ -57,9 +57,13 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      bind -M default \eo '__haris_prepend_cmdline o'
      bind -M insert  \eo '__haris_prepend_cmdline o'
 
-     # Prepend o in front of current command
+     # Prepend man in front of current command
      bind -M default \em '__haris_prepend_cmdline man'
      bind -M insert  \em '__haris_prepend_cmdline man'
+
+     # Append --help to the end of the command line and submit
+     bind -M default \eH '__haris_print_help'
+     bind -M insert \eH '__haris_print_help'
 
      bind -M default \et term
      bind -M insert  \et term
@@ -89,6 +93,12 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
           commandline --insert "$argv "
           commandline --function end-of-line
       end
+
+      function __haris_print_help
+          commandline --append " --help"
+          commandline -f execute
+      end
+
 
       function __haris_cmdline_editor
           commandline > /tmp/haris_cmdline.fish
@@ -381,10 +391,11 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
    :END:
 *** Aliases
     #+begin_src fish
-      alias src_fish   'source ~/.config/fish/config.fish'
-      alias term       'term & disown'
-      alias gh         '[ -z $SSH_AGENT_PID ] && SSH; command gh'
-      alias alpine     'docker run -it -a stdout alpine'
+      alias src_fish  'source ~/.config/fish/config.fish'
+      alias term      'term & disown'
+      alias gh        '[ -z $SSH_AGENT_PID ] && SSH; command gh'
+      alias alpine    'docker run -it -a stdout alpine'
+      alias x         'xargs'
 
       function dragon; dragon-drag-and-drop $argv & disown; end
       function vrg --wraps rg; vim (rg -l $argv); end
@@ -469,6 +480,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     export GPG_TTY=$(tty)
     export QT_QPA_PLATFORMTHEME=gtk2
     export PYTHONSTARTUP=~/.startup.py
+    export RUSTC_WRAPPER=sccache
 
     export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path
 

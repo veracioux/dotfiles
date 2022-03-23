@@ -15,6 +15,7 @@
     (setq browse-url-generic-program (executable-find "firefox"))
     (setq image-auto-resize 'fit-width)
     (setq image-auto-resize-on-window-resize t)
+    (setq evil-want-keybinding nil)
 
     (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
     (if (not (boundp 'haris-prepended-path))
@@ -124,10 +125,11 @@
     (add-hook 'org-mode-hook 'org-appear-mode)
     (add-hook 'org-mode-hook 'org-mode-visual-fill)
 
-    (setq org-indent-mode           nil
-          org-M-RET-may-split-line  nil
-          org-ellipsis              " ▾"
-          org-superstar-headline-bullets-list '("◉" "○" "■" "◆"))
+    (setq org-indent-mode                     nil
+          org-M-RET-may-split-line            nil
+          org-ellipsis                        " ▾"
+          org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
+          org-hide-emphasis-markers           t)
 
     (setq org-file-apps
           (quote
@@ -454,6 +456,7 @@
        ipython-notebook
        emacs-lisp
        shell
+       rust
        git
        github
        (org :variables org-enable-appear-support t)
@@ -466,7 +469,6 @@
      dotspacemacs-additional-packages
      '(
        org-fragtog org-drill org-ref org-attach-screenshot org-special-blocks ob-ipython
-       ox-extra
        yasnippet-snippets vterm multi-vterm
        i3wm-config-mode rainbow-mode fish-mode
        evil-easymotion reddigg md4rd pydoc pylint python-info
