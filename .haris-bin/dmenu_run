@@ -63,7 +63,8 @@ get_commands() {
     echo "Tem"              # Launch tem development environment
     echo "Octave"           # Launch octave in emacs
     echo "Python"           # Launch python interpreter in emacs
-    echo "Evolt"            # Evolt todo
+    echo "GPG"              # GPG addresses
+    echo "OTP"              # Genreate OTP for selected service
     echo "$aliases"
     echo "$gui_aliases"
     get_desktop_apps        # Programs extracted from *.desktop files
@@ -114,8 +115,10 @@ case "$choice" in
         eoctave --create-frame ;;
     "Python")
         epython --create-frame ;;
-    "Evolt")
-        emacs -c ~/evolt/TODO.org ;;
+    "GPG")
+        run_script gpg ;;
+    "OTP")
+        run_script otp ;;
     # The rest: aliases and regular commands
     *)
         # If the command is an aliased GUI program, just run it

@@ -23,7 +23,7 @@ else:
     open(cache_file, 'w').write(text)
 
 # Read the YAML file
-data = yaml.load(text)
+data = yaml.load(text, yaml.Loader)
 
 # ┏━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Add custom options ┃
