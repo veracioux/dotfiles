@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# Clone my dotfiles repo into $HOME/.cfg, as per my usual strategy
+
+conf() {
+    git --work-tree="$HOME" --git-dir="$HOME/.cfg" "$@"
+}
+
+conf clone https://github.com/veracioux/dotfiles --bare "$HOME/.cfg"
+
+conf remote set-url origin git@github.com:veracioux/dotfiles
