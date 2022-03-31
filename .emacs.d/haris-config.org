@@ -1,5 +1,5 @@
 #+TITLE: Emacs Config
-#+PROPERTY: header-args :tangle /tmp/.haris/.emacs.d/haris-config.el
+#+PROPERTY: header-args :tangle /tmp/.tangle-home/.emacs.d/haris-config.el
 #+begin_src emacs-lisp :exports none :mkdirp yes
   ;; -*- mode: emacs-lisp-mode; -*- vim: ft=lisp sw=2
 #+end_src
@@ -154,9 +154,9 @@
                                     (python   . t)))
      (defun haris/tangle ()
        (interactive)
-       (shell-command "rm -rf /tmp/.haris")
+       (shell-command "rm -rf /tmp/.tangle-home")
        (org-babel-tangle)
-       (shell-command "rsync -ru /tmp/.haris/ ~/" t))
+       (shell-command "rsync -ru /tmp/.tangle-home/ ~/"))
 
      (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle)
    #+end_src
@@ -434,7 +434,7 @@
       sudo pacman -S mpd
     #+end_src
 * Spacemacs
-  #+begin_src emacs-lisp :tangle /tmp/.haris/.spacemacs-init.el
+  #+begin_src emacs-lisp :tangle /tmp/.tangle-home/.spacemacs-init.el
     (setq-default
      dotspacemacs-configuration-layers
      '(syntax-checking

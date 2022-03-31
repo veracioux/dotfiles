@@ -1,5 +1,5 @@
 #+TITLE: Shell Config
-#+PROPERTY: header-args :tangle /tmp/.haris/.config/fish/config.fish :mkdirp yes
+#+PROPERTY: header-args :tangle /tmp/.tangle-home/.config/fish/config.fish :mkdirp yes
 
 This is a config for the shells I use:
 
@@ -62,8 +62,8 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      bind -M insert  \em '__haris_prepend_cmdline man'
 
      # Append --help to the end of the command line and submit
-     bind -M default \eH '__haris_print_help'
-     bind -M insert \eH '__haris_print_help'
+     bind -M default \eH '__haris_print_help_or_toggle'
+     bind -M insert \eH '__haris_print_help_or_toggle'
 
      bind -M default \et term
      bind -M insert  \et term
@@ -94,7 +94,11 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
           commandline --function end-of-line
       end
 
-      function __haris_print_help
+      function __haris_print_help_or_toggle
+          if [ (commandline -o | tail -1) = "--help" ]
+              commandline -r (commandline | string replace -r -- '\s*--help$' '')
+              return
+          end
           commandline --append " --help"
           commandline -f execute
       end
@@ -305,14 +309,14 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
                   -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
           end
    #+end_src
-   #+begin_src fish :tangle /tmp/.haris/.config/fish/completions/pass.fish :mkdirp yes
+   #+begin_src fish :tangle /tmp/.tangle-home/.config/fish/completions/pass.fish :mkdirp yes
      source /usr/share/fish/vendor_completions.d/pass.fish
      complete -c pass -a 'add' -n "no_positional_args"
      complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
    #+end_src
 * Bash
   Note: ~~/.bashrc~ is sourced by fish as well.
-  #+begin_src bash :tangle /tmp/.haris/.bashrc
+  #+begin_src bash :tangle /tmp/.tangle-home/.bashrc
     PS1='\[\e[1;36m\]\u\[\e[1;31m\]@\[\e[1;34m\]\h \[\e[1;32m\]\W \[\e[1;31m\]\$ \[\e[0;32m\]\[\e[0m\]'
 
     source ~/.alias
@@ -349,7 +353,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
   from ~~/.alias~ available in ~dmenu_run~. When I enter them in dmenu, it launches
   a terminal and runs the aliased command.
 ** CLI
-   #+begin_src shell :tangle /tmp/.haris/.alias
+   #+begin_src shell :tangle /tmp/.tangle-home/.alias
      alias x='startx'
      alias conf='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
      alias sconf='git --git-dir=$HOME/.secret/ --work-tree=$HOME'
@@ -374,7 +378,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      export api="$me/api"
    #+end_src
 ** GUI
-   #+begin_src shell :tangle /tmp/.haris/.alias-gui
+   #+begin_src shell :tangle /tmp/.tangle-home/.alias-gui
      alias calc='speedcrunch'
      alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
      alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
@@ -387,7 +391,6 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 ** Fish
    :PROPERTIES:
    :CUSTOM_ID: alias-fish
-   :HEADER-ARGS: :tangle /tmp/.haris/.config/fish/config.fish
    :END:
 *** Aliases
     #+begin_src fish
@@ -475,7 +478,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       set aur 'aur@aur.archlinux.org'
     #+end_src
 * .profile
-  #+begin_src shell :tangle /tmp/.haris/.profile
+  #+begin_src shell :tangle /tmp/.tangle-home/.profile
     export MAKEFLAGS='-j6'
     export GPG_TTY=$(tty)
     export QT_QPA_PLATFORMTHEME=gtk2
