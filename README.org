@@ -21,7 +21,7 @@
     located and run ~./setup.py --all~.
 *** Dependencies
     First complete the above steps.
-    #+begin_src shell :tangle /tmp/dependencies/vim
+    #+begin_src shell :tangle /tmp/dependencies/vim :mkdirp yes
       sudo pacman -S gvim neovim fzf
       rm -rf ~/.config/nvim/*/
       ln -sf -t ~/.config/nvim/ $(realpath ~/.vim/*/)
