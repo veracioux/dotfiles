@@ -19,8 +19,8 @@ mod4 + shift + comma
    dunstctl close
 mod4 + shift + period
    dunstctl close-all
-mod4 + shift + apostrophe
-   dunstctl history
+mod4 + question
+   dunstctl history-pop
 
 # Applications
 mod4 + Return
@@ -65,5 +65,9 @@ XF86MonBrightnessDown
 # Browser: switch to google search
 mod1 + i
    	browser-google-search
+
+# Small utilities
+mod4 + ctrl + c
+    echo | xsel -b
 
 # vim: ft=sxhkd

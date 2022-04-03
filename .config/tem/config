@@ -3,6 +3,7 @@ repo_path = /home/haris/.local/share/tem/repo
 	/home/haris/.local/share/tem/tmp
 	/home/haris/proj/tem/repo
 	/home/haris/repo/src
+	/home/haris/repo/cheat
 	/home/haris/repo/mbed
 editor = nvim
 

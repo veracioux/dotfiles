@@ -398,6 +398,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       alias term      'term & disown'
       alias gh        '[ -z $SSH_AGENT_PID ] && SSH; command gh'
       alias alpine    'docker run -it -a stdout alpine'
+      alias debian    'docker run -it -a stdout debian:bookworm-slim'
       alias x         'xargs'
 
       function dragon; dragon-drag-and-drop $argv & disown; end
@@ -484,6 +485,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     export QT_QPA_PLATFORMTHEME=gtk2
     export PYTHONSTARTUP=~/.startup.py
     export RUSTC_WRAPPER=sccache
+    export MOZ_USE_XINPUT2=1
 
     export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path
 
