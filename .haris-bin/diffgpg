@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Compare the contents of two GPG encrypted files
+
+diff <(gpg --decrypt --output - "$1") <(gpg --decrypt --output - "$2") "${@:3}"
