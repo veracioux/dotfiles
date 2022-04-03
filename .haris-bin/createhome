@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+# Top level home directory
+dirs=(
+    src
+    tmp
+    repo
+)
+mkdir -p "${dirs[@]}"
+
+mkdir -p ~/mnt
+cd ~/mnt
+
+dirs=(
+    cloud
+    hdd
+    phone
+    ssd
+    usb
+    usb-guest
+    usbs
+    usbd
+    usbc
+    vm
+)
+
+mkdir -p "${dirs[@]}"
+
