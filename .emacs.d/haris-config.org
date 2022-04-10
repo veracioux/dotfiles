@@ -124,6 +124,7 @@
 
     (add-hook 'org-mode-hook 'org-appear-mode)
     (add-hook 'org-mode-hook 'org-mode-visual-fill)
+    (add-hook 'org-mode-hook 'org-indent-mode)
 
     (setq org-indent-mode                     nil
           org-M-RET-may-split-line            nil

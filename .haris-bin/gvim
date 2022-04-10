@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Fake gvim which will just launch a terminal with neovim in it
 
@@ -9,13 +9,18 @@ done
 
 # nvim is launched through the shell because otherwise it behaves weirdly
 # All arguments are surrounded with ''
-FISH_CMD="$(printf "'%s' " nvim "$@")"
+FISH_CMD="$(printf "%q " nvim "$@")"
 
-[ -t 0 ] || {
-    cat > /dev/shm/gvim_pipe
-    FISH_CMD="cat /dev/shm/gvim_pipe | $FISH_CMD"
-}
+if [ ! -t 0 ]; then
+    # Input is from a PIPE
+    pipe_input="$(mktemp -t XXXXXXXXXXXXXXXX)"
+    cat > "$pipe_input"
+    FISH_CMD="cat $pipe_input | $FISH_CMD"
+fi
 
 alacritty --class Float,Alacritty -e fish -C "$FISH_CMD"
 
-[ -t 0 ] || rm -f /dev/shm/gvim_pipe
+if [ ! -t 0 ]; then
+    # Input is from a PIPE
+    rm -f "$pipe_input"
+fi

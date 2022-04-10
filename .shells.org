@@ -5,7 +5,8 @@ This is a config for the shells I use:
 
 - *dash* as the system shell (because it's faster)
 - *fish* as my interactive shell
-- *bash* for some scripts because it's more convenient
+- *bash* for some scripts because it's more convenient than dash and more standard
+  than fish
 
 ~~.profile~ is sourced by login, making it available everywhere. ~~/.bashrc~ is
 sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ and
@@ -76,6 +77,12 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 
      bind -M default \ee 'VISUAL="$EDITOR" edit_command_buffer'
      bind -M insert  \ee 'VISUAL="$EDITOR" edit_command_buffer'
+
+     bind -M insert  \ea 'commandline -i "(adhoc)"'
+     bind -M default \ea 'commandline -i "(adhoc)"'
+
+     bind -M insert  \eA 'commandline -i "(adhoc - | string collect)"'
+     bind -M default \eA 'commandline -i "(adhoc - | string collect)"'
      end                                          # End fish_user_key_bindings
    #+end_src
 *** Helper functions
@@ -309,6 +316,10 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
                   -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
           end
    #+end_src
+#+begin_src fish :tangle /tmp/.tangle-home/.config/fish/completions/adhoc.fish
+  complete -c adhoc -f \
+      -a "(complete -C'adsfadadflasdjflasdflnasdflasdu /tmp/adhoc-files/' | string replace /tmp/adhoc-files/ \"\")"
+#+end_src
    #+begin_src fish :tangle /tmp/.tangle-home/.config/fish/completions/pass.fish :mkdirp yes
      source /usr/share/fish/vendor_completions.d/pass.fish
      complete -c pass -a 'add' -n "no_positional_args"

@@ -7,5 +7,5 @@ export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 if acpi | grep -q '\s[0-9]%' && acpi | grep -q 'Discharging'; then
     notify-send 'Low battery' 'Suspending in 5s'
     sleep 5s
-    sudo systemctl suspend
+    sudo systemctl suspend -i
 fi
