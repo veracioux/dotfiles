@@ -1,5 +1,5 @@
 #+TITLE: Shell Config
-#+PROPERTY: header-args :tangle /tmp/.tangle-home/.config/fish/config.fish :mkdirp yes
+#+PROPERTY: header-args :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/config.fish") :mkdirp yes
 
 This is a config for the shells I use:
 
@@ -22,7 +22,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     set fish_prompt_pwd_dir_length 0
 
     # I'm setting HOME to prevent errors when running inside tuterm
-    HOME=/home/haris bass source ~/.bashrc        # Load bash's config
+    HOME="/home/$USER" bass source ~/.bashrc        # Load bash's config
     source "$__fish_config_dir"/tmp.fish          # Temporary aliases
     source "$__fish_config_dir"/private.fish      # Private aliases
 
@@ -135,7 +135,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 ** Plugins
    #+begin_src fish
      # pj plugin
-     set -gx PROJECT_PATHS ~/proj
+     set -gx PROJECT_PATHS $PROJECT_PATHS ~/proj
 
      # z.lua
      set _ZL_CMD z
@@ -149,7 +149,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      fzf_configure_bindings
    #+end_src
 *** Dependencies
-    #+begin_src shell :tangle /tmp/dependencies/fish.sh :mkdirp yes
+    #+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/fish.sh") :mkdirp yes
       paru -S fish fisher
       touch ~/.config/fish/{private,tmp}.fish
       fish -c 'fisher install edc/bass \
@@ -316,18 +316,18 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
                   -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
           end
    #+end_src
-#+begin_src fish :tangle /tmp/.tangle-home/.config/fish/completions/adhoc.fish
+#+begin_src fish :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/completions/adhoc.fish")
   complete -c adhoc -f \
       -a "(complete -C'adsfadadflasdjflasdflnasdflasdu /tmp/adhoc-files/' | string replace /tmp/adhoc-files/ \"\")"
 #+end_src
-   #+begin_src fish :tangle /tmp/.tangle-home/.config/fish/completions/pass.fish :mkdirp yes
+   #+begin_src fish :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/completions/pass.fish") :mkdirp yes
      source /usr/share/fish/vendor_completions.d/pass.fish
      complete -c pass -a 'add' -n "no_positional_args"
      complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
    #+end_src
 * Bash
   Note: ~~/.bashrc~ is sourced by fish as well.
-  #+begin_src bash :tangle /tmp/.tangle-home/.bashrc
+  #+begin_src bash :tangle (concat "/tmp/tangle-" (user-login-name) "/.bashrc")
     PS1='\[\e[1;36m\]\u\[\e[1;31m\]@\[\e[1;34m\]\h \[\e[1;32m\]\W \[\e[1;31m\]\$ \[\e[0;32m\]\[\e[0m\]'
 
     source ~/.alias
@@ -364,7 +364,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
   from ~~/.alias~ available in ~dmenu_run~. When I enter them in dmenu, it launches
   a terminal and runs the aliased command.
 ** CLI
-   #+begin_src shell :tangle /tmp/.tangle-home/.alias
+   #+begin_src shell :tangle (concat "/tmp/tangle-" (user-login-name) "/.alias")
      alias x='startx'
      alias conf='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
      alias sconf='git --git-dir=$HOME/.secret/ --work-tree=$HOME'
@@ -389,7 +389,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      export api="$me/api"
    #+end_src
 ** GUI
-   #+begin_src shell :tangle /tmp/.tangle-home/.alias-gui
+   #+begin_src shell :tangle (concat "/tmp/tangle-" (user-login-name) "/.alias-gui")
      alias calc='speedcrunch'
      alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
      alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
@@ -414,6 +414,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 
       function dragon; dragon-drag-and-drop $argv & disown; end
       function vrg --wraps rg; vim (rg -l $argv); end
+      function erg --wraps rg; emacs -c (rg -l $argv); end
     #+end_src
 *** Abbreviations
     #+begin_src fish
@@ -490,7 +491,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       set aur 'aur@aur.archlinux.org'
     #+end_src
 * .profile
-  #+begin_src shell :tangle /tmp/.tangle-home/.profile
+  #+begin_src shell :tangle (concat "/tmp/tangle-" (user-login-name) "/.profile")
     export MAKEFLAGS='-j6'
     export GPG_TTY=$(tty)
     export QT_QPA_PLATFORMTHEME=gtk2
@@ -506,6 +507,6 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
     [ -f ~/.alias-gui-tmp ] && . ~/.alias-gui-tmp
   #+end_src
 * Dependencies
-  #+begin_src shell :tangle /tmp/dependencies/shells.sh :mkdirp yes
+  #+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/shells.sh") :mkdirp yes
     sudo pacman -S dash fish
   #+end_src

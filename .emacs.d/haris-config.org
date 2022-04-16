@@ -1,5 +1,5 @@
 #+TITLE: Emacs Config
-#+PROPERTY: header-args :tangle /tmp/.tangle-home/.emacs.d/haris-config.el
+#+PROPERTY: header-args :tangle (concat "/tmp/tangle-" (user-login-name) "/.emacs.d/haris-config.el")
 #+begin_src emacs-lisp :exports none :mkdirp yes
   ;; -*- mode: emacs-lisp-mode; -*- vim: ft=lisp sw=2
 #+end_src
@@ -9,7 +9,7 @@
 * General settings
   #+begin_src emacs-lisp
     (setq fill-column 80)
-    (visual-line-mode)
+    (global-visual-line-mode)
     (setq default-tab-width 4)
     (setq custom-theme-directory "~/.emacs.d/private/themes")
     (setq browse-url-generic-program (executable-find "firefox"))
@@ -145,7 +145,7 @@
      (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
      (add-to-list 'org-structure-template-alist '("py" . "src python"))
      (add-to-list 'org-structure-template-alist
-                  '("dep" . "src shell :mkdirp yes :tangle /tmp/dependencies/"))
+                  '("dep" . "src shell :mkdirp yes :tangle (concat \"/tmp/dependencies-\" (user-login-name) \"/TODO\"))"))
    #+end_src
 ** Babel
    #+begin_src emacs-lisp
@@ -155,9 +155,10 @@
                                     (python   . t)))
      (defun haris/tangle ()
        (interactive)
-       (shell-command "rm -rf /tmp/.tangle-home")
+       (setq-local tangle-home (concat "/tmp/tangle-" (user-login-name) "/"))
+       (shell-command (concat "rm -rf " tangle-home))
        (org-babel-tangle)
-       (shell-command "rsync -ru /tmp/.tangle-home/ ~/"))
+       (shell-command (concat "rsync -ru " tangle-home " ~/")))
 
      (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle)
    #+end_src
@@ -169,12 +170,6 @@
      (setq org-latex-create-formula-image-program   'dvisvgm)
      (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
      (setq org-image-actual-width 400)
-   #+end_src
-** Exporters
-   #+begin_src emacs-lisp
-     (use-package ox-altacv
-       :load-path "/home/haris/repo/org-cv"
-       :init (require 'ox-altacv))
    #+end_src
 ** Bindings
    #+begin_src emacs-lisp
@@ -251,7 +246,7 @@
   #+end_src
 * EAF
 ** Dependencies
-   #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs-eaf.sh
+   #+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs-eaf.sh")
      sudo pacman -S git nodejs npm python-pyqt5 python-pyqt5-sip \
           python-pyqtwebengine wmctrl python-pymupdf
      paru -S python-epc
@@ -331,7 +326,7 @@
       (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
     #+end_src
 *** Dependencies
-    #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs_c-c++.sh
+    #+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs_c-c++.sh")
       sudo pip install cmake-language-server
     #+end_src
 ** Python
@@ -359,7 +354,7 @@
       (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)
     #+end_src
 *** Dependencies
-    #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs-python.sh
+    #+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs-python.sh")
       sudo pacman -S python-lsp-server flake8 python-typing_extensions \
            python-lsp-black python-pylint
       sudo pip install pyls-isort pyls-mypy pyls-memestra \
@@ -431,11 +426,11 @@
      ;; (setq emms-player-mpd-server-port "6601")
    #+end_src
 *** Dependencies
-    #+begin_src shell :mkdirp yes :tangle /tmp/dependencies/emacs_emms.sh
+    #+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs_emms.sh")
       sudo pacman -S mpd
     #+end_src
 * Spacemacs
-  #+begin_src emacs-lisp :tangle /tmp/.tangle-home/.spacemacs-init.el
+  #+begin_src emacs-lisp :tangle (concat "/tmp/tangle-" (user-login-name) "/.spacemacs-init.el")
     (setq-default
      dotspacemacs-configuration-layers
      '(syntax-checking

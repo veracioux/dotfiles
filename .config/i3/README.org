@@ -1,5 +1,5 @@
 #+TITLE: i3 config
-#+PROPERTY: header-args :tangle /tmp/.tangle-home/.config/i3/config
+#+PROPERTY: header-args :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/i3/config") :mkdirp yes
 #+begin_src i3wm-config :exports none :mkdirp yes
   # -*- mode: emacs-lisp-mode; -*- vim: filetype=i3 shiftwidth=2
 #+end_src
