@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Sudo but with a hook that sends a notification when the prompt is shown
+
+tmpfile="$(mktemp -t sudo_askpass.XXXXXXXXXXXXXX)"
+cat > "$tmpfile" <<EOF
+#!/usr/bin/env sh
+eval "$(env)"
+notify-send "SUDO" "Please enter your password"
+echo -n "[sudo] password for $(getent passwd 1000 | cut -d: -f1): " >&2
+head -1
+EOF
+
+chmod a+x "$tmpfile"
+SUDO_ASKPASS="$tmpfile" /usr/bin/sudo --askpass "$@"
+
+rm -f "$tmpfile"
