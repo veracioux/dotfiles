@@ -4,4 +4,4 @@
 # knows.
 
 rmdir ~/Desktop ~/Downloads ~/Documents ~/Pictures ~/Videos ~/Music \
-    ~/Templates ~/Public ~/'VirtualBox VMs'
+    ~/Templates ~/Public ~/'VirtualBox VMs' ~/mpv_slicing.log

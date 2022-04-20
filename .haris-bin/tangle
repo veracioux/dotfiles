@@ -14,7 +14,7 @@
 (org-babel-tangle-file "~/README.org")
 (org-babel-tangle-file "~/.shells.org")
 (org-babel-tangle-file "~/.emacs.d/haris-config.org")
-(org-babel-tangle-file "~/.config/i3.org")
+(org-babel-tangle-file "~/.config/i3/README.org")
 
 (shell-command (concat "rsync -rvu " tangle-home " ~/"))
 
