@@ -45,10 +45,11 @@
     co = checkout
     coh = checkout HEAD
     com = checkout master
+    cod = checkout develop
     tweak = commit --amend --no-edit
     t = commit --amend --no-edit
     sub = submodule
-    remaster = reset --hard upstream/master
+    remaster = fetch upstream master:master
     remain = reset --hard upstream/main
     res = restore
     uns = restore --staged

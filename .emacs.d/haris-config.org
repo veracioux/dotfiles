@@ -187,6 +187,8 @@
           erc-kill-buffer-on-part t
           erc-auto-query 'bury)
 
+    (add-hook 'erc-join-hook (lambda () (evil-normal-state)))
+
     ;; For some reason erc-modules is undefined
     (add-to-list 'erc-modules 'notifications)
     (delete 'readonly erc-modules)

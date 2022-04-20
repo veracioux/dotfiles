@@ -8,6 +8,7 @@ cat > "$tmpfile" <<EOF
 eval "$(env)"
 notify-send "SUDO" "Please enter your password"
 echo -n "[sudo] password for $(getent passwd 1000 | cut -d: -f1): " >&2
+stty -echo
 head -1
 EOF
 
