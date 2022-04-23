@@ -4,12 +4,13 @@
 
 tmpfile="$(mktemp -t sudo_askpass.XXXXXXXXXXXXXX)"
 cat > "$tmpfile" <<EOF
-#!/usr/bin/env sh
-eval "$(env)"
+#!/usr/bin/env bash
+eval "$(export -p)"
 notify-send "SUDO" "Please enter your password"
 echo -n "[sudo] password for $(getent passwd 1000 | cut -d: -f1): " >&2
 stty -echo
 head -1
+echo >&2
 EOF
 
 chmod a+x "$tmpfile"

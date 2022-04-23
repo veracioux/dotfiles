@@ -8,5 +8,12 @@ conf() {
 
 conf clone https://github.com/veracioux/dotfiles --bare "$HOME/.cfg"
 
+conf remote set-url origin_ro https://github.com/veracioux/dotfiles
 conf remote set-url origin git@github.com:veracioux/dotfiles
 conf checkout
+
+touch ~/.alias-tmp
+touch ~/.alias-gui-tmp
+touch ~/.sxhkd.tmp
+
+touch ~/.config/fish/tmp.fish

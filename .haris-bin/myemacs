@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+# Run emacsclient in the terminal, unless the -c option is given.
+# - Also enables proper color support.
+# - Any additional arguments you provide are passed to emacsclient
+
+export TERM='xterm-256color'
+extra_args=''
+if printarg "$@" | grep -q -- '-c'; then
+    extra_args='-n'
+else
+    extra_args='-t'
+fi
+if ! printarg "$@" | grep -qE   '(-s|--socket-name)'; then
+    extra_args="$extra_args --socket-name emacs"
+fi
+
+emacsclient --alternate-editor /usr/bin/emacs $extra_args "$@"

@@ -2,4 +2,4 @@
 
 # Run an emacs-hosted terminal via vterm
 
-emacsclient --eval '(multi-vterm)' "$@" -c
+myemacs -c --eval '(multi-vterm)' "$@"

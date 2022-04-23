@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
-emacsclient --eval "(progn (run-python) (delete-other-windows))" "$@"
+# Run a python interpreter through emacs
+
+myemacs --eval "(progn (run-python) (delete-other-windows))" "$@"

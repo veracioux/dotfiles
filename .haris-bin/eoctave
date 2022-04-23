@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
-emacsclient --eval "(progn (run-octave) (delete-other-windows))" "$@"
+# Run octave interpreter through emacs
+
+myemacs --eval "(progn (run-octave) (delete-other-windows))" "$@"

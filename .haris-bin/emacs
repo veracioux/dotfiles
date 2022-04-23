@@ -1,10 +1,1 @@
-#!/usr/bin/env sh
-
-# Run emacsclient in the terminal, unless the -c option is given.
-# - Also enables proper color support.
-# - Additional arguments are passed to emacsclient
-
-export TERM='xterm-256color'
-extra_args=''
-printarg "$@" | grep -- '-c' && extra_args='-n' || extra_args='-t'
-emacsclient --alternate-editor /usr/bin/emacs $extra_args "$@"
+myemacs

@@ -65,6 +65,7 @@ get_commands() {
     echo "Python"           # Launch python interpreter in emacs
     echo "GPG"              # GPG addresses
     echo "OTP"              # Genreate OTP for selected service
+    echo "IRC"              # Open emacs client for IRC
     echo "$aliases"
     echo "$gui_aliases"
     get_desktop_apps        # Programs extracted from *.desktop files
@@ -112,13 +113,15 @@ case "$choice" in
     "Tem")
         alacritty -e fish -C 'pj tem; clear' ;;
     "Octave")
-        eoctave --create-frame ;;
+        eoctave -c ;;
     "Python")
-        epython --create-frame ;;
+        epython -c ;;
     "GPG")
         run_script gpg ;;
     "OTP")
         run_script otp ;;
+    "IRC")
+        myemacs --socket-name="irc" ;;
     # The rest: aliases and regular commands
     *)
         # If the command is an aliased GUI program, just run it
