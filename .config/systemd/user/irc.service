@@ -1,11 +1,11 @@
 [Unit]
-Description=Emacs text editor
+Description=Emacs daemon for IRC chat
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/emacs --daemon="emacs"
-ExecStop=/usr/bin/emacsclient --socket-name="emacs" --eval "(kill-emacs)"
+ExecStart=/usr/bin/emacs --daemon="irc"
+ExecStop=/usr/bin/emacsclient --socket-name="irc" --eval "(kill-emacs)"
 Environment=SSH_AUTH_SOCK=%t/keyring/ssh
 Restart=on-failure
 
