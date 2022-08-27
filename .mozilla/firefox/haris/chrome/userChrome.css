@@ -1,91 +1,58 @@
-@import "/home/haris/.mozilla/firefox/common/chrome/userChrome.css";
-/* ┏━━━━━━━━━━━━━━━━━━━━┓
-   ┃ Title bar settings ┃
-   ┗━━━━━━━━━━━━━━━━━━━━┛ */
+#navigator-toolbox:not(:hover) #nav-bar {
+    min-height: 0 !important;
+    max-height: 0 !important;
+}
+
+#navigator-toolbox:not(:hover) #urlbar-container {
+    visibility: collapse;
+}
+
+/*
+ * A bit convoluted way of hiding the toolbar buttons when the navigator is
+ * collapsed. Simpler methods I've tried also hide the extension menu that
+ * should pop up when I press it's keyboard shortcut, so this one is the winner.
+ */
+#navigator-toolbox:not(:hover) .toolbarbutton-badge-stack > * {
+    display: none;
+}
 
 #titlebar {
-    height: 20px;
-}
-
-.private-browsing-indicator {
-    scale: 50%;
-    transform: translateX(15px) translateY(-14px);
-}
-
-#tabbrowser-tabs {
-    min-height: 0px
+  max-height: 20px !important;
 }
 
 #tabbrowser-arrowscrollbox, #scrollbutton-up, #scrollbutton-down,
-#tabs-newtab-button, #new-tab-button,
-.tabbrowser-tab, .tab-background, .tab-stack
+#tabs-newtab-button, #new-tab-button, #alltabs-button,
+.tabbrowser-tab, .tab-background, .tab-stack, .tab-background
 {
-    min-height: 0px;
-    max-height: 20px;
+    min-height: 0 !important;
+    max-height: 20px !important;
     margin: 0px !important;
-    z-index: 0 !important;
 }
 
-#tabs-newtab-button, #new-tab-button { visibility: collapse !important }
+#new-tab-button, #tabs-newtab-button {
+  visibility: collapse !important;
+}
 
-/* ┏━━━━━━━━━━━━━━┓
-   ┃ Tab settings ┃
-   ┗━━━━━━━━━━━━━━┛ */
+#alltabs-button {
+  transform: scale(0.8);
+  padding: 0 !important;
+}
+
+.toolbarbutton-badge-stack {
+  padding: 0 !important;
+}
 
 .tabbrowser-tab {
-    translate: 0px 0px !important;
-    padding: 0px;
-    font-size: 0.8em;
+    padding: 0;
+    font-size: 11px;
 }
 
-/* .tab-line {
-    height: 0.5px;
-} */
+/* Color variables are defined in my custom tridactyl theme. */
 
-.tab-content {
-    min-height: 0px;
-    max-height: 20px;
-    padding-top: 2px;
-    padding-left: 3px;
-    padding-right: 3px;
+a {
+ color: var(--mycolor-brblue);
 }
 
-.tab-icon-image {
-    scale: 60%;
-    transform: translateY(-2px);
+a:visited {
+  color: var(--mycolor-brmagenta);
 }
-
-.tab-close-button {
-    scale: 80% 95%;
-    transform: translateY(-1px);
-}
-
-/* ┏━━━━━━━━━┓
-   ┃ Toolbar ┃
-   ┗━━━━━━━━━┛ */
-
-#nav-bar {
-    min-height: 0px;
-    max-height: 0px; /* was 14px */
-}
-
-#navigator-toolbox {
-    min-height: 0px;
-    max-height: 22px; /* was 35px */
-}
-
-#downloads-button, #library-button, #sidebar-button, #PanelUI-button,
-#back-button, #forward-button, .webextension-browser-action {
-    scale: 0%; /* was 45% */
-    transform: translateX(70px) translateY(-15px);
-}
-
-#PanelUI-menu-button {
-    transform: translateX(-50px);
-}
-
-/* Remove search bar completely */
-#urlbar-container {
-    scale: 0;
-}
-
