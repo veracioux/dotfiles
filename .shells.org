@@ -45,46 +45,49 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      bind -M insert \cn down-or-search
    #+end_src
 ** Other bindings
-   #+begin_src fish
-     # Copy the current contents of the command line
-     bind -M default \ec 'commandline -b | xsel -b'
-     bind -M insert  \ec 'commandline -b | xsel -b'
+#+begin_src fish
+  # Copy the current contents of the command line
+  bind -M default \ec 'commandline -b | xsel -b'
+  bind -M insert  \ec 'commandline -b | xsel -b'
 
-     # Run the current command in bash
-     bind -M default \eb __haris_run_in_bash
-     bind -M insert  \eb __haris_run_in_bash
+  # Run the current command in bash
+  bind -M default \eb __haris_run_in_bash
+  bind -M insert  \eb __haris_run_in_bash
 
-     # Prepend o in front of current command
-     bind -M default \eo '__haris_prepend_cmdline o'
-     bind -M insert  \eo '__haris_prepend_cmdline o'
+  # Prepend o in front of current command
+  bind -M default \eo '__haris_prepend_cmdline o'
+  bind -M insert  \eo '__haris_prepend_cmdline o'
 
-     # Prepend man in front of current command
-     bind -M default \em '__haris_prepend_cmdline man'
-     bind -M insert  \em '__haris_prepend_cmdline man'
+  # Prepend man in front of current command
+  bind -M default \em '__haris_prepend_cmdline man'
+  bind -M insert  \em '__haris_prepend_cmdline man'
 
-     # Append --help to the end of the command line and submit
-     bind -M default \eH '__haris_print_help_or_toggle'
-     bind -M insert \eH '__haris_print_help_or_toggle'
+  # Append --help to the end of the command line and submit
+  bind -M default \eH '__haris_print_help_or_toggle'
+  bind -M insert \eH '__haris_print_help_or_toggle'
 
-     bind -M default \et term
-     bind -M insert  \et term
+  bind -M default \et term
+  bind -M insert  \et term
 
-     bind -M default \en '__haris_prepend_cmdline cmd-with-notify'
-     bind -M insert  \en '__haris_prepend_cmdline cmd-with-notify'
+  bind -M default \en '__haris_prepend_cmdline cmd-with-notify'
+  bind -M insert  \en '__haris_prepend_cmdline cmd-with-notify'
 
-     bind -M default \eg 'dragon (command ls | fzf --multi) 2>/dev/null'
-     bind -M insert  \eg 'dragon (command ls | fzf --multi) 2>/dev/null'
+  bind -M default \eg 'dragon (command ls | fzf --multi) 2>/dev/null'
+  bind -M insert  \eg 'dragon (command ls | fzf --multi) 2>/dev/null'
 
-     bind -M default \ee 'VISUAL="$EDITOR" edit_command_buffer'
-     bind -M insert  \ee 'VISUAL="$EDITOR" edit_command_buffer'
+  bind -M default \ee 'VISUAL="$EDITOR" edit_command_buffer'
+  bind -M insert  \ee 'VISUAL="$EDITOR" edit_command_buffer'
 
-     bind -M insert  \ea 'commandline -i "(adhoc)"'
-     bind -M default \ea 'commandline -i "(adhoc)"'
+  bind -M insert  \ea 'commandline -i "(adhoc)"'
+  bind -M default \ea 'commandline -i "(adhoc)"'
 
-     bind -M insert  \eA 'commandline -i "(adhoc - | string collect)"'
-     bind -M default \eA 'commandline -i "(adhoc - | string collect)"'
-     end                                          # End fish_user_key_bindings
-   #+end_src
+  bind -M insert  \eA 'commandline -i "(adhoc - | string collect)"'
+  bind -M default \eA 'commandline -i "(adhoc - | string collect)"'
+
+  bind -M insert  \eG 'magit'
+  bind -M default \eG 'magit'
+  end                                          # End fish_user_key_bindings
+#+end_src
 *** Helper functions
     #+begin_src fish
       function __haris_run_in_bash
@@ -135,7 +138,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 ** Plugins
    #+begin_src fish
      # pj plugin
-     set -gx PROJECT_PATHS $PROJECT_PATHS ~/proj
+     set -gx PROJECT_PATHS $PROJECT_PATHS ~/proj ~/proj/drytoe
 
      # z.lua
      set _ZL_CMD z
@@ -217,7 +220,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      end
 
      function __haris_emacs_conf
-         emacs -c --frame-parameters='(quote (name . "EmacsConf"))' $argv
+         emacs -c --frame-parameters='(quote (name . "EmacsFloat"))' $argv
      end
 
      # Productivity shortcuts
@@ -251,10 +254,11 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
 
      function SSH
          set -l session ~/.cache/ssh_session.gpg
-         set -l tmpfile /dev/shm/gpg_decrypt_target
+         mkdir -p /dev/shm/(whoami)
+         set -l tmpfile /dev/shm/(whoami)/gpg_decrypt_target
          if [ "$argv" = '-r' ]
-           rm $session
-           pkill ssh-agent
+           rm -f $session
+           pkill -u (whoami) ssh-agent
            return
          end
          if [ ! -s $session ]
@@ -262,18 +266,31 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
              source $tmpfile
              gpg --encrypt -r B97C0CA3BD9790A48EAA6EC9E64CF503559BB9E2 \
                -o $session $tmpfile
-             rm $tmpfile
+             rm -f $tmpfile
              ssh-add ~/.ssh/$argv
          else
              gpg --decrypt -o $tmpfile $session
              source $tmpfile
-             rm $tmpfile
+             rm -f $tmpfile
          end
      end
 
      function git
          SSH 1>/dev/null 2>/dev/null
          command git $argv
+     end
+
+     function sconf
+         set -l gitdir ~/.secret
+         set -l worktree_option --work-tree="$HOME"
+         if [ -e ".secret" ]
+             set gitdir (pwd)/.secret
+             if [ ~ != (pwd) ]
+                 set -le worktree_option
+             end
+         end
+
+         git --git-dir="$gitdir" $worktree_option $argv
      end
    #+end_src
 ** Completions
@@ -422,6 +439,10 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       abbr -g rm 'rm -i'
       abbr -g mv 'mv -i'
 
+      # Error correction
+      abbr -g claer 'clear'
+      abbr -g pas   'pass'
+
       # Pacman commands
       abbr -g p   'pacman'
       abbr -g pqi 'pacman -Qi'
@@ -437,19 +458,20 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       abbr -g spr 'cmd-with-notify sudo pacman -R'
 
       # Systemd
-      abbr -g ctl       'systemctl'
-      abbr -g startd    'systemctl start'
-      abbr -g stopd     'systemctl stop'
-      abbr -g enabled   'systemctl enable'
-      abbr -g statusd   'systemctl status'
-      abbr -g restartd  'systemctl restart'
+      abbr -g ctl     'systemctl'
+      abbr -g start   'systemctl start'
+      abbr -g stop    'systemctl stop'
+      abbr -g en      'systemctl enable'
+      abbr -g sts     'systemctl status'
+      abbr -g restart 'systemctl restart'
+            abbr -g sus     'systemctl suspend -i'
       #   --user versions
       abbr -g ctlu      'systemctl          --user'
-      abbr -g startdu   'systemctl start    --user'
-      abbr -g stopdu    'systemctl stop     --user'
-      abbr -g enabledu  'systemctl enable   --user'
-      abbr -g statusdu  'systemctl status   --user'
-      abbr -g restartdu 'systemctl restart  --user'
+      abbr -g startu    'systemctl start    --user'
+      abbr -g stopu     'systemctl stop     --user'
+      abbr -g enu       'systemctl enable   --user'
+      abbr -g stsu      'systemctl status   --user'
+      abbr -g restartu  'systemctl restart  --user'
 
       # Docker
       abbr -g d    'docker'
@@ -457,6 +479,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       abbr -g dr   'docker run'
       abbr -g drit 'docker run -it'
       abbr -g deit 'docker exec -it'
+            abbr -g drm  'docker rm -f'
       abbr -g dc   'docker-compose'
 
       abbr -g g     'git'
@@ -466,6 +489,7 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       abbr -g s     'sudo'
       abbr -g paru  'cmd-with-notify paru'
       abbr -g py    'python'
+      abbr -g ipy   'ipython'
       abbr -g copy  'xsel -b'
       abbr -g paste 'xsel -b -o'
       abbr -g oct   'octave'
@@ -480,11 +504,22 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
       abbr -g c  'conf'
       abbr -g fl 'flameshot'
 
-      abbr -g tb 'nc termbin.com 9999'
-      abbr -g asc 'asciinema'
-      abbr -g mic 'amixer set Capture toggle'
-      abbr -g priv 'fish --private'
-      abbr -g hk 'heroku'
+      abbr -g tb    'nc termbin.com 9999'
+      abbr -g asc   'asciinema'
+      abbr -g mic   'amixer set Capture toggle'
+      abbr -g priv  'fish --private'
+      abbr -g hk    'heroku'
+      abbr -g mhc   'man http-codes'
+      abbr -g rgh   'rg --hidden'
+
+      # Pass
+      abbr -g pn 'pass insert'
+      abbr -g pg 'pass generate --clip'
+      abbr -g pe 'pass edit'
+      abbr -g pc 'pass show --clip'
+
+            # Google cloud
+            abbr -g gce 'gcloud compute'
     #+end_src
 *** Variables
     #+begin_src fish
