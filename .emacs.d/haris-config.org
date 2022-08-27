@@ -27,8 +27,10 @@
     (add-hook 'text-mode-hook #'auto-fill-mode)
     (add-hook 'prog-mode-hook #'auto-fill-mode)
 
-    ;; NOTE: needed only in spacemacs
-    (disable-theme 'spacemacs-dark)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (select-frame frame)
+                (load-theme 'dracula t)))
     (load-theme 'dracula t)
   #+end_src
 ** Nerd commenter
@@ -183,7 +185,7 @@
           erc-nick "veracioux"
           erc-user-full-name "Haris Gušić"
           erc-track-shorten-start 8
-          erc-autojoin-channels-alist '((".*" "#archlinux" "#octave"))
+          erc-autojoin-channels-alist '(("irc.libera.chat" "#archlinux" "#Jobs" "#fossjobs"))
           erc-kill-buffer-on-part t
           erc-auto-query 'bury)
 
@@ -200,6 +202,8 @@
 
     (defun haris/erc-quit-channel () (interactive)
            (erc-part-from-channel ""))
+    (defun haris/euirc () (interactive)
+           (erc :server "irc.euirc.net" :port 6667 :nick "veracioux"))
 
     (define-key              erc-mode-map           (kbd "C-l") 'comint-clear-buffer)
     (evil-define-key 'normal erc-mode-map           (kbd ",b")  'erc-switch-to-buffer)
