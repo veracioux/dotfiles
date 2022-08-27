@@ -5,18 +5,14 @@
 [include]
     path = ~/.gitconfig.private
 [alias]
-    ldog = log --decorate --oneline --graph
-    whenadded = log --diff-filter=A
     i = init
     s = status
     a = add
-    c = commit -s
-    ca = commit -s -a -m
-    d = diff
-    ds = diff --staged
-    dd = diff HEAD~1..HEAD
+    b = branch
+    # Ls
     ls = ls-tree -r master --name-only
     lss = ls-tree -r master
+    # Log
     l = ldog --pretty=format:'%C(magenta bold)%h%Creset \
         -%C(auto)%d%Creset %s' \
         --abbrev-commit --date=short
@@ -26,11 +22,14 @@
     lll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
         -%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
         --abbrev-commit --date=short
-    f = fetch
-    fo = fetch origin
-    fu = fetch upstream
+    ldog = log --decorate --oneline --graph
+    whenadded = log --diff-filter=A
+    # Diff
+    d = diff
+    ds = diff --staged
+    dd = diff HEAD~1..HEAD
+    # Push
     p = push
-    b = branch
     po = push origin
     pom = push origin master
     poh = push origin HEAD
@@ -38,21 +37,37 @@
     puh = push upstream HEAD
     pa = push all
     pam = push all master
+    # Fetch
+    f = fetch
+    fo = fetch origin
+    fu = fetch upstream
+    # Pull
     ppo = pull origin
     ppom = pull origin master
     ppu = pull upstream
     ppum = pull upstream master
+    # Checkout
     co = checkout
     coh = checkout HEAD
     com = checkout master
     cod = checkout develop
-    tweak = commit --amend --no-edit
-    t = commit --amend --no-edit
+    # Commit
+    c = commit
+    ci = commit -m 'Initial commit'
+    call = commit --all
+    cc = commit --all --message
+    cam = commit --amend --message
+    extend = commit --amend --no-edit
+    ex = commit --amend --no-edit
     sub = submodule
     remaster = fetch upstream master:master
+    tweak = commit --amend --no-edit
+    t = commit --amend --no-edit
+    # Tree manipulation
     remain = reset --hard upstream/main
     res = restore
     uns = restore --staged
+    # Rebase
     rb = rebase
     rbc = rebase --continue
     rba = rebase --abort
@@ -62,14 +77,12 @@
     sa = stash apply
     sp = stash pop
     sd = stash drop
-
-    ic = commit -m 'Initial commit'
-
-    # Miscellaneous
-    chx = update-index --chmod=+x
-
+    # Bisect
     good = bisect good
     bad = bisect bad
+    bsr = bisect reset
+    # Miscellaneous
+    chx = update-index --chmod=+x
 [core]
     autocrlf      = input
     pager         = less -F -X
@@ -78,13 +91,17 @@
     filemode      = false
 [apply]
     whitespace    = fix
+[format]
+    signOff = true
 [init]
-    defaultBranch = master
+    defaultBranch = main
 
 [url "https://github.com/"]
     insteadOf = gh:
-[url "git@github.com:veracioux/"]
+[url "https://github.com/veracioux/"]
     insteadOf = mygh:
+[url "git@github.com:veracioux/"]
+    insteadOf = myghg:
 [url "git@github.com:"]
     insteadOf = ghg:
 
