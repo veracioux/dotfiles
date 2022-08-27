@@ -8,4 +8,6 @@ dunst &                                     # Notification daemon
 clipmenud &                                 # Daemon for dmenu clipboard
 picom &                                     # Compositor
 autotiling &                                # Autotiling for i3
-i3                                          # Window manager
+dbus-update-activation-environment \        # Fixes dbus problems with i3
+    --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY
+exec i3                                     # Window manager

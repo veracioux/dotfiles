@@ -281,10 +281,12 @@
     for_window [class="matplotlib" floating]              move position center
 
     # Emacs config editor
-    for_window [title="EmacsConf"]                        floating enable
-    for_window [title="EmacsConf" floating]               move position center
-    for_window [title="EmacsConf"]                        move scratchpad
-    for_window [title="EmacsConf"]                        scratchpad show
+    for_window [title="EmacsFloat"]                       floating enable
+    for_window [title="EmacsFloat" floating]              move position center
+    for_window [title="EmacsFloat"]                       move scratchpad
+    for_window [title="EmacsFloat"]                       scratchpad show
+
+    # Emacs magit
 
     # Octave plots
     for_window [class="GNU Octave"]                       floating enable

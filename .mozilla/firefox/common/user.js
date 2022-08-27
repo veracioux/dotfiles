@@ -20,3 +20,7 @@ user_pref("tridactyl.unfixedamo_removed", true);
 user_pref("dom.security.https_only_mode_ever_enabled_pbm", true);
 user_pref("dom.security.https_only_mode_pbm", true);
 user_pref("signon.generation.enabled", false);
+
+user_pref("browser.link.open_newwindow", 3);
+
+user_pref("services.sync.declinedEngines", "creditcards,passwords");

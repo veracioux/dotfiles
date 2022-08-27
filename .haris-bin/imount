@@ -43,3 +43,4 @@ echo # newline
 sudo mount "$device" "$mount_dir" -o umask=002,uid=$(id -u),gid=$(id -g)
 
 echo -e "$mount_dir" > /tmp/imount_directory
+chmod a+rw /tmp/imount_directory

@@ -1,3 +1,3 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-/usr/bin/ipython -i "$PYTHONSTARTUP" "$@"
+/usr/bin/ipython "$@" -i -- "$PYTHONSTARTUP"

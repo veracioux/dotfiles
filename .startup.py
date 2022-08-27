@@ -6,4 +6,4 @@ import re
 from importlib import reload
 
 pwd = os.getcwd
-ls = lambda: print(sp.run(["ls", *os.listdir()]).stdout)
+ls = lambda path=".": print(sp.run(["ls", *os.listdir(path)]).stdout)

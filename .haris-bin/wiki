@@ -5,7 +5,7 @@ source=~/wiki/
 # The folder where the Sphinx HTML build resides
 build=~/wiki/.build/html/
 
-[ -z "$@" ] && { emacsclient --create-frame $source/index.org & disown; exit; }
+[ -z "$@" ] && { myemacs --create-frame $source/index.org & disown; exit; }
 [ "$@" == "-v" ] && { firefox -P minimal $build/index.html & disown; exit; }
 
 # By default, sections are opened for editing, not for viewing

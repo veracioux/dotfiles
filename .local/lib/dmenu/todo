@@ -2,7 +2,6 @@
 
 edit=" Edit..."
 lookup="$(ls ~/proj/*/TODO.org \
-    ~/evolt/TODO.org \
     ~/data/personal/todos/*/TODO.org)"
 
 entries="$(echo "$edit"
@@ -20,5 +19,5 @@ choice="$(
 if [ "$choice" = " Edit..." ]; then
     cd "$(dirname "$0")"; gvim "$0"
 else
-    emacsclient --create-frame $(echo "$lookup" | grep "$choice/TODO.org")
+    myemacs -c $(echo "$lookup" | grep "$choice/TODO.org")
 fi

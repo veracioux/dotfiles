@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-choice="$(echo "Shutdown\nReboot..." | dmenu)"
+choice="$(echo "Shutdown\nSuspend\nReboot..." | dmenu)"
 
 # No choice, bye-bye
 [ -z "$choice" ] && exit
@@ -9,6 +9,10 @@ if [ "$choice" = "Shutdown" ]; then
 
     choice="$(echo " No\n Yes, shutdown" | dmenu -p 'Sure?')"
     [ "$choice" = " Yes, shutdown" ] && shutdown now
+
+elif [ "$choice" = "Suspend" ]; then
+
+    systemctl suspend -i
 
 elif [ "$choice" = "Reboot..." ]; then
 

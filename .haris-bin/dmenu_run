@@ -121,13 +121,13 @@ case "$choice" in
     "OTP")
         run_script otp ;;
     "IRC")
-        myemacs --socket-name="irc" ;;
+        myemacs --socket-name="irc" -c ;;
     # The rest: aliases and regular commands
     *)
         # If the command is an aliased GUI program, just run it
         for al in $gui_aliases; do
             if [ "$choice" = "$al" ]; then
-                fish -C "$choice"    # Only fish works here
+                fish -C "$choice"    # Fish is the only shell that works here
                 exit
             fi
         done

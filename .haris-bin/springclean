@@ -4,6 +4,7 @@ docker system prune
 docker volume prune
 
 rm -rf ~/.local/share/Trash
+rm -rf ~/.local/share/*.xbel*
 
 # I think this is created by KDE plasma
 rm -rf ~/.local/share/baloo

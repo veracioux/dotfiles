@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
-# Run emacsclient in the terminal, unless the -c option is given.
+# Run emacsclient in the terminal, unless the -c option is given, which will
+# open the GUI.
 # - Also enables proper color support.
 # - Any additional arguments you provide are passed to emacsclient
 
@@ -11,7 +12,7 @@ if printarg "$@" | grep -q -- '-c'; then
 else
     extra_args='-t'
 fi
-if ! printarg "$@" | grep -qE   '(-s|--socket-name)'; then
+if ! printarg "$@" | grep -qE '^(-s|--socket-name)'; then
     extra_args="$extra_args --socket-name emacs"
 fi
 

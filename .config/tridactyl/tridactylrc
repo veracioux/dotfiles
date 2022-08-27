@@ -14,6 +14,9 @@ bind ,P open about:profiles
 bind ,a open about:addons
 bind ,c open about:config
 bind ,d open about:downloads
+bind ,l open about:logins
+bind ,D open about:debugger
+
 bind ,g tabopen google.com
 bind ,m composite get_current_url | mpvsafe
 bind <C-.> tabdetach
