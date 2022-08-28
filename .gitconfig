@@ -24,6 +24,11 @@
         --abbrev-commit --date=short
     ldog = log --decorate --oneline --graph
     whenadded = log --diff-filter=A
+    # Remote
+    r = remote
+    rg = remote get-url
+    rgo = remote get-url origin
+    rgu = remote get-url upstream
     # Diff
     d = diff
     ds = diff --staged
@@ -60,7 +65,6 @@
     extend = commit --amend --no-edit
     ex = commit --amend --no-edit
     sub = submodule
-    remaster = fetch upstream master:master
     tweak = commit --amend --no-edit
     t = commit --amend --no-edit
     # Tree manipulation

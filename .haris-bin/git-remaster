@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# Reset the local trunk branch to its remote counterpart
+# The script will determine if trunk is 'master' or 'main'. If both branches
+# exist, main will be used.
+# For the remote, origin is used if it exists. Otherwise
+
+set -e
+
+trunk="$(git branch | cut -b 3- | grep -E '^(main|master)$' | head -1)"
+current="$(git branch --show-current)"
+remote=""
+
+# Verify $trunk valid
+if [ -z "$trunk" ]; then
+    echo "Trunk branch could not be found. Aborting.." >&2
+    exit 1
+fi
+
+# Determine remote
+if git remote | grep -q origin; then
+    remote="origin"
+elif git remote | grep -q upstream; then
+    remote="upstream"
+else
+    echo "Neither origin nor upstream were found. Aborting.." >&2
+    exit 1
+fi
+
+remote_trunk="$remote/$trunk"
+
+# How many commits is trunk ahead of remote trunk
+ahead="$(git rev-list --left-only "$trunk"..."$remote_trunk")"
+
+if [ "$ahead" -gt 0 ]; then
+    echo "Local $trunk branch has commits ahead of $remote_trunk. Aborting.." >&2
+    exit 1
+fi
+
+if [ "$current" = "$trunk" ]; then
+    git reset --merge "$remote_trunk"
+else
+    git fetch "$remote" "$trunk:$trunk"
+fi
