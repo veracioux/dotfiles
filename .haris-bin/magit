@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+myemacs -c --frame-parameters='(quote (name . "EmacsFloat"))' \
+    --eval "(progn (cd \"$PWD\") (magit-status) (delete-other-windows))" \
+    >/dev/null 2>&1 &

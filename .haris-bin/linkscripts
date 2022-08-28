@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Create links to all scripts from ~/.haris-bin and ~/.haris-bin-priv in ~/.local/bin
+
+cp --link --force ~/.haris-bin{,-priv}/* ~/.local/bin/

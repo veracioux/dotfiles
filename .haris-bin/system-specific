@@ -1,0 +1,19 @@
+#!/bin/bash
+# This is an initialization script specifically customized for my Dell G15 laptop
+
+setxkbmap -layout "ba"
+xmodmap -e "keycode 10 = 1 exclam asciitilde asciitilde asciitilde"
+xmodmap -e "keycode 16 = 7 slash grave grave grave"
+xmodmap -e "keycode 12 = 3 numbersign asciicircum asciicircum asciicircum"
+
+touchpad_id=$( xinput list | grep -i touchpad | awk -F'id=' '{print $2 }' | awk '{print $1}' )
+touch_option=$( xinput list-props $touchpad_id | grep -i 'Tapping Enabled' | head -1 | awk -F"[()]" '{print $2}' )
+accel_option=$( xinput list-props $touchpad_id | grep -i 'Accel Speed' | head -1 | awk -F"[()]" '{print $2}' )
+
+# Enable touch clicking
+xinput set-prop $touchpad_id $touch_option 1
+# Increase touchpad acceleration
+xinput set-prop $touchpad_id $accel_option 0.5
+
+# Show second monitor
+xrandr2 --auto
