@@ -13,5 +13,5 @@ choice="$(echo "$entries" | dmenu -l 10 -p 'OTP:')"
 
 [ -z "$choice" ] && exit 1
 
-oathtool --totp --base32 "$(pass show "$choice/otp-secret")" | xsel -b
+otp "$choice" | xsel -b
 notify-send "OTP" "Saved to clipboard"

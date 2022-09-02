@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# Print an otp for a given account name
+# Usage: otp ACCOUNT_NAME
+
+oathtool --totp --base32 "$(pass show "$1/otp-secret")"
