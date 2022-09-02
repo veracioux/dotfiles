@@ -342,6 +342,9 @@ sourced by *bash* and *fish* (using the *bass* extension). The files ~~/.alias~ 
      complete -c pass -a 'add' -n "no_positional_args"
      complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
    #+end_src
+#+begin_src shell :mkdirp yes :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/completions/otp.fish"))
+    complete -c otp -a "(fd 'otp-secret.gpg' .password-store -x echo {//} | sed 's:^\.password-store/\?::')" -f
+#+end_src
 * Bash
   Note: ~~/.bashrc~ is sourced by fish as well.
   #+begin_src bash :tangle (concat "/tmp/tangle-" (user-login-name) "/.bashrc")
