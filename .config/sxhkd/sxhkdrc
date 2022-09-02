@@ -3,8 +3,8 @@ mod4 + ctrl + l
    xlock
 
 # Dmenu stuff
-mod4 + slash
-   dmenu_run
+mod4 + ISO_Level3_Shift
+	dmenu_run
 mod4 + c
    dmenu_run config
 mod4 + o
