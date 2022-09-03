@@ -350,7 +350,7 @@ Completions for the functions defined in [[Functions]].
   complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
 #+end_src
 #+begin_src shell :mkdirp yes :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/completions/otp.fish"))
-    complete -c otp -a "(fd 'otp-secret.gpg' .password-store -x echo {//} | sed 's:^\.password-store/\?::')" -f
+    complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
@@ -421,10 +421,6 @@ a terminal and runs the aliased command.
   alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
   alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
   alias ff="firefox"
-
-  # Virtual machines
-  alias ubuntu-21.10='fish -c "cd ~/mnt/vm && command ubuntu-21.10"'
-  alias ubuntu-20.04='fish -c "cd ~/mnt/vm && command ubuntu-20.04"'
 #+end_src
 ** Fish
 :PROPERTIES:
