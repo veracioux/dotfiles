@@ -1,6 +1,33 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python3
+import shlex
+import subprocess
 
-# Print an otp for a given account name
-# Usage: otp ACCOUNT_NAME
+import dryparse
+import sys
 
-oathtool --totp --base32 "$(pass show "$1/otp-secret")"
+
+@dryparse.command
+def otp(name: str, *, new: bool = False):
+    """Use and manage one-time passwords.
+
+    :param name: name of the OTP
+    :param new: store a new OTP instead of printing an existing one
+    """
+
+    def run(*args, **kwargs):
+        return subprocess.run(*args, shell=True, encoding="utf-8", **kwargs)
+
+    if new:
+        p = run(f"pass insert {name}/otp-secret")
+        sys.exit(p.returncode)
+
+    otp_secret = run(
+        f"pass show {name}/otp-secret", stdout=subprocess.PIPE
+    ).stdout.strip()
+
+    p = run(f"oathtool --totp --base32 {shlex.quote(otp_secret)}")
+    sys.exit(p.returncode)
+
+
+otp = dryparse.parse(otp, sys.argv)
+otp()
