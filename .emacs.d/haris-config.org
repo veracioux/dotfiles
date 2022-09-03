@@ -7,210 +7,210 @@
 *NOTE*: I use spacemacs.
 
 * General settings
-  #+begin_src emacs-lisp
-    (setq fill-column 80)
-    (global-visual-line-mode)
-    (setq default-tab-width 4)
-    (setq custom-theme-directory "~/.emacs.d/private/themes")
-    (setq browse-url-generic-program (executable-find "firefox"))
-    (setq image-auto-resize 'fit-width)
-    (setq image-auto-resize-on-window-resize t)
-    (setq evil-want-keybinding nil)
+#+begin_src emacs-lisp
+  (setq fill-column 80)
+  (global-visual-line-mode)
+  (setq default-tab-width 4)
+  (setq custom-theme-directory "~/.emacs.d/private/themes")
+  (setq browse-url-generic-program (executable-find "firefox"))
+  (setq image-auto-resize 'fit-width)
+  (setq image-auto-resize-on-window-resize t)
+  (setq evil-want-keybinding nil)
 
-    (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
-    (if (not (boundp 'haris-prepended-path))
-        (progn
-          (setq haris-prepended-path "yes")
-          (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))))
+  (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
+  (if (not (boundp 'haris-prepended-path))
+      (progn
+        (setq haris-prepended-path "yes")
+        (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))))
 
-    ;; TODO whatever this does
-    (add-hook 'text-mode-hook #'auto-fill-mode)
-    (add-hook 'prog-mode-hook #'auto-fill-mode)
+  ;; TODO whatever this does
+  (add-hook 'text-mode-hook #'auto-fill-mode)
+  (add-hook 'prog-mode-hook #'auto-fill-mode)
 
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (select-frame frame)
-                (load-theme 'dracula t)))
-    (load-theme 'dracula t)
-  #+end_src
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (select-frame frame)
+              (load-theme 'dracula t)))
+  (load-theme 'dracula t)
+#+end_src
 ** Nerd commenter
-   #+begin_src emacs-lisp
-     (add-hook 'octave-mode-hook
-               (lambda ()
-                 (setq comment-start "% " comment-end "")))
-     (define-key evil-normal-state-map (kbd "SPC c c") 'evilnc-copy-and-comment-lines)
-   #+end_src
+#+begin_src emacs-lisp
+  (add-hook 'octave-mode-hook
+            (lambda ()
+              (setq comment-start "% " comment-end "")))
+  (define-key evil-normal-state-map (kbd "SPC c c") 'evilnc-copy-and-comment-lines)
+#+end_src
 ** Avy
 *** Try to make evil-easymotion work bidirectionally
-    #+begin_src emacs-lisp
-      (define-key evil-normal-state-map (kbd "M-w") 'avy-goto-word-0)
-      (define-key evil-normal-state-map (kbd "M-f") 'avy-goto-char)
-    #+end_src
+#+begin_src emacs-lisp
+  (define-key evil-normal-state-map (kbd "M-w") 'avy-goto-word-0)
+  (define-key evil-normal-state-map (kbd "M-f") 'avy-goto-char)
+#+end_src
 ** Bindings
-   #+begin_src emacs-lisp
-     ;; M-TAB in insert mode inserts a tab and converts it to a space
-     (define-key evil-insert-state-map (kbd "M-TAB")
-       '(lambda () (interactive)
-          (insert "\t")
-          (untabify
-           (line-beginning-position)
-           (line-end-position))))
-     ;; M-TAB in normal mode switches windows
-     (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
-   #+end_src
+#+begin_src emacs-lisp
+  ;; M-TAB in insert mode inserts a tab and converts it to a space
+  (define-key evil-insert-state-map (kbd "M-TAB")
+    '(lambda () (interactive)
+       (insert "\t")
+       (untabify
+        (line-beginning-position)
+        (line-end-position))))
+  ;; M-TAB in normal mode switches windows
+  (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
+#+end_src
 *** Forking
-    #+begin_src emacs-lisp
-      (global-set-key (kbd "M-t")
-                      '(lambda () (interactive)
-                         (start-process-shell-command "" nil "term")))
-      (global-set-key
-       (kbd "M-e")
-       '(lambda () (interactive)
-          (start-process-shell-command "" nil
-                                       "emacs -c "
-                                       (buffer-file-name (window-buffer)))))
-      (global-set-key
-       (kbd "M-v")
-       '(lambda () (interactive)
-          (start-process-shell-command "" nil
-                                       "gvim "
-                                       (buffer-file-name (window-buffer)))))
-    #+end_src
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-t")
+                  '(lambda () (interactive)
+                     (start-process-shell-command "" nil "term")))
+  (global-set-key
+   (kbd "M-e")
+   '(lambda () (interactive)
+      (start-process-shell-command "" nil
+                                   "emacs -c "
+                                   (buffer-file-name (window-buffer)))))
+  (global-set-key
+   (kbd "M-v")
+   '(lambda () (interactive)
+      (start-process-shell-command "" nil
+                                   "gvim "
+                                   (buffer-file-name (window-buffer)))))
+#+end_src
 *** Spacemacs-like bindings
-    #+begin_src emacs-lisp
-      (define-key evil-normal-state-map
-        (kbd "SPC f e h")
-        '(lambda () (interactive)
-           (find-file "~/.emacs.d/haris-config.org")))
-      (define-key evil-normal-state-map
-        (kbd "SPC f e r")
-        '(lambda () (interactive)
-           (load-file "~/.emacs.d/haris-config.el")))
+#+begin_src emacs-lisp
+  (define-key evil-normal-state-map
+    (kbd "SPC f e h")
+    '(lambda () (interactive)
+       (find-file "~/.emacs.d/haris-config.org")))
+  (define-key evil-normal-state-map
+    (kbd "SPC f e r")
+    '(lambda () (interactive)
+       (load-file "~/.emacs.d/haris-config.el")))
 
-      (define-key evil-normal-state-map
-        (kbd "SPC s a")
-        'spacemacs/search-project-ag-region-or-symbol)
-    #+end_src
+  (define-key evil-normal-state-map
+    (kbd "SPC s a")
+    'spacemacs/search-project-ag-region-or-symbol)
+#+end_src
 *** Consistent vim navigation
-    #+begin_src emacs-lisp
-      (define-key evil-normal-state-map (kbd "Q")     'delete-window)
-      (define-key evil-motion-state-map (kbd "Q")     'delete-window)
+#+begin_src emacs-lisp
+  (define-key evil-normal-state-map (kbd "Q")     'delete-window)
+  (define-key evil-motion-state-map (kbd "Q")     'delete-window)
 
-      (define-key evil-visual-state-map (kbd "v")     'evil-visual-line)
-      (define-key evil-normal-state-map (kbd "V")     (kbd "v$"))
+  (define-key evil-visual-state-map (kbd "v")     'evil-visual-line)
+  (define-key evil-normal-state-map (kbd "V")     (kbd "v$"))
 
-      (define-key evil-normal-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
-      (define-key evil-visual-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
-      (define-key evil-normal-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
-      (define-key evil-visual-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
+  (define-key evil-normal-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
+  (define-key evil-visual-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
+  (define-key evil-visual-state-map (kbd "C-x")   'evil-numbers/dec-at-pt)
 
-      (defun haris/nohighlight () (interactive)       (evil-ex-call-command "" "noh" ""))
-      (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
-      (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
-    #+end_src
+  (defun haris/nohighlight () (interactive)       (evil-ex-call-command "" "noh" ""))
+  (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
+  (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
+#+end_src
 * Ivy
-  #+begin_src emacs-lisp
-    (setq ivy-initial-inputs-alist ())
-  #+end_src
+#+begin_src emacs-lisp
+  (setq ivy-initial-inputs-alist ())
+#+end_src
 * Org mode
-  #+begin_src emacs-lisp
-    (require 'ob-shell)
-    (require 'ob-C)
-    (require 'ob-python)
-    (require 'org-tempo)
+#+begin_src emacs-lisp
+  (require 'ob-shell)
+  (require 'ob-C)
+  (require 'ob-python)
+  (require 'org-tempo)
 
-    (defun org-mode-visual-fill ()
-      (setq visual-fill-column-width        90
-            visual-fill-column-center-text  t)
-      (visual-fill-column-mode 1))
+  (defun org-mode-visual-fill ()
+    (setq visual-fill-column-width        90
+          visual-fill-column-center-text  t)
+    (visual-fill-column-mode 1))
 
-    (add-hook 'org-mode-hook 'org-appear-mode)
-    (add-hook 'org-mode-hook 'org-mode-visual-fill)
-    (add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'org-mode-hook 'org-appear-mode)
+  (add-hook 'org-mode-hook 'org-mode-visual-fill)
+  (add-hook 'org-mode-hook 'org-indent-mode)
 
-    (setq org-indent-mode                     nil
-          org-M-RET-may-split-line            nil
-          org-ellipsis                        " ▾"
-          org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
-          org-hide-emphasis-markers           t)
+  (setq org-indent-mode                     nil
+        org-M-RET-may-split-line            nil
+        org-ellipsis                        " ▾"
+        org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
+        org-hide-emphasis-markers           t)
 
-    (setq org-file-apps
-          (quote
-           ((        . emacs)
-            ("\\.x?html?\\'"  . "firefox %s"))))
+  (setq org-file-apps
+        (quote
+         ((        . emacs)
+          ("\\.x?html?\\'"  . "firefox %s"))))
 
-    (add-to-list 'org-export-backends 'md)
-  #+end_src
+  (add-to-list 'org-export-backends 'md)
+#+end_src
 ** Block templates
-   #+begin_src emacs-lisp
-     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-     (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-     (add-to-list 'org-structure-template-alist '("py" . "src python"))
-     (add-to-list 'org-structure-template-alist
-                  '("dep" . "src shell :mkdirp yes :tangle (concat \"/tmp/dependencies-\" (user-login-name) \"/TODO\"))"))
-   #+end_src
+#+begin_src emacs-lisp
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist
+               '("dep" . "src shell :mkdirp yes :tangle (concat \"/tmp/dependencies-\" (user-login-name) \"/TODO\"))"))
+#+end_src
 ** Babel
-   #+begin_src emacs-lisp
-     (org-babel-do-load-languages 'org-babel-load-languages
-                                  '((shell    . t)
-                                    (C        . t)
-                                    (python   . t)))
-     (defun haris/tangle ()
-       (interactive)
-       (setq-local tangle-home (concat "/tmp/tangle-" (user-login-name) "/"))
-       (shell-command (concat "rm -rf " tangle-home))
-       (org-babel-tangle)
-       (shell-command (concat "rsync -ru " tangle-home " ~/")))
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((shell    . t)
+                                 (C        . t)
+                                 (python   . t)))
+  (defun haris/tangle ()
+    (interactive)
+    (setq-local tangle-home (concat "/tmp/tangle-" (user-login-name) "/"))
+    (shell-command (concat "rm -rf " tangle-home))
+    (org-babel-tangle)
+    (shell-command (concat "rsync -ru " tangle-home " ~/")))
 
-     (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle)
-   #+end_src
+  (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle)
+#+end_src
 ** LaTeX preview
-   #+begin_src emacs-lisp
-     (org-agenda-files '("~/data/personal/todo.org"))
+#+begin_src emacs-lisp
+  (org-agenda-files '("~/data/personal/todo.org"))
 
-     (setq org-preview-latex-default-process        'dvisvgm)
-     (setq org-latex-create-formula-image-program   'dvisvgm)
-     (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
-     (setq org-image-actual-width 400)
-   #+end_src
+  (setq org-preview-latex-default-process        'dvisvgm)
+  (setq org-latex-create-formula-image-program   'dvisvgm)
+  (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
+  (setq org-image-actual-width 400)
+#+end_src
 ** Bindings
-   #+begin_src emacs-lisp
-     (evil-define-key 'normal org-mode-map (kbd "C-c e") 'visible-mode)
-     (evil-define-key 'normal org-mode-map (kbd ",S")    'org-attach-screenshot)
-   #+end_src
+#+begin_src emacs-lisp
+  (evil-define-key 'normal org-mode-map (kbd "C-c e") 'visible-mode)
+  (evil-define-key 'normal org-mode-map (kbd ",S")    'org-attach-screenshot)
+#+end_src
 * ERC
-  #+begin_src emacs-lisp
-    (require 'erc)
-    (setq erc-server "irc.libera.chat"
-          erc-nick "veracioux"
-          erc-user-full-name "Haris Gušić"
-          erc-track-shorten-start 8
-          erc-autojoin-channels-alist '(("irc.libera.chat" "#archlinux" "#Jobs" "#fossjobs"))
-          erc-kill-buffer-on-part t
-          erc-auto-query 'bury)
+#+begin_src emacs-lisp
+  (require 'erc)
+  (setq erc-server "irc.libera.chat"
+        erc-nick "veracioux"
+        erc-user-full-name "Haris Gušić"
+        erc-track-shorten-start 8
+        erc-autojoin-channels-alist '(("irc.libera.chat" "#archlinux" "#Jobs" "#fossjobs"))
+        erc-kill-buffer-on-part t
+        erc-auto-query 'bury)
 
-    (add-hook 'erc-join-hook (lambda () (evil-normal-state)))
+  (add-hook 'erc-join-hook (lambda () (evil-normal-state)))
 
-    ;; For some reason erc-modules is undefined
-    (add-to-list 'erc-modules 'notifications)
-    (delete 'readonly erc-modules)
-    (erc-services-mode 1)
-    (erc-update-modules)
+  ;; For some reason erc-modules is undefined
+  (add-to-list 'erc-modules 'notifications)
+  (delete 'readonly erc-modules)
+  (erc-services-mode 1)
+  (erc-update-modules)
 
-    (erc-notify-mode t)
-    (erc-notifications-mode t)
+  (erc-notify-mode t)
+  (erc-notifications-mode t)
 
-    (defun haris/erc-quit-channel () (interactive)
-           (erc-part-from-channel ""))
-    (defun haris/euirc () (interactive)
-           (erc :server "irc.euirc.net" :port 6667 :nick "veracioux"))
+  (defun haris/erc-quit-channel () (interactive)
+         (erc-part-from-channel ""))
+  (defun haris/euirc () (interactive)
+         (erc :server "irc.euirc.net" :port 6667 :nick "veracioux"))
 
-    (define-key              erc-mode-map           (kbd "C-l") 'comint-clear-buffer)
-    (evil-define-key 'normal erc-mode-map           (kbd ",b")  'erc-switch-to-buffer)
-    (evil-define-key 'normal erc-mode-map           (kbd ",j")  'erc-join-channel)
-    (evil-define-key 'normal erc-mode-map           (kbd ",q")  'haris/erc-quit-channel)
-    (evil-define-key 'normal erc-list-menu-mode-map (kbd ",j")  'erc-list-join)
-  #+end_src
+  (define-key              erc-mode-map           (kbd "C-l") 'comint-clear-buffer)
+  (evil-define-key 'normal erc-mode-map           (kbd ",b")  'erc-switch-to-buffer)
+  (evil-define-key 'normal erc-mode-map           (kbd ",j")  'erc-join-channel)
+  (evil-define-key 'normal erc-mode-map           (kbd ",q")  'haris/erc-quit-channel)
+  (evil-define-key 'normal erc-list-menu-mode-map (kbd ",j")  'erc-list-join)
+#+end_src
 ** Theme tweak
    #+begin_src emacs-lisp
      (setq erc-track-faces-priority-list
@@ -229,44 +229,44 @@
              erc-fool-face erc-input-face erc-prompt-face))
    #+end_src
 * Git
-** GitHub
-   #+begin_src emacs-lisp
-     (setq auth-sources '("~/.authinfo.dev.gpg" "~/.netrc.gpg"))
-   #+end_src
+** TODO deprecated GitHub
+#+begin_src emacs-lisp
+  (setq auth-sources '("~/.authinfo.dev.gpg" "~/.netrc.gpg"))
+#+end_src
 * Octave mode
-  #+begin_src emacs-lisp
-    (defun octave-write-and-source () (interactive)
-           (write-file (buffer-file-name))
-           (octave-source-file (buffer-file-name)))
+#+begin_src emacs-lisp
+  (defun octave-write-and-source () (interactive)
+         (write-file (buffer-file-name))
+         (octave-source-file (buffer-file-name)))
 
-    (evil-define-key 'normal octave-mode-map
-      (kbd ",ss") 'octave-write-and-source)
-    (evil-define-key 'normal inferior-octave-mode-map
-      (kbd ",hh") 'octave-help)
-  #+end_src
+  (evil-define-key 'normal octave-mode-map
+    (kbd ",ss") 'octave-write-and-source)
+  (evil-define-key 'normal inferior-octave-mode-map
+    (kbd ",hh") 'octave-help)
+#+end_src
 * Comint
-  #+begin_src emacs-lisp
-    (defun comint-clear-buffer-goto () (interactive)
-           (comint-clear-buffer) (evil-goto-line))
-    (define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer-goto)
-  #+end_src
+#+begin_src emacs-lisp
+  (defun comint-clear-buffer-goto () (interactive)
+         (comint-clear-buffer) (evil-goto-line))
+  (define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer-goto)
+#+end_src
 * EAF
 ** Dependencies
-   #+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs-eaf.sh")
-     sudo pacman -S git nodejs npm python-pyqt5 python-pyqt5-sip \
-          python-pyqtwebengine wmctrl python-pymupdf
-     paru -S python-epc
-   #+end_src
+#+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs-eaf.sh")
+  sudo pacman -S git nodejs npm python-pyqt5 python-pyqt5-sip \
+       python-pyqtwebengine wmctrl python-pymupdf
+  paru -S python-epc
+#+end_src
 * Vterm
-  #+begin_src emacs-lisp
-    (setq vterm-shell "/usr/bin/fish")
-    (setq vterm-exit-functions 'delete-frame)
+#+begin_src emacs-lisp
+  (setq vterm-shell "/usr/bin/fish")
+  (setq vterm-exit-functions 'delete-frame)
 
-    (add-hook 'vterm-mode-hook (lambda () (read-only-mode -1)))
+  (add-hook 'vterm-mode-hook (lambda () (read-only-mode -1)))
 
-    (evil-define-key 'normal vterm-mode-map (kbd "A")     'evil-append-line)
-    (evil-define-key 'normal vterm-mode-map (kbd "M-TAB") 'other-window)
-  #+end_src
+  (evil-define-key 'normal vterm-mode-map (kbd "A")     'evil-append-line)
+  (evil-define-key 'normal vterm-mode-map (kbd "M-TAB") 'other-window)
+#+end_src
 ** TODO WTF?
    This doesn't work consistently.
    #+begin_src emacs-lisp
@@ -274,211 +274,210 @@
      ;; (define-key vterm-mode-map (kbd "C-l") 'erase-buffer)
      ;; (define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
    #+end_src
-* TODO Mu4e
-  #+begin_src emacs-lisp
-    (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-    ;;; Set up some common mu4e variables
-    (setq mu4e-maildir "~/mail"
-          mu4e-inbox-folder "/INBOX"
-          mu4e-drafts-folder "/[Gmail].Drafts"
-          mu4e-sent-folder "/[Gmail].Sent Mail"
-          mu4e-refile-folder "/[Gmail].All Mail"
-          mu4e-trash-folder "/[Gmail].Trash"
-          mu4e-get-mail-command "mbsync -a"
-          mu4e-update-interval nil
-          mu4e-change-filenames-when-moving t
-          mu4e-compose-signature-auto-include nil
-          mu4e-view-show-images t
-          mu4e-view-show-addresses t)
+* TODO Email
+I use mu4e as my email client.
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+  ;;; Set up some common mu4e variables
+  (setq mu4e-maildir "~/mail"
+        mu4e-inbox-folder "/INBOX"
+        mu4e-drafts-folder "/[Gmail].Drafts"
+        mu4e-sent-folder "/[Gmail].Sent Mail"
+        mu4e-refile-folder "/[Gmail].All Mail"
+        mu4e-trash-folder "/[Gmail].Trash"
+        mu4e-get-mail-command "mbsync -a"
+        mu4e-update-interval nil
+        mu4e-change-filenames-when-moving t
+        mu4e-compose-signature-auto-include nil
+        mu4e-view-show-images t
+        mu4e-view-show-addresses t)
 
-    ;;; Mail directory shortcuts
-    (setq mu4e-maildir-shortcuts
-          '(("/INBOX" . ?i)))
-  #+end_src
+  ;;; Mail directory shortcuts
+  (setq mu4e-maildir-shortcuts
+        '(("/INBOX" . ?i)))
+#+end_src
 * Programming languages
 ** LSP
-   #+begin_src emacs-lisp
-     ;;(add-to-list 'projectile-project-root-files-functions 'custom/lsp-default-dir)(setq lsp-auto-guess-root t)
-     (setq projectile-require-project-root t)
-     ;; (add-hook 'lsp-mode-hook (lambda () (cd (file-name-directory buffer-file-name))))
+#+begin_src emacs-lisp
+  ;;(add-to-list 'projectile-project-root-files-functions 'custom/lsp-default-dir)(setq lsp-auto-guess-root t)
+  (setq projectile-require-project-root t)
+  ;; (add-hook 'lsp-mode-hook (lambda () (cd (file-name-directory buffer-file-name))))
 
-     ;; Diagnostic mode doesn't work well with flycheck
-     (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
-   #+end_src
+  ;; Diagnostic mode doesn't work well with flycheck
+  (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
+#+end_src
 ** DAP
    #+begin_src emacs-lisp
      (setq dap-auto-show-output nil)
    #+end_src
 ** TODO C/C++
-   #+begin_src emacs-lisp
-     (setq c-default-style
-           "bsd" c-basic-offset 4)
+#+begin_src emacs-lisp
+  (setq c-default-style
+        "bsd" c-basic-offset 4)
 
-     (add-hook 'c-mode-hook    (lambda () (setq tab-width 4)))
-     (add-hook 'c++-mode-hook  (lambda () (setq tab-width 4)))
-   #+end_src
+  (add-hook 'c-mode-hook    (lambda () (setq tab-width 4)))
+  (add-hook 'c++-mode-hook  (lambda () (setq tab-width 4)))
+#+end_src
 *** CMake
-    #+begin_src emacs-lisp
-      (defun haris/cmake-info () (interactive)
-             (info-display-manual "cmake")
-             (Info-top-node))
-      (defun haris/cmake-help () (interactive)
-             (split-window-right-and-focus)
-             (let ((symbol (cmake-symbol-at-point)))
-               (haris/cmake-info)
-               (Info-menu symbol)))
+#+begin_src emacs-lisp
+  (defun haris/cmake-info () (interactive)
+         (info-display-manual "cmake")
+         (Info-top-node))
+  (defun haris/cmake-help () (interactive)
+         (split-window-right-and-focus)
+         (let ((symbol (cmake-symbol-at-point)))
+           (haris/cmake-info)
+           (Info-menu symbol)))
 
-      (evil-define-key 'normal cmake-mode-map (kbd ",hc") 'haris/cmake-info)
-      (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
-    #+end_src
+  (evil-define-key 'normal cmake-mode-map (kbd ",hc") 'haris/cmake-info)
+  (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
+#+end_src
 *** Dependencies
-    #+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs_c-c++.sh")
-      sudo pip install cmake-language-server
-    #+end_src
+#+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs_c-c++.sh")
+  sudo pip install cmake-language-server
+#+end_src
 ** Python
-   Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
-   #+begin_src emacs-lisp
-     (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
+Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
 
-     (setq python-shell-interpreter "ipython")
-     ;; python-shell-interpreter-args "-i")
+  (setq python-shell-interpreter "ipython")
+  ;; python-shell-interpreter-args "-i")
 
-     (setq lsp-pylsp-plugins-pylint-enabled t
-           lsp-pylsp-plugins-flake8-enabled nil
-           lsp-pyls-plugins-flake8-enabled  nil
-           lsp-diagnostics--flycheck-enabled t)
+  (setq lsp-pylsp-plugins-pylint-enabled t
+        lsp-pylsp-plugins-flake8-enabled nil
+        lsp-pyls-plugins-flake8-enabled  nil
+        lsp-diagnostics--flycheck-enabled t)
 
-     ;; (add-hook 'python-mode-hook 'lsp)
-     (add-hook 'lsp-mode-hook (lambda ()
-                                (setq default-directory (lsp-workspace-root))))
+  ;; (add-hook 'python-mode-hook 'lsp)
+  (add-hook 'lsp-mode-hook (lambda ()
+                             (setq default-directory (lsp-workspace-root))))
 
-     ;; elpy
-     (setq elpy-modules nil)
-   #+end_src
+  ;; elpy
+  (setq elpy-modules nil)
+#+end_src
 *** Bindings
-    #+begin_src emacs-lisp
-      (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)
-    #+end_src
+#+begin_src emacs-lisp
+  (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)
+#+end_src
 *** Dependencies
-    #+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs-python.sh")
-      sudo pacman -S python-lsp-server flake8 python-typing_extensions \
-           python-lsp-black python-pylint
-      sudo pip install pyls-isort pyls-mypy pyls-memestra \
-           autoflake importmagic epc ptvsd
-    #+end_src
+#+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs-python.sh")
+  sudo pacman -S python-lsp-server flake8 python-typing_extensions \
+       python-lsp-black python-pylint
+  sudo pip install pyls-isort pyls-mypy pyls-memestra \
+       autoflake importmagic epc ptvsd
+#+end_src
 ** RST
-   #+begin_src emacs-lisp
-     (defun haris/rst-heading () (interactive)
-            (evil-execute-macro 1 "\"yyyp^v$"))
+#+begin_src emacs-lisp
+  (defun haris/rst-heading () (interactive)
+         (evil-execute-macro 1 "\"yyyp^v$"))
 
-     (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
-   #+end_src
+  (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
+#+end_src
 * TODO Yasnippet
-  #+begin_src emacs-lisp
-    ;; Show snippets in auto-completion popup
-    (setq-default dotspacemacs-configuration-layers
-                  '((auto-completion :variables
-                                     auto-completion-enable-snippets-in-popup t)))
-  #+end_src
+#+begin_src emacs-lisp
+  ;; Show snippets in auto-completion popup
+  (setq-default dotspacemacs-configuration-layers
+                '((auto-completion :variables
+                                   auto-completion-enable-snippets-in-popup t)))
+#+end_src
 * Maxima
-  I used this mode like 2-3 times, but I'm keeping it in case I have to use it
-  again.
-  #+begin_src emacs-lisp
-    (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
-    (autoload 'maxima-mode "maxima" "Maxima mode" t)
-    (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
-    (autoload 'maxima "maxima" "Maxima interaction" t)
-    (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
-    (setq imaxima-use-maxima-mode-flag t)
-    (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
-  #+end_src
+I used this mode like 2-3 times, but I'm keeping it in case I have to use it
+again.
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
+  (autoload 'maxima-mode "maxima" "Maxima mode" t)
+  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
+  (autoload 'maxima "maxima" "Maxima interaction" t)
+  (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
+  (setq imaxima-use-maxima-mode-flag t)
+  (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
+#+end_src
 * Info mode
-  Remove Info mode annoying keybindings.
-  #+begin_src emacs-lisp
-    (evil-define-key 'motion Info-mode-map (kbd "C-o")  'Info-history-back)
-    (evil-define-key 'motion Info-mode-map (kbd "C-i")  'Info-history-forward)
-    (evil-define-key 'motion Info-mode-map (kbd "[")    'Info-prev)
-    (evil-define-key 'motion Info-mode-map (kbd "]")    'Info-next)
-    (evil-define-key 'motion Info-mode-map (kbd "RET")  'Info-follow-nearest-node)
-    (evil-define-key 'motion Info-mode-map (kbd "TAB")  'Info-next-reference)
-    (evil-define-key 'motion Info-mode-map (kbd "p")    nil)
-  #+end_src
+Remove Info mode annoying keybindings.
+#+begin_src emacs-lisp
+  (evil-define-key 'motion Info-mode-map (kbd "C-o")  'Info-history-back)
+  (evil-define-key 'motion Info-mode-map (kbd "C-i")  'Info-history-forward)
+  (evil-define-key 'motion Info-mode-map (kbd "[")    'Info-prev)
+  (evil-define-key 'motion Info-mode-map (kbd "]")    'Info-next)
+  (evil-define-key 'motion Info-mode-map (kbd "RET")  'Info-follow-nearest-node)
+  (evil-define-key 'motion Info-mode-map (kbd "TAB")  'Info-next-reference)
+  (evil-define-key 'motion Info-mode-map (kbd "p")    nil)
+#+end_src
 ** TODO Fix bindings that were messed up by evil.
-   #+begin_src emacs-lisp
-     ;; (evil-define-key 'motion-state Info-mode-map   (kbd "[ [")  'Info-prev)
-     ;; (evil-define-key 'motion-state Info-mode-map   (kbd "] ]")  'Info-next)
-   #+end_src
+#+begin_src emacs-lisp
+  ;; (evil-define-key 'motion-state Info-mode-map   (kbd "[ [")  'Info-prev)
+  ;; (evil-define-key 'motion-state Info-mode-map   (kbd "] ]")  'Info-next)
+#+end_src
 * Miscellaneous
 ** Reddit
 *** md4rd
-    #+begin_src emacs-lisp
-      (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines)
-      (setq md4rd-subs-active '(linuxquestions+linux+opensource plc))
-    #+end_src
+#+begin_src emacs-lisp
+  (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines)
+  (setq md4rd-subs-active '(linuxquestions+linux+opensource plc))
+#+end_src
 *** reddigg
-    This is a very elegant reader for reddit that uses org-mode.
-    #+begin_src emacs-lisp
-      (defun reddit-view-linux () (interactive)
-             (reddigg-view-sub "linux+linuxquestions+opensource"))
-      (defun reddit-view-elec () (interactive)
-             (reddigg-view-sub "plc+ElectricalEngineering+embedded"))
-    #+end_src
+This is a very elegant reader for reddit that uses org-mode.
+#+begin_src emacs-lisp
+  (defun reddit-view-linux () (interactive)
+         (reddigg-view-sub "linux+linuxquestions+opensource"))
+  (defun reddit-view-elec () (interactive)
+         (reddigg-view-sub "plc+ElectricalEngineering+embedded"))
+#+end_src
 ** Music
-   Emms.
-   #+begin_src emacs-lisp
-     ;; (emms-standard)
-     ;; (setq emms-player-list '(emms-player-mpd))
-     ;; (setq emms-player-mpd-server-name "localhost")
-     ;; (setq emms-player-mpd-server-port "6601")
-   #+end_src
+Emms.
+#+begin_src emacs-lisp
+  ;; (emms-standard)
+  ;; (setq emms-player-list '(emms-player-mpd))
+  ;; (setq emms-player-mpd-server-name "localhost")
+  ;; (setq emms-player-mpd-server-port "6601")
+#+end_src
 *** Dependencies
-    #+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs_emms.sh")
-      sudo pacman -S mpd
-    #+end_src
+#+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs_emms.sh")
+  sudo pacman -S mpd
+#+end_src
 * Spacemacs
-  #+begin_src emacs-lisp :tangle (concat "/tmp/tangle-" (user-login-name) "/.spacemacs-init.el")
-    (setq-default
-     dotspacemacs-configuration-layers
-     '(syntax-checking
-       octave
-       markdown
-       html
-       spacemacs-language
-       spacemacs-navigation
-       ivy
-       imenu-list
-       auto-completion
-       (c-c++ :variables c-c++-backend 'lsp-clangd c-c++-enable-clang-support t)
-       (cmake :variables cmake-backend 'lsp cmake-enable-cmake-ide-support t)
-       (python :variables python-formatter 'black python-backend 'lsp)
-       dap
-       vagrant
-       ;; elpy
-       ;; pythonp
-       ipython-notebook
-       emacs-lisp
-       shell
-       rust
-       git
-       github
-       (org :variables org-enable-appear-support t)
-       ;; mu4e
-       ;; eaf
-       ;; emms
-       debug))
+#+begin_src emacs-lisp :tangle (concat "/tmp/tangle-" (user-login-name) "/.spacemacs-init.el")
+  (setq-default
+   dotspacemacs-configuration-layers
+   '(syntax-checking
+     octave
+     markdown
+     html
+     spacemacs-language
+     spacemacs-navigation
+     ivy
+     imenu-list
+     auto-completion
+     (c-c++ :variables c-c++-backend 'lsp-clangd c-c++-enable-clang-support t)
+     (cmake :variables cmake-backend 'lsp cmake-enable-cmake-ide-support t)
+     (python :variables python-formatter 'black python-backend 'lsp)
+     dap
+     vagrant
+     ;; elpy
+     ;; pythonp
+     ipython-notebook
+     emacs-lisp
+     shell
+     rust
+     git
+     (org :variables org-enable-appear-support t)
+     ;; mu4e
+     ;; eaf
+     ;; emms
+     debug))
 
-    (setq-default
-     dotspacemacs-additional-packages
-     '(
-       org-fragtog org-drill org-ref org-attach-screenshot org-special-blocks ob-ipython
-       yasnippet-snippets vterm multi-vterm
-       i3wm-config-mode rainbow-mode fish-mode
-       evil-easymotion reddigg md4rd pydoc pylint python-info
-       nodejs-repl))
-  #+end_src
-
+  (setq-default
+   dotspacemacs-additional-packages
+   '(
+     org-fragtog org-drill org-ref org-attach-screenshot org-special-blocks ob-ipython
+     yasnippet-snippets vterm multi-vterm
+     i3wm-config-mode rainbow-mode fish-mode
+     evil-easymotion reddigg md4rd pydoc pylint python-info
+     nodejs-repl))
+#+end_src
 * Appendix
-  I use this variable to check if the config loaded correctly.
-  #+begin_src emacs-lisp
-    (setq haris/config_loaded_fine "true")
-  #+end_src
+I use this variable to check if the config loaded correctly.
+#+begin_src emacs-lisp
+  (setq haris/config_loaded_fine "true")
+#+end_src
