@@ -1,57 +1,58 @@
 #+TITLE: Haris' Config
 #+PROPERTY: header-args :tangle-mode (identity #o755)
 
-* Notes
-  - This repository uses tem to make some things easier
 * Set up for use
-  - Custom scripts are located in [[.haris-bin][~.haris-bin/~]]. In order to have them available
-    in your PATH, you must run copy them over to ~.local/bin/~:
-    #+begin_src shell
-      cp --link --interactive ~/.haris-bin/* ~/.local/bin/
-    #+end_src
+- Custom scripts are located in [[~/.haris-bin][=~/.haris-bin/=]]. In order to have them available
+  in your PATH, you must run copy them over to =.local/bin/=:
+  #+begin_src shell
+    cp --link --interactive ~/.haris-bin/* ~/.local/bin/
+  #+end_src
 ** Vim configuration
-   Install vim-plug:
-   #+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/vim") :mkdirp yes
-     curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-     touch ~/.vimrc.tmp
-   #+end_src
-   After that, open vim and run ~:PlugInstall~.
+Install vim-plug:
+#+begin_src shell :tangle (haris/tangle-deps "vim") :mkdirp yes
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  touch ~/.vimrc.tmp
+#+end_src
+After that, open vim and run =:PlugInstall=.
 *** YouCompleteMe
-    After installing using vim-plug, go to the directory where YouCompleteMe is
-    located and run ~./setup.py --all~.
+After installing using vim-plug, go to the directory where YouCompleteMe is
+located and run  =./setup.py --all=.
 *** Dependencies
-    First complete the above steps.
-    #+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/vim") :mkdirp yes
-      sudo pacman -S gvim neovim fzf
-      rm -rf ~/.config/nvim/*/
-      ln -sf -t ~/.config/nvim/ $(realpath ~/.vim/*/)
-      touch ~/.vimrc.tmp ~/.config/nvim/init.tmp.vim
-      # YouCompleteMe
-      sudo pacman -S go nodejs npm jdk-openjdk
-      echo "Run :PlugInstall to install plugins..." | vim
-      cd ~/.vim/plugged/YouCompleteMe && python install.py --all
-    #+end_src
+First complete the above steps.
+#+begin_src shell :tangle (haris/tangle-deps "/vim") :mkdirp yes
+  sudo pacman -S gvim neovim fzf
+  rm -rf ~/.config/nvim/*/
+  ln -sf -t ~/.config/nvim/ $(realpath ~/.vim/*/)
+  touch ~/.vimrc.tmp ~/.config/nvim/init.tmp.vim
+  # YouCompleteMe
+  sudo pacman -S go nodejs npm jdk-openjdk
+  echo "Run :PlugInstall to install plugins..." | vim
+  cd ~/.vim/plugged/YouCompleteMe && python install.py --all
+#+end_src
 * X11
-  I store a couple of ~.xinitrc~ presets in my dotfiles, for different WMs, DEs etc.
-  They are named ~.xinitrc-<identifier>~. I switch among them using ~xpreset
-  <identifier>~. There is also the ~.xinitrc.common-x11~ file which contains some
-  common commands for all presets.
+I store a couple of =.xinitrc= presets in my dotfiles, for different WMs, DEs
+etc. So I can easily switch among them. They are named =~/.xinitrc-<identifier>=.
+I switch among them using =xpreset <identifier>=. There is also the
+=~/.xinitrc.common-x11= file which contains some common commands for all presets.
 * Firefox
 * Installing all dependencies
-  Each configuration file contains a list of dependencies for the program it
-  configures. These dependencies are conveniently placed in a shell source block
-  and can be exported using ~org-babel-tangle~. The export destination is
-  ~/tmp/dependencies-$USER/PROGRAM_NAME.sh~. The dependencies are installed by sourcing
-  these files in a POSIX-compliant shell, individually or in bulk.
+Each configuration file contains a list of dependencies for the program it
+configures. These dependencies are conveniently placed in a shell source block
+and can be exported using =(org-babel-tangle)=. The export destination is
+=/tmp/dependencies-$USER/PROGRAM_NAME.sh=. The dependencies are installed by sourcing
+these files in a POSIX-compliant shell, individually or in bulk.
 
-  In order to install all the dependencies, simply run
-  #+begin_src sh
-    ./.mkdeps
-  #+end_src
+In order to install all the dependencies, simply run
+#+begin_src sh
+  ./.mkdeps
+#+end_src
 ** TODO Not yet implemented
-   This script will also take care of extracting the shell blocks from org files,
-   so you don't have to do anything except answer the package manager's prompts.
+This script will also take care of extracting the shell blocks from org files,
+so you don't have to do anything except answer the package manager's prompts.
 
-   *NOTE:* The dependency scripts were made with *Arch Linux* in mind, so they use
-   ~pacman~ as the package manager and ~paru~ as an AUR helper.
+*NOTE:* The dependency scripts were made with *Arch Linux* in mind, so they use
+=pacman= as the package manager and =paru= as an AUR helper.
+* Notes and ideas
+- Use tem to organize scripts (unless I decide to keep all scripts in an org
+  file and just tangle them)
