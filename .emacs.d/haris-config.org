@@ -1,5 +1,5 @@
 #+TITLE: Emacs Config
-#+PROPERTY: header-args :tangle (concat "/tmp/tangle-" (user-login-name) "/.emacs.d/haris-config.el")
+#+PROPERTY: header-args :tangle (haris/tangle-home ".emacs.d/haris-config.el")
 #+begin_src emacs-lisp :exports none :mkdirp yes
   ;; -*- mode: emacs-lisp-mode; -*- vim: ft=lisp sw=2
 #+end_src
@@ -9,7 +9,7 @@
 * General settings
 #+begin_src emacs-lisp
   (setq fill-column 80)
-  (global-visual-line-mode)
+  (global-visual-line-mode t)
   (setq default-tab-width 4)
   (setq custom-theme-directory "~/.emacs.d/private/themes")
   (setq browse-url-generic-program (executable-find "firefox"))
@@ -32,6 +32,10 @@
               (select-frame frame)
               (load-theme 'dracula t)))
   (load-theme 'dracula t)
+#+end_src
+Add MELPA
+#+begin_src emacs-lisp
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 #+end_src
 ** Nerd commenter
 #+begin_src emacs-lisp
@@ -147,22 +151,44 @@
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
   (add-to-list 'org-structure-template-alist
-               '("dep" . "src shell :mkdirp yes :tangle (concat \"/tmp/dependencies-\" (user-login-name) \"/TODO\"))"))
+               '("dep" . "src shell :mkdirp yes :tangle (haris/tangle-deps \"/TODO\")"))
+  (add-to-list 'org-structure-template-alist
+               '("cfg" . "src shell :mkdirp yes :tangle (haris/tangle-home \"/TODO\")"))
 #+end_src
 ** Babel
+I tangle my configs from various org files into their respective destination
+files. But, sometimes I perform a tangle without wanting to overwrite my live
+configuration. One reason for this is that I have a (WIP) github workflow that I
+use to generate the configs from my org files. That is why code blocks in my
+literal configs use temporary "staging" destinations. So, whenever I run
+=(org-babel-tangle)=, the files are output into =/tmp/tangle-<username>= or
+=/tmp/dependencies-<username>= (varies by code block). Then, if I want to apply
+those files to my live config under =~/=, I can call =(haris/tangle)=.
 #+begin_src emacs-lisp
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell    . t)
                                  (C        . t)
                                  (python   . t)))
   (defun haris/tangle ()
+    "Copy all files from the temporary staging tangle destinations into their real destinations"
     (interactive)
-    (setq-local tangle-home (concat "/tmp/tangle-" (user-login-name) "/"))
-    (shell-command (concat "rm -rf " tangle-home))
-    (org-babel-tangle)
-    (shell-command (concat "rsync -ru " tangle-home " ~/")))
+    (let ((tangle-home (haris/tangle-home)))
+      (shell-command (concat "rm -rf " tangle-home))
+      (org-babel-tangle)
+      (shell-command (concat "rsync -ru " tangle-home " ~/"))))
 
   (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle)
+#+end_src
+The following functions help me define common tangle destinations.
+#+begin_src emacs-lisp
+  (defun haris/tangle-deps (subpath)
+    "Prefix 'subpath' with the directory where dependency install scripts are
+     tangled"
+    (concat "/tmp/dependencies-" (user-login-name) "/" subpath))
+  (defun haris/tangle-home (&optional subpath)
+    "Prefix 'subpath' with the directory that is used as staging for /home/haris
+     when tangling"
+    (concat "/tmp/tangle-" (user-login-name) "/" subpath))
 #+end_src
 ** LaTeX preview
 #+begin_src emacs-lisp
@@ -252,7 +278,7 @@
 #+end_src
 * EAF
 ** Dependencies
-#+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs-eaf.sh")
+#+begin_src shell :mkdirp yes :tangle (haris/tangle-deps "emacs-eaf.sh")
   sudo pacman -S git nodejs npm python-pyqt5 python-pyqt5-sip \
        python-pyqtwebengine wmctrl python-pymupdf
   paru -S python-epc
@@ -277,24 +303,74 @@
 * TODO Email
 I use mu4e as my email client.
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-  ;;; Set up some common mu4e variables
-  (setq mu4e-maildir "~/mail"
-        mu4e-inbox-folder "/INBOX"
-        mu4e-drafts-folder "/[Gmail].Drafts"
-        mu4e-sent-folder "/[Gmail].Sent Mail"
-        mu4e-refile-folder "/[Gmail].All Mail"
-        mu4e-trash-folder "/[Gmail].Trash"
-        mu4e-get-mail-command "mbsync -a"
-        mu4e-update-interval nil
-        mu4e-change-filenames-when-moving t
-        mu4e-compose-signature-auto-include nil
-        mu4e-view-show-images t
-        mu4e-view-show-addresses t)
+  ;; This is set to 't' to avoid mail syncing issues when using mbsync
+  (setq mu4e-change-filenames-when-moving t)
 
-  ;;; Mail directory shortcuts
-  (setq mu4e-maildir-shortcuts
-        '(("/INBOX" . ?i)))
+  ;; Refresh mail using isync every M minutes
+  (setq mu4e-update-interval (let ((M 4)) (* M 60)))
+  (setq mu4e-get-mail-command "mbsync -a")
+  (setq mu4e-enable-async-operations t)
+
+  ;; Configure contexts
+  (setq mu4e-contexts
+        `(
+          ,(make-mu4e-context
+            :name "p-hgusic.pub@gmail.com"
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "hgusic.pub@gmail.com")))
+            :enter-func (lambda () (message "Entering context: hgusic.pub@gmail.com"))
+            :vars '((user-mail-address . "hgusic.pub@gmail.com")
+                    (user-full-name . "Haris Gusic")
+                    (mu4e-drafts-folder .     "/gmail/hgusic.pub/[Gmail]/Drafts")
+                    (mu4e-sent-folder   .     "/gmail/hgusic.pub/[Gmail]/Sent Mail")
+                    (mu4e-refile-folder .     "/gmail/hgusic.pub/[Gmail]/All Mail")
+                    (mu4e-trash-folder  .     "/gmail/hgusic.pub/[Gmail]/Trash")
+                    (
+                     mu4e-maildir-shortcuts
+                     . (("/gmail/hgusic.pub/Inbox"             . ?i)
+                        ("/gmail/hgusic.pub/[Gmail]/Sent Mail" . ?s)
+                        ("/gmail/hgusic.pub/[Gmail]/Trash"     . ?t)
+                        ("/gmail/hgusic.pub/[Gmail]/Drafts"    . ?d)
+                        ("/gmail/hgusic.pub/[Gmail]/All Mail" . ?a)))))
+
+          ,(make-mu4e-context
+            :name "d-harisgusic.dev@gmail.com"
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "harisgusic.dev@gmail.com")))
+            :enter-func (lambda () (message "Entering context: harisgusic.dev@gmail.com"))
+            :vars '((user-mail-address . "harisgusic.dev@gmail.com")
+                    (user-full-name . "Haris Gusic")
+                    (mu4e-drafts-folder .     "/gmail/harisgusic.dev/[Gmail]/Drafts")
+                    (mu4e-sent-folder   .     "/gmail/harisgusic.dev/[Gmail]/Sent Mail")
+                    (mu4e-refile-folder .     "/gmail/harisgusic.dev/[Gmail]/All Mail")
+                    (mu4e-trash-folder  .     "/gmail/harisgusic.dev/[Gmail]/Trash")
+                    (
+                     mu4e-maildir-shortcuts
+                     . (("/gmail/harisgusic.dev/Inbox"             . ?i)
+                        ("/gmail/harisgusic.dev/[Gmail]/Sent Mail" . ?s)
+                        ("/gmail/harisgusic.dev/[Gmail]/Trash"     . ?t)
+                        ("/gmail/harisgusic.dev/[Gmail]/Drafts"    . ?d)
+                        ("/gmail/harisgusic.dev/[Gmail]/All Mail" . ?a)))))
+          ))
+
+  (setq mu4e-context-policy         'ask
+        mu4e-compose-context-policy 'ask)
+
+  (setq mu4e-org-support t)
+  ;; Enable org mode when composing messages
+  (setq mu4e-org-compose-support t)
+#+end_src
+** Sending messages
+#+begin_src emacs-lisp
+  ;; Show completion for From and To headers
+  (setq mail-user-agent 'mu4e-user-agent)
+  (setq message-mail-alias-type 'ecomplete)
+
+  (add-hook 'message-setup-hook 'flyspell-mode)
+#+end_src
+** Notifications
+#+begin_src emacs-lisp
+  (require 'mu4e-alert)
+  (setq mu4e-enable-notifications t)
+  (mu4e-alert-set-default-style 'libnotify)
 #+end_src
 * Programming languages
 ** LSP
@@ -333,7 +409,7 @@ I use mu4e as my email client.
   (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
 #+end_src
 *** Dependencies
-#+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs_c-c++.sh")
+#+begin_src shell :mkdirp yes :tangle (haris/tangle-deps "/emacs_c-c++.sh")
   sudo pip install cmake-language-server
 #+end_src
 ** Python
@@ -361,7 +437,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)
 #+end_src
 *** Dependencies
-#+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs-python.sh")
+#+begin_src shell :mkdirp yes :tangle (haris/tangle-deps "emacs-python.sh")
   sudo pacman -S python-lsp-server flake8 python-typing_extensions \
        python-lsp-black python-pylint
   sudo pip install pyls-isort pyls-mypy pyls-memestra \
@@ -433,11 +509,11 @@ Emms.
   ;; (setq emms-player-mpd-server-port "6601")
 #+end_src
 *** Dependencies
-#+begin_src shell :mkdirp yes :tangle (concat "/tmp/dependencies-" (user-login-name) "/emacs_emms.sh")
+#+begin_src shell :mkdirp yes :tangle (haris/tangle-deps "emacs_emms.sh")
   sudo pacman -S mpd
 #+end_src
 * Spacemacs
-#+begin_src emacs-lisp :tangle (concat "/tmp/tangle-" (user-login-name) "/.spacemacs-init.el")
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".spacemacs-init.el")
   (setq-default
    dotspacemacs-configuration-layers
    '(syntax-checking
@@ -446,6 +522,7 @@ Emms.
      html
      spacemacs-language
      spacemacs-navigation
+     helpful
      ivy
      imenu-list
      auto-completion
@@ -462,7 +539,7 @@ Emms.
      rust
      git
      (org :variables org-enable-appear-support t)
-     ;; mu4e
+     mu4e
      ;; eaf
      ;; emms
      debug))
@@ -479,5 +556,5 @@ Emms.
 * Appendix
 I use this variable to check if the config loaded correctly.
 #+begin_src emacs-lisp
-  (setq haris/config_loaded_fine "true")
+  (setq haris/config-loaded-fine (current-time-string))
 #+end_src

@@ -32,9 +32,6 @@
       echo "Run :PlugInstall to install plugins..." | vim
       cd ~/.vim/plugged/YouCompleteMe && python install.py --all
     #+end_src
-* Docker
-  To test how everything works, docker can be used. The dockerfile is written to
-  [[.Dockerfile][.Dockerfile]].
 * X11
   I store a couple of ~.xinitrc~ presets in my dotfiles, for different WMs, DEs etc.
   They are named ~.xinitrc-<identifier>~. I switch among them using ~xpreset
