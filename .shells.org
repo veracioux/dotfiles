@@ -226,15 +226,10 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       ln -s "$path" ~/.wallpaper
   end
 
-  function __haris_emacs_conf
-      emacs -c --frame-parameters='(quote (name . "EmacsFloat"))' $argv
-  end
-
-  # Productivity shortcuts
   function cdcf;   set file (cf "$argv");   test -f "$file" && cd (dirname        "$file"); end
   function catcf;  set file (cf "$argv");   test -f "$file" && cat                "$file" ; end
   function vicf;   set file (cf "$argv");   test -f "$file" && vim                "$file" ; end
-  function ecf;    set file (cf "$argv");   test -f "$file" && __haris_emacs_conf "$file" ; end
+  function ecf;    set file (cf "$argv");   test -f "$file" && myemacs-float "$file" ; end
 
   function cdcmd;  set file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
   function catcmd; set file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end

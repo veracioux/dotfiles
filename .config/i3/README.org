@@ -46,6 +46,13 @@
   set $col_a_k #1e1e1ecc
   # Bright magenta with transparency for bar separator
   set $col_a_m #f298c377
+
+  # Bind mode names
+  set $mode_resize  " resize"
+  set $mode_session "Session"
+  set $mode_wm      " WM"
+  set $mode_qr      " QR [i]n [o]ut [s]creen"
+  set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers"
 #+end_src
 * Visuals
 #+begin_src i3wm-config
@@ -124,7 +131,7 @@
   move position center
   bindsym $mod+g            move position center
 
-  mode " resize" {
+  mode $mode_resize {
     bindsym w               resize  shrink  width   1
     bindsym Shift+w         resize  grow    width   1
     bindsym h               resize  shrink  height  1
@@ -155,9 +162,9 @@
     # Back to normal: Enter or Escape or $mod+r
     bindsym Escape          mode "default"
   }
-  bindsym $mod+r            mode " resize"
+  bindsym $mod+r            mode $mode_resize
 
-  mode "Session" {
+  mode $mode_session {
     bindsym r               reload
     bindsym Ctrl+r          restart
     bindsym q               exit
@@ -165,9 +172,9 @@
 
     bindsym Escape          mode "default"
   }
-  bindsym $mod+period       mode "Session"
+  bindsym $mod+period       mode $mode_session
 
-  mode " WM" {
+  mode $mode_wm {
     bindsym h               split h
     bindsym v               split v
     bindsym period          layout toggle split
@@ -182,16 +189,27 @@
 
     bindsym Escape          mode "default"
   }
-  bindsym $mod+s            mode " WM"
+  bindsym $mod+s            mode $mode_wm
 
-  mode " QR" {
+  mode $mode_qr {
     bindsym i               exec --no-startup-id "qr in"
     bindsym o               exec --no-startup-id "qr out"
     bindsym s               exec --no-startup-id "qr screen"
 
     bindsym Escape          mode "default"
   }
-  bindsym $mod+Shift+q      mode " QR"
+  bindsym $mod+Shift+q      mode $mode_qr
+
+  mode $mode_org {
+    bindsym t               exec --no-startup-id "myemacs-float ~/data/personal/todo.org"
+    bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org"
+    bindsym j               exec --no-startup-id "myemacs-float ~/wiki/journal.org"
+    bindsym n               exec --no-startup-id "myemacs-float ~/wiki/notes.org"
+    bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org"
+
+    bindsym Escape          mode "default"
+  }
+  bindsym $mod+Shift+o      mode $mode_org
 #+end_src
 * Workspaces
 #+begin_src i3wm-config

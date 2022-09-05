@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+myemacs -c --frame-parameters='(quote (name . "EmacsFloat"))' "$@"
+

@@ -43,10 +43,6 @@ mod4 + v
 	gvim
 mod4 + shift + e
 	myemacs -c
-mod4 + shift + w
-	fish -c wiki
-mod4 + shift + o
-	fish -c todo
 mod4 + shift + g
     dmenu_run gpg
 
