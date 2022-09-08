@@ -5,3 +5,7 @@
 # savePath in flameshot's config keeps changing, which is annoying
 .config/flameshot/flameshot.ini
 /.haris-bin/synchro
+
+/.config/i3
+/.config/i3status
+!/.config/i3/README.org
