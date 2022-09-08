@@ -10,12 +10,14 @@
 #+begin_src emacs-lisp
   (setq fill-column 80)
   (global-visual-line-mode t)
+  (global-auto-revert-mode t)
   (setq default-tab-width 4)
   (setq custom-theme-directory "~/.emacs.d/private/themes")
   (setq browse-url-generic-program (executable-find "firefox"))
   (setq image-auto-resize 'fit-width)
   (setq image-auto-resize-on-window-resize t)
   (setq evil-want-keybinding nil)
+  (setq mouse-wheel-scroll-amount '(6))
 
   (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
   (if (not (boundp 'haris-prepended-path))
@@ -33,9 +35,16 @@
               (load-theme 'dracula t)))
   (load-theme 'dracula t)
 #+end_src
-Add MELPA
+** General custom functions
+#+begin_src emacs-lisp
+  (defun haris/stage () (interactive) (mkdir "/tmp/stage" t) (dired "/tmp/stage"))
+#+end_src
+** Package initialization
 #+begin_src emacs-lisp
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  (setq use-package-always-ensure t)
+
+  (require 'use-package)
 #+end_src
 ** Nerd commenter
 #+begin_src emacs-lisp
@@ -54,13 +63,21 @@ Add MELPA
 #+begin_src emacs-lisp
   ;; M-TAB in insert mode inserts a tab and converts it to a space
   (define-key evil-insert-state-map (kbd "M-TAB")
-    '(lambda () (interactive)
+    (lambda () (interactive)
        (insert "\t")
        (untabify
         (line-beginning-position)
         (line-end-position))))
   ;; M-TAB in normal mode switches windows
   (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
+
+  (defun haris/search-in-files-with-initial ()
+    "Search in files, with initial text set to region, or nil if no region is active"
+    (interactive)
+    (if (eq evil-state 'visual) (counsel-rg (projectile-symbol-or-selection-at-point)) (counsel-rg)))
+
+  ;; Use ripgrep for search
+  (define-key evil-normal-state-map (kbd "SPC /") 'haris/search-in-files-with-initial)
 #+end_src
 *** Forking
 #+begin_src emacs-lisp
@@ -112,6 +129,11 @@ Add MELPA
   (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
   (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
 #+end_src
+*** Miscellaneous
+#+begin_src emacs-lisp
+  ;; Use RET to execute command even in normal mode
+  (evil-define-key 'normal ielm-map (kbd "RET") 'ielm-return)
+#+end_src
 * Ivy
 #+begin_src emacs-lisp
   (setq ivy-initial-inputs-alist ())
@@ -139,11 +161,21 @@ Add MELPA
         org-hide-emphasis-markers           t)
 
   (setq org-file-apps
-        (quote
-         ((        . emacs)
-          ("\\.x?html?\\'"  . "firefox %s"))))
+        '((        . emacs)
+          ("\\.x?html?\\'"  . "firefox %s")))
 
   (add-to-list 'org-export-backends 'md)
+#+end_src
+** Agenda
+#+begin_src emacs-lisp
+  (setq org-agenda-files (append '("~/data/personal/todo.org"
+                                   "~/data/personal/wiki/")
+                                 (file-expand-wildcards "~/proj/*/*.org")
+                                 (file-expand-wildcards "~/proj/drytoe/*/*.org")))
+#+end_src
+** org-alert
+#+begin_src emacs-lisp
+  (use-package org-alert :defer t)
 #+end_src
 ** Block templates
 #+begin_src emacs-lisp
@@ -192,8 +224,6 @@ The following functions help me define common tangle destinations.
 #+end_src
 ** LaTeX preview
 #+begin_src emacs-lisp
-  (org-agenda-files '("~/data/personal/todo.org"))
-
   (setq org-preview-latex-default-process        'dvisvgm)
   (setq org-latex-create-formula-image-program   'dvisvgm)
   (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
@@ -206,7 +236,7 @@ The following functions help me define common tangle destinations.
 #+end_src
 * ERC
 #+begin_src emacs-lisp
-  (require 'erc)
+  (use-package erc :defer t)
   (setq erc-server "irc.libera.chat"
         erc-nick "veracioux"
         erc-user-full-name "Haris Gušić"
@@ -368,7 +398,7 @@ I use mu4e as my email client.
 #+end_src
 ** Notifications
 #+begin_src emacs-lisp
-  (require 'mu4e-alert)
+  (use-package 'mu4e-alert :defer t)
   (setq mu4e-enable-notifications t)
   (mu4e-alert-set-default-style 'libnotify)
 #+end_src
@@ -536,6 +566,7 @@ Emms.
      ipython-notebook
      emacs-lisp
      shell
+     yaml
      rust
      git
      (org :variables org-enable-appear-support t)
