@@ -34,6 +34,11 @@
               (select-frame frame)
               (load-theme 'dracula t)))
   (load-theme 'dracula t)
+
+  ;; Ways to spawn shells from within Emacs
+  (setq shell-default-shell 'shell)
+  (setq terminal-here-linux-terminal-command '("alacritty")
+        terminal-here-mac-terminal-command   '("alacritty"))
 #+end_src
 ** General custom functions
 #+begin_src emacs-lisp
@@ -64,10 +69,10 @@
   ;; M-TAB in insert mode inserts a tab and converts it to a space
   (define-key evil-insert-state-map (kbd "M-TAB")
     (lambda () (interactive)
-       (insert "\t")
-       (untabify
-        (line-beginning-position)
-        (line-end-position))))
+      (insert "\t")
+      (untabify
+       (line-beginning-position)
+       (line-end-position))))
   ;; M-TAB in normal mode switches windows
   (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
 
@@ -78,6 +83,13 @@
 
   ;; Use ripgrep for search
   (define-key evil-normal-state-map (kbd "SPC /") 'haris/search-in-files-with-initial)
+
+  ;; "SPC +" will pop up eshell
+  (spacemacs/set-leader-keys "+"
+    (lambda ()
+      (interactive)
+      (let ((shell-default-shell 'eshell))
+        (spacemacs/default-pop-shell))))
 #+end_src
 *** Forking
 #+begin_src emacs-lisp
