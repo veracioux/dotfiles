@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-
-/usr/bin/picom --experimental-backends
-
