@@ -88,14 +88,14 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
 * Visuals
 #+begin_src i3wm-config
   font pango:Source Code Pro, Icons bold 10
-  default_border pixel 2
   hide_edge_borders none
   gaps inner 6
   gaps outer 0
-  for_window [class=".*"]               title_format " %title"
-  for_window [window_type="dialog"]     title_format "  %title"
-  for_window [window_type="popup_menu"] title_format "  %title"
-  for_window [window_type="splash"]     title_format "  %title"
+  for_window [all]                      title_format " %title"
+  # This one prevents _MOTIF_WM_HINTS to force a window title
+  for_window [all]                      border pixel 2
+  for_window [window_type="dialog"]     border normal 2
+  for_window [window_type="popup_menu"] border normal 2
 
   # Colors
   # class                 border    backgr.   text      indicator child_border
