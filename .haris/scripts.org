@@ -1,0 +1,217 @@
+#+TITLE: Scripts
+#+PROPERTY: header-args :comments headline :mkdirp yes :tangle-mode (identity #o744)
+
+This is where my custom scripts live. That includes shell scripts, dmenu scripts,
+and potentially programming language-specific scripts. One of the things I
+strive for is to have the same script available in different formats. For
+example, I have a dmenu script for creating a QR code, which allows me to scan
+or generate a QR code with a few keystrokes. But sometimes I want to call this
+script from a terminal, so I also have a =qr= command available in =~/.local/bin=.
+Likewise, I have ideas to port some scripts to tridactyl (a firefox extension)
+as well. Since those different versions of the same script differ only by UX, it
+is useful to have all the versions defined in the same place - here.
+
+Note: For code reusability, I use some [[* Helper code][helper code blocks]] defined at the bottom
+of this document. These code blocks are utilized via =org-sbe= or via noweb references.
+
+* Wrappers around existing commands
+** =rm=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/rm")
+  #!/usr/bin/env sh
+
+  for arg in "$@"; do
+      [ ! -e "$arg" ] && continue
+      arg="$(realpath "$arg")"
+      if echo "$arg" \
+          | grep -q '^/home' && echo "$arg" \
+          | grep -qv '^/home/[^/]\+/[^/]\+'
+      then
+          echo "WTF: Trying to delete a home directory???"
+          exit 1
+      fi
+  done
+  /usr/bin/rm "$@"
+#+end_src
+
+** =pass=
+This is a wrapper around GNU =pass=.
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/pass")
+  #!/usr/bin/env bash
+
+  shopt -s expand_aliases
+
+  alias pass=/usr/bin/pass
+
+  # Add a password read directly from stdin (without prompting to interactively
+  # enter it)
+  if [ "$1" = "add" ]; then
+      dest=~/.password-store/"$2"
+      destdir="$(dirname "$dest")"
+      mkdir -p "$destdir"
+      cat | gpg -e -o- -r "$(cat ~/.password-store/.gpg-id)" > "$dest".gpg
+  else
+      pass "$@"
+  fi
+#+end_src
+** =dmenu=
+#+NAME: dmenu
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu")
+  #!/usr/bin/env sh
+
+  /usr/bin/dmenu -f -i -h 25 -nb '#1e1e1e' -nf '#dddddd' -sb '#99a3ff' -sf '#1e1e1e' $@
+#+end_src
+** =ipython=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/ipython")
+  #!/usr/bin/env bash
+
+  /usr/bin/ipython "$@" -i -- "$PYTHONSTARTUP"
+#+end_src
+** =gvim=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/gvim")
+  #!/usr/bin/env bash
+
+  # Fake gvim which will just launch a terminal with neovim in it
+
+  for arg in "$@"; do
+      # Hacky solution that will open files in real gvim when opened by xdg-open
+      if [ "$arg" = "-f" ]; then /usr/bin/gvim "$@"; exit; fi
+  done
+
+  # nvim is launched through the shell because otherwise it behaves weirdly
+  # All arguments are surrounded with ''
+  FISH_CMD="$(printf "%q " nvim "$@")"
+
+  if [ ! -t 0 ]; then
+      # Input is from a PIPE
+      pipe_input="$(mktemp -t XXXXXXXXXXXXXXXX)"
+      cat > "$pipe_input"
+      FISH_CMD="cat $pipe_input | $FISH_CMD"
+  fi
+
+  alacritty --class Float,Alacritty -e fish -C "$FISH_CMD"
+
+  if [ ! -t 0 ]; then
+      # Input is from a PIPE
+      rm -f "$pipe_input"
+  fi
+#+end_src
+** =redshift=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/reshift")
+  #!/usr/bin/env sh
+
+  /usr/bin/redshift -l 43.84:18.35
+#+end_src
+** =firefox=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/firefox")
+  #!/usr/bin/env sh
+
+  /usr/bin/firefox $(printarg --new-tab "$@" | uniq)
+#+end_src
+** =picom=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/picom")
+  #!/usr/bin/env sh
+
+  /usr/bin/picom --experimental-backends
+#+end_src
+** =myemacs=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs")
+  #!/usr/bin/env sh
+
+  # Run emacsclient in the terminal, unless the -c option is given, which will
+  # open the GUI.
+  # - Also enables proper color support.
+  # - Any additional arguments you provide are passed to emacsclient
+
+  export TERM='xterm-256color'
+  extra_args=''
+  if printarg "$@" | grep -q -- '-c'; then
+      extra_args='-n'
+  else
+      extra_args='-t'
+  fi
+  if ! printarg "$@" | grep -qE '^(-s|--socket-name)'; then
+      extra_args="$extra_args --socket-name emacs"
+  fi
+
+  emacsclient --alternate-editor /usr/bin/emacs $extra_args "$@"
+#+end_src
+** =notify-send=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/notify-send")
+  #!/usr/bin/env sh
+
+  export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+
+  /usr/bin/notify-send "$@"
+#+end_src
+** =sudo=
+#+NAME: sudo
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/quickmenu")
+  #!/usr/bin/env bash
+
+  choices=(
+      "Algorithms"
+  )
+
+  choice="$(printarg "${choices[@]}" | dmenu)"
+
+  case "$choice" in
+      "Algorithms")
+          zathura ~/data/knowledge/literature/prog/"Thomas H. Cormen - Introduction to Algorithms (2022).pdf" ;;
+  esac
+#+end_src
+#+transclude: [[file:~/.haris/private.org::dmenu-quickmenu][dmenu-quickmenu]] 
+
+* Applications
+** =cf=
+* Miscellaneous
+** =aurvote=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/aurvote")
+#!/usr/bin/env sh
+
+ssh aur@aur.archlinux.org vote "$@"
+#+end_src
+** TODO sxhkd
+TODO: move to main README
+
+I have three sets of bindings for =sxhkd=:
+- common; publicly available in my dotfiles repo
+- private; kept in a private repo and not publicly available
+- temporary; ad hoc bindings, not versioned at all
+
+I want to be able to enable/disable each of those individually. That's why I
+keep each in a separate config file. And, for each I run a separate process
+* Helper code
+:PROPERTIES:
+:header-args: :results silent
+:END:
+These scripts are used as snippets or noweb references within this org file.
+** =find-alt-cmd(name)=
+Returns the second executable with the given name, looked up in execpath.
+#+NAME: find-alt-cmd
+#+begin_src emacs-lisp :var name="nil" :results silent
+  (let ((counter 0) (executable))
+    (locate-file name exec-path nil
+                 (lambda (path)
+                   (if (file-executable-p path)
+                       (setq counter (+ counter 1)))
+                   (> counter 1))))
+#+end_src
+
+# Quick test...
+#+CALL: find-alt-cmd(name="emacs")
+** OS-specific code
+#+NAME: on-macos
+#+begin_src emacs-lisp :var text="" :var else=""
+  ;; Insert text only on macOS
+  (if (eq system-type 'darwin) text else)
+#+end_src
+#+NAME: on-linux
+#+begin_src emacs-lisp :var text="" :var else=""
+  ;; Insert text only on Linux
+  (if (eq system-type 'darwin) text else)
+#+end_src
+
+* Local variables                                                  :noexport:
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:

@@ -1,34 +1,114 @@
 #+TITLE: Emacs Config
-#+PROPERTY: header-args :tangle (haris/tangle-home ".emacs.d/haris-config.el")
-#+begin_src emacs-lisp :exports none :mkdirp yes
+#+PROPERTY: header-args :tangle (haris/tangle-home ".emacs.d/haris/default.el") :mkdirp yes :noweb yes
+#+begin_src emacs-lisp :exports none
   ;; -*- mode: emacs-lisp-mode; -*- vim: ft=lisp sw=2
 #+end_src
 
-*NOTE*: I use spacemacs.
+Emacs is a very versatile tool. I use it as:
+- a text editor (of course)
+- a [[*Email][mail client]] (mu4e)
+- an [[*ERC][IRC chat client]] (ERC)
+- a [[*Git][git GUI]] (magit)
+- a multilingual [[*Programming languages][IDE for quick and simple work]]
+- a [[*Vterm][special-purpose terminal emulator]] (vterm)
+- for [[*Org mode][note-taking and organization]] (org-mode)
+- as a [[*Comint][superior interface for many interpreters]] (comint)
 
+What's more, I'm using a distribution of Emacs called Spacemacs, which comes
+with many sensible defaults and simplifies the installation and setup of packages.
+Because it is so feature-rich, Emacs can take an annoying time to start up.
+That's why I have set up a systemd service that runs an emacs daemon on system
+startup. When I want to launch emacs to perform a task, I run [[file:~/.haris/scripts.org::*=myemacs=][myemacs]] (a custom
+command that wraps [[man:emacsclient][emacsclient]]), which uses the daemon, without the need to load
+the cruft each time.
+
+** Daemons
+For some of those use cases I mentioned above, I want to run a standalone emacs
+daemon, specialized for that use case. One reason is that emacs is
+single-threaded, so a hang-up in one application would render the rest of the
+daemon unresponsive. Another reason is simply to have a cleaner buffer list, so
+I can use =ibuffer= more efficiently.
+
+Here's a list of standalone daemons I have configured. Each one has a systemd
+service configured and thus launches on system startup. For each entry the
+daemon name is shown (as passed to the =--socket-name= option). Each daemon has
+its own configuration file (see [[* Configuration loading][Configuration loading]]) to prevent loading of
+unnecessary code.
+
+- =irc= :: Used as an IRC chat client
+  - Configuration file :: =~/.emacs.d/haris/irc.el=
+
+  #+begin_details "Systemd unit"
+  #+begin_src conf :tangle no
+    <<irc.service>>
+  #+end_src
+  #+end_details
+
+- =ide= :: Used as a multilingual IDE via the lsp protocol
+
+  *NOTE*: The functionality for this daemon is not yet configured.
+- =emacs= :: Everything else is done through this daemon. This includes basic text
+  editing and applications that don't warrant a standalone daemon.
+  - Configuration file :: =~/.emacs.d/default.el=
+
+  #+begin_details "Systemd unit"
+  #+begin_src conf :tangle no
+    <<emacs.service>>
+  #+end_src
+  #+end_details
+  #+NAME: emacs.service
+  #+begin_src conf :tangle (haris/tangle-home ".config/systemd/user/emacs.service") :exports none
+    [Unit]
+    Description=Emacs text editor
+    Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+
+    [Service]
+    Type=forking
+    ExecStart=/usr/bin/emacs --daemon="emacs"
+    ExecStop=/usr/bin/emacsclient --socket-name="emacs" --eval "(kill-emacs)"
+    Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+    Restart=on-failure
+
+    [Install]
+    WantedBy=default.target
+  #+end_src
+
+  *TODO*: It is planned that this config file be used, but it's not yet implemented.
+
+*** TODO Configuration loading
+**** Root user config file
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
+  (load-file (cond ((equal server-name "irc") "~/.emacs.d/haris/irc.el")
+                   ("~/.emacs.d/haris/default.el")))
+#+end_src
 * General settings
+#+NAME: basic-settings
 #+begin_src emacs-lisp
   (setq fill-column 80)
   (global-visual-line-mode t)
   (global-auto-revert-mode t)
   (setq default-tab-width 4)
-  (setq custom-theme-directory "~/.emacs.d/private/themes")
   (setq browse-url-generic-program (executable-find "firefox"))
   (setq image-auto-resize 'fit-width)
   (setq image-auto-resize-on-window-resize t)
   (setq evil-want-keybinding nil)
   (setq mouse-wheel-scroll-amount '(6))
 
+  ;; Handle URLs as files
+  (url-handler-mode)
+
   (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
-  (if (not (boundp 'haris-prepended-path))
+  (if (not (boundp 'haris/prepended-path))
       (progn
-        (setq haris-prepended-path "yes")
+        (setq haris/prepended-path "yes")
         (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))))
 
   ;; TODO whatever this does
   (add-hook 'text-mode-hook #'auto-fill-mode)
   (add-hook 'prog-mode-hook #'auto-fill-mode)
 
+  ;; Init and set theme
+  (setq custom-theme-directory "~/.emacs.d/private/themes")
   (add-hook 'after-make-frame-functions
             (lambda (frame)
               (select-frame frame)
@@ -40,22 +120,30 @@
   (setq terminal-here-linux-terminal-command '("alacritty")
         terminal-here-mac-terminal-command   '("alacritty"))
 #+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<basic-settings>>
+#+end_src
 ** General custom functions
 #+begin_src emacs-lisp
   (defun haris/stage () (interactive) (mkdir "/tmp/stage" t) (dired "/tmp/stage"))
 #+end_src
 ** Package initialization
+#+NAME: package-init
 #+begin_src emacs-lisp
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (setq use-package-always-ensure t)
 
   (require 'use-package)
 #+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<package-init>>
+#+end_src
 ** Nerd commenter
 #+begin_src emacs-lisp
   (add-hook 'octave-mode-hook
             (lambda ()
-              (setq comment-start "% " comment-end "")))
+              (setq comment-start "% "
+                    comment-end "")))
   (define-key evil-normal-state-map (kbd "SPC c c") 'evilnc-copy-and-comment-lines)
 #+end_src
 ** Avy
@@ -91,46 +179,51 @@
       (let ((shell-default-shell 'eshell))
         (spacemacs/default-pop-shell))))
 #+end_src
-*** Forking
+*** Launching other programs at current context
+Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
 #+begin_src emacs-lisp
-  (global-set-key (kbd "M-t")
-                  '(lambda () (interactive)
-                     (start-process-shell-command "" nil "term")))
   (global-set-key
    (kbd "M-e")
-   '(lambda () (interactive)
-      (start-process-shell-command "" nil
-                                   "emacs -c "
-                                   (buffer-file-name (window-buffer)))))
+   (lambda () (interactive)
+      (start-process "" nil "emacs" "-c" (buffer-file-name (window-buffer)))))
   (global-set-key
    (kbd "M-v")
-   '(lambda () (interactive)
-      (start-process-shell-command "" nil
-                                   "gvim "
-                                   (buffer-file-name (window-buffer)))))
+   (lambda () (interactive)
+      (start-process "" nil "gvim" (buffer-file-name (window-buffer)))))
 #+end_src
 *** Spacemacs-like bindings
+#+NAME: spacemacs-like-bindings
 #+begin_src emacs-lisp
   (define-key evil-normal-state-map
     (kbd "SPC f e h")
     '(lambda () (interactive)
-       (find-file "~/.emacs.d/haris-config.org")))
+       (find-file "~/.haris/emacs.org")))
   (define-key evil-normal-state-map
     (kbd "SPC f e r")
     '(lambda () (interactive)
-       (load-file "~/.emacs.d/haris-config.el")))
+       (load-file "~/.emacs.d/haris/default.el")))
 
   (define-key evil-normal-state-map
     (kbd "SPC s a")
     'spacemacs/search-project-ag-region-or-symbol)
 #+end_src
-*** Consistent vim navigation
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<spacemacs-like-bindings>>
+#+end_src
+*** Consistent vim-like bindings
+There are some inconsistencies in the vim key bindings (vim is guilty of this as
+well). For example =D= deletes until end of line, but =V= visually selects the whole
+line. This section remaps =V= to =v$= and does the same for other similar cases.
+Some custom keybindings are defined here as well.
+
+#+NAME: consistent-vim-bindings
 #+begin_src emacs-lisp
   (define-key evil-normal-state-map (kbd "Q")     'delete-window)
   (define-key evil-motion-state-map (kbd "Q")     'delete-window)
 
   (define-key evil-visual-state-map (kbd "v")     'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V")     (kbd "v$"))
+  (define-key evil-normal-state-map (kbd "Y")     (kbd "y$"))
 
   (define-key evil-normal-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
   (define-key evil-visual-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
@@ -141,14 +234,54 @@
   (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
   (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
 #+end_src
-*** Miscellaneous
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<consistent-vim-bindings>>
+#+end_src
+*** Ielm
+#+NAME: ielm
 #+begin_src emacs-lisp
   ;; Use RET to execute command even in normal mode
   (evil-define-key 'normal ielm-map (kbd "RET") 'ielm-return)
 #+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<ielm>>
+#+end_src
+*** Miscellaneous
+#+NAME: bindings-miscellaneous
+#+begin_src emacs-lisp
+  ;; Use RET to execute command even in normal mode
+  (evil-define-key 'normal ielm-map (kbd "RET") 'ielm-return)
+
+  ;; Use M-y or M-n to answer a minibuffer prompt
+  (defun haris/insert-into-minibuffer-and-exit (text)
+    (interactive)
+    (with-current-buffer (window-buffer (active-minibuffer-window))
+      (insert text)
+      (exit-minibuffer)))
+  (global-set-key (kbd "M-y")
+                  (lambda ()
+                    (interactive)
+                    (haris/insert-into-minibuffer-and-exit "y")))
+  (global-set-key (kbd "M-n")
+                  (lambda ()
+                    (interactive)
+                    (haris/insert-into-minibuffer-and-exit "n")))
+
+  (define-key comint-mode-map (kbd "M-h") (lambda ()
+                                            "Search through current history"
+                                            (interactive)
+                                            (counsel-shell-history)))
+#+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<bindings-miscellaneous>>
+#+end_src
 * Ivy
+#+NAME: ivy
 #+begin_src emacs-lisp
   (setq ivy-initial-inputs-alist ())
+#+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<ivy>>
 #+end_src
 * Org mode
 #+begin_src emacs-lisp
@@ -156,6 +289,10 @@
   (require 'ob-C)
   (require 'ob-python)
   (require 'org-tempo)
+
+  (use-package org-transclusion :defer t)
+
+  (use-package ol-man :ensure nil :defer t)
 
   (defun org-mode-visual-fill ()
     (setq visual-fill-column-width        90
@@ -172,10 +309,6 @@
         org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
         org-hide-emphasis-markers           t)
 
-  (setq org-file-apps
-        '((        . emacs)
-          ("\\.x?html?\\'"  . "firefox %s")))
-
   (add-to-list 'org-export-backends 'md)
 #+end_src
 ** Agenda
@@ -185,19 +318,30 @@
                                  (file-expand-wildcards "~/proj/*/*.org")
                                  (file-expand-wildcards "~/proj/drytoe/*/*.org")))
 #+end_src
-** org-alert
-#+begin_src emacs-lisp
+** TODO Syntax extensions
+Doesn't get loaded correctly.
+#+begin_src emacs-lisp :tangle no
+  (use-package org-special-block-extras
+    :ensure t
+    :hook (org-mode . org-special-block-extras-mode))
+#+end_src
+** TODO org-alert
+Takes too long to load.
+#+begin_src emacs-lisp :tangle no
   (use-package org-alert :defer t)
 #+end_src
 ** Block templates
 #+begin_src emacs-lisp
-  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-  (add-to-list 'org-structure-template-alist '("py" . "src python"))
-  (add-to-list 'org-structure-template-alist
-               '("dep" . "src shell :mkdirp yes :tangle (haris/tangle-deps \"/TODO\")"))
-  (add-to-list 'org-structure-template-alist
-               '("cfg" . "src shell :mkdirp yes :tangle (haris/tangle-home \"/TODO\")"))
+  (setq org-structure-template-alist
+        (cl-remove-duplicates
+         (append (default-value 'org-structure-template-alist)
+                 '(("el"  . "src emacs-lisp")
+                   ("sh"  . "src shell")
+                   ("py"  . "src python")
+                   ("dep" . "src shell :tangle (haris/tangle-deps \"TODO\")")
+                   ("sht" . "src shell :tangle (haris/tangle-home \"TODO\")")
+                   ("elt" . "src emacs-lisp :tangle (haris/tangle-home \"TODO\")")))
+         :test (lambda (a b) (string= (car a) (car b)))))
 #+end_src
 ** Babel
 I tangle my configs from various org files into their respective destination
@@ -218,6 +362,7 @@ those files to my live config under =~/=, I can call =(haris/tangle)=.
     (interactive)
     (let ((tangle-home (haris/tangle-home)))
       (shell-command (concat "rm -rf " tangle-home))
+      (org-transclusion-add-all)
       (org-babel-tangle)
       (shell-command (concat "rsync -ru " tangle-home " ~/"))))
 
@@ -243,11 +388,15 @@ The following functions help me define common tangle destinations.
 #+end_src
 ** Bindings
 #+begin_src emacs-lisp
-  (evil-define-key 'normal org-mode-map (kbd "C-c e") 'visible-mode)
-  (evil-define-key 'normal org-mode-map (kbd ",S")    'org-attach-screenshot)
+  (evil-define-key 'normal org-mode-map (kbd ", S")         'org-attach-screenshot)
+  (evil-define-key 'normal org-mode-map (kbd ", TAB")       'org-next-link)
+  (evil-define-key 'normal org-mode-map (kbd ", <backtab>") 'org-previous-link)
+  (evil-define-key 'normal org-src-mode-map (kbd ", w")     'org-edit-src-save)
+
+  (evil-define-key 'normal org-mode-map (kbd "SPC h o")     'org-info-find-node)
 #+end_src
 * ERC
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
   (use-package erc :defer t)
   (setq erc-server "irc.libera.chat"
         erc-nick "veracioux"
@@ -272,30 +421,56 @@ The following functions help me define common tangle destinations.
          (erc-part-from-channel ""))
   (defun haris/euirc () (interactive)
          (erc :server "irc.euirc.net" :port 6667 :nick "veracioux"))
+  (defun haris/erc-list-channels () (interactive)
+         (erc-with-server-buffer
+           (erc-kill-input)
+           (insert "/list")
+           (erc-send-current-line)))
 
-  (define-key              erc-mode-map           (kbd "C-l") 'comint-clear-buffer)
-  (evil-define-key 'normal erc-mode-map           (kbd ",b")  'erc-switch-to-buffer)
-  (evil-define-key 'normal erc-mode-map           (kbd ",j")  'erc-join-channel)
-  (evil-define-key 'normal erc-mode-map           (kbd ",q")  'haris/erc-quit-channel)
-  (evil-define-key 'normal erc-list-menu-mode-map (kbd ",j")  'erc-list-join)
+  (define-key               erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
+  (evil-define-key  'normal erc-mode-map    (kbd ",b")  'erc-switch-to-buffer)
+  (evil-define-key  'normal erc-mode-map    (kbd ",j")  'erc-join-channel)
+  (evil-define-key  'normal erc-mode-map    (kbd ",q")  'haris/erc-quit-channel)
+  (evil-define-key  'normal erc-mode-map    (kbd ",l")  'haris/erc-list-channels)
+
+  (evil-define-key  'motion erc-list-menu-mode-map  (kbd "RET")   nil)
+  (evil-define-key  'normal erc-list-menu-mode-map  (kbd "RET")   nil)
+  (define-key       erc-list-menu-mode-map  (kbd "RET")   'erc-list-join)
 #+end_src
 ** Theme tweak
-   #+begin_src emacs-lisp
-     (setq erc-track-faces-priority-list
-           '(erc-error-face
-             erc-notice-face
-             (erc-nick-default-face erc-current-nick-face)
-             erc-current-nick-face erc-keyword-face
-             (erc-nick-default-face erc-pal-face)
-             erc-pal-face erc-nick-msg-face erc-direct-msg-face
-             (erc-button erc-default-face)
-             (erc-nick-default-face erc-dangerous-host-face)
-             erc-dangerous-host-face erc-nick-default-face
-             (erc-nick-default-face erc-default-face)
-             erc-default-face erc-action-face
-             (erc-nick-default-face erc-fool-face)
-             erc-fool-face erc-input-face erc-prompt-face))
-   #+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+  (setq erc-track-faces-priority-list
+        '(erc-error-face
+          erc-notice-face
+          (erc-nick-default-face erc-current-nick-face)
+          erc-current-nick-face erc-keyword-face
+          (erc-nick-default-face erc-pal-face)
+          erc-pal-face erc-nick-msg-face erc-direct-msg-face
+          (erc-button erc-default-face)
+          (erc-nick-default-face erc-dangerous-host-face)
+          erc-dangerous-host-face erc-nick-default-face
+          (erc-nick-default-face erc-default-face)
+          erc-default-face erc-action-face
+          (erc-nick-default-face erc-fool-face)
+          erc-fool-face erc-input-face erc-prompt-face))
+#+end_src
+** Systemd service
+#+NAME: irc.service
+#+begin_src conf :tangle (haris/tangle-home ".config/systemd/user/irc.service")
+  [Unit]
+  Description=Emacs daemon for IRC chat
+  Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+
+  [Service]
+  Type=forking
+  ExecStart=/usr/bin/emacs --daemon="irc"
+  ExecStop=/usr/bin/emacsclient --socket-name="irc" --eval "(kill-emacs)"
+  Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+  Restart=on-failure
+
+  [Install]
+  WantedBy=default.target
+#+end_src
 * Git
 ** TODO deprecated GitHub
 #+begin_src emacs-lisp
@@ -313,14 +488,18 @@ The following functions help me define common tangle destinations.
     (kbd ",hh") 'octave-help)
 #+end_src
 * Comint
+#+NAME: comint
 #+begin_src emacs-lisp
   (defun comint-clear-buffer-goto () (interactive)
          (comint-clear-buffer) (evil-goto-line))
   (define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer-goto)
 #+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<comint>>
+#+end_src
 * EAF
 ** Dependencies
-#+begin_src shell :mkdirp yes :tangle (haris/tangle-deps "emacs-eaf.sh")
+#+begin_src shell :tangle (haris/tangle-deps "emacs-eaf.sh")
   sudo pacman -S git nodejs npm python-pyqt5 python-pyqt5-sip \
        python-pyqtwebengine wmctrl python-pymupdf
   paru -S python-epc
@@ -410,7 +589,7 @@ I use mu4e as my email client.
 #+end_src
 ** Notifications
 #+begin_src emacs-lisp
-  (use-package 'mu4e-alert :defer t)
+  (use-package mu4e-alert :defer t)
   (setq mu4e-enable-notifications t)
   (mu4e-alert-set-default-style 'libnotify)
 #+end_src
@@ -451,7 +630,7 @@ I use mu4e as my email client.
   (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
 #+end_src
 *** Dependencies
-#+begin_src shell :mkdirp yes :tangle (haris/tangle-deps "/emacs_c-c++.sh")
+#+begin_src shell :tangle (haris/tangle-deps "/emacs_c-c++.sh")
   sudo pip install cmake-language-server
 #+end_src
 ** Python
@@ -479,7 +658,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)
 #+end_src
 *** Dependencies
-#+begin_src shell :mkdirp yes :tangle (haris/tangle-deps "emacs-python.sh")
+#+begin_src shell :tangle (haris/tangle-deps "emacs-python.sh")
   sudo pacman -S python-lsp-server flake8 python-typing_extensions \
        python-lsp-black python-pylint
   sudo pip install pyls-isort pyls-mypy pyls-memestra \
@@ -500,8 +679,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
                                    auto-completion-enable-snippets-in-popup t)))
 #+end_src
 * Maxima
-I used this mode like 2-3 times, but I'm keeping it in case I have to use it
-again.
+I used this mode like 2-3 times, but I'm keeping it in case I have to use it again.
 #+begin_src emacs-lisp
   (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
   (autoload 'maxima-mode "maxima" "Maxima mode" t)
@@ -513,6 +691,7 @@ again.
 #+end_src
 * Info mode
 Remove Info mode annoying keybindings.
+#+NAME: info
 #+begin_src emacs-lisp
   (evil-define-key 'motion Info-mode-map (kbd "C-o")  'Info-history-back)
   (evil-define-key 'motion Info-mode-map (kbd "C-i")  'Info-history-forward)
@@ -521,6 +700,9 @@ Remove Info mode annoying keybindings.
   (evil-define-key 'motion Info-mode-map (kbd "RET")  'Info-follow-nearest-node)
   (evil-define-key 'motion Info-mode-map (kbd "TAB")  'Info-next-reference)
   (evil-define-key 'motion Info-mode-map (kbd "p")    nil)
+#+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<info>>
 #+end_src
 ** TODO Fix bindings that were messed up by evil.
 #+begin_src emacs-lisp
@@ -551,10 +733,18 @@ Emms.
   ;; (setq emms-player-mpd-server-port "6601")
 #+end_src
 *** Dependencies
-#+begin_src shell :mkdirp yes :tangle (haris/tangle-deps "emacs_emms.sh")
+#+begin_src shell :tangle (haris/tangle-deps "emacs_emms.sh")
   sudo pacman -S mpd
 #+end_src
+** Ibuffer
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
+  (define-key ibuffer-mode-map (kbd "j") 'evil-next-line)
+  (define-key ibuffer-mode-map (kbd "k") 'evil-previous-line)
+#+end_src
 * Spacemacs
+These are a list of spacemacs layers and a list of additional packages loaded by
+spacemacs. This code block is loaded from [[~/.spacemacs]]. You can re-install a
+default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block]].
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".spacemacs-init.el")
   (setq-default
    dotspacemacs-configuration-layers
@@ -580,8 +770,13 @@ Emms.
      shell
      yaml
      rust
+     docker
+     translate
      git
-     (org :variables org-enable-appear-support t)
+     lua
+     (org :variables
+          org-enable-appear-support t
+          org-enable-transclusion-support t)
      mu4e
      ;; eaf
      ;; emms
@@ -596,8 +791,94 @@ Emms.
      evil-easymotion reddigg md4rd pydoc pylint python-info
      nodejs-repl))
 #+end_src
+
+#+NAME: install-dotspacemacs
+#+begin_src emacs-lisp :tangle no :exports none :results none
+  ;; (dotspacemacs/install)
+
+  (let ((process-nested-list
+         (lambda (list process)
+           "Traverse each node of a tree of lists represented by 'list' and call 'process' on it."
+           (let ((item nil))
+             (while (and list (listp list))
+               ;; Iterate through each item in the list
+               ;;   If the item is not itself a list, call process on it.
+               ;;   If it is a list, call process on the item and call process-nested-list on it.
+               (setq item (car list))
+               (if (listp item)
+                   (progn
+                     (funcall process item)
+                     (funcall process-nested-list item process))
+                 (funcall process item))
+               (setq list (cdr list)))))))
+    (funcall process-nested-list
+             ;; contents of the ~/.spacemacs file as elisp data
+             (car (read-from-string (concat "(progn\n"
+                                            (with-temp-buffer
+                                              (insert-file-contents "~/.spacemacs")
+                                              (buffer-string))
+                                            "\n)")))
+             ;; function applied to each subtree of code
+             (lambda (code)
+               ;; Prepend code to body of function 'dotspacemacs/layers'
+               (message "%s" code)
+               ;; (if (and (eq (car code) 'defun)
+               ;;          (eq (nth 1 code) 'dotspacemacs/layers))
+               ;;     (message "%s" code)
+               ;;     ;; (setcdr (nthcdr 3 code) `((load-file "~/.spacemacs-init.el") . (nthcdr 4 code)))
+               ;;   )
+               )))
+
+  ;; ;; (with-temp-file (dotspacemacs/location))
+  ;; ;; (dotspacemacs/add-layer)
+#+end_src
 * Appendix
+** Lib
+An elisp library of functions used in this file, but may be useful elsewhere
+too. When such use case presents itself, copy these functions from here, or
+extract them into a common library and use that library from both here and there.
+#+NAME: begin_details
+#+begin_src emacs-lisp :tangle no :exports none :results none
+  (o-defblock details (title "Details") (title-color "green")
+    "Enclose contents in a folded up box, for HTML.
+
+  For LaTeX, this is just a boring, but centered, box.
+
+  By default, the TITLE of such blocks is “Details”
+  and its TITLE-COLOR is green.
+
+  In HTML, we show folded, details, regions with a nice greenish colour.
+
+  In the future ---i.e., when I have time---
+  it may be prudent to expose more aspects as arguments,
+  such as ‘background-color’.
+  "
+    (format
+     (pcase backend
+       (`latex "\\begin{quote}
+                    \\begin{tcolorbox}[colback=%s,title={%s},sharp corners,boxrule=0.4pt]
+                      %s
+                    \\end{tcolorbox}
+                  \\end{quote}")
+       (_ "<details>
+                    <summary>
+                      <strong>
+                        <font face=\"Courier\" size=\"3\" color=\"%s\">
+                           %s
+                        </font>
+                      </strong>
+                    </summary>
+                    %s
+                 </details>"))
+     title-color title contents))
+#+end_src
+** Config check
 I use this variable to check if the config loaded correctly.
-#+begin_src emacs-lisp
+#+NAME: config-loaded-fine
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
   (setq haris/config-loaded-fine (current-time-string))
 #+end_src
+** Local variables                                                :noexport:
+# Local variables:
+# eval: (org-sbe "begin_details")
+# End:

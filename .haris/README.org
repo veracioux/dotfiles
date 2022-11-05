@@ -1,0 +1,4 @@
+#+TITLE: My configs
+
+The bootstrap directory contains everything that is needed to tangle all my
+org-mode configs into actual usable config files.
