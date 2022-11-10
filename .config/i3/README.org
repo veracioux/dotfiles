@@ -82,7 +82,7 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
   set $mode_session "Session"
   set $mode_wm      " WM"
   set $mode_qr      " QR [i]n [o]ut [s]creen"
-  set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers"
+  set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle"
   set $mode_mic     " Microphone [+] [-] [m]ute"
 #+end_src
 * Visuals
@@ -157,9 +157,6 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
   bindsym $mod+minus        resize shrink width   20;
   bindsym $mod+Shift+plus   resize grow                 height  20;
   bindsym $mod+Shift+minus  resize shrink               height  20;
-  bindsym $mod+f            floating enable;                            \
-  $resize2;                                   \
-  move position center
   bindsym $mod+g            move position center
 
   mode $mode_resize {
@@ -240,6 +237,8 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
     bindsym n               exec --no-startup-id "myemacs-float ~/wiki/notes.org"; \
                               mode default
     bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org"; \
+                              mode default
+    bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org"; \
                               mode default
 
     bindsym Escape          mode default

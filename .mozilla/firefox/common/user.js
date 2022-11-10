@@ -24,3 +24,6 @@ user_pref("signon.generation.enabled", false);
 user_pref("browser.link.open_newwindow", 3);
 
 user_pref("services.sync.declinedEngines", "creditcards,passwords");
+
+// Show search bar in <select> dropdown
+user_pref("dom.forms.selectSearch", true);

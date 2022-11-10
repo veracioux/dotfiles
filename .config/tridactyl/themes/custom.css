@@ -155,8 +155,9 @@
 /* ┏━━━━━━━━━━━━━━━━━┓
    ┃ General Firefox ┃
    ┗━━━━━━━━━━━━━━━━━┛ */
-a { color: var(--mycolor-brblue); }          /* Link color */
-a:visited { color: var(--mycolor-brmagenta); }
+
+/*a { color: var(--mycolor-brblue); }          /* Link color */
+/* a:visited { color: var(--mycolor-brmagenta); } */
 
 /* ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
    ┃ Miscellaneous - not sure if they have any effect ┃

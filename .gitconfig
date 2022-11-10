@@ -59,7 +59,6 @@
     # Commit
     c = commit
     ci = commit -m 'Initial commit'
-    call = commit --all
     cc = commit --all --message
     cam = commit --amend --message
     extend = commit --amend --no-edit

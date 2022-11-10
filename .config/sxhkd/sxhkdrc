@@ -13,6 +13,8 @@ mod4 + shift + p
    passmenu -l 10
 mod4 + q
    dmenu_run system
+mod4 + ctrl + q
+   dmenu_run quickmenu
 
 # Dunst stuff
 mod4 + shift + comma

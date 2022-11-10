@@ -486,6 +486,9 @@ a terminal and runs the aliased command.
   abbr -g drm  'docker rm -f'
   abbr -g dcl  'docker container list'
   abbr -g dc   'docker-compose'
+  abbr -g dcub 'docker-compose up --build'
+  abbr -g dce  'docker-compose exec'
+  abbr -g dcd  'docker-compose down'
 
   abbr -g g     'git'
   abbr -g v     'vim'
