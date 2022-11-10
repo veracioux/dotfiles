@@ -23,8 +23,8 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
       [ ! -e "$arg" ] && continue
       arg="$(realpath "$arg")"
       if echo "$arg" \
-          | grep -q '^/home' && echo "$arg" \
-          | grep -qv '^/home/[^/]\+/[^/]\+'
+              | grep -q '^/home' && echo "$arg" \
+                  | grep -qv '^/home/[^/]\+/[^/]\+'
       then
           echo "WTF: Trying to delete a home directory???"
           exit 1
@@ -145,30 +145,175 @@ This is a wrapper around GNU =pass=.
 #+end_src
 ** =sudo=
 #+NAME: sudo
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/quickmenu")
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/sudo") :noweb yes
   #!/usr/bin/env bash
 
-  choices=(
-      "Algorithms"
-  )
+  # Sudo but with a hook that sends a notification when the prompt is shown
 
-  choice="$(printarg "${choices[@]}" | dmenu)"
+  tmpfile="$(mktemp -t sudo_askpass.XXXXXXXXXXXXXX)"
+  cat > "$tmpfile" <<EOF
+  <<sudo-askpass>>
+  EOF
 
-  case "$choice" in
-      "Algorithms")
-          zathura ~/data/knowledge/literature/prog/"Thomas H. Cormen - Introduction to Algorithms (2022).pdf" ;;
-  esac
+  chmod a+x "$tmpfile"
+  SUDO_ASKPASS="$tmpfile" /usr/bin/sudo --askpass "$@"
+
+  status="$?"
+
+  rm -f "$tmpfile"
+
+  exit "$status"
+
 #+end_src
-#+transclude: [[file:~/.haris/private.org::dmenu-quickmenu][dmenu-quickmenu]] 
+#+NAME: sudo-askpass
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+  #!/usr/bin/env bash
+  eval "$(export -p)"
+  notify-send "SUDO" "Please enter your password"
+  echo -n "[sudo] password for $(getent passwd "$USER" | cut -d: -f1): " >&2
+  stty -echo
+  head -1
+  echo >&2
+#+end_src
+* Utilities
+** =printarg=
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+  #!/usr/bin/env sh
 
+  # Print commandline arguments passed to this function each on its own line
+  printf "%s\n" "$@"
+#+end_src
+** =n=
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+  #!/usr/bin/env sh
+
+  # Print n of the received arguments, where n=$1
+
+  [ "$#" = 0 ] && exit 1
+
+  num="$1"
+  shift
+  printarg $(printarg "${@}" | head -"$num")
+#+end_src
+** =diffgpg=
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+  #!/usr/bin/env bash
+
+  # Compare the contents of two GPG encrypted files
+
+  diff <(gpg --decrypt --output - "$1") <(gpg --decrypt --output - "$2") "${@:3}"
+#+end_src
+** =chx=
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+  #!/usr/bin/env sh
+
+  chmod u+x "$@"
+#+end_src
+** =abspath=
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+  #!/usr/bin/env bash
+
+  pushd "$(dirname "$1")" >/dev/null
+  echo "$PWD/$(basename "$1")"
+  popd >/dev/null
+#+end_src
+** =fcmd=
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+  #!/usr/bin/env bash
+
+  type "$@" 2>/dev/null | awk '{print $3}'
+  exit "${PIPESTATUS[0]}"
+#+end_src
+** =lscf=
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+#!/usr/bin/env sh
+
+cat $(fcmd cf) | sed -n 's/\s*\(.*\)).*/\1/p'
+#+end_src
+** =rmws=
+#+begin_src shell :tangle (haris/tangle-home "TODO")
+#!/usr/bin/env sh
+
+# Remove whitespace from a file (or stdin if input is from a pipe) and write the
+# output to stdout (or rewrite the file if the -i option is given)
+
+[ ! -t 0 ] &&\
+    cat | sed 's:\s\+$::' ||\
+    sed 's:\s\+$::' "$@"
+
+#+end_src
+
+* Dmenu
+#+transclude: [[file:~/.haris/private.org::dmenu-quickmenu][dmenu-quickmenu]] 
 * Applications
 ** =cf=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/cf")
+  #!/usr/bin/env sh
+
+  # Look up a configuration file by its user-friendly alias.
+
+  # Note: This script is statically parsed by lscf. Keep its structure intact.
+
+  for arg in "$@"; do
+      case "$arg" in
+          README.org)     echo ~/README.org ;;
+          private.org)    echo ~/.haris/private.org ;;
+          temporary.org)  echo ~/.haris/temporary.org ;;
+          scripts.org)    echo ~/.haris/scripts.org ;;
+          alacritty)      echo ~/.config/alacritty/alacritty.yml ;;
+          shells.org)     echo ~/.haris/shells.org ;;
+          alias-tmp)      echo ~/.alias-tmp ;;
+          alias-gui-tmp)  echo ~/.alias-gui-tmp ;;
+          fish)           echo ~/.config/fish/config.fish ;;
+          fish-private)   echo ~/.config/fish/private.fish ;;
+          fish-tmp)       echo ~/.config/fish/tmp.fish ;;
+          vim)            echo ~/.vimrc ;;
+          vim-theme)      echo ~/.vim/colors/customtheme.vim ;;
+          nvim)           echo ~/.config/nvim/init.vim ;;
+          vifm)           echo ~/.config/vifm/vifmrc ;;
+          vifm-theme)     echo ~/.config/vifm/colors/customtheme.vifm ;;
+          git)            echo ~/.gitconfig ;;
+          gh)             echo ~/.config/gh/config.yml ;;
+          hg)             echo ~/.hgrc ;;
+          i3.org)         echo ~/.config/i3/README.org ;;
+          picom)          echo ~/.config/picom.conf ;;
+          dmenu)          echo ~/.local/bin/dmenu_run ;;
+          firefox)        echo ~/.mozilla/firefox/haris/user.js ;;
+          librewolf)      echo ~/.librewolf/haris/user.js ;;
+          lw-chrome)      echo ~/.librewolf/haris/chrome/userChrome.css ;;
+          tridactyl)      echo ~/.config/tridactyl/tridactylrc ;;
+          schim)          echo ~/.config/schim/schim.conf ;;
+          schim-volatile) echo ~/.config/schim/volatile.conf ;;
+          dunst)          echo ~/.config/dunst/dunstrc ;;
+          tem)            echo ~/.config/tem/config ;;
+          mime)           echo ~/.config/mimeapps.list ;;
+          zathura)        echo ~/.config/zathura/zathurarc ;;
+          emacs)          echo ~/.haris/emacs.org ;;
+          spacemacs)      echo ~/.spacemacs ;;
+          cron)           echo ~/.crontab ;;
+          octave)         echo ~/.octaverc ;;
+          python)         echo ~/.startup.py ;;
+          gtk2)           echo ~/.gtkrc-2.0.mine ;;
+          gtk3)           echo ~/.config/gtk-3.0/settings.ini ;;
+          gtk3-bookmarks) echo ~/.config/gtk-3.0/bookmarks ;;
+          tuterm)         echo ~/.config/tuterm/config.sh ;;
+          xinit)          echo ~/.xinitrc ;;
+          sxhkd)          echo ~/.config/sxhkd/sxhkdrc ;;
+          mpv)            echo ~/.config/mpv/mpv.conf ;;
+          mpv-input)      echo ~/.config/mpv/input.conf ;;
+          flameshot)      echo ~/.config/flameshot/flameshot.ini ;;
+          cheat)          echo ~/.config/cheat/conf.yml ;;
+          monero)         echo ~/.config/monero-project/monero-core.conf ;;
+          xmrig)          echo ~/.config/xmrig.json ;;
+      esac
+  done
+#+end_src
 * Miscellaneous
 ** =aurvote=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/aurvote")
-#!/usr/bin/env sh
+  #!/usr/bin/env sh
 
-ssh aur@aur.archlinux.org vote "$@"
+  ssh aur@aur.archlinux.org vote "$@"
 #+end_src
 ** TODO sxhkd
 TODO: move to main README
@@ -215,3 +360,9 @@ Returns the second executable with the given name, looked up in execpath.
 # Local Variables:
 # org-confirm-babel-evaluate: nil
 # End:
+
+* Templates
+** =TODO=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/TODO")
+
+#+end_src

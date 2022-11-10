@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-type "$@" 2>/dev/null | awk '{print $3}'
-exit "${PIPESTATUS[0]}"

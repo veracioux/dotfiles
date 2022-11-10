@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-
-# Print n of the received arguments, where n=$1
-
-[ "$#" = 0 ] && exit 1
-
-num="$1"
-shift
-printarg $(printarg "${@}" | head -"$num")
