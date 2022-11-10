@@ -95,17 +95,21 @@ hints:
 
 key_bindings:
 
-- { key: U,     mods: Alt,      action: ScrollPageUp,   mode: ~AppCursor }
-- { key: D,     mods: Alt,      action: ScrollPageDown, mode: ~AppCursor }
-- { key: J,     mods: Alt,      action: ScrollLineDown, mode: ~AppCursor }
-- { key: K,     mods: Alt,      action: ScrollLineUp,   mode: ~AppCursor }
-- { key: H,     mods: Alt,      chars: "\x1b[D"                          }
-- { key: L,     mods: Alt,      chars: "\x1b[C"                          }
-  #- { key: P,     mods: Control,  chars: "\x1b[A",        mode: ~AppCursor }
-  #- { key: N,     mods: Control,  chars: "\x1b[B",        mode: ~AppCursor }
-- { key: Space, mods: Control,  action: ToggleViMode,   mode: ~AppCursor }
-- { key: Key4,  mods: Shift,    action: Last,           mode: Vi }
-- { key: Key4,                  action: Last,           mode: Vi }
+- { key: U,     mods: Alt,      action: ScrollPageUp,     mode: ~AppCursor }
+- { key: D,     mods: Alt,      action: ScrollPageDown,   mode: ~AppCursor }
+- { key: J,     mods: Alt,      action: ScrollLineDown,   mode: ~AppCursor }
+- { key: K,     mods: Alt,      action: ScrollLineUp,     mode: ~AppCursor }
+- { key: H,     mods: Alt,      chars: "\x1b[D"                            }
+- { key: L,     mods: Alt,      chars: "\x1b[C"                            }
+- { key: T,     mods: Alt,      action: SpawnNewInstance, mode: ~AppCursor }
+
+# These allow me to use Ctrl + N/P to navigate the command history in shells
+# where I can't make custom bindings (e.g. in docker containers)
+- { key: P,     mods: Control,  chars: "\x1b[A",          mode: ~AppCursor }
+- { key: N,     mods: Control,  chars: "\x1b[B",          mode: ~AppCursor }
+- { key: Space, mods: Control,  action: ToggleViMode,     mode: ~AppCursor }
+- { key: Key4,  mods: Shift,    action: Last,             mode: Vi }
+- { key: Key4,                  action: Last,             mode: Vi }
 # Alt+X deletes current character
-- { key: X,     mods: Alt,      chars: "\x1b[3~",       mode: ~AppCursor }
+- { key: X,     mods: Alt,      chars: "\x1b[3~",         mode: ~AppCursor }
 
