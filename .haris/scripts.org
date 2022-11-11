@@ -166,7 +166,7 @@ This is a wrapper around GNU =pass=.
 
 #+end_src
 #+NAME: sudo-askpass
-#+begin_src shell :tangle (haris/tangle-home "TODO")
+#+begin_src shell :tangle no
   #!/usr/bin/env bash
   eval "$(export -p)"
   notify-send "SUDO" "Please enter your password"
@@ -175,16 +175,51 @@ This is a wrapper around GNU =pass=.
   head -1
   echo >&2
 #+end_src
-* Utilities
-** =printarg=
-#+begin_src shell :tangle (haris/tangle-home "TODO")
+** =alacritty=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty")
   #!/usr/bin/env sh
 
-  # Print commandline arguments passed to this function each on its own line
-  printf "%s\n" "$@"
+  WINIT_X11_SCALE_FACTOR=1.5 /usr/bin/alacritty "$@"
+  #WINIT_X11_SCALE_FACTOR=1.5 prime-run /usr/bin/alacritty "$@"
+#+end_src
+* Utilities
+** =abspath=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/abspath")
+  #!/usr/bin/env bash
+
+  pushd "$(dirname "$1")" >/dev/null
+  echo "$PWD/$(basename "$1")"
+  popd >/dev/null
+#+end_src
+** =chx=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/chx")
+  #!/usr/bin/env sh
+
+  chmod u+x "$@"
+#+end_src
+** =diffgpg=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/diffgpg")
+  #!/usr/bin/env bash
+
+  # Compare the contents of two GPG encrypted files
+
+  diff <(gpg --decrypt --output - "$1") <(gpg --decrypt --output - "$2") "${@:3}"
+#+end_src
+** =fcmd=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/fcmd")
+  #!/usr/bin/env bash
+
+  type "$@" 2>/dev/null | awk '{print $3}'
+  exit "${PIPESTATUS[0]}"
+#+end_src
+** =lscf=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/lscf")
+  #!/usr/bin/env sh
+
+  cat $(fcmd cf) | sed -n 's/\s*\(.*\)).*/\1/p'
 #+end_src
 ** =n=
-#+begin_src shell :tangle (haris/tangle-home "TODO")
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/n")
   #!/usr/bin/env sh
 
   # Print n of the received arguments, where n=$1
@@ -195,56 +230,29 @@ This is a wrapper around GNU =pass=.
   shift
   printarg $(printarg "${@}" | head -"$num")
 #+end_src
-** =diffgpg=
-#+begin_src shell :tangle (haris/tangle-home "TODO")
-  #!/usr/bin/env bash
-
-  # Compare the contents of two GPG encrypted files
-
-  diff <(gpg --decrypt --output - "$1") <(gpg --decrypt --output - "$2") "${@:3}"
-#+end_src
-** =chx=
-#+begin_src shell :tangle (haris/tangle-home "TODO")
+** =printarg=
+#+begin_src shell :tangle (haris/tangle-home "local/bin/printarg")
   #!/usr/bin/env sh
 
-  chmod u+x "$@"
-#+end_src
-** =abspath=
-#+begin_src shell :tangle (haris/tangle-home "TODO")
-  #!/usr/bin/env bash
-
-  pushd "$(dirname "$1")" >/dev/null
-  echo "$PWD/$(basename "$1")"
-  popd >/dev/null
-#+end_src
-** =fcmd=
-#+begin_src shell :tangle (haris/tangle-home "TODO")
-  #!/usr/bin/env bash
-
-  type "$@" 2>/dev/null | awk '{print $3}'
-  exit "${PIPESTATUS[0]}"
-#+end_src
-** =lscf=
-#+begin_src shell :tangle (haris/tangle-home "TODO")
-#!/usr/bin/env sh
-
-cat $(fcmd cf) | sed -n 's/\s*\(.*\)).*/\1/p'
+  # Print commandline arguments passed to this function each on its own line
+  printf "%s\n" "$@"
 #+end_src
 ** =rmws=
-#+begin_src shell :tangle (haris/tangle-home "TODO")
-#!/usr/bin/env sh
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/rmws")
+  #!/usr/bin/env sh
 
-# Remove whitespace from a file (or stdin if input is from a pipe) and write the
-# output to stdout (or rewrite the file if the -i option is given)
+  # Remove whitespace from a file (or stdin if input is from a pipe) and write the
+  # output to stdout (or rewrite the file if the -i option is given)
 
-[ ! -t 0 ] &&\
-    cat | sed 's:\s\+$::' ||\
-    sed 's:\s\+$::' "$@"
+  [ ! -t 0 ] &&\
+      cat | sed 's:\s\+$::' ||\
+          sed 's:\s\+$::' "$@"
 
 #+end_src
 
 * Dmenu
 #+transclude: [[file:~/.haris/private.org::dmenu-quickmenu][dmenu-quickmenu]] 
+# Leave this line empty - otherwise transclusion might hoist the next section up
 * Applications
 ** =cf=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cf")
@@ -308,6 +316,153 @@ cat $(fcmd cf) | sed -n 's/\s*\(.*\)).*/\1/p'
       esac
   done
 #+end_src
+** =elisp=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/elisp")
+  #!/usr/bin/env sh
+
+  myemacs --eval "(ielm)" "$@"
+#+end_src
+** =eoctave=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/elisp")
+  #!/usr/bin/env sh
+
+  # Run octave interpreter through emacs
+
+  myemacs --eval "(progn (run-octave) (delete-other-windows))" "$@"
+#+end_src
+** =epyhon=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/epython")
+  #!/usr/bin/env sh
+
+  # Run a python interpreter through emacs
+
+  myemacs --eval "(progn (run-python) (delete-other-windows))" "$@"
+#+end_src
+** =eterm=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/eterm")
+  #!/usr/bin/env sh
+
+  # Run an emacs-hosted terminal via vterm
+
+  myemacs -c --eval '(multi-vterm)' "$@"
+#+end_src
+** =magit=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/magit")
+  #!/usr/bin/env sh
+
+  myemacs -c --frame-parameters='(quote (name . "EmacsFloat"))' \
+          --eval "(progn (cd \"$PWD\") (magit-status) (delete-other-windows))" \
+          >/dev/null 2>&1 &
+#+end_src
+** =qr=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/qr")
+  #!/usr/bin/env bash
+
+  # Copy, show or open the argument based on its content
+  copy_or_show_or_open() {
+      notify-send 'QR Code:' "$@"
+      echo "$1" | xsel -b
+      if echo "$1" | grep -q '^https://'; then
+          firefox --new-tab "$@"
+      fi
+  }
+
+  if [ "$1" = 'in' ]; then
+      copy_or_show_or_open "$(timeout 10s zbarcam /dev/video0 -1 | sed 's/^QR-Code://')"
+  elif [ "$1" = 'screen' -o "$1" = 's' ]; then
+      copy_or_show_or_open "$(zbarimg -q <(flameshot screen --raw) | sed 's/^QR-Code://')"
+  else # out
+      if [ -t 0 ] || [ "$TERM" = 'linux' ]; then
+          input="$(xsel -b -o)"
+      else
+          input="$(cat)"
+      fi
+      echo "$input" | qrencode -s 10 -o - | feh -
+  fi
+#+end_src
+* System maintenance
+** =texclean=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/texclean")
+  #!/bin/bash
+
+  # Array of extensions
+  extarray=($(sed -e '/^#/d' -e '/^$/d' ~/templates/latex/ignored_files))
+
+  if [ "$1" == '-r' ]; then
+      shopt -s globstar
+      rm -f ${extarray[*]/#/\*\*\/\*.} # **/*.extension
+  else
+      rm -f ${extarray[*]/#/\*.} # **/*.extension
+  fi
+
+  exit
+#+end_src
+** =springclean=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/springclean")
+  #!/usr/bin/env sh
+
+  docker system prune
+  docker volume prune
+
+  rm -rf ~/.local/share/Trash
+  rm -rf ~/.local/share/*.xbel*
+
+  # I think this is created by KDE plasma
+  rm -rf ~/.local/share/baloo
+#+end_src
+** =createhome=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/springclean")
+  #!/usr/bin/env sh
+
+  # Top level home directory
+  dirs=(
+      src
+      tmp
+      repo
+  )
+  mkdir -p "${dirs[@]}"
+
+  mkdir -p ~/mnt
+  cd ~/mnt
+
+  dirs=(
+      cloud
+      hdd
+      phone
+      ssd
+      usb
+      usb-guest
+      usbs
+      usbd
+      usbc
+      vm
+  )
+
+  mkdir -p "${dirs[@]}"
+
+#+end_src
+** =cleanhome=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/cleanhome")
+  #!/usr/bin/env sh
+
+  # Clean home of directories like Downloads, Documents, regularly created by who
+  # knows.
+
+  rmdir ~/Desktop ~/Downloads ~/Documents ~/Pictures ~/Videos ~/Music \
+        ~/Templates ~/Public ~/'VirtualBox VMs' ~/mpv_slicing.log
+#+end_src
+** =cleantex=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/cleantex")
+  #!/usr/bin/env bash
+
+  # A script to clean tex build files
+
+  shopt -s globstar
+
+  rm **/*.aux **/*.log **/*.toc **/*.bbl **/*.fls **/*.idx **/*.ilg **/*.ind \
+     ,**/*.nlo **/*.out **/*.synctex.gz **/*.fdb_latexmk 2>&1 | grep -v \
+                                                                    'No such file or directory'
+#+end_src
 * Miscellaneous
 ** =aurvote=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/aurvote")
@@ -363,6 +518,6 @@ Returns the second executable with the given name, looked up in execpath.
 
 * Templates
 ** =TODO=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/TODO")
-
-#+end_src
+# #+begin_src shell :tangle (haris/tangle-home ".local/bin/.local/bin/TODO")
+#
+# #+end_src

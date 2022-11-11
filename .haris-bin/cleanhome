@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-# Clean home of directories like Downloads, Documents, regularly created by who
-# knows.
-
-rmdir ~/Desktop ~/Downloads ~/Documents ~/Pictures ~/Videos ~/Music \
-    ~/Templates ~/Public ~/'VirtualBox VMs' ~/mpv_slicing.log

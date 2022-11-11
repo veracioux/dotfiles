@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-
-# Run an emacs-hosted terminal via vterm
-
-myemacs -c --eval '(multi-vterm)' "$@"

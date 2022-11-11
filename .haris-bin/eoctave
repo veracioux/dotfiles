@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-
-# Run octave interpreter through emacs
-
-myemacs --eval "(progn (run-octave) (delete-other-windows))" "$@"

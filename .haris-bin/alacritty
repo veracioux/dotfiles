@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-
-WINIT_X11_SCALE_FACTOR=1.5 /usr/bin/alacritty "$@"
-#WINIT_X11_SCALE_FACTOR=1.5 prime-run /usr/bin/alacritty "$@"
