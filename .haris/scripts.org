@@ -250,10 +250,81 @@ This is a wrapper around GNU =pass=.
 
 #+end_src
 
-* Dmenu
-#+transclude: [[file:~/.haris/private.org::dmenu-quickmenu][dmenu-quickmenu]] 
-# Leave this line empty - otherwise transclusion might hoist the next section up
+** =adhoc=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/adhoc")
+#!/usr/bin/env bash
+
+# Create an ad-hoc file, edit it in $EDITOR and then print its path. If a '-'
+# argument is given, the file contents are printed instead of its path.
+
+destdir="/tmp/adhoc-files"
+mkdir -p "$destdir"
+cd "$destdir"
+
+if [ "$#" != 0 ] && [ "$1" = "-" ]; then
+    print_content=true
+    files=("${@:2}")
+else
+    files=("$@")
+fi
+
+# Convert files to realpaths
+readarray -t files < <(realpath "${files[@]}" 2>/dev/null)
+
+if [ -z "$files" ]; then
+    files=("$(mktemp "$destdir"/XXXXXXXXXXX)")
+fi
+
+term --class Float -e fish -c "nvim ${files[*]}"
+
+if [ -n "$print_content" ]; then
+    cat "${files[@]}"
+else
+    realpath "${files[@]}"
+fi
+#+end_src
+** =cmd-with-notify=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/cmd-with-notify")
+#!/usr/bin/env sh
+
+if [ "$TERM" = "linux" ]; then
+    "$@"
+    exit
+fi
+
+"$@" && notify-send "Command $(echo $@) exited successfully." || {
+    err=$?
+    notify-send -u critical "Command $(echo $@) exited with error $err."
+}
+return $err
+#+end_src
+** =xrandr-toggle=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr-toggle")
+#!/usr/bin/env sh
+
+n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
+
+[ "$n" = 1 ] && {\
+    xrandr2 --auto
+    MSG='enabled'
+} || {\
+    xrandr2 --off
+    MSG='disabled'
+}
+[ "$?" = 0 ] && notify-send "second monitor sucessfully $MSG" || notify-send -u "monitor operation unsuccessful"
+#+end_src
+** =xrandr2=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr2")
+  #!/usr/bin/env sh
+
+  # Wrapper for xrandr command with some options applied based on my current
+  # monitor configuration
+
+  xrandr --output HDMI-1-0 "$@" --pos -1920x0
+#+end_src
 * Applications
+These are programs that are meant to be used mostly interactively. As such, they
+are designed to be easily integrated into dmenu scripts.
 ** =cf=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cf")
   #!/usr/bin/env sh
@@ -280,7 +351,7 @@ This is a wrapper around GNU =pass=.
           nvim)           echo ~/.config/nvim/init.vim ;;
           vifm)           echo ~/.config/vifm/vifmrc ;;
           vifm-theme)     echo ~/.config/vifm/colors/customtheme.vifm ;;
-          git)            echo ~/.gitconfig ;;
+          git.org)        echo ~/.haris/git.org ;;
           gh)             echo ~/.config/gh/config.yml ;;
           hg)             echo ~/.hgrc ;;
           i3.org)         echo ~/.config/i3/README.org ;;
@@ -380,10 +451,287 @@ This is a wrapper around GNU =pass=.
       echo "$input" | qrencode -s 10 -o - | feh -
   fi
 #+end_src
+** =rb=
+# TODO: linux-only
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/rb")
+#!/usr/bin/env bash
+# One-time reboot into selected OS
+
+set -e # Quit if any command fails
+
+index="$(grep "menuentry '\|submenu '" /boot/grub/grub.cfg |\
+  grep -v -P '\t' |\
+  grep -i -n "$1" |\
+  head -1 | awk -F':' '{print $1}')"
+
+if [ -z $index ]; then
+  echo "No entry found"
+else
+  index=$(( $index - 1 ))
+  echo "Selected menuentry: $index. Proceed?"
+  read response
+  if [ "$response" == 'y' ]; then
+    sudo grub-reboot $index >/home/haris/src/grublog 2>&1
+    reboot
+  fi
+fi
+#+end_src
+** =viman=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/viman")
+#!/usr/bin/env sh
+
+# Wrapper script for vim which:
+#   1. By default opens vim with a configuration for displaying man pages,
+#       without loading unnecessary plugins
+#   2. If the --floating option is provided, opens a popup window
+
+[ "$1" = '--floating' ] && {
+    shift
+    cat > /dev/shm/viman
+    alacritty --class Float,Alacritty -e fish \
+        -C "cat /dev/shm/viman | nvim --cmd 'let g:haris_man = \"true\"' +Man! $*"
+    rm -f /dev/shm/viman
+} || {
+    nvim --cmd 'let g:haris_man = "true"' +Man! "$@"
+}
+#+end_src
+** =vimdiff=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/vimdiff")
+#!/usr/bin/env sh
+
+# Like regular vimdiff, but in nvim
+
+nvim -d "$@"
+#+end_src
+** =vicc=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/vicc")
+#!/usr/bin/env sh
+
+# Find and open in vim a header file from the default include path
+
+vim "$(echo "#include <$1>" | cpp -H 2>&1 >/dev/null | head -1 | sed 's/^. //')"
+#+end_src
+** =vipydoc=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/vipydoc")
+#!/usr/bin/env sh
+
+# Open alacritty with pydoc in it
+# - All arguments are passed to pydoc
+# - Alacritty window class tracks those defined in my i3 config
+
+alacritty --class Float,Alacritty -e fish -C "pydoc $*" &
+#+end_src
+* Dmenu
+** =Run=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu_run")
+#!/usr/bin/env sh
+
+# If an argument is provided, run corresponding custom dmenu script
+[ -n "$1" ] && ~/.local/lib/dmenu/"$1"
+# Otherwise open a generic dmenu where the user will choose what dmenu script
+# or other program to run
+
+run_script() { ~/.local/lib/dmenu/"$1"; }
+
+extract_aliases() {
+    grep -v '^\s*#' "$@" | sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_"
+}
+
+pull_desktop_apps() {
+    # Print out desktop apps by reading *.desktop files and also cache them
+    sed -n -e '/^Exec=/p'                       \
+        /usr/share/applications/*.desktop       \
+        ~/.local/share/applications/*.desktop   |
+        sed 's/Exec=\(\S*\).*/\1/'              |
+    while read line; do
+        basename $line
+    done                                        |
+    sort | uniq | tee "$cache_file"
+}
+get_desktop_apps() {
+    cache_file=~/.cache/.desktop-apps.txt
+    age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
+    # Refresh the cache only if the file is older than a specified age (seconds)
+    [ ! -f "$cache_file" -o  $age -gt 36000 ] || ! grep -q '^.'    \
+        && pull_desktop_apps                        \
+        || cat "$cache_file"
+    find ~/.local/bin -executable -type f -printf '%f\n'
+}
+get_aliases() {
+    extract_aliases ~/.alias ~/.alias-tmp
+}
+get_gui_aliases() {
+    extract_aliases ~/.alias-gui ~/.alias-gui-tmp
+}
+
+aliases="$(get_aliases)"
+gui_aliases="$(get_gui_aliases)"
+
+# ┏━━━━━━━━━━━━━━━┓
+# ┃ dmenu entries ┃
+# ┗━━━━━━━━━━━━━━━┛
+get_commands() {
+    echo "Open"             # Open an URL or bookmark
+    echo "Search"           # Web search
+    echo "Clipboard"        # Clipboard using clipmenu
+    echo "Snippets"         # Text snippets
+    echo "TODO"             # Open TODO file of a project
+    echo "Mail"             # View mail in browser
+    echo "Windows"          # Choose windows
+    echo "Pacman"           # Package management
+    echo "Color"            # Pick a color
+    echo "Unicode"          # Pick an icon
+    echo "Kill Process"     # Kill process
+    echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
+    echo "Config"           # Open documentation selection
+    echo "System"           # System actions
+    echo "Update cache"     # Update desktop app cache
+    echo "Tem"              # Launch tem development environment
+    echo "Octave"           # Launch octave in emacs
+    echo "Python"           # Launch python interpreter in emacs
+    echo "GPG"              # GPG addresses
+    echo "OTP"              # Genreate OTP for selected service
+    echo "IRC"              # Open emacs client for IRC
+    echo "$aliases"
+    echo "$gui_aliases"
+    get_desktop_apps        # Programs extracted from *.desktop files
+}
+
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ Actions based on user's choice ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+choice="$(get_commands | dmenu $@)"
+case "$choice" in
+    "")
+        exit ;;
+    "Open")
+        run_script open ;;
+    "Search")
+        choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
+        ;;
+    "Clipboard")
+        clipmenu ;;
+    "Snippets")
+        run_script snips ;;
+    "TODO")
+        run_script todo ;;
+    "Mail")
+        run_script mail ;;
+    "Windows")
+        ~/.local/lib/i3/i3-container-commander.py ;;
+    "Pacman")
+        run_script pacman ;;
+    "Color")
+        run_script color ;;
+    "Unicode")
+        run_script unicode ;;
+    "Kill Process")
+        run_script pkill ;;
+    "Fix Wifi")
+        fix-wifi ;;
+        #nmcli networking off; sleep 6; nmcli networking on ;;
+    "Config")
+        run_script config ;;
+    "System")
+        run_script system ;;
+    "Update cache")
+        rm ~/.cache/.desktop-apps.txt ;;
+    "Tem")
+        alacritty -e fish -C 'pj tem; clear' ;;
+    "Octave")
+        eoctave -c ;;
+    "Python")
+        epython -c ;;
+    "GPG")
+        run_script gpg ;;
+    "OTP")
+        run_script otp ;;
+    "IRC")
+        myemacs --socket-name="irc" -c ;;
+    # The rest: aliases and regular commands
+    *)
+        # If the command is an aliased GUI program, just run it
+        for al in $gui_aliases; do
+            if [ "$choice" = "$al" ]; then
+                fish -C "$choice"    # Fish is the only shell that works here
+                exit
+            fi
+        done
+        # If the command is an aliased CLI program, open it in fish
+        for al in $aliases; do
+            if [ "$choice" = "$al" ]; then
+                guirun alacritty --class Float,Alacritty -e fish -C "$choice"
+                exit
+            fi
+        done
+        # Fallback, if the entry matches none of the above, just run the command
+        fish -C "cmd-with-notify $choice"
+        ;;
+esac
+#+end_src
+** =Config=
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/config")
+#!/usr/bin/env python3
+
+from subprocess import run, PIPE
+import os
+import os.path
+import sys
+
+# Load regular configuration entries
+entries = run('lscf', stdout=PIPE, encoding='utf-8').stdout.replace('-', ' ')
+# Load dmenu scripts
+dmenu_scripts = os.listdir(os.path.expanduser('~/.local/lib/dmenu/'))
+
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ Additional entries and customization ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+entries = ' Edit...\n' +                               \
+          ' ' + entries.replace('\n', '\n ') +        \
+          'dmenu ' + '\n dmenu '.join(dmenu_scripts)
+
+# Run dmenu
+choice = run(['dmenu', '-l', '20',  '-p', 'Config:'],
+             input=entries, encoding='utf-8', stdout=PIPE).stdout
+
+if not choice:
+    sys.exit()
+
+# Strip decoration from the entry
+choice = choice[2:-1].replace(' ', '-')
+
+def run_command(cmd):
+    run(['alacritty', '--class', 'Float,Alacritty', '-e',
+         'fish', '-C', cmd])
+
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ Actions based on user's choice ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+if choice.startswith('dmenu-'):
+    run_command('cd (dirname ' + __file__ + '); vim ' + choice.replace(
+        'dmenu-',
+        os.path.expanduser('~/.local/lib/dmenu/')
+    ))
+elif choice == 'Edit...':
+    EVAL = '''
+        (progn (find-file "~/.haris/scripts.org")
+               (goto-char (org-find-property "CUSTOM_ID" "cf")))
+    '''
+    run(["myemacs-float", "--create-frame", "--eval", EVAL])
+else:
+    if 'emacs' in choice or choice.endswith('.el') or choice.endswith('.org'):
+        run("fish -c 'ecf {}'".format(choice), shell=True)
+    else:
+        run_command('cdcf {0}; vicf {0}'.format(choice))
+sys.exit()
+#+end_src
+** =Quickmenu=
+#+transclude: [[file:~/.haris/private.org::dmenu-quickmenu][dmenu-quickmenu]] 
+# Leave this line empty - otherwise transclusion might hoist the next section up
 * System maintenance
 ** =texclean=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/texclean")
-  #!/bin/bash
+  #!/usr/bin/env bash
 
   # Array of extensions
   extarray=($(sed -e '/^#/d' -e '/^$/d' ~/templates/latex/ignored_files))
@@ -462,6 +810,82 @@ This is a wrapper around GNU =pass=.
   rm **/*.aux **/*.log **/*.toc **/*.bbl **/*.fls **/*.idx **/*.ilg **/*.ind \
      ,**/*.nlo **/*.out **/*.synctex.gz **/*.fdb_latexmk 2>&1 | grep -v \
                                                                     'No such file or directory'
+#+end_src
+** =tangle=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle") :noweb yes
+  #!/usr/bin/env bash
+
+  # Tangle all code blocks from the given file
+  # Usage: tangle FILENAME
+
+  tmpfile="$(mktemp -t XXXXXXXXXXX)"
+
+  cat > "$tmpfile" <<EOF
+    <<tangle-helper>>
+  EOF
+
+  cat "$tmpfile"
+  echo
+
+  emacs --script "$tmpfile"
+
+  rm -f "$tmpfile"
+
+  # vim: filetype=sh
+#+end_src
+*** Helper code that tangles
+#+NAME: tangle-helper
+#+begin_src emacs-lisp :results none
+(require 'ob-tangle)
+; (with-temp-buffer (progn (insert-file-contents "~/" nil nil nil t)))
+(org-babel-tangle-file "$1")
+#+end_src
+** =tangle-all=
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".local/bin/tangle-all")
+#!/usr/bin/emacs --script
+
+; Tangle config files written in org format. Output dotfiles are saved to
+; /tmp/tangle-$USER and dependency installation scripts are saved to
+; /tmp/dependencies-$USER. If this script is not running in a docker container, the
+; files will be deleted.
+
+(setq tangle-home (concat "/tmp/tangle-" (user-login-name)))
+
+(shell-command (concat "rm -rf " tangle-home))
+
+(require 'ob-tangle)
+
+(org-babel-tangle-file "~/README.org")
+(org-babel-tangle-file "~/.shells.org")
+(org-babel-tangle-file "~/.emacs.d/haris-config.org")
+(org-babel-tangle-file "~/.config/i3/README.org")
+
+(shell-command (concat "rsync -rvu " tangle-home " ~/"))
+
+; vim: filetype=lisp
+#+end_src
+** TODO =bootstrap=
+- Soon to be obsolete
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/bootstrap")
+#!/usr/bin/env sh
+
+# Clone my dotfiles repo into $HOME/.cfg, as per my usual strategy
+
+conf() {
+    git --work-tree="$HOME" --git-dir="$HOME/.cfg" "$@"
+}
+
+conf clone https://github.com/veracioux/dotfiles --bare "$HOME/.cfg"
+
+conf remote set-url origin_ro https://github.com/veracioux/dotfiles
+conf remote set-url origin git@github.com:veracioux/dotfiles
+conf checkout
+
+touch ~/.alias-tmp
+touch ~/.alias-gui-tmp
+touch ~/.sxhkd.tmp
+
+touch ~/.config/fish/tmp.fish
 #+end_src
 * Miscellaneous
 ** =aurvote=

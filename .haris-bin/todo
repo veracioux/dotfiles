@@ -1,3 +1,0 @@
-#!/bin/bash
-
-myemacs -c ~/data/personal/todo.org & disown
