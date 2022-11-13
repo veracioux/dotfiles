@@ -77,7 +77,7 @@ if choice[2:] == 'Edit...': # Open this file for editing
     run(['alacritty', '--class', 'Float,Alacritty', '-e', 'fish', '-C',
          'cd (dirname ' + __file__ + '); vim -c "norm 45z." ' + __file__])
 elif choice[2:] == 'FontAwesome...':
-    run(['firefox', '-P', 'minimal', 'https://fontawesome.com/cheatsheet'])
+    run(['firefox', 'https://fontawesome.com/cheatsheet'])
 elif choice[2:] == 'From code...':
     p = run(['dmenu', '-p', 'Code:'], stdout=PIPE, input=char_entries, encoding='utf-8')
     open('/home/haris/src/testlog', 'w').write(choice)

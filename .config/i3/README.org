@@ -4,10 +4,20 @@
   # -*- mode: emacs-lisp-mode; -*- vim: filetype=i3 shiftwidth=2
 #+end_src
 
+* Quick interaction                                                :noexport:
+- [[~/.config/i3/config][Tangled destination file]].
+
+Execute the following call to tangle this file and apply changes:
+#+CALL: tangle-and-apply()
+
+#+NAME: tangle-and-apply
+#+begin_src emacs-lisp :tangle no :results none
+  (haris/tangle)
+  (shell-command "i3-msg -t command reload")
+#+end_src
 * Helper scripts and local variables
-#+PROPERTIES
+#+PROPERTIES:
 :header-args: :results output :mkdirp yes
-#+END
 
 NOTE: See local variables defined [[*Local variables][at the bottom]]. /I would really like to define
 them in a babel code block, but I don't know how or if it's possible at all./
@@ -26,14 +36,14 @@ These scripts are used in the other sections:
   pactl set-source-mute "$(pactl get-default-source)" toggle
 #+end_src
 
-This code block wraps elisp's =eval= function so it can be called using noweb.
+This code block wraps elisp's =eval= function so it can be called using noweb. It
+evaluates the symbol specified as its =symbol= argument.
 #+NAME: eval
-#+begin_src emacs-lisp :var arg="nil" :cache yes :exports none :tangle no
-(eval (car (read-from-string arg)))
+#+begin_src emacs-lisp :var symbol="nil" :exports none :tangle no
+  (eval (car (read-from-string symbol)))
 #+end_src
-
-#+RESULTS[1983f503b47e686cea6cc9ca713ebe0f82b9862c]: eval
-
+# Test: must output path to mic-mute-toggle script
+#+CALL: eval(symbol="mic-mute-toggle-filename") :results silent
 * Variable definitions
 #+begin_src i3wm-config
   # vim: filetype=i3
@@ -84,6 +94,7 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
   set $mode_qr      " QR [i]n [o]ut [s]creen"
   set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle"
   set $mode_mic     " Microphone [+] [-] [m]ute"
+  set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term"
 #+end_src
 * Visuals
 #+begin_src i3wm-config
@@ -148,7 +159,7 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
   bindsym $mod+Shift+l      move right    30
 
   # Layout manipulation
-  bindsym $mod+e            fullscreen toggle
+  bindsym $mod+f            fullscreen toggle
   bindsym $mod+Shift+space  floating toggle
   bindsym $mod+b            bar mode toggle
 
@@ -160,100 +171,114 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
   bindsym $mod+g            move position center
 
   mode $mode_resize {
-    bindsym w               resize  shrink  width   1
-    bindsym Shift+w         resize  grow    width   1
-    bindsym h               resize  shrink  height  1
-    bindsym Shift+h         resize  grow    height  1
+  bindsym w               resize  shrink  width   1
+  bindsym Shift+w         resize  grow    width   1
+  bindsym h               resize  shrink  height  1
+  bindsym Shift+h         resize  grow    height  1
 
-    bindsym plus            resize  grow    width   20; move position center
-    bindsym Shift+plus      resize  grow    height  20; move position center
-    bindsym minus           resize  shrink  width   20; move position center
-    bindsym Shift+minus     resize  shrink  height  20; move position center
+  bindsym plus            resize  grow    width   20; move position center
+  bindsym Shift+plus      resize  grow    height  20; move position center
+  bindsym minus           resize  shrink  width   20; move position center
+  bindsym Shift+minus     resize  shrink  height  20; move position center
 
-    # equal key on my keyboard
-    bindsym Shift+0         exec --no-startup-id i3_balance_workspace
+  # equal key on my keyboard
+  bindsym Shift+0         exec --no-startup-id i3_balance_workspace
 
-    bindsym t               $resize_term; mode default
+  bindsym t               $resize_term; mode default
 
-    # Some standard sizes
-    bindsym 0               $resizeW0
-    bindsym Shift+0         $resizeH0
-    bindsym 1               $resize1; move position center
-    bindsym Shift+1         $resize1
-    bindsym 2               $resize2; move position center
-    bindsym Shift+2         $resize2
-    bindsym 3               $resize3; move position center
-    bindsym Shift+3         $resize3
-    bindsym 4               $resize4; move position center
-    bindsym Shift+4         $resize4
+  # Some standard sizes
+  bindsym 0               $resizeW0
+  bindsym Shift+0         $resizeH0
+  bindsym 1               $resize1; move position center
+  bindsym Shift+1         $resize1
+  bindsym 2               $resize2; move position center
+  bindsym Shift+2         $resize2
+  bindsym 3               $resize3; move position center
+  bindsym Shift+3         $resize3
+  bindsym 4               $resize4; move position center
+  bindsym Shift+4         $resize4
 
-    # Back to normal: Enter or Escape or $mod+r
-    bindsym Escape          mode default
+  # Back to normal: Enter or Escape or $mod+r
+  bindsym Escape          mode default
   }
   bindsym $mod+r            mode $mode_resize
 
   mode $mode_session {
-    bindsym r               reload
-    bindsym Ctrl+r          restart
-    bindsym q               exit
-    bindsym k               exec --no-startup-id kbind
-
-    bindsym Escape          mode default
+  bindsym r               reload
+  bindsym Ctrl+r          restart
+  bindsym q               exit
+  bindsym k               exec --no-startup-id kbind
+  bindsym Escape          mode default
+  bindsym $mod+period     mode default
   }
-  bindsym $mod+period       mode $mode_session
+  bindsym $mod+period     mode $mode_session
 
   mode $mode_wm {
-    bindsym h               split h
-    bindsym v               split v
-    bindsym period          layout toggle split
-    bindsym s               layout stacking
-    bindsym t               layout tabbed
-    bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
-    bindsym a               exec --no-startup-id \
-                              "pgrep autotiling && pkill autotiling || autotiling"
-    bindsym x               exec xrandr-toggle; mode "default"
-    bindsym 1               move workspace to output eDP-1
-    bindsym 2               move workspace to output HDMI-1-0
+  bindsym h               split h
+  bindsym v               split v
+  bindsym period          layout toggle split
+  bindsym s               layout stacking
+  bindsym t               layout tabbed
+  bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
+  bindsym a               exec --no-startup-id \
+  "pgrep autotiling && pkill autotiling || autotiling"
+  bindsym x               exec xrandr-toggle; mode "default"
+  bindsym 1               move workspace to output eDP-1
+  bindsym 2               move workspace to output HDMI-1-0
 
-    bindsym Escape          mode default
+  bindsym Escape          mode default
   }
   bindsym $mod+s            mode $mode_wm
 
   mode $mode_qr {
-    bindsym i               exec --no-startup-id "qr in"
-    bindsym o               exec --no-startup-id "qr out"
-    bindsym s               exec --no-startup-id "qr screen"
+  bindsym i               exec --no-startup-id "qr in"
+  bindsym o               exec --no-startup-id "qr out"
+  bindsym s               exec --no-startup-id "qr screen"
 
-    bindsym Escape          mode default
+  bindsym Escape          mode default
   }
   bindsym $mod+Shift+q      mode $mode_qr
 
   mode $mode_org {
-    bindsym t               exec --no-startup-id "myemacs-float ~/data/personal/todo.org"; mode default
-    bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org"; \
-                              mode default
-    bindsym j               exec --no-startup-id "myemacs-float ~/wiki/journal.org"; \
-                              mode default
-    bindsym n               exec --no-startup-id "myemacs-float ~/wiki/notes.org"; \
-                              mode default
-    bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org"; \
-                              mode default
-    bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org"; \
-                              mode default
+  bindsym t               exec --no-startup-id "myemacs-float ~/data/personal/todo.org"; mode default
+  bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org"; \
+  mode default
+  bindsym j               exec --no-startup-id "myemacs-float ~/wiki/journal.org"; \
+  mode default
+  bindsym n               exec --no-startup-id "myemacs-float ~/wiki/notes.org"; \
+  mode default
+  bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org"; \
+  mode default
+  bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org"; \
+  mode default
 
-    bindsym Escape          mode default
+  bindsym Escape          mode default
   }
   bindsym $mod+Shift+o      mode $mode_org
 
   mode $mode_mic {
-    bindsym plus            exec --no-startup-id '<<eval(arg="mic-volume-up-filename")>>'
-    bindsym minus           exec --no-startup-id '<<eval(arg="mic-volume-down-filename")>>'
-    bindsym m               exec --no-startup-id '<<eval(arg="mic-mute-toggle-filename")>>'
+  bindsym plus            exec --no-startup-id '<<eval(symbol="mic-volume-up-filename")>>'
+  bindsym minus           exec --no-startup-id '<<eval(symbol="mic-volume-down-filename")>>'
+  bindsym m               exec --no-startup-id '<<eval(symbol="mic-mute-toggle-filename")>>'
 
-    bindsym Escape          mode default
+  bindsym Escape          mode default
+  bindsym F9              mode default
   }
-  # TODO
   bindsym F9 mode $mode_mic
+
+  mode $mode_emacs {
+  bindsym p              exec --no-startup-id sh -c 'TERM=menu epython', mode default
+  bindsym o              exec --no-startup-id sh -c 'TERM=menu eoctave'; mode default
+  bindsym i              exec --no-startup-id sh -c 'TERM=menu erc',     mode default
+  bindsym d              exec --no-startup-id sh -c 'TERM=menu edocker', mode default
+  bindsym e              exec --no-startup-id sh -c 'TERM=menu elisp',   mode default
+  bindsym Return         exec --no-startup-id sh -c 'TERM=menu eterm',   mode default
+  # TODO: make a way (script?) to open magit for the currently active project
+  #bindsym g              exec --no-startup-id magit; mode default
+  bindsym Escape         mode default
+  bindsym $mod+e         mode default
+  }
+  bindsym $mod+e mode $mode_emacs
 #+end_src
 * Workspaces
 #+begin_src i3wm-config
@@ -358,8 +383,6 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
   for_window [title="EmacsFloat" floating]              move position center
   for_window [title="EmacsFloat"]                       move scratchpad
   for_window [title="EmacsFloat"]                       scratchpad show
-
-  # Emacs magit
 
   # Octave plots
   for_window [class="GNU Octave"]                       floating enable
@@ -503,13 +526,13 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
   # ß
 
   general {
-    output_format   = "i3bar"
-    colors          = true
-    color_good      = "#98eb98"
-    color_degraded  = "#f2b374"
-    color_bad       = "#ff5555"
-    markup          = "pango"
-    interval        = 1
+  output_format   = "i3bar"
+  colors          = true
+  color_good      = "#98eb98"
+  color_degraded  = "#f2b374"
+  color_bad       = "#ff5555"
+  markup          = "pango"
+  interval        = 1
   }
 
   order += "volume master"
@@ -526,104 +549,104 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
   order += "tztime localtime"
 
   volume master {
-    format         = "  %volume "
-    format_muted   = "  %volume "
+  format         = "  %volume "
+  format_muted   = "  %volume "
   }
 
   wireless _first_ {
-    format_up      = "  %quality"
-    format_down    = "  "
-    separator      = false
+  format_up      = "  %quality"
+  format_down    = "  "
+  separator      = false
   }
 
   ethernet _first_ {
-    format_up      = "  %speed "
-    format_down    = ""
+  format_up      = "  %speed "
+  format_down    = ""
   }
 
   battery all {
-    format_down     = ""
-    status_full     = "<span color='#98eb98'> </span>"
-    status_bat      = " "
-    status_chr      = "<span color='#f2b374'></span>"
-    format          = " %status %percentage %remaining "
-    threshold_type  = "percentage"
-    low_threshold   = "30"
+  format_down     = ""
+  status_full     = "<span color='#98eb98'> </span>"
+  status_bat      = " "
+  status_chr      = "<span color='#f2b374'></span>"
+  format          = " %status %percentage %remaining "
+  threshold_type  = "percentage"
+  low_threshold   = "30"
   }
 
   disk "/" {
-    format = " <span color='#d098ff'></span> <span color='#f298c3'>/</span> %avail "
-    prefix_type           = binary
-    low_threshold         = 20
-    threshold_type        = "gbytes_avail"
-    separator             = false
-    separator_block_width = -6
+  format = " <span color='#d098ff'></span> <span color='#f298c3'>/</span> %avail "
+  prefix_type           = binary
+  low_threshold         = 20
+  threshold_type        = "gbytes_avail"
+  separator             = false
+  separator_block_width = -6
   }
 
   disk "/home/haris/data" {
-    format                = " <span color='#f298c3'>D:</span> %avail "
-    prefix_type           = binary
-    low_threshold         = 30
-    threshold_type        = "gbytes_avail"
-    separator             = false
-    separator_block_width = -6
+  format                = " <span color='#f298c3'>D:</span> %avail "
+  prefix_type           = binary
+  low_threshold         = 30
+  threshold_type        = "gbytes_avail"
+  separator             = false
+  separator_block_width = -6
   }
 
   disk "/home/haris/mnt/vm" {
-    format                = " <span color='#f2b374'></span> %avail "
-    prefix_type           = binary
-    low_threshold         = 15
-    threshold_type        = "gbytes_avail"
+  format                = " <span color='#f2b374'></span> %avail "
+  prefix_type           = binary
+  low_threshold         = 15
+  threshold_type        = "gbytes_avail"
   }
 
 
   memory {
-    format                = "  %available"
-    threshold_degraded    = "2G"
-    threshold_critical    = "1G"
-    format_degraded       = " M: %available "
+  format                = "  %available"
+  threshold_degraded    = "2G"
+  threshold_critical    = "1G"
+  format_degraded       = " M: %available "
   }
 
   cpu_usage {
-    format                = " %usage "
-    max_threshold         = "90"
-    degraded_threshold    = "60"
-    separator             = false
-    separator_block_width = -2
+  format                = " %usage "
+  max_threshold         = "90"
+  degraded_threshold    = "60"
+  separator             = false
+  separator_block_width = -2
   }
 
   cpu_temperature 3 {
-    format                 = "<span color='#6980fa'></span> %degrees °C"
-    format_above_threshold = " <span color='#ff8c8c'></span> %degrees °C "
-    max_threshold          = 70
+  format                 = "<span color='#6980fa'></span> %degrees °C"
+  format_above_threshold = " <span color='#ff8c8c'></span> %degrees °C "
+  max_threshold          = 70
   }
 
   tztime localdate {
-    format = " <span color='#d098ff'> %Y-%m-%d</span>"
+  format = " <span color='#d098ff'> %Y-%m-%d</span>"
   }
 
   tztime localtime {
-    format = " <span color='#f298c3'>  %H:%M:%S</span> "
-  }
-
-
-  tztime localtime {
-    format = " <span color='#f298c3'>  %H:%M:%S</span> "
+  format = " <span color='#f298c3'>  %H:%M:%S</span> "
   }
 
 
   tztime localtime {
-    format = " <span color='#f298c3'>  %H:%M:%S</span> "
+  format = " <span color='#f298c3'>  %H:%M:%S</span> "
   }
 
 
   tztime localtime {
-    format = " <span color='#f298c3'>  %H:%M:%S</span> "
+  format = " <span color='#f298c3'>  %H:%M:%S</span> "
   }
 
 
   tztime localtime {
-    format = " <span color='#f298c3'>  %H:%M:%S</span> "
+  format = " <span color='#f298c3'>  %H:%M:%S</span> "
+  }
+
+
+  tztime localtime {
+  format = " <span color='#f298c3'>  %H:%M:%S</span> "
   }
 #+end_src
 * Dependencies
@@ -633,7 +656,7 @@ This code block wraps elisp's =eval= function so it can be called using noweb.
 #+end_src
 * Local variables                                                  :noexport:
 # Local Variables:
-# eval: (setq-local scriptdir (expand-file-name "~/.config/i3/scripts/"))
+# eval: (setq-local scriptdir (haris/tangle-home ".config/i3/scripts/"))
 # eval: (setq-local mic-volume-up-filename (concat scriptdir "mic-volume-up"))
 # eval: (setq-local mic-volume-down-filename (concat scriptdir "mic-volume-down"))
 # eval: (setq-local mic-mute-toggle-filename (concat scriptdir "mic-mute-toggle"))

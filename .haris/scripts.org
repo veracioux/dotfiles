@@ -391,23 +391,27 @@ are designed to be easily integrated into dmenu scripts.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/elisp")
   #!/usr/bin/env sh
 
-  myemacs --eval "(ielm)" "$@"
+  # Run an elisp interpreter through emacs
+  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  myemacs $create_frame --eval "(ielm)" "$@"
 #+end_src
 ** =eoctave=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/elisp")
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/eoctave")
   #!/usr/bin/env sh
 
   # Run octave interpreter through emacs
 
-  myemacs --eval "(progn (run-octave) (delete-other-windows))" "$@"
+  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  myemacs $create_frame --eval "(progn (run-octave) (delete-other-windows))" "$@"
 #+end_src
-** =epyhon=
+** =epython=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/epython")
   #!/usr/bin/env sh
 
   # Run a python interpreter through emacs
 
-  myemacs --eval "(progn (run-python) (delete-other-windows))" "$@"
+  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  myemacs $create_frame --eval "(progn (call-interactively 'run-python) (delete-other-windows))" "$@"
 #+end_src
 ** =eterm=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/eterm")
@@ -415,13 +419,32 @@ are designed to be easily integrated into dmenu scripts.
 
   # Run an emacs-hosted terminal via vterm
 
-  myemacs -c --eval '(multi-vterm)' "$@"
+  myemacs --create-frame --eval '(multi-vterm)' "$@"
+#+end_src
+** =erc=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/erc") :noweb yes
+  #!/usr/bin/env sh
+
+  # Open emacs and run ERC in it
+
+  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  myemacs --socket-name="irc" $create_frame \
+          --eval "(unless erc-server-connected (call-interactively 'erc-tls))"
+#+end_src
+** =edocker=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/edocker")
+  #!/usr/bin/env sh
+
+  # Open emacs and open the docker UI there
+
+  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  myemacs $create_frame --eval '(progn (switch-to-buffer "*scratch*") (docker))'
 #+end_src
 ** =magit=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/magit")
   #!/usr/bin/env sh
 
-  myemacs -c --frame-parameters='(quote (name . "EmacsFloat"))' \
+  myemacs --create-frame --frame-parameters='(quote (name . "EmacsFloat"))' \
           --eval "(progn (cd \"$PWD\") (magit-status) (delete-other-windows))" \
           >/dev/null 2>&1 &
 #+end_src
@@ -524,150 +547,152 @@ alacritty --class Float,Alacritty -e fish -C "pydoc $*" &
 * Dmenu
 ** =Run=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu_run")
-#!/usr/bin/env sh
+  #!/usr/bin/env sh
 
-# If an argument is provided, run corresponding custom dmenu script
-[ -n "$1" ] && ~/.local/lib/dmenu/"$1"
-# Otherwise open a generic dmenu where the user will choose what dmenu script
-# or other program to run
+  # If an argument is provided, run corresponding custom dmenu script
+  [ -n "$1" ] && ~/.local/lib/dmenu/"$1"
+  # Otherwise open a generic dmenu where the user will choose what dmenu script
+  # or other program to run
 
-run_script() { ~/.local/lib/dmenu/"$1"; }
+  export TERM=dmenu
 
-extract_aliases() {
-    grep -v '^\s*#' "$@" | sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_"
-}
+  run_script() { ~/.local/lib/dmenu/"$1"; }
 
-pull_desktop_apps() {
-    # Print out desktop apps by reading *.desktop files and also cache them
-    sed -n -e '/^Exec=/p'                       \
-        /usr/share/applications/*.desktop       \
-        ~/.local/share/applications/*.desktop   |
-        sed 's/Exec=\(\S*\).*/\1/'              |
-    while read line; do
-        basename $line
-    done                                        |
-    sort | uniq | tee "$cache_file"
-}
-get_desktop_apps() {
-    cache_file=~/.cache/.desktop-apps.txt
-    age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
-    # Refresh the cache only if the file is older than a specified age (seconds)
-    [ ! -f "$cache_file" -o  $age -gt 36000 ] || ! grep -q '^.'    \
-        && pull_desktop_apps                        \
-        || cat "$cache_file"
-    find ~/.local/bin -executable -type f -printf '%f\n'
-}
-get_aliases() {
-    extract_aliases ~/.alias ~/.alias-tmp
-}
-get_gui_aliases() {
-    extract_aliases ~/.alias-gui ~/.alias-gui-tmp
-}
+  extract_aliases() {
+      grep -v '^\s*#' "$@" | sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_"
+  }
 
-aliases="$(get_aliases)"
-gui_aliases="$(get_gui_aliases)"
+  pull_desktop_apps() {
+      # Print out desktop apps by reading *.desktop files and also cache them
+      sed -n -e '/^Exec=/p'                       \
+          /usr/share/applications/*.desktop       \
+          ~/.local/share/applications/*.desktop   |
+          sed 's/Exec=\(\S*\).*/\1/'              |
+          while read line; do
+              basename $line
+          done                                        |
+          sort | uniq | tee "$cache_file"
+  }
+  get_desktop_apps() {
+      cache_file=~/.cache/.desktop-apps.txt
+      age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
+      # Refresh the cache only if the file is older than a specified age (seconds)
+      [ ! -f "$cache_file" -o  $age -gt 36000 ] || ! grep -q '^.'    \
+              && pull_desktop_apps                        \
+                  || cat "$cache_file"
+      find ~/.local/bin -executable -type f -printf '%f\n'
+  }
+  get_aliases() {
+      extract_aliases ~/.alias ~/.alias-tmp
+  }
+  get_gui_aliases() {
+      extract_aliases ~/.alias-gui ~/.alias-gui-tmp
+  }
 
-# ┏━━━━━━━━━━━━━━━┓
-# ┃ dmenu entries ┃
-# ┗━━━━━━━━━━━━━━━┛
-get_commands() {
-    echo "Open"             # Open an URL or bookmark
-    echo "Search"           # Web search
-    echo "Clipboard"        # Clipboard using clipmenu
-    echo "Snippets"         # Text snippets
-    echo "TODO"             # Open TODO file of a project
-    echo "Mail"             # View mail in browser
-    echo "Windows"          # Choose windows
-    echo "Pacman"           # Package management
-    echo "Color"            # Pick a color
-    echo "Unicode"          # Pick an icon
-    echo "Kill Process"     # Kill process
-    echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
-    echo "Config"           # Open documentation selection
-    echo "System"           # System actions
-    echo "Update cache"     # Update desktop app cache
-    echo "Tem"              # Launch tem development environment
-    echo "Octave"           # Launch octave in emacs
-    echo "Python"           # Launch python interpreter in emacs
-    echo "GPG"              # GPG addresses
-    echo "OTP"              # Genreate OTP for selected service
-    echo "IRC"              # Open emacs client for IRC
-    echo "$aliases"
-    echo "$gui_aliases"
-    get_desktop_apps        # Programs extracted from *.desktop files
-}
+  aliases="$(get_aliases)"
+  gui_aliases="$(get_gui_aliases)"
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃ Actions based on user's choice ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-choice="$(get_commands | dmenu $@)"
-case "$choice" in
-    "")
-        exit ;;
-    "Open")
-        run_script open ;;
-    "Search")
-        choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
-        ;;
-    "Clipboard")
-        clipmenu ;;
-    "Snippets")
-        run_script snips ;;
-    "TODO")
-        run_script todo ;;
-    "Mail")
-        run_script mail ;;
-    "Windows")
-        ~/.local/lib/i3/i3-container-commander.py ;;
-    "Pacman")
-        run_script pacman ;;
-    "Color")
-        run_script color ;;
-    "Unicode")
-        run_script unicode ;;
-    "Kill Process")
-        run_script pkill ;;
-    "Fix Wifi")
-        fix-wifi ;;
-        #nmcli networking off; sleep 6; nmcli networking on ;;
-    "Config")
-        run_script config ;;
-    "System")
-        run_script system ;;
-    "Update cache")
-        rm ~/.cache/.desktop-apps.txt ;;
-    "Tem")
-        alacritty -e fish -C 'pj tem; clear' ;;
-    "Octave")
-        eoctave -c ;;
-    "Python")
-        epython -c ;;
-    "GPG")
-        run_script gpg ;;
-    "OTP")
-        run_script otp ;;
-    "IRC")
-        myemacs --socket-name="irc" -c ;;
-    # The rest: aliases and regular commands
-    *)
-        # If the command is an aliased GUI program, just run it
-        for al in $gui_aliases; do
-            if [ "$choice" = "$al" ]; then
-                fish -C "$choice"    # Fish is the only shell that works here
-                exit
-            fi
-        done
-        # If the command is an aliased CLI program, open it in fish
-        for al in $aliases; do
-            if [ "$choice" = "$al" ]; then
-                guirun alacritty --class Float,Alacritty -e fish -C "$choice"
-                exit
-            fi
-        done
-        # Fallback, if the entry matches none of the above, just run the command
-        fish -C "cmd-with-notify $choice"
-        ;;
-esac
+  # ┏━━━━━━━━━━━━━━━┓
+  # ┃ dmenu entries ┃
+  # ┗━━━━━━━━━━━━━━━┛
+  get_commands() {
+      echo "Open"             # Open an URL or bookmark
+      echo "Search"           # Web search
+      echo "Clipboard"        # Clipboard using clipmenu
+      echo "Snippets"         # Text snippets
+      echo "TODO"             # Open TODO file of a project
+      echo "Mail"             # View mail in browser
+      echo "Windows"          # Choose windows
+      echo "Pacman"           # Package management
+      echo "Color"            # Pick a color
+      echo "Unicode"          # Pick an icon
+      echo "Kill Process"     # Kill process
+      echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
+      echo "Config"           # Open documentation selection
+      echo "System"           # System actions
+      echo "Update cache"     # Update desktop app cache
+      echo "Tem"              # Launch tem development environment
+      echo "Octave"           # Launch octave in emacs
+      echo "Python"           # Launch python interpreter in emacs
+      echo "GPG"              # GPG addresses
+      echo "OTP"              # Genreate OTP for selected service
+      echo "IRC"              # Open emacs client for IRC
+      echo "$aliases"
+      echo "$gui_aliases"
+      get_desktop_apps        # Programs extracted from *.desktop files
+  }
+
+  # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  # ┃ Actions based on user's choice ┃
+  # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  choice="$(get_commands | dmenu $@)"
+  case "$choice" in
+      "")
+          exit ;;
+      "Open")
+          run_script open ;;
+      "Search")
+          choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
+          ;;
+      "Clipboard")
+          clipmenu ;;
+      "Snippets")
+          run_script snips ;;
+      "TODO")
+          run_script todo ;;
+      "Mail")
+          run_script mail ;;
+      "Windows")
+          ~/.local/lib/i3/i3-container-commander.py ;;
+      "Pacman")
+          run_script pacman ;;
+      "Color")
+          run_script color ;;
+      "Unicode")
+          run_script unicode ;;
+      "Kill Process")
+          run_script pkill ;;
+      "Fix Wifi")
+          fix-wifi ;;
+      #nmcli networking off; sleep 6; nmcli networking on ;;
+      "Config")
+          run_script config ;;
+      "System")
+          run_script system ;;
+      "Update cache")
+          rm ~/.cache/.desktop-apps.txt ;;
+      "Tem")
+          alacritty -e fish -C 'pj tem; clear' ;;
+      "Octave")
+          eoctave -c ;;
+      "Python")
+          epython -c ;;
+      "GPG")
+          run_script gpg ;;
+      "OTP")
+          run_script otp ;;
+      "IRC")
+          myemacs --socket-name="irc" -c ;;
+      # The rest: aliases and regular commands
+      ,*)
+          # If the command is an aliased GUI program, just run it
+          for al in $gui_aliases; do
+              if [ "$choice" = "$al" ]; then
+                  fish -C "$choice"    # Fish is the only shell that works here
+                  exit
+              fi
+          done
+          # If the command is an aliased CLI program, open it in fish
+          for al in $aliases; do
+              if [ "$choice" = "$al" ]; then
+                  guirun alacritty --class Float,Alacritty -e fish -C "$choice"
+                  exit
+              fi
+          done
+          # Fallback, if the entry matches none of the above, just run the command
+          fish -C "cmd-with-notify $choice"
+          ;;
+  esac
 #+end_src
 ** =Config=
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/config")
