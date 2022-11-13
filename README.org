@@ -1,9 +1,37 @@
 #+TITLE: Haris' Config
 #+PROPERTY: header-args :tangle-mode (identity #o755)
 
+Welcome. This is my personal dotfile repository. I use Arch Linux, so these
+dotfiles are customized to work there. I have also used a Macbook when
+professionally required, so most of the configs will work there too, but expect
+some incompatibilities and occasional breakage.
+
+I do not directly keep my dotfiles in this repository. Rather, I write them as
+literary documents with the actual configs embedded as code blocks. With the
+help of Emacs and it's excellent =org-mode=, I can run a command and those code
+blocks go exactly into the config file they need to. This approach is known as
+literate programming.
+
+I find it superior to keeping the config files directly because:
+- It is much easier to document my configuration as it has become quite complex
+  and reading/writing it this way feels more natural.
+- I can group related configuration from multiple programs in a single file, and
+  then export (/tangle/ is the technical term) them where they need to go. See for
+  example: [[.haris/shells.org][file:.haris/shells.org]].
+- For each application, I can use the same org file to keep its configuration
+  and a script that installs all of its dependencies.
+- I can use the breadth of =org-mode= features to more easily navigate my configs.
+- It is very satisfying.
+- *[In progress]* I can put all the configs into a =~/.haris= folder and make that a
+  regular git repository, instead of keeping a bare repo in my home directory,
+  which has some drawbacks.
+
+*NOTE:* I am still in the process of migrating my traditional configs to this
+format, so this repo is a bit fragmented and incomplete.
+
 * Set up for use
 - Custom scripts are located in [[~/.haris-bin][=~/.haris-bin/=]]. In order to have them available
-  in your PATH, you must run copy them over to =.local/bin/=:
+  in your PATH, you must copy them over to =.local/bin/=:
   #+begin_src shell
     cp --link --interactive ~/.haris-bin/* ~/.local/bin/
   #+end_src
