@@ -24,26 +24,17 @@ them in a babel code block, but I don't know how or if it's possible at all./
 
 These scripts are used in the other sections:
 #+NAME: mic-volume-up
-#+begin_src shell :tangle (eval mic-volume-up-filename) :shebang "#!/usr/bin/env sh"
+#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-up") :shebang "#!/usr/bin/env sh"
   pactl set-source-volume "$(pactl get-default-source)" +5%
 #+end_src
 #+NAME: mic-volume-down
-#+begin_src shell :tangle (eval mic-volume-down-filename) :shebang "#!/usr/bin/env sh"
+#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-down") :shebang "#!/usr/bin/env sh"
   pactl set-source-volume "$(pactl get-default-source)" -5%
 #+end_src
 #+NAME: mic-mute-toggle
-#+begin_src shell :tangle (eval mic-mute-toggle-filename) :shebang "#!/usr/bin/env sh"
+#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-mute-toggle") :shebang "#!/usr/bin/env sh"
   pactl set-source-mute "$(pactl get-default-source)" toggle
 #+end_src
-
-This code block wraps elisp's =eval= function so it can be called using noweb. It
-evaluates the symbol specified as its =symbol= argument.
-#+NAME: eval
-#+begin_src emacs-lisp :var symbol="nil" :exports none :tangle no
-  (eval (car (read-from-string symbol)))
-#+end_src
-# Test: must output path to mic-mute-toggle script
-#+CALL: eval(symbol="mic-mute-toggle-filename") :results silent
 * Variable definitions
 #+begin_src i3wm-config
   # vim: filetype=i3
@@ -257,10 +248,9 @@ evaluates the symbol specified as its =symbol= argument.
   bindsym $mod+Shift+o      mode $mode_org
 
   mode $mode_mic {
-  bindsym plus            exec --no-startup-id '<<eval(symbol="mic-volume-up-filename")>>'
-  bindsym minus           exec --no-startup-id '<<eval(symbol="mic-volume-down-filename")>>'
-  bindsym m               exec --no-startup-id '<<eval(symbol="mic-mute-toggle-filename")>>'
-
+  bindsym plus            exec --no-startup-id ~/.config/i3/scripts/mic-volume-up
+  bindsym minus           exec --no-startup-id ~/.config/i3/scripts/mic-volume-down
+  bindsym m               exec --no-startup-id ~/.config/i3/scripts/mic-mute-toggle
   bindsym Escape          mode default
   bindsym F9              mode default
   }
@@ -654,10 +644,3 @@ evaluates the symbol specified as its =symbol= argument.
   sudo pacman -S i3status ttf-font-awesome
   paru -S dmenu-height autotiling i3-balance-workspace
 #+end_src
-* Local variables                                                  :noexport:
-# Local Variables:
-# eval: (setq-local scriptdir (haris/tangle-home ".config/i3/scripts/"))
-# eval: (setq-local mic-volume-up-filename (concat scriptdir "mic-volume-up"))
-# eval: (setq-local mic-volume-down-filename (concat scriptdir "mic-volume-down"))
-# eval: (setq-local mic-mute-toggle-filename (concat scriptdir "mic-mute-toggle"))
-# End:
