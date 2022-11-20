@@ -93,6 +93,7 @@ unnecessary code.
   (setq image-auto-resize-on-window-resize t)
   (setq evil-want-keybinding nil)
   (setq mouse-wheel-scroll-amount '(6))
+  (setq dotspacemacs-search-tools '("rg" "grep"))
 
   ;; Handle URLs as files
   (url-handler-mode)
@@ -185,11 +186,11 @@ Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
   (global-set-key
    (kbd "M-e")
    (lambda () (interactive)
-      (start-process "" nil "emacs" "-c" (buffer-file-name (window-buffer)))))
+     (start-process "" nil "emacs" "-c" (buffer-file-name (window-buffer)))))
   (global-set-key
    (kbd "M-v")
    (lambda () (interactive)
-      (start-process "" nil "gvim" (buffer-file-name (window-buffer)))))
+     (start-process "" nil "gvim" (buffer-file-name (window-buffer)))))
 #+end_src
 *** Spacemacs-like bindings
 #+NAME: spacemacs-like-bindings
@@ -291,6 +292,7 @@ Some custom keybindings are defined here as well.
   (require 'org-tempo)
 
   (use-package org-transclusion :defer t)
+  (use-package org-preview-html :defer t)
 
   (use-package ol-man :ensure nil :defer t)
 
@@ -309,6 +311,7 @@ Some custom keybindings are defined here as well.
         org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
         org-hide-emphasis-markers           t)
 
+  (add-to-list 'org-file-apps '("\\.x?html?\\'" . "firefox %s"))
   (add-to-list 'org-export-backends 'md)
 #+end_src
 ** Agenda
@@ -423,9 +426,9 @@ The following functions help me define common tangle destinations.
          (erc :server "irc.euirc.net" :port 6667 :nick "veracioux"))
   (defun haris/erc-list-channels () (interactive)
          (erc-with-server-buffer
-           (erc-kill-input)
-           (insert "/list")
-           (erc-send-current-line)))
+          (erc-kill-input)
+          (insert "/list")
+          (erc-send-current-line)))
 
   (define-key               erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
   (evil-define-key  'normal erc-mode-map    (kbd ",b")  'erc-switch-to-buffer)
@@ -515,12 +518,12 @@ The following functions help me define common tangle destinations.
   (evil-define-key 'normal vterm-mode-map (kbd "M-TAB") 'other-window)
 #+end_src
 ** TODO WTF?
-   This doesn't work consistently.
-   #+begin_src emacs-lisp
-     ;; (define-key vterm-mode-map (kbd "C-l") 'vterm-clear-scrollback)
-     ;; (define-key vterm-mode-map (kbd "C-l") 'erase-buffer)
-     ;; (define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
-   #+end_src
+This doesn't work consistently.
+#+begin_src emacs-lisp
+  ;; (define-key vterm-mode-map (kbd "C-l") 'vterm-clear-scrollback)
+  ;; (define-key vterm-mode-map (kbd "C-l") 'erase-buffer)
+  ;; (define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
+#+end_src
 * TODO Email
 I use mu4e as my email client.
 #+begin_src emacs-lisp
@@ -604,9 +607,9 @@ I use mu4e as my email client.
   (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
 #+end_src
 ** DAP
-   #+begin_src emacs-lisp
-     (setq dap-auto-show-output nil)
-   #+end_src
+#+begin_src emacs-lisp
+  (setq dap-auto-show-output nil)
+#+end_src
 ** TODO C/C++
 #+begin_src emacs-lisp
   (setq c-default-style
@@ -741,6 +744,11 @@ Emms.
   (define-key ibuffer-mode-map (kbd "j") 'evil-next-line)
   (define-key ibuffer-mode-map (kbd "k") 'evil-previous-line)
 #+end_src
+** Docker
+Fix for empty image list (not sure if the fix works):
+#+begin_src emacs-lisp
+  (use-package transient :defer t)
+#+end_src
 * Spacemacs
 These are a list of spacemacs layers and a list of additional packages loaded by
 spacemacs. This code block is loaded from [[~/.spacemacs]]. You can re-install a
@@ -840,7 +848,7 @@ extract them into a common library and use that library from both here and there
 #+NAME: begin_details
 #+begin_src emacs-lisp :tangle no :exports none :results none
   (o-defblock details (title "Details") (title-color "green")
-    "Enclose contents in a folded up box, for HTML.
+              "Enclose contents in a folded up box, for HTML.
 
   For LaTeX, this is just a boring, but centered, box.
 
@@ -853,14 +861,14 @@ extract them into a common library and use that library from both here and there
   it may be prudent to expose more aspects as arguments,
   such as ‘background-color’.
   "
-    (format
-     (pcase backend
-       (`latex "\\begin{quote}
+              (format
+               (pcase backend
+                 (`latex "\\begin{quote}
                     \\begin{tcolorbox}[colback=%s,title={%s},sharp corners,boxrule=0.4pt]
                       %s
                     \\end{tcolorbox}
                   \\end{quote}")
-       (_ "<details>
+                 (_ "<details>
                     <summary>
                       <strong>
                         <font face=\"Courier\" size=\"3\" color=\"%s\">
@@ -870,7 +878,7 @@ extract them into a common library and use that library from both here and there
                     </summary>
                     %s
                  </details>"))
-     title-color title contents))
+               title-color title contents))
 #+end_src
 ** Config check
 I use this variable to check if the config loaded correctly.
