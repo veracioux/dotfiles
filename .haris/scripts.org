@@ -354,7 +354,7 @@ are designed to be easily integrated into dmenu scripts.
           git.org)        echo ~/.haris/git.org ;;
           gh)             echo ~/.config/gh/config.yml ;;
           hg)             echo ~/.hgrc ;;
-          i3.org)         echo ~/.config/i3/README.org ;;
+          i3.org)         echo ~/.haris/i3.org ;;
           picom)          echo ~/.config/picom.conf ;;
           dmenu)          echo ~/.local/bin/dmenu_run ;;
           firefox)        echo ~/.mozilla/firefox/haris/user.js ;;
@@ -554,7 +554,7 @@ alacritty --class Float,Alacritty -e fish -C "pydoc $*" &
   # Otherwise open a generic dmenu where the user will choose what dmenu script
   # or other program to run
 
-  export TERM=dmenu
+  export TERM=menu
 
   run_script() { ~/.local/lib/dmenu/"$1"; }
 
@@ -617,6 +617,7 @@ alacritty --class Float,Alacritty -e fish -C "pydoc $*" &
       echo "GPG"              # GPG addresses
       echo "OTP"              # Genreate OTP for selected service
       echo "IRC"              # Open emacs client for IRC
+      echo "Quickmenu"        # Menu to quickly revisit recent activity
       echo "$aliases"
       echo "$gui_aliases"
       get_desktop_apps        # Programs extracted from *.desktop files
@@ -673,6 +674,8 @@ alacritty --class Float,Alacritty -e fish -C "pydoc $*" &
           run_script otp ;;
       "IRC")
           myemacs --socket-name="irc" -c ;;
+      "Quickmenu")
+          run_script quickmenu ;;
       # The rest: aliases and regular commands
       ,*)
           # If the command is an aliased GUI program, just run it
