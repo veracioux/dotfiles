@@ -107,12 +107,6 @@ This is a wrapper around GNU =pass=.
 
   /usr/bin/firefox $(printarg --new-tab "$@" | uniq)
 #+end_src
-** =picom=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/picom")
-  #!/usr/bin/env sh
-
-  /usr/bin/picom --experimental-backends
-#+end_src
 ** =myemacs=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs")
   #!/usr/bin/env sh
@@ -292,9 +286,9 @@ if [ "$TERM" = "linux" ]; then
     exit
 fi
 
-"$@" && notify-send "Command $(echo $@) exited successfully." || {
+"$@" && notify-send "Command $* exited successfully." || {
     err=$?
-    notify-send -u critical "Command $(echo $@) exited with error $err."
+    notify-send -u critical "Command $* exited with error $err."
 }
 return $err
 #+end_src
