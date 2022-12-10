@@ -259,15 +259,15 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       mkdir -p /dev/shm/(whoami)
       set -l tmpfile /dev/shm/(whoami)/gpg_decrypt_target
       if [ "$argv" = '-r' ]
-        rm -f $session
-        pkill -u (whoami) ssh-agent
-        return
+          rm -f $session
+          pkill -u (whoami) ssh-agent
+          return
       end
       if [ ! -s $session ]
           ssh-agent -c > $tmpfile
           source $tmpfile
           gpg --encrypt -r B97C0CA3BD9790A48EAA6EC9E64CF503559BB9E2 \
-            -o $session $tmpfile
+              -o $session $tmpfile
           rm -f $tmpfile
           ssh-add ~/.ssh/$argv
       else
@@ -321,19 +321,19 @@ Completions for the functions defined in [[Functions]].
       return 0
   end
 
-       complete --command chbg --no-files --arguments="(pushd /usr/share/backgrounds/; command ls -1; popd)"
-       complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
-       complete -c snip -f -a \
-           "(pushd ~/.vim/snips; command ls | sed 's_\(.*\)\.snippets_\1_g'; popd)"
+  complete --command chbg --no-files --arguments="(pushd /usr/share/backgrounds/; command ls -1; popd)"
+  complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
+  complete -c snip -f -a \
+      "(pushd ~/.vim/snips; command ls | sed 's_\(.*\)\.snippets_\1_g'; popd)"
 
-       # *cf and *cmd style commands
-       for cmd in {,cd,vi,cat,e}cf
-           complete --command $cmd --no-files -a '(lscf)'
-       end
-       for cmd in {f,cd,vi,cat,e, rm}cmd
-           complete -c $cmd -f \
-               -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
-       end
+  # *cf and *cmd style commands
+  for cmd in {,cd,vi,cat,e}cf
+      complete --command $cmd --no-files -a '(lscf)'
+  end
+  for cmd in {f,cd,vi,cat,e, rm}cmd
+      complete -c $cmd -f \
+          -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
+  end
 #+end_src
 #+begin_src fish :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/completions/adhoc.fish")
   complete -c adhoc -f \
@@ -347,6 +347,8 @@ Completions for the functions defined in [[Functions]].
 #+begin_src shell :mkdirp yes :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/completions/otp.fish"))
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
+** Private
+#+transclude: [[file:./private/README.org::fish-private][fish-private]] 
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (concat "/tmp/tangle-" (user-login-name) "/.bashrc")
