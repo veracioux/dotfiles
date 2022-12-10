@@ -27,6 +27,7 @@ unbind <C-f>
 autocmd DocStart savannah.gnu.org mode ignore
 autocmd DocStart octave.sourceforge.io mode ignore
 autocmd DocStart gnu.org mode ignore
+autocmd DocStart buildyourownlisp.com mode ignore
 
 # Flameshot delete imgur upload
 bind ,D js document.querySelectorAll(".button-big")[1].click();
