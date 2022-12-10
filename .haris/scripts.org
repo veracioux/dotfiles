@@ -88,7 +88,7 @@ This is a wrapper around GNU =pass=.
       FISH_CMD="cat $pipe_input | $FISH_CMD"
   fi
 
-  alacritty --class Float,Alacritty -e fish -C "$FISH_CMD"
+  alacritty --class Alacritty,Float -e fish -C "$FISH_CMD"
 
   if [ ! -t 0 ]; then
       # Input is from a PIPE
@@ -511,7 +511,7 @@ fi
 [ "$1" = '--floating' ] && {
     shift
     cat > /dev/shm/viman
-    alacritty --class Float,Alacritty -e fish \
+    alacritty --class Alacritty,Float -e fish \
         -C "cat /dev/shm/viman | nvim --cmd 'let g:haris_man = \"true\"' +Man! $*"
     rm -f /dev/shm/viman
 } || {
@@ -542,7 +542,7 @@ vim "$(echo "#include <$1>" | cpp -H 2>&1 >/dev/null | head -1 | sed 's/^. //')"
 # - All arguments are passed to pydoc
 # - Alacritty window class tracks those defined in my i3 config
 
-alacritty --class Float,Alacritty -e fish -C "pydoc $*" &
+alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
 #+end_src
 * Dmenu
 ** =Run=
@@ -688,7 +688,7 @@ alacritty --class Float,Alacritty -e fish -C "pydoc $*" &
           # If the command is an aliased CLI program, open it in fish
           for al in $aliases; do
               if [ "$choice" = "$al" ]; then
-                  guirun alacritty --class Float,Alacritty -e fish -C "$choice"
+                  guirun alacritty --class Alacritty,Float -e fish -C "$choice"
                   exit
               fi
           done
@@ -729,7 +729,7 @@ if not choice:
 choice = choice[2:-1].replace(' ', '-')
 
 def run_command(cmd):
-    run(['alacritty', '--class', 'Float,Alacritty', '-e',
+    run(['alacritty', '--class', 'Alacritty,Float', '-e',
          'fish', '-C', cmd])
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

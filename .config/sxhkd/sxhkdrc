@@ -28,15 +28,17 @@ mod4 + question
 mod4 + Return
 	alacritty
 mod4 + shift + Return
-	alacritty --class Float,Alacritty
+	alacritty --class Alacritty,Float
 mod4 + ctrl + Return
    eterm
 mod4 + shift + f
 	firefox -P haris
 mod4 + shift + v
-	alacritty --class Float,Alacritty -e fish -C vifm
+	alacritty --class Alacritty,Float -e fish -C vifm
 mod4 + shift + t
-	alacritty --class Float,Alacritty -e trans -shell
+	alacritty --class Alacritty,Float -e trans -shell
+mod4 + shift + c
+    alacritty --class Alacritty,Float -e trans -shell -from 'cs+en' -to 'en+cs'
 mod4 + shift + s
     flameshot gui
 mod4 + shift + Print
