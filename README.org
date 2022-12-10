@@ -17,7 +17,7 @@ I find it superior to keeping the config files directly because:
   and reading/writing it this way feels more natural.
 - I can group related configuration from multiple programs in a single file, and
   then export (/tangle/ is the technical term) them where they need to go. See for
-  example: [[.haris/shells.org][file:.haris/shells.org]].
+  example: [[file:~/.haris/shells.org][.haris/shells.org]].
 - For each application, I can use the same org file to keep its configuration
   and a script that installs all of its dependencies.
 - I can use the breadth of =org-mode= features to more easily navigate my configs.
@@ -28,6 +28,21 @@ I find it superior to keeping the config files directly because:
 
 *NOTE:* I am still in the process of migrating my traditional configs to this
 format, so this repo is a bit fragmented and incomplete.
+
+* Usage
+I keep all persistent user configs in org files, and use =org-babel-tangle= (part
+of Emacs) to tangle them, i.e. send all the configs to the files they need to be in
+for the programs to read them. One problem is that I can't just feed these files
+to vanilla Emacs - I need to configure Emacs to be able to support tangle, which
+is done in [[file:~/.haris/emacs.org][.haris/emacs.org]].
+
+Here are the occasions when I want to tangle these config files:
+- On a fresh OS install, where I have to tangle the files, without having Emacs
+  configured prior
+- On my main machine when I want to edit my configs and then apply them
+  For this, I only need to load the =org-babel= package. Then, I have the
+  =org-babel-tangle= function available, mapped to the =, b t= shortcut.
+- As part of a CI workflow to have them available for download on GitHub
 
 * Set up for use
 - Custom scripts are located in [[~/.haris-bin][=~/.haris-bin/=]]. In order to have them available
