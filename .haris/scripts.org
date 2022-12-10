@@ -1,5 +1,5 @@
 #+TITLE: Scripts
-#+PROPERTY: header-args :comments headline :mkdirp yes :tangle-mode (identity #o744)
+#+PROPERTY: header-args :comments headline :mkdirp yes :tangle-mode (identity #o744) :results silent
 
 This is where my custom scripts live. That includes shell scripts, dmenu scripts,
 and potentially programming language-specific scripts. One of the things I
@@ -330,7 +330,7 @@ are designed to be easily integrated into dmenu scripts.
   for arg in "$@"; do
       case "$arg" in
           README.org)     echo ~/README.org ;;
-          private.org)    echo ~/.haris/private.org ;;
+          private.org)    echo ~/.haris/private/README.org ;;
           temporary.org)  echo ~/.haris/temporary.org ;;
           scripts.org)    echo ~/.haris/scripts.org ;;
           alacritty)      echo ~/.config/alacritty/alacritty.yml ;;
@@ -539,7 +539,7 @@ vim "$(echo "#include <$1>" | cpp -H 2>&1 >/dev/null | head -1 | sed 's/^. //')"
 alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
 #+end_src
 * Dmenu
-** =Run=
+** Main entrypoint (=dmenu_run=)
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu_run")
   #!/usr/bin/env sh
 
@@ -691,7 +691,355 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
           ;;
   esac
 #+end_src
-** =Config=
+** Open
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/open")
+  #!/usr/bin/env sh
+
+  # Open a website in Firefox
+  # Suggests bookmarks managed by buku, but you can input any URL
+
+  edit=" Edit..."
+  sync=" Sync..."
+
+  entries="$(buku -p --format 30 | grep -v '^$')"
+  entries="$edit\n$sync\n$entries"
+
+  choice="$(echo "$entries" | dmenu -p 'Open:')"
+
+  [ -z "$choice" ] && exit
+
+  if [ "$choice" = "$edit" ]; then
+      # Open this file for editing
+      gvim "$0"
+  elif [ "$choice" = "$sync" ]; then
+      alacritty --class Alacritty,Float -e fish -C "
+          echo -e \"--- Importing bookmarks from Firefox ---\nDefault is: n y y \";
+          buku --import ~/.mozilla/firefox/haris/bookmarks.html"
+  else
+      # Try to open it as a bookmark in firefox
+      url="$(buku --sreg "^$choice\$" -n 1 --format 10 | grep -v 'waiting for input')"
+      [ -z "$url" ] && url="$choice"
+      # All google links shall be opened in firefox
+      echo "$url" | grep -q 'google' && browser="$(echo "$browser" | sed 's_librewolf_/bin/firefox/')"
+      echo "$url"
+      auto-browser -P haris "$url"
+  fi
+#+end_src
+** Snippets
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/snips")
+  #!/usr/bin/env sh
+
+  # TODO add snippets from tem
+
+  edit=" Edit..."
+  edit_snips=" Edit snips..."
+  add=" Add..."
+
+  print_options() {
+      echo "$edit"
+      echo "$add"
+      echo "$edit_clip"
+  }
+
+  # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  # ┃ Edit this - these are your entries ┃
+  # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  print_entries() {
+      echo "$(cd ~/mail && command ls -1)"            # All my mail addresses
+      cat ~/.local/snippets.txt | awk '{print $1}'    # TODO Snippets (temporary)
+  }
+
+  options="$(print_options)"
+  entries="$(print_entries)"
+
+  choice="$(echo "$options\n$entries" | dmenu )"
+
+  [ -z "$choice" ] && exit
+
+  if [ "$choice" = "$edit" ]; then
+      gvim "$0"
+  elif [ "$choice" = "$edit_snips" ]; then
+      gvim ~/.local/snippets.txt
+  elif [ "$choice" = "$add" ]; then
+      choice="$(echo '' | dmenu)"
+      [ -n "$choice" ] && echo "$choice" >> ~/.local/snippets.txt
+  else
+      match="$(sed -n "/^$choice\[\s\|$\]/p" ~/.local/snippets.txt | sed 's/\S*\s*//')"
+      print_match() { [ -n "$match" ] && echo "$match" || echo "$choice"; }
+      print_match | xsel -b
+      : # TODO integrate with tem;
+  fi
+#+end_src
+*** TODO Use something more universal
+** Todo
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/todo")
+  #!/usr/bin/env bash
+
+  edit=" Edit..."
+  lookup="$(ls ~/proj/*/TODO.org ~/proj/drytoe/*/TODO.org \
+      ~/data/personal/todos/*/TODO.org)"
+  echo "$lookup"
+
+  entries="$(echo "$edit"
+             echo "$lookup" |
+             while read p; do
+                 basename "$(dirname "$p")"
+             done)"
+
+  choice="$(
+      echo "$entries" | dmenu -p TODO:
+  )"
+
+  [ "$?" != 0 ] && exit 1
+
+  if [ "$choice" = " Edit..." ]; then
+      cd "$(dirname "$0")"; gvim "$0"
+  else
+      myemacs -c $(echo "$lookup" | grep "$choice/TODO.org")
+  fi
+#+end_src
+** Mail
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/mail")
+  #!/usr/bin/env bash
+
+  edit=" Edit..."
+
+  entries="$(echo "$edit"; cd ~/mail && command ls)"
+
+  choice="$(echo "$entries" | dmenu -p mail -l $(echo "$entries" | wc -l))"
+
+  [ -z "$choice" ] && exit
+
+  if [ "$choice" = "$edit" ]; then
+      gvim "$0"
+  elif [ "${choice//*@/}" = 'gmail.com' ] || [ "${choice//*@/}" = 'etf.unsa.ba' ]; then
+      auto-browser -P haris "mail.google.com/mail/?authuser=$choice"
+  fi
+#+end_src
+** Pacman
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/pacman")
+  #!/usr/bin/env sh
+
+  install=" Install..."
+  about=" About..."
+  remove=" Remove..."
+  manage=" Manage..."
+  update=" Update..."
+  keyring=" Keyring..."
+  edit=" Edit..."
+
+  print_options() {
+      echo "$install"
+      echo "$about"
+      echo "$update"
+      echo "$remove"
+      echo "$manage"
+      echo "$keyring"
+      echo "$edit"
+  }
+
+  choice="$(print_options | dmenu -l $(print_options | wc -l))"
+
+  case "$choice" in
+      "$install")
+          cache_file=~/.cache/.aur-package-list.txt
+          age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
+          # Create cache file if it does not exist or is older than 5 hours
+          if [ ! -f "$cache_file" ] || [ $age -gt 18000 ]; then
+              curl -s 'https://aur.archlinux.org/packages.gz' \
+                  -o - | gunzip -c > "$cache_file"
+          fi
+          # Pull the list of AUR packages
+          list="$(cat "$cache_file")"
+          # Prepend official packages to the list
+          list="$(pacman -Ssq; echo "$list")"
+          choice="$(echo "$list" | dmenu -l 20)"
+          [ -z "$choice" ] && exit
+          cmd="$(pacman -Ss "^$choice\$" >/dev/null && echo sudo pacman -S || echo paru)"
+          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify $cmd $choice" && exit
+          ;;
+      "$about")
+          choice="$(echo "$(pacman -Qq)" | dmenu -p 'About:' -l 20)"
+          [ -z "$choice" ] && exit
+          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify pacman -Qi $choice" && exit
+          ;;
+      "$update")
+          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify paru -Syu"
+          ;;
+      "$remove")
+          choice="$(pacman -Qq | dmenu -l 20)"
+          [ -z "$choice" ] && exit
+          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify sudo pacman -R $choice" && exit
+          ;;
+      "$manage")
+          gvim "$(fcmd system-install)"
+          ;;
+      "$keyring")
+          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify sudo pacman -Sy archlinux-keyring && exit"
+          ;;
+      "$edit")
+          gvim "$0"
+          ;;
+  esac
+
+#+end_src
+** Color
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/color")
+  #!/usr/bin/env bash
+
+  declare -A colors
+
+  colors[',k black']='         #1e1e1e'
+  colors[',r red']='           #ff5555'
+  colors[',g green']='         #5ac2a8'
+  colors[',y yellow']='        #f2b374'
+  colors[',b blue']='          #6980fa'
+  colors[',m magenta']='       #d098ff'
+  colors[',c cyan']='          #8cceff' # TODO Change to something darker
+  colors[',w white']='         #92aab7'
+  colors['.k brblack']='      #6b746b'
+  colors['.r brred']='        #ff8c8c'
+  colors['.g brgreen']='      #98eb98'
+  colors['.y bryellow']='     #e0d97b'
+  colors['.b brblue']='       #99a3ff'
+  colors['.m brmagenta']='    #f298c3'
+  colors['.c brcyan']='       #a6d9ff'
+  colors['.w brwhite']='      #dddddd'
+
+  get_entries() {
+      echo ' Edit...' 
+      printf '%s\n' "${!colors[@]}" | sort | sed 's_.*_ &_'
+  }
+
+  entries=$(get_entries)
+
+  let n=$(echo "$entries" | wc -l)
+
+  choice="$(echo "$entries" | dmenu -l $n -p 'Color:')"
+
+  [ -z "$choice" ] && exit
+
+  if [ "$choice" = ' Edit...' ]; then
+      gvim "$0"
+      exit
+  fi
+
+  # Remove decoration from the choice
+  choice_filtered="$(echo $choice | sed 's_[^ ]* *\(.*\)_\1_')"
+  # Copy the color, after removing whitespace
+  echo -n "${colors["$choice_filtered"]}" | sed 's_[^ ]* *\(.*\)_\1_' | xsel -b
+#+end_src
+** Unicode
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/unicode")
+  #!/usr/bin/env python3
+
+  # Choose a font-awesome icon from dmenu and copy it
+
+  from urllib.request import urlopen
+  from subprocess import run, PIPE
+  import os.path
+  import yaml
+
+  # ┏━━━━━━━━━━━━━━━━━━━━━━━┓
+  # ┃ Prepare the icon list ┃
+  # ┗━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  cache_file = os.path.expanduser('~/.cache/font-awesome-icon-list.yml')
+
+  # Read the yml file from cache, or download it from GitHub
+  if os.path.exists(cache_file):
+      text = open(cache_file).read()
+  else:
+      url = 'https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.yml'
+      data = urlopen(url).read()
+      text = data.decode('utf-8')
+      open(cache_file, 'w').write(text)
+
+  # Read the YAML file
+  data = yaml.load(text, yaml.Loader)
+
+  # ┏━━━━━━━━━━━━━━━━━━━━┓
+  # ┃ Add custom options ┃
+  # ┗━━━━━━━━━━━━━━━━━━━━┛
+  top_entries =   [
+      ' Edit...',
+      ' FontAwesome...',
+      ' From code...',
+      ' Get code...',
+  ]
+
+  char_entries = []
+  # Create a (decorated) list of entries
+  for key in data.keys():
+      unicode = int(data[key]['unicode'], base=16)
+      char_entries.append(chr(unicode) + ' ' + key)
+
+  def add_custom(char):
+      global char_entries
+      char_entries.append(char + ' [custom]')
+
+  # ┏━━━━━━━━━━━━━━━━━━━━━━━┓
+  # ┃ Add custom characters ┃
+  # ┗━━━━━━━━━━━━━━━━━━━━━━━┛
+  add_custom('├ |-')
+  add_custom('└ |_')
+  add_custom('─ --')
+  add_custom('┃┗━┛┏━┓ ||')
+  add_custom('š .sh')
+  add_custom('ć .ch meko')
+  add_custom('č .ch tvrdo')
+  add_custom('đ .dj')
+  add_custom('ž .zj')
+
+  # Form entry lists as multi-line strings
+  char_entries = '\n'.join(char_entries)
+  # Add options and character entries together
+  top_entries  = '\n'.join(top_entries) + '\n' + char_entries
+
+  # Run dmenu and get user choice
+  p = run(['dmenu'], stdout=PIPE, input=top_entries, encoding='utf-8')
+  choice = p.stdout[:-1]
+
+  def copy_to_clipboard(text):
+      run(['xsel', '-b'], input=text, encoding='utf-8')
+
+  # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  # ┃ Actions based on user's choice ┃
+  # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  if choice[2:] == 'Edit...': # Open this file for editing
+     run(['alacritty', '--class', 'Alacritty,Float', '-e', 'fish', '-C',
+           'cd (dirname ' + __file__ + '); vim -c "norm 45z." ' + __file__])
+  elif choice[2:] == 'FontAwesome...':
+      run(['firefox', 'https://fontawesome.com/cheatsheet'])
+  elif choice[2:] == 'From code...':
+      p = run(['dmenu', '-p', 'Code:'], stdout=PIPE, input=char_entries, encoding='utf-8')
+      open('/home/haris/src/testlog', 'w').write(choice)
+      code = p.stdout[:-1]
+      if choice:
+          copy_to_clipboard(chr(int(code, base=16)))
+  elif choice[2:] == 'Get code...':
+      p = run(['dmenu', '-p', 'Character:'], stdout=PIPE, input=char_entries, encoding='utf-8')
+      choice = p.stdout[:-1]
+      if choice:
+          copy_to_clipboard(str(ord(choice[0])))
+  elif choice:
+      copy_to_clipboard(choice.split(' ')[0])
+#+end_src
+** Kill Process
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/pkill")
+  #!/usr/bin/env sh
+
+  choice="$(ps -A -o comm --no-headers | dmenu)"
+
+  [ -z "$choice" ] && exit
+
+  process="$choice"
+
+  choice="$(echo " No\n Yes, kill $process" | dmenu -p 'Sure?' -l 2)"
+
+  [ "$choice" = " Yes, kill $process" ] && pkill "$process"
+#+end_src
+** Config
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/config")
 #!/usr/bin/env python3
 
@@ -747,8 +1095,116 @@ else:
         run_command('cdcf {0}; vicf {0}'.format(choice))
 sys.exit()
 #+end_src
-** =Quickmenu=
-#+transclude: [[file:~/.haris/private.org::dmenu-quickmenu][dmenu-quickmenu]] 
+** System
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/system")
+  #!/usr/bin/env sh
+
+  choice="$(echo "Shutdown\nSuspend\nReboot..." | dmenu)"
+
+  # No choice, bye-bye
+  [ -z "$choice" ] && exit
+
+  if [ "$choice" = "Shutdown" ]; then
+
+      choice="$(echo " No\n Yes, shutdown" | dmenu -p 'Sure?')"
+      [ "$choice" = " Yes, shutdown" ] && shutdown now
+
+  elif [ "$choice" = "Suspend" ]; then
+
+      systemctl suspend -i
+
+  elif [ "$choice" = "Reboot..." ]; then
+
+      print_entries() {
+          # Extract only lines with menu entries from grub
+          grep "menuentry '\|submenu '" /boot/grub/grub.cfg   |\
+          # Only top-level menus are considered
+          grep -v -P '\t'                                     |\
+          # Take only the entry name
+          sed "s_\S* '\([^']*\)'.*_\1_"                       |\
+          # Add numbers
+          nl -w 1 -v 0 -n rn | sed -E 's/\s+/ /g'
+      }
+
+      entries="$(print_entries)"
+      choice="$(echo "$entries" | dmenu -l $(echo "$entries" | wc -l))"
+      [ -z "$choice" ] && exit
+      # grub-reboot should be allowed passwordless in sudo (or doas)
+      sudo grub-reboot "$(echo "$choice" | cut -c 1)"
+      sudo reboot
+  fi
+#+end_src
+** GPG
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/gpg")
+  #!/usr/bin/env bash
+
+  # Get list of all public keys
+  keylist=($(gpg --list-public-keys Haris | grep '^\s' | sed 's/^\s*//g'))
+
+  entries="$(
+      for key in "${keylist[@]}"; do
+          # Get info for key
+          keyinfo="$(gpg --list-public-keys | grep "$key" -A1)"
+          # Get email of key owner
+          email="$(echo "$keyinfo" | grep '<.*>' | sed 's/^.*\]//')"
+          echo "$key" "$email"
+      done
+  )"
+  let n=$(echo "$entries" | wc -l)
+
+  choice="$(echo "$entries" | dmenu -l $n -p 'GPG:')"
+
+  echo "$choice" | awk '{print $1}' | xsel -b
+#+end_src
+** OTP
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/otp")
+  #!/usr/bin/env bash
+
+  # Select an app and copy its OTP to clipboard
+
+  cd ~
+
+  entries="$(
+      fd 'otp-secret.gpg' .password-store -x echo {//} \
+          | sed 's:^\.password-store/\?::'
+  )"
+
+  choice="$(echo "$entries" | dmenu -l 10 -p 'OTP:')"
+
+  [ -z "$choice" ] && exit 1
+
+  otp "$choice" | xsel -b
+  notify-send "OTP" "Saved to clipboard"
+#+end_src
+** Quickmenu
+#+name: dmenu-quickmenu
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/quickmenu")
+  #!/usr/bin/env bash
+
+  choices=(
+      "Algorithms"
+      "Bullshit Jobs"
+      "MONEY - Tony Robbins"
+      "I will teach you to be rich - Ramit Sethi"
+  )
+
+  choice="$(printarg "${choices[@]}" | dmenu)"
+
+  case "$choice" in
+      "Algorithms")
+          zathura ~/data/literature/prog/"Thomas H. Cormen - Introduction to Algorithms (2022).pdf"
+          ;;
+      "Bullshit Jobs")
+          zathura ~/data/literature/world/"David Graeber - Bullshit Jobs_ A Theory-Simon & Schuster (2018).epub"
+          ;;
+      "MONEY - Tony Robbins")
+          zathura ~/data/literature/finance/"Tony Robbins - MONEY Master the Game - 7 Simple Steps to Financial Freedom (2014).epub"
+          ;;
+      "I will teach you to be rich - Ramit Sethi")
+          zathura ~/data/literature/finance/"Ramit Sethi - I Will Teach You to Be Rich, Second Edition (2019).epub"
+          ;;
+  esac
+#+end_src
 # Leave this line empty - otherwise transclusion might hoist the next section up
 * System maintenance
 ** =texclean=
