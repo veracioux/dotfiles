@@ -124,10 +124,6 @@ unnecessary code.
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<basic-settings>>
 #+end_src
-** General custom functions
-#+begin_src emacs-lisp
-  (defun haris/stage () (interactive) (mkdir "/tmp/stage" t) (dired "/tmp/stage"))
-#+end_src
 ** Package initialization
 #+NAME: package-init
 #+begin_src emacs-lisp
@@ -138,6 +134,14 @@ unnecessary code.
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<package-init>>
+#+end_src
+** Global packages
+#+begin_src emacs-lisp
+  (use-package focus-autosave-mode :defer t)
+#+end_src
+** General custom functions
+#+begin_src emacs-lisp
+  (defun haris/stage () (interactive) (mkdir "/tmp/stage" t) (dired "/tmp/stage"))
 #+end_src
 ** Nerd commenter
 #+begin_src emacs-lisp
@@ -605,6 +609,8 @@ I use mu4e as my email client.
 
   ;; Diagnostic mode doesn't work well with flycheck
   (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
+
+  (setq lsp-enable-on-type-formatting nil)
 #+end_src
 ** DAP
 #+begin_src emacs-lisp
@@ -744,6 +750,14 @@ Emms.
   (define-key ibuffer-mode-map (kbd "j") 'evil-next-line)
   (define-key ibuffer-mode-map (kbd "k") 'evil-previous-line)
 #+end_src
+** Currency converter
+#+begin_src emacs-lisp
+  (use-package currency-convert
+    :defer t
+    :init (lambda () (setq
+                      currency-convert-exchangeratesapi-key
+                      (string-trim (shell-command-to-string "pass show @apilayer/api-key")))))
+#+end_src
 ** Docker
 Fix for empty image list (not sure if the fix works):
 #+begin_src emacs-lisp
@@ -786,6 +800,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
           org-enable-appear-support t
           org-enable-transclusion-support t)
      mu4e
+     pass
      ;; eaf
      ;; emms
      debug))
