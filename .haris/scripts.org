@@ -316,6 +316,178 @@ n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
 
   xrandr --output HDMI-1-0 "$@" --pos -1920x0
 #+end_src
+** =pipetest=
+[[file:~/.local/bin/pipetest][Output file]]
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/pipetest") :noweb yes
+  #!/usr/bin/env bash
+
+  # Create three tmux panes:
+  # - A SOURCE text file opened in vim
+  # - A SCRIPT file opened in vim
+  # - An output buffer that shows the results of processing SOURCE with SCRIPT
+  #
+  # The SOURCE is supplied to the SCRIPT via pipe, i.e. the output buffer shows
+  # the results of:
+  #
+  # SCRIPT < SOURCE
+  #
+  # The output automatically updates when one of SCRIPT, SOURCE changes.
+  #
+  # USAGE: pipetest [SCRIPT] [SOURCE]
+  #
+  # If the optional arguments SCRIPT and SOURCE are given, the SCRIPT and SOURCE
+  # buffers will have an initial content equal to the content of those files.
+
+  vim_executable=vim
+  if command -v nvim >/dev/null; then
+      vim_executable=nvim
+  fi
+  temp_dir="$(mktemp -d)"
+
+  INITIAL_SOURCE="$1"
+  INITIAL_SCRIPT="$2"
+
+  [ -z "$INITIAL_SOURCE" ] && INITIAL_SOURCE=/dev/null
+  [ -z "$INITIAL_SCRIPT" ] && INITIAL_SCRIPT=/dev/null
+
+  if [ "$#" -gt 2 ]; then
+      echo "Too many arguments" >&2
+      exit 1
+  fi
+
+  # Create a temporary file with content from stdin
+  # Usage: create_file HANDLE <CONTENT
+  # HANDLE is the name of the bash variable that will point to the file's path
+  create_file() {
+      local file
+      file="$temp_dir/$1"
+      if [ ! -t 0 ]; then
+          cat > "$file"
+      else
+          touch "$file"
+      fi
+
+      declare -g "$1"="$file"
+  }
+
+  # Same as create_file but also marks it executable by the current user
+  create_file_x() {
+      create_file "$@"
+      chmod u+x "${!1}"
+  }
+
+  # Create a fifo so the first and second windows can notify the third window of
+  # changes
+  fifo="$temp_dir/fifo"
+  mkfifo "$fifo"
+
+  # The source file (first buffer) that is being piped to SCRIPT
+  create_file SOURCE < "$INITIAL_SOURCE"
+
+  # The script file (second buffer) that will process the file and generate
+  # output in the third buffer
+  create_file_x SCRIPT < "$INITIAL_SCRIPT"
+
+  #
+  # Notifies the output terminal that some of the first two buffers have changed.
+  #
+  create_file_x on_change <<EOF
+  <<pipetest_on_change>>
+  EOF
+
+  #
+  # Supplementary vimrc file that is loaded by each vim session started from this
+  # program.
+  #
+  create_file vimrc <<EOF
+  <<pipetest_vimrc>>
+  EOF
+
+  #
+  # Vim wrapper that loads our supplementary vimrc file.
+  #
+  create_file_x custom_vim <<EOF
+  <<pipetest_custom_vim>>
+  EOF
+
+  #
+  # Output script - script that is run in the third buffer that shows the output
+  # of the user SCRIPT when applied to the SOURCE file.
+  #
+  create_file_x output_script <<EOF
+  <<pipetest_output_script>>
+  EOF
+
+  #
+  # Main script that launches tmux and everything.
+  #
+  create_file_x main_script <<EOF
+  <<pipetest_main_script>>
+  EOF
+
+  tmux new "$main_script"
+
+  #
+  # Remove created temporary directory
+  #
+  rm -rf "$temp_dir"
+#+end_src
+*** Helper scripts
+These scripts are embedded into the =pipetest= script as heredocs, but we define
+them as code blocks here for better readability.
+**** =on_change=
+#+NAME: pipetest_on_change
+#+begin_src shell
+  #!/usr/bin/env sh
+
+  echo > "$fifo"
+#+end_src
+**** =vimrc=
+#+NAME: pipetest_vimrc
+#+begin_src text
+  " On write run the on_change script
+  autocmd BufWritePost * silent !$on_change
+  autocmd ExitPre $SOURCE,$SCRIPT silent !tmux kill-session
+#+end_src
+**** =custom_vim=
+#+NAME: pipetest_custom_vim
+#+begin_src shell
+  #!/usr/bin/env sh
+
+  "$vim_executable" -c "source $vimrc" "\$@"
+#+end_src
+**** =output_script=
+#+NAME: pipetest_output_script
+#+begin_src shell
+  #!/usr/bin/env sh
+
+  echo "This is the output."
+  echo "It will automatically refresh when either of the files change."
+  echo "Press Ctrl+C here or quit any of the two vim instances to exit."
+
+  trap "tmux kill-session" INT TERM EXIT
+
+  while :; do
+      #stty -echo
+      read _ < "$fifo"
+      [ "$?" != "0" ] && break
+      clear
+      "$SCRIPT" <"$SOURCE"
+  done
+#+end_src
+**** =main_script=
+#+NAME: pipetest_main_script
+#+begin_src shell
+  #!/usr/bin/env sh
+
+  tmux split-window -h "$custom_vim" "$SCRIPT"
+  tmux split-window -h sh -c 'cd "$(pwd)"; "$output_script"'
+  tmux select-pane -L
+  tmux select-layout even-horizontal
+
+  "$custom_vim" "$SOURCE"
+#+end_src
+*** TODO consider extracting this script into its own project
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
@@ -378,6 +550,7 @@ are designed to be easily integrated into dmenu scripts.
           cheat)          echo ~/.config/cheat/conf.yml ;;
           monero)         echo ~/.config/monero-project/monero-core.conf ;;
           xmrig)          echo ~/.config/xmrig.json ;;
+          tmux)           echo ~/.tmux.conf ;;
       esac
   done
 #+end_src
@@ -1237,7 +1410,7 @@ sys.exit()
   rm -rf ~/.local/share/baloo
 #+end_src
 ** =createhome=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/springclean")
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/createhome")
   #!/usr/bin/env sh
 
   # Top level home directory
@@ -1260,7 +1433,7 @@ sys.exit()
       usb-guest
       usbs
       usbd
-      usbc
+      usbp
       vm
   )
 
@@ -1383,9 +1556,6 @@ I have three sets of bindings for =sxhkd=:
 I want to be able to enable/disable each of those individually. That's why I
 keep each in a separate config file. And, for each I run a separate process
 * Helper code
-:PROPERTIES:
-:header-args: :results silent
-:END:
 These scripts are used as snippets or noweb references within this org file.
 ** =find-alt-cmd(name)=
 Returns the second executable with the given name, looked up in execpath.
