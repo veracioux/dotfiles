@@ -7,22 +7,20 @@
 * Quick interaction                                                :noexport:
 - [[~/.config/i3/config][Tangled destination file]].
 
-Execute the following call to tangle this file and apply changes:
+Execute the following call to tangle this file and apply changes to the running
+i3 session:
 #+CALL: tangle-and-apply()
 
 #+NAME: tangle-and-apply
 #+begin_src emacs-lisp :tangle no :results none
   (haris/tangle)
-  (shell-command "i3-msg -t command reload")
+  (shell-command "i3-msg -t command restart")
 #+end_src
 * Helper scripts and local variables
 #+PROPERTIES:
 :header-args: :results output :mkdirp yes
 
-NOTE: See local variables defined [[*Local variables][at the bottom]]. /I would really like to define
-them in a babel code block, but I don't know how or if it's possible at all./
-
-These scripts are used in the other sections:
+These scripts are used by the other sections:
 #+NAME: mic-volume-up
 #+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-up") :shebang "#!/usr/bin/env sh"
   pactl set-source-volume "$(pactl get-default-source)" +5%
@@ -83,7 +81,7 @@ These scripts are used in the other sections:
   set $mode_session "Session"
   set $mode_wm      " WM"
   set $mode_qr      " QR [i]n [o]ut [s]creen"
-  set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle"
+  set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle c[z]ech"
   set $mode_mic     " Microphone [+] [-] [m]ute"
   set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term"
 #+end_src
@@ -117,11 +115,12 @@ These scripts are used in the other sections:
 #+begin_src i3wm-config
   exec_always --no-startup-id \
   /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
-  # TODO exec_always --no-startup-id "autotiling"
+  exec_always --no-startup-id "autotiling"
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
 #+end_src
-* Bindings
+* Key bindings
+** General bindings
 #+begin_src i3wm-config :noweb yes
   # Manipulation using mouse
   floating_modifier $mod
@@ -160,6 +159,9 @@ These scripts are used in the other sections:
   bindsym $mod+Shift+plus   resize grow                 height  20;
   bindsym $mod+Shift+minus  resize shrink               height  20;
   bindsym $mod+g            move position center
+#+end_src
+** Resize menu
+#+begin_src i3wm-config :noweb yes
 
   mode $mode_resize {
   bindsym w               resize  shrink  width   1
@@ -192,8 +194,11 @@ These scripts are used in the other sections:
   # Back to normal: Enter or Escape or $mod+r
   bindsym Escape          mode default
   }
-  bindsym $mod+r            mode $mode_resize
 
+  bindsym $mod+r            mode $mode_resize
+#+end_src
+** Controlling the i3 session
+#+begin_src i3wm-config :noweb yes
   mode $mode_session {
   bindsym r               reload
   bindsym Ctrl+r          restart
@@ -202,8 +207,11 @@ These scripts are used in the other sections:
   bindsym Escape          mode default
   bindsym $mod+period     mode default
   }
-  bindsym $mod+period     mode $mode_session
 
+  bindsym $mod+period     mode $mode_session
+#+end_src
+** Window management menu
+#+begin_src i3wm-config :noweb yes
   mode $mode_wm {
   bindsym h               split h
   bindsym v               split v
@@ -219,8 +227,11 @@ These scripts are used in the other sections:
 
   bindsym Escape          mode default
   }
-  bindsym $mod+s            mode $mode_wm
 
+  bindsym $mod+s            mode $mode_wm
+#+end_src
+** QR code menu
+#+begin_src i3wm-config :noweb yes
   mode $mode_qr {
   bindsym i               exec --no-startup-id "qr in"
   bindsym o               exec --no-startup-id "qr out"
@@ -228,8 +239,11 @@ These scripts are used in the other sections:
 
   bindsym Escape          mode default
   }
-  bindsym $mod+Shift+q      mode $mode_qr
 
+  bindsym $mod+Shift+q      mode $mode_qr
+#+end_src
+** Organization menu (using org-mode)
+#+begin_src i3wm-config :noweb yes
   mode $mode_org {
   bindsym t               exec --no-startup-id "myemacs-float ~/data/personal/todo.org"; mode default
   bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org"; \
@@ -242,11 +256,16 @@ These scripts are used in the other sections:
   mode default
   bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org"; \
   mode default
+  bindsym z               exec --no-startup-id "myemacs-float ~/wiki/czech.org"; \
+  mode default
 
   bindsym Escape          mode default
   }
-  bindsym $mod+Shift+o      mode $mode_org
 
+  bindsym $mod+Shift+o      mode $mode_org
+#+end_src
+** Microphone control menu
+#+begin_src i3wm-config :noweb yes
   mode $mode_mic {
   bindsym plus            exec --no-startup-id ~/.config/i3/scripts/mic-volume-up
   bindsym minus           exec --no-startup-id ~/.config/i3/scripts/mic-volume-down
@@ -254,8 +273,11 @@ These scripts are used in the other sections:
   bindsym Escape          mode default
   bindsym F9              mode default
   }
-  bindsym F9 mode $mode_mic
 
+  bindsym F9 mode $mode_mic
+#+end_src
+** Emacs apps menu
+#+begin_src i3wm-config :noweb yes
   mode $mode_emacs {
   bindsym p              exec --no-startup-id sh -c 'TERM=menu epython', mode default
   bindsym o              exec --no-startup-id sh -c 'TERM=menu eoctave'; mode default
@@ -268,6 +290,7 @@ These scripts are used in the other sections:
   bindsym Escape         mode default
   bindsym $mod+e         mode default
   }
+
   bindsym $mod+e mode $mode_emacs
 #+end_src
 * Workspaces
@@ -367,6 +390,9 @@ These scripts are used in the other sections:
   # Matplotlib plots
   for_window [class="matplotlib"]                       floating enable
   for_window [class="matplotlib" floating]              move position center
+
+  # Emacs
+  for_window [class="Emacs" floating]                   $resize2; move position center
 
   # Emacs config editor
   for_window [title="EmacsFloat"]                       floating enable
