@@ -15,12 +15,12 @@ Emacs is a very versatile tool. I use it as:
 - as a [[*Comint][superior interface for many interpreters]] (comint)
 
 What's more, I'm using a distribution of Emacs called Spacemacs, which comes
-with many sensible defaults and simplifies the installation and setup of packages.
-Because it is so feature-rich, Emacs can take an annoying time to start up.
-That's why I have set up a systemd service that runs an emacs daemon on system
-startup. When I want to launch emacs to perform a task, I run [[file:~/.haris/scripts.org::*=myemacs=][myemacs]] (a custom
-command that wraps [[man:emacsclient][emacsclient]]), which uses the daemon, without the need to load
-the cruft each time.
+with many sensible defaults and simplifies the installation and setup of
+packages. Because it is so feature-rich, Emacs can take an annoying time to
+start up. That's why I have set up a systemd service that runs an emacs daemon
+on system startup. When I want to launch emacs to perform a task, I run [[file:~/.haris/scripts.org::*=myemacs=][myemacs]]
+(a custom command that wraps [[man:emacsclient][emacsclient]]), which attaches to the daemon, without
+the need to load the cruft each time.
 
 ** Daemons
 For some of those use cases I mentioned above, I want to run a standalone emacs
@@ -78,7 +78,7 @@ unnecessary code.
 *** TODO Configuration loading
 **** Root user config file
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
-  (load-file (cond ((equal server-name "irc") "~/.emacs.d/haris/irc.el")
+ (load-file (cond ((equal server-name "irc") "~/.emacs.d/haris/irc.el")
                    ("~/.emacs.d/haris/default.el")))
 #+end_src
 * General settings
@@ -160,29 +160,31 @@ unnecessary code.
 ** Bindings
 #+begin_src emacs-lisp
   ;; M-TAB in insert mode inserts a tab and converts it to a space
-  (define-key evil-insert-state-map (kbd "M-TAB")
-    (lambda () (interactive)
-      (insert "\t")
-      (untabify
-       (line-beginning-position)
-       (line-end-position))))
-  ;; M-TAB in normal mode switches windows
-  (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
+  (defun haris/insert-tab-as-spaces () (interactive)
+         (insert "\t")
+         (untabify
+          (line-beginning-position)
+          (line-end-position)))
 
   (defun haris/search-in-files-with-initial ()
     "Search in files, with initial text set to region, or nil if no region is active"
     (interactive)
-    (if (eq evil-state 'visual) (counsel-rg (projectile-symbol-or-selection-at-point)) (counsel-rg)))
+    (if (eq evil-state 'visual)
+        (counsel-rg (projectile-symbol-or-selection-at-point))
+      (counsel-rg)))
 
+  (defun haris/popup-eshell () (interactive)
+         (let ((shell-default-shell 'eshell))
+           (spacemacs/default-pop-shell)) )
+
+  ;; M-TAB in normal mode switches windows
+  (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
+  ;; M-TAB in insert mode inserts a tab emulated by spaces
+  (define-key evil-insert-state-map (kbd "M-TAB") 'haris/insert-tab-as-spaces)
   ;; Use ripgrep for search
   (define-key evil-normal-state-map (kbd "SPC /") 'haris/search-in-files-with-initial)
-
   ;; "SPC +" will pop up eshell
-  (spacemacs/set-leader-keys "+"
-    (lambda ()
-      (interactive)
-      (let ((shell-default-shell 'eshell))
-        (spacemacs/default-pop-shell))))
+  (spacemacs/set-leader-keys "+" 'haris/popup-eshell)
 #+end_src
 *** Launching other programs at current context
 Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
@@ -276,6 +278,9 @@ Some custom keybindings are defined here as well.
                                             "Search through current history"
                                             (interactive)
                                             (counsel-shell-history)))
+
+  (spacemacs/declare-prefix "o" "custom")
+  (spacemacs/set-leader-keys "or" 'rename-buffer)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<bindings-miscellaneous>>
@@ -297,16 +302,17 @@ Some custom keybindings are defined here as well.
 
   (use-package org-transclusion :defer t)
   (use-package org-preview-html :defer t)
+  (use-package org-drill        :defer t)
 
   (use-package ol-man :ensure nil :defer t)
 
-  (defun org-mode-visual-fill ()
+  (defun haris/org-mode-visual-fill ()
     (setq visual-fill-column-width        90
           visual-fill-column-center-text  t)
     (visual-fill-column-mode 1))
 
   (add-hook 'org-mode-hook 'org-appear-mode)
-  (add-hook 'org-mode-hook 'org-mode-visual-fill)
+  (add-hook 'org-mode-hook 'haris/org-mode-visual-fill)
   (add-hook 'org-mode-hook 'org-indent-mode)
 
   (setq org-indent-mode                     nil
@@ -347,7 +353,8 @@ Takes too long to load.
                    ("py"  . "src python")
                    ("dep" . "src shell :tangle (haris/tangle-deps \"TODO\")")
                    ("sht" . "src shell :tangle (haris/tangle-home \"TODO\")")
-                   ("elt" . "src emacs-lisp :tangle (haris/tangle-home \"TODO\")")))
+                   ("elt" . "src emacs-lisp :tangle (haris/tangle-home \"TODO\")")
+                   ("st" . "src :tangle (haris/tangle-home \"TODO\")")))
          :test (lambda (a b) (string= (car a) (car b)))))
 #+end_src
 ** Babel
@@ -399,6 +406,7 @@ The following functions help me define common tangle destinations.
   (evil-define-key 'normal org-mode-map (kbd ", TAB")       'org-next-link)
   (evil-define-key 'normal org-mode-map (kbd ", <backtab>") 'org-previous-link)
   (evil-define-key 'normal org-src-mode-map (kbd ", w")     'org-edit-src-save)
+  (evil-define-key 'normal org-mode-map (kbd ", i c")       'org-columns)
 
   (evil-define-key 'normal org-mode-map (kbd "SPC h o")     'org-info-find-node)
 #+end_src

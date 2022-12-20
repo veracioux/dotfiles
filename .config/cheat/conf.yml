@@ -9,4 +9,4 @@ cheatpaths:
   - name: haris
     path: ~/repo/cheat
     tags: [ haris ]
-    readonly: true
+    readonly: false

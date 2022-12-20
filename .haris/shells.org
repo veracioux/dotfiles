@@ -206,7 +206,12 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   # When you ls, save the argument so you can quickly cd to that folder.
   # It's not fool-proof, but it works in most situations and it's safe.
   function ls
-      lsd --color=auto $argv
+      if [ -z "$EMACS_VTERM_PATH" ]
+        # In emacs vterm, lsd outputs additional whitespace which is annoying
+        lsd --color=auto $argv
+      else
+        command ls --color=auto $argv
+      end
       set -g __last_ls_arg "$argv"
   end
 
