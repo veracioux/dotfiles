@@ -207,10 +207,10 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   # It's not fool-proof, but it works in most situations and it's safe.
   function ls
       if [ -z "$EMACS_VTERM_PATH" ]
-        # In emacs vterm, lsd outputs additional whitespace which is annoying
-        lsd --color=auto $argv
+          # In emacs vterm, lsd outputs additional whitespace which is annoying
+          lsd --color=auto $argv
       else
-        command ls --color=auto $argv
+          command ls --color=auto $argv
       end
       set -g __last_ls_arg "$argv"
   end
@@ -245,8 +245,8 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       if [ -f "$file" ]
           vim "$file"
       else
-          read -n 1 -P "Create new script? [Y/n]: " choice
-          if [ -z "$choice" -o "$choice" = 'y' ]
+          read -n 1 -P "Create new script? [y/N]: " choice
+          if [ "$choice" = 'y' ]
               set file ~/.haris-bin/"$argv[1]"
               tem put sh -o "$file"
               chx "$file"
@@ -469,19 +469,25 @@ a terminal and runs the aliased command.
   abbr -g sprq  'cmd-with-notify sudo pacman -R (pacman -Qdtq)'
 
   # Systemd
-  abbr -g ctl     'systemctl'
-  abbr -g start   'systemctl start'
-  abbr -g stop    'systemctl stop'
-  abbr -g en      'systemctl enable'
-  abbr -g sts     'systemctl status'
-  abbr -g restart 'systemctl restart'
-  abbr -g sus     'systemctl suspend -i'
+  abbr -g ctl       'systemctl'
+  abbr -g start     'systemctl start'
+  abbr -g stop      'systemctl stop'
+  abbr -g en        'systemctl enable'
+  abbr -g dis       'systemctl disable'
+  abbr -g sts       'systemctl status'
+  abbr -g dreload   'systemctl daemon-reload'
+  abbr -g reload    'systemctl reload'
+  abbr -g restart   'systemctl restart'
+  abbr -g sus       'systemctl suspend -i'
   #   --user versions
-  abbr -g ctlu      'systemctl          --user'
-  abbr -g startu    'systemctl start    --user'
-  abbr -g stopu     'systemctl stop     --user'
-  abbr -g enu       'systemctl enable   --user'
-  abbr -g stsu      'systemctl status   --user'
+  abbr -g ctlu      'systemctl --user'
+  abbr -g startu    'systemctl start --user'
+  abbr -g stopu     'systemctl stop --user'
+  abbr -g enu       'systemctl enable --user'
+  abbr -g disu      'systemctl disable --user'
+  abbr -g stsu      'systemctl status --user'
+  abbr -g dreloadu  'systemctl daemon-reload --user'
+  abbr -g reloadu   'systemctl reload --user'
   abbr -g restartu  'systemctl restart  --user'
 
   # Docker
@@ -510,6 +516,7 @@ a terminal and runs the aliased command.
   abbr -g oct   'octave'
   abbr -g octb  'OCTAVE_BASIC=true command octave'
   abbr -g va    'vagrant'
+  abbr -g u     'fusermount -u'
 
   abbr -g yt 'ytfzf -t -s'
   abbr -g t  'tem'
