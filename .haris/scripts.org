@@ -488,6 +488,21 @@ them as code blocks here for better readability.
   "$custom_vim" "$SOURCE"
 #+end_src
 *** TODO consider extracting this script into its own project
+** =auto-browser=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/auto-browser")
+  #!/usr/bin/env bash
+
+  browser='firefox'
+  # If a firefox window is currently active, open the link in the active window
+  if xprop -id "$(xdotool getactivewindow)" | grep -qi 'firefox'; then
+      where='--new-tab'
+  else # Otherwise open a new window
+      where='--new-window'
+  fi
+
+  args="$(printf '%q ' "$@")"
+  i3-msg exec "$browser $where $args"
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
@@ -551,6 +566,7 @@ are designed to be easily integrated into dmenu scripts.
           monero)         echo ~/.config/monero-project/monero-core.conf ;;
           xmrig)          echo ~/.config/xmrig.json ;;
           tmux)           echo ~/.tmux.conf ;;
+          browser.org)    echo ~/.haris/browser.org ;;
       esac
   done
 #+end_src
@@ -949,8 +965,12 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
   #!/usr/bin/env bash
 
   edit=" Edit..."
-  lookup="$(ls ~/proj/*/TODO.org ~/proj/drytoe/*/TODO.org \
-      ~/data/personal/todos/*/TODO.org)"
+  lookup="$(
+    ls ~/proj/*/TODO.org \
+       ~/eo/TODO.org \
+       ~/proj/drytoe/*/TODO.org \
+       ~/data/personal/todos/*/TODO.org
+  )"
   echo "$lookup"
 
   entries="$(echo "$edit"
