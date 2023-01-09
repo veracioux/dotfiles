@@ -554,7 +554,7 @@ a terminal and runs the aliased command.
 #+begin_src shell :tangle (concat "/tmp/tangle-" (user-login-name) "/.profile")
   export MAKEFLAGS='-j6'
   export GPG_TTY=$(tty)
-  export QT_QPA_PLATFORMTHEME=gtk2
+  [ "$(uname)" = "Linux" ] && export QT_QPA_PLATFORMTHEME=gtk2
   export PYTHONSTARTUP=~/.startup.py
   export RUSTC_WRAPPER=sccache
   export MOZ_USE_XINPUT2=1

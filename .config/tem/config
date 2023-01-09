@@ -15,10 +15,11 @@ command = lsd -1
 a = add
 r = repo
 p = path
+pl = path --list
 e = env
 c = config
 g = git
-s = path -ne
+s = path --new --edit
 f = find
 v = var
 

@@ -285,6 +285,11 @@ Some custom keybindings are defined here as well.
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<bindings-miscellaneous>>
 #+end_src
+** Vim-like configuration
+#+begin_src emacs-lisp
+  (use-package evil-quickscope)
+  (global-evil-quickscope-always-mode)
+#+end_src
 * Ivy
 #+NAME: ivy
 #+begin_src emacs-lisp
@@ -521,7 +526,7 @@ The following functions help me define common tangle destinations.
 #+end_src
 * Vterm
 #+begin_src emacs-lisp
-  (setq vterm-shell "/usr/bin/fish")
+  (setq vterm-shell "fish")
   (setq vterm-exit-functions 'delete-frame)
 
   (add-hook 'vterm-mode-hook (lambda () (read-only-mode -1)))
@@ -799,6 +804,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      emacs-lisp
      shell
      yaml
+     csv
      rust
      docker
      translate

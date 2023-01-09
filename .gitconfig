@@ -22,6 +22,7 @@
     lll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
         -%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
         --abbrev-commit --date=short
+    lpf = log --pretty=fuller
     ldog = log --decorate --oneline --graph
     whenadded = log --diff-filter=A
     # Remote
@@ -63,11 +64,15 @@
     cam = commit --amend --message
     extend = commit --amend --no-edit
     ex = commit --amend --no-edit
-    sub = submodule
     tweak = commit --amend --no-edit
-    t = commit --amend --no-edit
+    t = tweak
+    # Submodule
+    sub = submodule
+    foreach = submodule foreach
     # Tree manipulation
     remain = reset --hard upstream/main
+    redev = reset --hard upstream/develop
+    redev = reset --hard upstream/develop
     res = restore
     uns = restore --staged
     # Rebase
@@ -142,4 +147,4 @@
     branch        = brightmagenta bold
     remoteBranch  = brightgreen bold
 [github]
-	user = veracioux
+  user = veracioux

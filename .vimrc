@@ -1,6 +1,6 @@
 " vim: foldmethod=marker
 " {{{
-set shell=/usr/bin/fish
+set shell=fish
 syntax on
 set number relativenumber
 set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\

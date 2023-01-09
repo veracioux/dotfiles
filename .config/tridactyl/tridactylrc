@@ -8,6 +8,7 @@ bind j scrollline 3
 bind k scrollline -3
 bind D tabduplicate
 
+# about: pages
 bind ,p open about:preferences
 bind ,s open about:preferences#search
 bind ,P open about:profiles
@@ -20,6 +21,9 @@ bind ,D open about:debugger
 bind ,g tabopen google.com
 bind ,m composite get_current_url | mpvsafe
 bind <C-.> tabdetach
+
+bind ;D js debugger;
+bind ;? hint -W exclaim_quiet notify-send
 
 unbind <C-b>
 unbind <C-f>
