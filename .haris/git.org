@@ -3,151 +3,156 @@
 
 * Main config
 #+begin_src conf :tangle (haris/tangle-home ".gitconfig")
-[user]
-    email = harisgusic.dev@gmail.com
-    name = Haris Gušić
-    signingkey = 2333BDF9F505C46F2E3F5FDB0348E6D2D1D44A6D
-[include]
-    path = ~/.gitconfig.private
-[alias]
-    i = init
-    s = status
-    a = add
-    b = branch
-    # Ls
-    ls = ls-tree -r master --name-only
-    lss = ls-tree -r master
-    # Log
-    l = ldog --pretty=format:'%C(magenta bold)%h%Creset \
-        -%C(auto)%d%Creset %s' \
-        --abbrev-commit --date=short
-    ll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
-        -%C(auto)%d%Creset %s %C(brightcyan)(%ad)' \
-        --abbrev-commit --date=short
-    lll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
-        -%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
-        --abbrev-commit --date=short
-    ldog = log --decorate --oneline --graph
-    whenadded = log --diff-filter=A
-    # Remote
-    r = remote
-    rg = remote get-url
-    rgo = remote get-url origin
-    rgu = remote get-url upstream
-    # Diff
-    d = diff
-    ds = diff --staged
-    dd = diff HEAD~1..HEAD
-    # Push
-    p = push
-    po = push origin
-    pom = push origin master
-    poh = push origin HEAD
-    pu = push upstream
-    puh = push upstream HEAD
-    pa = push all
-    pam = push all master
-    # Fetch
-    f = fetch
-    fo = fetch origin
-    fu = fetch upstream
-    # Pull
-    ppo = pull origin
-    ppom = pull origin master
-    ppu = pull upstream
-    ppum = pull upstream master
-    # Checkout
-    co = checkout
-    coh = checkout HEAD
-    com = checkout master
-    cod = checkout develop
-    # Commit
-    c = commit
-    ci = commit -m 'Initial commit'
-    cc = commit --all --message
-    cam = commit --amend --message
-    extend = commit --amend --no-edit
-    ex = commit --amend --no-edit
-    sub = submodule
-    tweak = commit --amend --no-edit
-    t = commit --amend --no-edit
-    # Tree manipulation
-    remain = reset --hard upstream/main
-    res = restore
-    uns = restore --staged
-    # Rebase
-    rb = rebase
-    rbc = rebase --continue
-    rba = rebase --abort
-    # Stash
-    ss = stash
-    sl = stash list
-    sa = stash apply
-    sp = stash pop
-    sd = stash drop
-    # Bisect
-    good = bisect good
-    bad = bisect bad
-    bsr = bisect reset
-    # Miscellaneous
-    chx = update-index --chmod=+x
-[core]
-    autocrlf      = input
-    pager         = less -F -X
-    editor        = vim
-    whitespace    = trailing-space
-    filemode      = false
-[apply]
-    whitespace    = fix
-[format]
-    signOff = true
-[init]
-    defaultBranch = main
+  [user]
+      email = harisgusic.dev@gmail.com
+      name = Haris Gušić
+      signingkey = 2333BDF9F505C46F2E3F5FDB0348E6D2D1D44A6D
+  [include]
+      path = ~/.gitconfig.private
+  [alias]
+      i = init
+      s = status
+      a = add
+      b = branch
+      # Ls
+      ls = ls-tree -r master --name-only
+      lss = ls-tree -r master
+      # Log
+      l = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+          -%C(auto)%d%Creset %s' \
+          --abbrev-commit --date=short
+      ll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+          -%C(auto)%d%Creset %s %C(brightcyan)(%ad)' \
+          --abbrev-commit --date=short
+      lll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+          -%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
+          --abbrev-commit --date=short
+      lpf = log --pretty=fuller
+      ldog = log --decorate --oneline --graph
+      whenadded = log --diff-filter=A
+      # Remote
+      r = remote
+      rg = remote get-url
+      rgo = remote get-url origin
+      rgu = remote get-url upstream
+      # Diff
+      d = diff
+      ds = diff --staged
+      dd = diff HEAD~1..HEAD
+      # Push
+      p = push
+      po = push origin
+      pom = push origin master
+      poh = push origin HEAD
+      pu = push upstream
+      puh = push upstream HEAD
+      pa = push all
+      pam = push all master
+      # Fetch
+      f = fetch
+      fo = fetch origin
+      fu = fetch upstream
+      # Pull
+      ppo = pull origin
+      ppom = pull origin master
+      ppu = pull upstream
+      ppum = pull upstream master
+      # Checkout
+      co = checkout
+      coh = checkout HEAD
+      com = checkout master
+      cod = checkout develop
+      # Commit
+      c = commit
+      ci = commit -m 'Initial commit'
+      cc = commit --all --message
+      cam = commit --amend --message
+      extend = commit --amend --no-edit
+      ex = commit --amend --no-edit
+      tweak = commit --amend --no-edit
+      t = tweak
+      # Submodule
+      sub = submodule
+      foreach = submodule foreach
+      # Tree manipulation
+      remain = reset --hard upstream/main
+      redev = reset --hard upstream/develop
+      redev = reset --hard upstream/develop
+      res = restore
+      uns = restore --staged
+      # Rebase
+      rb = rebase
+      rbc = rebase --continue
+      rba = rebase --abort
+      # Stash
+      ss = stash
+      sl = stash list
+      sa = stash apply
+      sp = stash pop
+      sd = stash drop
+      # Bisect
+      good = bisect good
+      bad = bisect bad
+      bsr = bisect reset
+      # Miscellaneous
+      chx = update-index --chmod=+x
+  [core]
+      autocrlf      = input
+      pager         = less -F -X
+      editor        = vim
+      whitespace    = trailing-space
+      filemode      = false
+  [apply]
+      whitespace    = fix
+  [format]
+      signOff = true
+  [init]
+      defaultBranch = main
 
-[url "https://github.com/"]
-    insteadOf = gh:
-[url "https://github.com/veracioux/"]
-    insteadOf = mygh:
-[url "git@github.com:veracioux/"]
-    insteadOf = myghg:
-[url "git@github.com:"]
-    insteadOf = ghg:
+  [url "https://github.com/"]
+      insteadOf = gh:
+  [url "https://github.com/veracioux/"]
+      insteadOf = mygh:
+  [url "git@github.com:veracioux/"]
+      insteadOf = myghg:
+  [url "git@github.com:"]
+      insteadOf = ghg:
 
-[url "https://gitlab.com/"]
-    insteadOf = gl:
-[url "git@gitlab.com:"]
-    insteadOf = glg:
-[url "git@gitlab.com:veracioux/"]
-    insteadOf = mygl:
+  [url "https://gitlab.com/"]
+      insteadOf = gl:
+  [url "git@gitlab.com:"]
+      insteadOf = glg:
+  [url "git@gitlab.com:veracioux/"]
+      insteadOf = mygl:
 
-[url "ssh://aur@aur.archlinux.org/"]
-    insteadOf = aurg:
+  [url "ssh://aur@aur.archlinux.org/"]
+      insteadOf = aurg:
 
-[url "ssh://git@heroku.com/"]
-    insteadOf = https://git.heroku.com/
+  [url "ssh://git@heroku.com/"]
+      insteadOf = https://git.heroku.com/
 
-[color "diff"]
-    context       = white
-    frag          = magenta
-    meta          = brightblue bold
-    hunk          = red
-    old           = brightred
-    new           = brightgreen
-    oldMoved      = yellow
-    newMoved      = brightcyan
+  [color "diff"]
+      context       = white
+      frag          = magenta
+      meta          = brightblue bold
+      hunk          = red
+      old           = brightred
+      new           = brightgreen
+      oldMoved      = yellow
+      newMoved      = brightcyan
 
-[color "branch"]
-    current       = blue bold
-    local         = brightcyan
-    remote        = brightmagenta
-    upstream      = magenta
+  [color "branch"]
+      current       = blue bold
+      local         = brightcyan
+      remote        = brightmagenta
+      upstream      = magenta
 
-[color "decorate"]
-    head          = brightblue bold
-    branch        = brightmagenta bold
-    remoteBranch  = brightgreen bold
-[github]
-	user = veracioux
+  [color "decorate"]
+      head          = brightblue bold
+      branch        = brightmagenta bold
+      remoteBranch  = brightgreen bold
+  [github]
+    user = veracioux
 #+end_src
 * Script aliases
 ** =bak=
