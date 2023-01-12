@@ -299,6 +299,27 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       git --git-dir="$gitdir" $worktree_option $argv
   end
 #+end_src
+*** =^=
+#+begin_src fish
+  function ^ -d "cd to the first directory in the hierarchy by specified name" -a name
+      pushd "$PWD"
+      while [ "$PWD" != "/" ]
+          if [ (basename "$PWD") = "$name" ]
+              set -l dir "$PWD"
+              popd
+              cd "$dir"
+              return
+          end
+          cd ..
+      end
+      popd
+      return 1
+  end
+#+end_src
+**** Completions
+#+begin_src fish
+  complete -c ^ -a '(pwd | tr "/" "\n")' -f
+#+end_src
 ** Completions
 Function(s) that will be used by many completions.
 Completions for the functions defined in [[Functions]].
