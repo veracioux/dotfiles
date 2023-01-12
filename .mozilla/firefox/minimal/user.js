@@ -1,1 +1,0 @@
-/home/haris/.mozilla/firefox/common/user.js

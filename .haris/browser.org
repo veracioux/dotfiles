@@ -1,0 +1,384 @@
+#+TITLE: Web browser config
+#+PROPERTY: header-args :mkdirp yes
+
+I use Firefox as my main web browser, and occasionally Chromium (or Chrome on
+non-linux) for browser compatibility testing during web development. I use
+=userChrome.css= to remove the title bar and whatnot. I use the =haris= profile as
+my main profile. I also have an =ext= profile that I keep packed with additional
+extensions that I use only occasionally, so they don't affect the performance of
+my main profile.
+
+* Settings
+All my browser preferences that I don't need to keep secret go here.
+#+NAME: user.js
+#+begin_src javascript :tangle (haris/tangle-home ".mozilla/firefox/haris/user.js")
+  user_pref("devtools.theme", "dark");
+  user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+  user_pref("browser.bookmarks.autoExportHTML", false);
+  user_pref("browser.startup.page", 3);
+
+  user_pref("places.history.enabled", true);
+  user_pref("privacy.clearOnShutdown.history", false);
+  user_pref("browser.download.useDownloadDir", false);
+
+  // Allow extensions to run on official mozilla pages
+  user_pref("extensions.webextensions.restrictedDomains", "");
+
+  user_pref("privacy.resistFingerprinting.block_mozAddonManager", true);
+
+  user_pref("devtools.chrome.enabled", true);
+  user_pref("devtools.debugger.remote-enabled", true);
+
+  user_pref("tridactyl.unfixedamo_removed", true);
+
+  user_pref("dom.security.https_only_mode_ever_enabled_pbm", true);
+  user_pref("dom.security.https_only_mode_pbm", true);
+  user_pref("signon.generation.enabled", false);
+
+  user_pref("browser.link.open_newwindow", 3);
+
+  user_pref("services.sync.declinedEngines", "creditcards,passwords");
+
+  // Show search bar in <select> dropdown
+  user_pref("dom.forms.selectSearch", true);
+
+#+end_src
+#+begin_src javascript :tangle (haris/tangle-home ".mozilla/firefox/ext/user.js") :noweb yes
+  <<user.js>>
+#+end_src
+* CSS customizations
+:PROPERTIES:
+:header-args: :tangle (haris/tangle-home ".mozilla/firefox/haris/chrome/userChrome.css") :mkdirp yes
+:END:
+#+begin_src css
+  #navigator-toolbox:not(:hover) #nav-bar {
+      min-height: 0 !important;
+      max-height: 0 !important;
+  }
+
+  #navigator-toolbox:not(:hover) #urlbar-container {
+      visibility: collapse;
+  }
+
+  /*
+   ,* A bit convoluted way of hiding the toolbar buttons when the navigator is
+   ,* collapsed. Simpler methods I've tried also hide the extension menu that
+   ,* should pop up when I press its keyboard shortcut, so this one is the winner.
+   ,*/
+  #navigator-toolbox:not(:hover) .toolbarbutton-badge-stack > * {
+      display: none;
+  }
+
+  #titlebar, #tabbrowser-tabs {
+      max-height: 20px !important;
+      min-height: 0 !important;
+  }
+
+  #firefox-view-button {
+      height: 20px !important;
+      width: 20px !important;
+  }
+
+  #urlbar {
+      top: 0 !important;
+  }
+
+  #tabbrowser-arrowscrollbox, #scrollbutton-up, #scrollbutton-down,
+  #tabs-newtab-button, #new-tab-button, #alltabs-button,
+  .tabbrowser-tab, .tab-background, .tab-stack, .tab-background
+  {
+      min-height: 0 !important;
+      max-height: 20px !important;
+      margin: 0px !important;
+  }
+
+  #new-tab-button, #tabs-newtab-button {
+      visibility: collapse !important;
+  }
+
+  #alltabs-button {
+      transform: scale(0.8);
+      padding: 0 !important;
+  }
+
+  .toolbarbutton-badge-stack {
+      padding: 0 !important;
+  }
+
+  .tabbrowser-tab {
+      padding: 0;
+      font-size: 11px;
+  }
+
+  /* Color variables are defined in my custom tridactyl theme. */
+
+  a {
+      color: var(--mycolor-brblue);
+  }
+
+  a:visited {
+      color: var(--mycolor-brmagenta);
+  }
+#+end_src
+#+begin_src css :tangle (haris/tangle-home ".mozilla/firefox/ext/chrome/userChrome.css")
+  @import url("/home/haris/.mozilla/firefox/haris/chrome/userChrome.css");
+#+end_src
+** Right-click bug
+I don't remember what the bug is - something about a context menu sometimes being
+automatically closed right after it is opened.
+#+begin_src css
+  /* Fix right-click bug */
+  #contentAreaContextMenu{ margin: 2px 0 0 2px }
+#+end_src
+** URL status panel
+I am annoyed by the URL status panel shadowing my tridactyl ex command window,
+so I move it to the top-right corner.
+#+begin_src css
+  #statuspanel[type="overLink"] {
+      padding-top: 0 !important;
+      inset: 0 0 auto auto !important;
+  }
+#+end_src
+* Tridactyl
+I try to use Vim mode everywhere - including my web browser. For this I use the
+Tridactyl extension.
+#+begin_src shell :tangle (haris/tangle-home ".config/tridactyl/tridactylrc")
+  command colo colorscheme
+
+  command Src source ~/.config/tridactyl/tridactylrc
+
+  colorscheme custom
+
+  bind j scrollline 3
+  bind k scrollline -3
+  bind D tabduplicate
+
+  # about: pages
+  bind ,p open about:preferences
+  bind ,s open about:preferences#search
+  bind ,P open about:profiles
+  bind ,a open about:addons
+  bind ,c open about:config
+  bind ,d open about:downloads
+  bind ,l open about:logins
+  bind ,D open about:debugger
+
+  bind ,g tabopen google.com
+  bind ,m composite get_current_url | mpvsafe
+  bind <C-.> tabdetach
+
+  bind ;D js debugger;
+  bind ;? hint -W exclaim_quiet notify-send
+
+  unbind <C-b>
+  unbind <C-f>
+
+  autocmd DocStart savannah.gnu.org mode ignore
+  autocmd DocStart octave.sourceforge.io mode ignore
+  autocmd DocStart gnu.org mode ignore
+  autocmd DocStart buildyourownlisp.com mode ignore
+
+  # Flameshot delete imgur upload
+  bind ,D js document.querySelectorAll(".button-big")[1].click();
+
+  # GitHub
+
+  # Remove check_suite_focus from URL
+  command artifact js location.href = location.href.replace("?check_suite_focus=true", "");
+#+end_src
+** Custom theme
+#+begin_src css :tangle (haris/tangle-home ".config/tridactyl/themes/custom.css")
+  /* ┏━━━━━━━━━━━━━━━━━━━┓
+     ┃ Color definitions ┃
+     ┗━━━━━━━━━━━━━━━━━━━┛ */
+  :root {
+      --mycolor-black:        #1e1e1e;
+      --mycolor-red:          #ff5555;
+      --mycolor-green:        #5ac2a8;
+      --mycolor-yellow:       #f2b374;
+      --mycolor-blue:         #6980fa;
+      --mycolor-magenta:      #d098ff;
+      --mycolor-cyan:         #8cceff; /*TODO Change to something darker*/
+      --mycolor-white:        #92aab7;
+      --mycolor-brblack:      #6b746b;
+      --mycolor-brred:        #ff8c8c;
+      --mycolor-brgreen:      #98eb98;
+      --mycolor-bryellow:     #e0d97b;
+      --mycolor-brblue:       #99a3ff;
+      --mycolor-brmagenta:    #f298c3;
+      --mycolor-brcyan:       #a6d9ff;
+      --mycolor-brwhite:      #dddddd;
+      --mycolor-extra1:       #333333;
+  }
+
+  /* ┏━━━━━━━━━━━━━┓
+     ┃ Main window ┃
+     ┗━━━━━━━━━━━━━┛ */
+
+  /* Mode indicator */
+  :root {
+      --tridactyl-status-font-family: var(--tridactyl-font-family);
+      --tridactyl-status-font-size: var(--tridactyl-small-font-size);
+      --tridactyl-status-bg: var(--tridactyl-bg);
+      --tridactyl-status-fg: var(--mycolor-magenta);
+      --tridactyl-status-border: 2px var(--mycolor-brblue) solid;
+      --tridactyl-status-border-radius: 4px;
+  }
+
+  /* ┏━━━━━━━━━━━━━━━━━┓
+     ┃ Tridactyl popup ┃
+     ┗━━━━━━━━━━━━━━━━━┛ */
+
+  /* sectionHeader */
+  #completions .sectionHeader {
+      background: var(--mycolor-brblue);
+      color:      var(--mycolor-black);
+  }
+
+  /* Completion window */
+  :root {                                                  /* General window */
+      --tridactyl-cmplt-option-height: 1.4em;
+      --tridactyl-cmplt-fg: var(--tridactyl-fg);
+      --tridactyl-cmplt-bg: var(--tridactyl-bg);
+      --tridactyl-cmplt-font-size: 10pt;
+      --tridactyl-cmplt-font-family: monospace;
+      --tridactyl-cmplt-border-top: none;
+  }
+
+  .excmd {                                                /* Command names */
+      color: var(--mycolor-brcyan);
+      font-weight: bold;
+  }
+  .BufferCompletionOption .title {                        /* Tab browser */
+      color: var(--mycolor-brcyan);
+      font-weight: bold;
+  }
+  .focused * {                                            /* Active entry */
+      font-weight: bold;
+      color: var(--mycolor-black);
+  }
+  .optionContainer .BufferCompletionOption.focused * {    /* Active entry */
+      font-weight: bold;
+      color: var(--mycolor-black);
+  }
+  #completions .BmarkCompletionOption .title {            /* :bmarks names */
+      font-weight: bold;
+      color: var(--mycolor-brcyan);
+  }
+  #completions .BmarkCompletionOption.focused * {         /* Active entry */
+      font-weight: bold;
+      color: var(--mycolor-black);
+  }
+
+  /* Command-line */
+  :root {
+      --tridactyl-cmdl-bg: var(--mycolor-extra1);
+      --tridactyl-cmdl-fg: var(--mycolor-brwhite);
+      --tridactyl-cmdl-line-height: 1.5;
+      --tridactyl-cmdl-font-family: monospace;
+      --tridactyl-cmdl-font-size: 9pt;
+  }
+
+  /* Generic */
+  :root {
+      --tridactyl-font-family: monospace;
+      --tridactyl-font-family-sans: sans-serif;
+      --tridactyl-font-size: 13pt;
+      --tridactyl-small-font-size: 13px;
+      --tridactyl-bg: var(--mycolor-black);
+      --tridactyl-fg: var(--mycolor-brwhite);
+      /*--tridactyl-logo: url("moz-extension://__MSG_@@extension_id__/static/logo/tridactyl_64px.png");*/
+      --tridactyl-scrollbar-color: red;
+      /* Search highlight */
+      --tridactyl-search-highlight-color: var(--mycolor-bryellow);
+  }
+
+  /* ┏━━━━━━━━━┓
+     ┃ Hinting ┃
+     ┗━━━━━━━━━┛ */
+
+  :root {
+      /* Hint character tags */
+      --tridactyl-hintspan-font-family: var(--tridactyl-font-family-sans);
+      --tridactyl-hintspan-font-size: var(--tridactyl-small-font-size);
+      --tridactyl-hintspan-font-weight: bold;
+      --tridactyl-hintspan-fg: var(--mycolor-black);
+      --tridactyl-hintspan-bg: var(--mycolor-brblue);
+      --tridactyl-hintspan-border-color: var(--mycolor-brblue);
+      --tridactyl-hintspan-border-width: 0px;
+      --tridactyl-hintspan-border-style: solid;
+      --tridactyl-hintspan-js-background: var(--mycolor-brmagenta);
+
+      /* Element highlights */
+      --tridactyl-hint-active-fg: var(--tridactyl-fg);
+      --tridactyl-hint-active-bg: var(--mycolor-magenta);
+      --tridactyl-hint-active-outline: 1px solid var(--mycolor-blue);
+      --tridactyl-hint-bg: rgba(var(--mycolor-magenta), 0.01) !important;
+      --tridactyl-hint-outline: 1px solid var(--mycolor-blue);
+  }
+
+
+  /* ┏━━━━━━━━━━━━━━━━━┓
+     ┃ Tridactyl pages ┃
+     ┗━━━━━━━━━━━━━━━━━┛ */
+
+  #tridactyl-version-number {                             /* Start page title */
+      color: var(--mycolor-magenta);
+  }
+  :root {
+      /* :viewsource */
+      --tridactyl-vs-bg: var(--tridactyl-bg);
+      --tridactyl-vs-fg: var(--tridactyl-fg);
+      --tridactyl-vs-font-family: var(--tridactyl-font-family);
+
+      /*url style*/
+      --tridactyl-url-text-decoration: none;
+      --tridactyl-url-fg: var(--mycolor-magenta);
+      --tridactyl-url-bg: var(--tridactyl-bg);
+      --tridactyl-url-cursor: pointer;
+
+      /*option focused*/
+      --tridactyl-of-fg: var(--mycolor-black);
+      --tridactyl-of-bg: var(--mycolor-yellow);
+  }
+
+  /* ┏━━━━━━━━━━━━━━━━━┓
+     ┃ General Firefox ┃
+     ┗━━━━━━━━━━━━━━━━━┛ */
+
+  /*a { color: var(--mycolor-brblue); }          /* Link color */
+  /* a:visited { color: var(--mycolor-brmagenta); } */
+
+  /* ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+     ┃ Miscellaneous - not sure if they have any effect ┃
+     ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ */
+  :root {
+      /*new tab spoiler box*/
+      --tridactyl-highlight-box-bg: red;
+      --tridactyl-highlight-box-fg: red;
+
+      --tridactyl-container-color-blue:      var(--mycolor-brblue);
+      --tridactyl-container-color-turquoise: var(--mycolor-green);
+      --tridactyl-container-color-green:     var(--mycolor-brgreen);
+      --tridactyl-container-color-yellow:    var(--mycolor-bryellow);
+      --tridactyl-container-color-orange:    var(--mycolor-yellow);
+      --tridactyl-container-color-red:       var(--mycolor-brred);
+      --tridactyl-container-color-pink:      var(--mycolor-brmagenta);
+      --tridactyl-container-color-purple:    var(--mycolor-magenta);
+      --tridactyl-externaledit-bg: var(--tridactyl-logo) no-repeat center;
+      --tridactyl-private-window-icon-url: url("chrome://browser/skin/privatebrowsing/private-browsing.svg");
+      --tridactyl-container-fingerprint-url: url("resource://usercontext-content/fingerprint.svg");
+      --tridactyl-container-briefcase-url: url("resource://usercontext-content/briefcase.svg");
+      --tridactyl-container-dollar-url: url("resource://usercontext-content/dollar.svg");
+      --tridactyl-container-cart-url: url("resource://usercontext-content/cart.svg");
+      --tridactyl-container-circle-url: url("resource://usercontext-content/circle.svg");
+      --tridactyl-container-gift-url: url("resource://usercontext-content/gift.svg");
+      --tridactyl-container-vacation-url: url("resource://usercontext-content/vacation.svg");
+      --tridactyl-container-food-url: url("resource://usercontext-content/food.svg");
+      --tridactyl-container-fruit-url: url("resource://usercontext-content/fruit.svg");
+      --tridactyl-container-pet-url: url("resource://usercontext-content/pet.svg");
+      --tridactyl-container-tree-url: url("resource://usercontext-content/tree.svg");
+      --tridactyl-container-chill-url: url("resource://usercontext-content/chill.svg");
+  }
+
+#+end_src

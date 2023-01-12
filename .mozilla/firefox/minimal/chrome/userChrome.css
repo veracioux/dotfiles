@@ -1,8 +1,0 @@
-/* @import "/home/haris/.mozilla/firefox/common/chrome/userChrome.css"; */
-
-/* Hide toolbar and everything from the top */
-#navigator-toolbox:not(:hover) {
-	overflow: hidden;
-	max-height: 2px !important;
-	min-height: 2px !important;
-}
