@@ -7,7 +7,6 @@ This is a config for the shells I use:
 - *fish* as my interactive shell
 - *bash* for some scripts because it's more convenient than dash and more POSIX compliant
   than fish
-
 Using org-tangle, I output the configs to the files they need to be in:
 
 - =~/.profile= is sourced by login, making everything in it available to all shells.

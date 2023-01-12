@@ -76,7 +76,10 @@ unnecessary code.
   *TODO*: It is planned that this config file be used, but it's not yet implemented.
 
 *** TODO Configuration loading
-**** Root user config file
+The main generated user configuration file is [[~/.emacs.d/haris/root.el]]. This
+file is loaded by spacemacs and internally, it loads the other files based on
+the type of the purpose of the current emacs daemon (by reading the
+=server-name= variable). This is the config file:
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
  (load-file (cond ((equal server-name "irc") "~/.emacs.d/haris/irc.el")
                    ("~/.emacs.d/haris/default.el")))
@@ -208,7 +211,7 @@ Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
   (define-key evil-normal-state-map
     (kbd "SPC f e r")
     '(lambda () (interactive)
-       (load-file "~/.emacs.d/haris/default.el")))
+       (load-file "~/.emacs.d/haris/root.el")))
 
   (define-key evil-normal-state-map
     (kbd "SPC s a")

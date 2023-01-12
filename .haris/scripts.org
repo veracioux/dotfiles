@@ -58,7 +58,7 @@ This is a wrapper around GNU =pass=.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu")
   #!/usr/bin/env sh
 
-  /usr/bin/dmenu -f -i -h 25 -nb '#1e1e1e' -nf '#dddddd' -sb '#99a3ff' -sf '#1e1e1e' $@
+  /usr/bin/dmenu -f -i -h 25 -nb '#1e1e1e' -nf '#dddddd' -sb '#99a3ff' -sf '#1e1e1e' "$@"
 #+end_src
 ** =ipython=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/ipython")
