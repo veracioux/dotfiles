@@ -537,6 +537,7 @@ a terminal and runs the aliased command.
   abbr -g octb  'OCTAVE_BASIC=true command octave'
   abbr -g va    'vagrant'
   abbr -g u     'fusermount -u'
+  abbr -g um    'sudo umount'
 
   abbr -g yt 'ytfzf -t -s'
   abbr -g t  'tem'
@@ -579,7 +580,7 @@ a terminal and runs the aliased command.
   export RUSTC_WRAPPER=sccache
   export MOZ_USE_XINPUT2=1
 
-  export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path
+  export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator
 
   [ -f ~/.alias ]         && . ~/.alias
   [ -f ~/.alias-tmp ]     && . ~/.alias-tmp
