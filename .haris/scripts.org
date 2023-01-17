@@ -177,6 +177,52 @@ This is a wrapper around GNU =pass=.
   #WINIT_X11_SCALE_FACTOR=1.5 prime-run /usr/bin/alacritty "$@"
 #+end_src
 * Utilities
+** =bootstrap=
+This is everything you need to get a new user set up. Just run this script, and
+you will get all the dotfiles deployed where they need to go.
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/bootstrap")
+# TODO configure .spacemacs* etc.
+#+end_src
+*** =minemacs=
+This is a minimalistic helper emacs script that comes pre-loaded with all
+dependencies that are needed for tangling of the dotfiles to work. Besides
+making sure that =org-babel-tangle= is available, it makes available some
+utilities that are commonly used during tangling, like =haris/tangle-home=, etc.
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/minemacs")
+  emacs --quick --load ~/.emacs.d/haris/minimal.el "$@"
+#+end_src
+**** Minimal emacs config
+:PROPERTIES:
+:header-args: :mkdirp yes :tangle (haris/tangle-home ".emacs.d/haris/minimal.el")
+:END:
+***** Configure and load dependencies
+#+begin_src emacs-lisp
+  (setq package-archives '("melpa" . "https://melpa.org/packages/"))
+  (setq use-package-always-ensure t)
+  (require 'use-package)
+
+  (use-package org-transclusion)
+#+end_src
+***** Set up utilities
+#+begin_src emacs-lisp
+  (defun haris/tangle ()
+    "Copy all files from the temporary staging tangle destinations into their real destinations"
+    (interactive)
+    (let ((tangle-home (haris/tangle-home)))
+      (shell-command (concat "rm -rf " tangle-home))
+      (org-transclusion-add-all)
+      (org-babel-tangle)
+      (shell-command (concat "rsync -ru " tangle-home " ~/"))))
+
+  (defun haris/tangle-deps (subpath)
+    "Prefix 'subpath' with the directory where dependency install scripts are
+       tangled"
+    (concat "/tmp/dependencies-" (user-login-name) "/" subpath))
+  (defun haris/tangle-home (&optional subpath)
+    "Prefix 'subpath' with the directory that is used as staging for /home/haris
+       when tangling"
+    (concat "/tmp/tangle-" (user-login-name) "/" subpath))
+#+end_src
 ** =abspath=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/abspath")
   #!/usr/bin/env bash
@@ -225,7 +271,7 @@ This is a wrapper around GNU =pass=.
   printarg $(printarg "${@}" | head -"$num")
 #+end_src
 ** =printarg=
-#+begin_src shell :tangle (haris/tangle-home "local/bin/printarg")
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/printarg")
   #!/usr/bin/env sh
 
   # Print commandline arguments passed to this function each on its own line
@@ -314,7 +360,7 @@ n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
   # Wrapper for xrandr command with some options applied based on my current
   # monitor configuration
 
-  xrandr --output HDMI-1-0 "$@" --pos -1920x0
+  xrandr --output HDMI-1-0 "$@" --pos 1920x1080
 #+end_src
 ** =pipetest=
 [[file:~/.local/bin/pipetest][Output file]]
@@ -503,6 +549,8 @@ them as code blocks here for better readability.
   args="$(printf '%q ' "$@")"
   i3-msg exec "$browser $where $args"
 #+end_src
+** =minemacs=
+The bare minimum of emacs that is required to tangle all the dotfiles.
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
@@ -1100,7 +1148,7 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
   colors['.w brwhite']='      #dddddd'
 
   get_entries() {
-      echo ' Edit...' 
+      echo ' Edit...'
       printf '%s\n' "${!colors[@]}" | sort | sed 's_.*_ &_'
   }
 
@@ -1428,6 +1476,8 @@ sys.exit()
 
   # I think this is created by KDE plasma
   rm -rf ~/.local/share/baloo
+
+  sudo journalctl --vacuum-size=250M
 #+end_src
 ** =createhome=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/createhome")
