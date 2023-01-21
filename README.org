@@ -63,9 +63,10 @@ After installing using vim-plug, go to the directory where YouCompleteMe is
 located and run  =./setup.py --all=.
 *** Dependencies
 First complete the above steps.
-#+begin_src shell :tangle (haris/tangle-deps "/vim") :mkdirp yes
-  sudo pacman -S gvim neovim fzf
+#+begin_src shell :tangle (haris/tangle-deps "vim") :mkdirp yes
   rm -rf ~/.config/nvim/*/
+
+  sudo pacman -S gvim neovim fzf
   ln -sf -t ~/.config/nvim/ $(realpath ~/.vim/*/)
   touch ~/.vimrc.tmp ~/.config/nvim/init.tmp.vim
   # YouCompleteMe
