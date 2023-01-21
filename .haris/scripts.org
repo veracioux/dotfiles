@@ -583,7 +583,7 @@ are designed to be easily integrated into dmenu scripts.
           git.org)        echo ~/.haris/git.org ;;
           gh)             echo ~/.config/gh/config.yml ;;
           hg)             echo ~/.hgrc ;;
-          i3.org)         echo ~/.haris/i3.org ;;
+          wm.org)         echo ~/.haris/wm.org ;;
           picom)          echo ~/.config/picom.conf ;;
           dmenu)          echo ~/.local/bin/dmenu_run ;;
           firefox)        echo ~/.mozilla/firefox/haris/user.js ;;
