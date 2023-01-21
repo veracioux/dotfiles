@@ -1,4 +1,0 @@
-~/.xinitrc.common
-
-export DESKTOP_SESSION=plasma
-exec dbus-launch startplasma-x11
