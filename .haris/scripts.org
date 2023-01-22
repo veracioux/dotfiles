@@ -176,6 +176,17 @@ This is a wrapper around GNU =pass=.
   WINIT_X11_SCALE_FACTOR=1.5 /usr/bin/alacritty "$@"
   #WINIT_X11_SCALE_FACTOR=1.5 prime-run /usr/bin/alacritty "$@"
 #+end_src
+** =alacritty-float=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty-float")
+  #!/usr/bin/env sh
+
+  alacritty --class Alacritty,Float "$@"
+#+end_src
+** =sway=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/sway")
+  #!/usr/bin/env sh
+  sway --unsupported-gpu
+#+end_src
 * Utilities
 ** =bootstrap=
 This is everything you need to get a new user set up. Just run this script, and
