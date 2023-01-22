@@ -185,7 +185,8 @@ This is a wrapper around GNU =pass=.
 ** =sway=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/sway")
   #!/usr/bin/env sh
-  sway --unsupported-gpu
+  export XDG_CURRENT_DESKTOP=Sway
+  /usr/bin/sway --unsupported-gpu "$@"
 #+end_src
 * Utilities
 ** =bootstrap=

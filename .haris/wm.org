@@ -137,18 +137,20 @@ Shared between i3 and sway:
   workspace_auto_back_and_forth yes
   for_window [instance="Float" class="Alacritty"] floating enable
 #+end_src
-* Start up
+* Start-up
 ** .xinitrc
 :PROPERTIES:
 :header-args: :tangle-mode (eval #o744) :noweb yes
 :END:
 Since i3 is used under X server, it needs to be launched within [[~/.xinitrc]].
 There are three =.xinitrc= configuration presets, that I switch between using
-[[~/.haris-bin/xpreset][xpreset]].
+[[~/.haris-bin/xpreset][xpreset]]. The default one is defined here (you can change it if you want):
 #+NAME: xinitrc-default
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc")
   <<xinitrc-i3>>
 #+end_src
+
+Here are the configs you can choose from:
 #+NAME: xinitrc-i3
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc-i3")
   ~/.xinitrc.common
@@ -161,8 +163,10 @@ There are three =.xinitrc= configuration presets, that I switch between using
   clipmenud &                                 # Daemon for dmenu clipboard
   picom &                                     # Compositor
   autotiling &                                # Autotiling for i3
-  dbus-update-activation-environment \        # Fixes dbus problems with i3
-  --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY
+  dbus-update-activation-environment --systemd
+    DBUS_SESSION_BUS_ADDRESS \
+    DISPLAY \
+    XAUTHORITY                                # Fixes dbus problems with i3
   exec i3                                     # Window manager
 
 #+end_src
@@ -181,9 +185,12 @@ There are three =.xinitrc= configuration presets, that I switch between using
   export DESKTOP_SESSION=plasma
   exec dbus-launch startplasma-x11
 #+end_src
+
+The following is shared by all presets. It also contains configuration specific
+to the laptop I currently use. Please change to suit your needs.
 #+NAME: xinitrc-common
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc.common")
-  system-specific                             # System specific config
+  <<dell-g15-xinitrc>>
   xset r rate 200 60                          # Increase key press rate
   redshift &                                  # Blue light filter
   xset s 1000                                 # Set lock timeout
@@ -194,7 +201,7 @@ There are three =.xinitrc= configuration presets, that I switch between using
 
   # vim: ft=sh
 #+end_src
-** i3 start up
+** i3 start-up
 Some things are tightly tied to i3 and should be launched as part of its
 configuration reload procedure:
 #+begin_src i3wm-config
@@ -203,6 +210,50 @@ configuration reload procedure:
   exec_always --no-startup-id "autotiling"
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
+#+end_src
+** sway start-up
+#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+  # TODO debug this
+  # exec swhks
+  # exec pkexec swhkd --debug | tee /tmp/swhkd.log
+
+  # TODO this is temporary:
+  bindsym $mod+Return exec alacritty
+  bindsym $mod+Shift+Return exec alacritty-float
+#+end_src
+Please verify that the correct device-specific config is chosen. Otherwise
+change it according to your preference:
+#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+  <<dell-g15-sway>>
+#+end_src
+** System-specific setups
+*** Dell G15 5510
+#+NAME: dell-g15-xinitrc
+#+begin_src shell :tangle no
+  setxkbmap -layout "ba"
+  xmodmap -e "keycode 10 = 1 exclam asciitilde asciitilde asciitilde"
+  xmodmap -e "keycode 16 = 7 slash grave grave grave"
+  xmodmap -e "keycode 12 = 3 numbersign asciicircum asciicircum asciicircum"
+
+
+  touchpad_id=$( xinput list | grep -i touchpad | awk -F'id=' '{print $2 }' | awk '{print $1}' )
+  touch_option=$( xinput list-props $touchpad_id | grep -i 'Tapping Enabled' | head -1 | awk -F"[()]" '{print $2}' )
+  accel_option=$( xinput list-props $touchpad_id | grep -i 'Accel Speed' | head -1 | awk -F"[()]" '{print $2}' )
+
+  # Enable touch clicking
+  xinput set-prop $touchpad_id $touch_option 1
+  # Increase touchpad acceleration
+  xinput set-prop $touchpad_id $accel_option 0.5
+
+  # Show second monitor
+  xrandr2 --auto
+#+end_src
+#+NAME: dell-g15-sway
+#+begin_src i3wm-config :tangle no
+  input * {
+      xkb_layout "ba"
+  }
+  # TODO replicate other commands from i3 part
 #+end_src
 * Key bindings and menus
 Here I define only a core set of keybindings whose behavior is coupled to i3.
