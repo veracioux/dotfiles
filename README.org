@@ -52,7 +52,7 @@ Here are the occasions when I want to tangle these config files:
   #+end_src
 ** Vim configuration
 Install vim-plug:
-#+begin_src shell :tangle (haris/tangle-deps "vim") :mkdirp yes
+#+begin_src shell :tangle (haris/tangle-deps "vim") :mkdirp yes :shebang "#!/usr/bin/env sh"
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   touch ~/.vimrc.tmp
@@ -64,9 +64,9 @@ located and run  =./setup.py --all=.
 *** Dependencies
 First complete the above steps.
 #+begin_src shell :tangle (haris/tangle-deps "vim") :mkdirp yes
+  sudo pacman -S gvim neovim fzf
   rm -rf ~/.config/nvim/*/
 
-  sudo pacman -S gvim neovim fzf
   ln -sf -t ~/.config/nvim/ $(realpath ~/.vim/*/)
   touch ~/.vimrc.tmp ~/.config/nvim/init.tmp.vim
   # YouCompleteMe
