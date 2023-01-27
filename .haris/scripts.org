@@ -1,5 +1,5 @@
 #+TITLE: Scripts
-#+PROPERTY: header-args :comments headline :mkdirp yes :tangle-mode (identity #o744) :results silent
+#+PROPERTY: header-args :comments headline :mkdirp yes :tangle-mode (identity #o744) :results silent :noweb yes
 
 This is where my custom scripts live. That includes shell scripts, dmenu scripts,
 and potentially programming language-specific scripts. One of the things I
@@ -133,7 +133,7 @@ This is a wrapper around GNU =pass=.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/notify-send")
   #!/usr/bin/env sh
 
-  export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+  export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/<<eval-real-uid()>>/bus
 
   /usr/bin/notify-send "$@"
 #+end_src
@@ -1664,7 +1664,11 @@ Returns the second executable with the given name, looked up in execpath.
   ;; Insert text only on Linux
   (if (eq system-type 'darwin) text else)
 #+end_src
-
+** =eval-real-uid=
+#+NAME: eval-real-uid
+#+begin_src emacs-lisp
+  (user-real-uid)
+#+end_src
 * Local variables                                                  :noexport:
 # Local Variables:
 # org-confirm-babel-evaluate: nil
