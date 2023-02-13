@@ -810,6 +810,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      csv
      rust
      docker
+     vagrant
      translate
      git
      lua
