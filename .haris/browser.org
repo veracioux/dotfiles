@@ -133,7 +133,7 @@ automatically closed right after it is opened.
 I am annoyed by the URL status panel shadowing my tridactyl ex command window,
 so I move it to the top-right corner.
 #+begin_src css
-  #statuspanel[type="overLink"] {
+  #statuspanel {
       padding-top: 0 !important;
       inset: 0 0 auto auto !important;
   }
