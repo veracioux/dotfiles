@@ -1,5 +1,5 @@
 #+TITLE: Web browser config
-#+PROPERTY: header-args :mkdirp yes
+#+PROPERTY: header-args :mkdirp yes :noweb yes
 
 I use Firefox as my main web browser, and occasionally Chromium (or Chrome on
 non-linux) for browser compatibility testing during web development. I use
@@ -41,7 +41,6 @@ All my browser preferences that I don't need to keep secret go here.
 
   // Show search bar in <select> dropdown
   user_pref("dom.forms.selectSearch", true);
-
 #+end_src
 #+begin_src javascript :tangle (haris/tangle-home ".mozilla/firefox/ext/user.js") :noweb yes
   <<user.js>>
@@ -186,6 +185,29 @@ Tridactyl extension.
   # Remove check_suite_focus from URL
   command artifact js location.href = location.href.replace("?check_suite_focus=true", "");
 #+end_src
+** Default home page
+Tridactyl doesn't work on the default home page, so I change the page to
+a blank page loaded from a local file (because it is lightning-fast). This way I
+have tridactyl ready every time I launch a new firefox window, without having to
+press the exit hatch keys.
+
+#+begin_src javascript :tangle (haris/tangle-home ".mozilla/firefox/haris/user.js")
+  user_pref(
+      "browser.startup.homepage",
+      "file:///home/<<username()>>/.local/share/haris/blank.html"
+  );
+#+end_src
+
+This code block is that blank page, and is tangled to the appropriate location:
+#+NAME: blank-html
+#+begin_src html :tangle (haris/tangle-home ".local/share/haris/blank.html")
+#+end_src
+
+#+NAME: username
+#+begin_src emacs-lisp
+  (user-login-name)
+#+end_src
+
 ** Custom theme
 #+begin_src css :tangle (haris/tangle-home ".config/tridactyl/themes/custom.css")
   /* ┏━━━━━━━━━━━━━━━━━━━┓
