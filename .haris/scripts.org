@@ -162,7 +162,6 @@ This is a wrapper around GNU =pass=.
 #+NAME: sudo-askpass
 #+begin_src shell :tangle no
   #!/usr/bin/env bash
-  eval "$(export -p)"
   notify-send "SUDO" "Please enter your password"
   echo -n "[sudo] password for $(getent passwd "$USER" | cut -d: -f1): " >&2
   stty -echo
@@ -858,7 +857,7 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
       echo "Octave"           # Launch octave in emacs
       echo "Python"           # Launch python interpreter in emacs
       echo "GPG"              # GPG addresses
-      echo "OTP"              # Genreate OTP for selected service
+      echo "OTP"              # Generate OTP for selected service
       echo "IRC"              # Open emacs client for IRC
       echo "Quickmenu"        # Menu to quickly revisit recent activity
       echo "$aliases"
@@ -1403,7 +1402,7 @@ sys.exit()
           echo "$key" "$email"
       done
   )"
-  let n=$(echo "$entries" | wc -l)
+  let n="$(echo "$entries" | wc -l)"
 
   choice="$(echo "$entries" | dmenu -l $n -p 'GPG:')"
 
