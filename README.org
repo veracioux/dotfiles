@@ -1,5 +1,5 @@
 #+TITLE: Haris' Config
-#+PROPERTY: header-args :tangle-mode (identity #o755)
+#+PROPERTY: header-args :tangle-mode (identity #o755) :results silent
 
 Welcome. This is my personal dotfile repository. I use Arch Linux, so these
 dotfiles are customized to work there. I have also used a Macbook when
