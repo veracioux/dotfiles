@@ -144,7 +144,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 ** Plugins
 #+begin_src fish
   # pj plugin
-  set -gx PROJECT_PATHS $PROJECT_PATHS ~/proj ~/proj/drytoe
+  set -gx PROJECT_PATHS ~/proj ~/proj/drytoe
 
   # z.lua
   set _ZL_CMD z
@@ -522,6 +522,9 @@ a terminal and runs the aliased command.
   abbr -g dcub 'docker-compose up --build'
   abbr -g dce  'docker-compose exec'
   abbr -g dcd  'docker-compose down'
+
+  # VirtualBox
+  abbr -g vb   'vboxmanage'
 
   abbr -g g     'git'
   abbr -g v     'vim'
