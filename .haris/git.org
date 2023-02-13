@@ -215,3 +215,10 @@ else
     git fetch "$remote" "$trunk:$trunk"
 fi
 #+end_src
+
+** =redate=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/git-redate") :tangle-mode (eval #o744)
+  #!/usr/bin/env sh
+
+  GIT_COMMITTER_DATE="$1" git commit --amend --no-edit --date "$1"
+#+end_src
