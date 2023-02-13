@@ -65,8 +65,8 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   bind -M insert  \eo '__haris_prepend_cmdline o'
 
   # Prepend man in front of current command
-  bind -M default \em '__haris_prepend_cmdline man'
-  bind -M insert  \em '__haris_prepend_cmdline man'
+  bind -M default \em '__haris_show_man'
+  bind -M insert  \em '__haris_show_man'
 
   # Append --help to the end of the command line and submit
   bind -M default \eH '__haris_print_help_or_toggle'
@@ -108,6 +108,10 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       commandline --cursor 0
       commandline --insert "$argv "
       commandline --function end-of-line
+  end
+
+  function __haris_show_man
+      man (commandline -po)
   end
 
   function __haris_print_help_or_toggle
