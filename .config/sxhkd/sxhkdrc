@@ -11,6 +11,8 @@ mod4 + o
    dmenu_run open
 mod4 + shift + p
    passmenu -l 10
+mod4 + ctrl + p
+   dmenu_run otp
 mod4 + q
    dmenu_run system
 mod4 + ctrl + q
