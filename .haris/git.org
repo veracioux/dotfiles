@@ -15,8 +15,9 @@
       a = add
       b = branch
       # Ls
-      ls = ls-tree -r master --name-only
-      lss = ls-tree -r master
+      ls = ls-tree -r --name-only
+      lsh = ls-tree -r --name-only HEAD
+      lsm = ls-tree -r --name-only master
       # Log
       l = ldog --pretty=format:'%C(magenta bold)%h%Creset \
           -%C(auto)%d%Creset %s' \
