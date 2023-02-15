@@ -579,8 +579,12 @@ are designed to be easily integrated into dmenu scripts.
           private.org)    echo ~/.haris/private/README.org ;;
           temporary.org)  echo ~/.haris/temporary.org ;;
           scripts.org)    echo ~/.haris/scripts.org ;;
-          alacritty)      echo ~/.config/alacritty/alacritty.yml ;;
           shells.org)     echo ~/.haris/shells.org ;;
+          wm.org)         echo ~/.haris/wm.org ;;
+          git.org)        echo ~/.haris/git.org ;;
+          browser.org)    echo ~/.haris/browser.org ;;
+          gtk.org)        echo ~/.haris/gtk.org ;;
+          alacritty)      echo ~/.config/alacritty/alacritty.yml ;;
           alias-tmp)      echo ~/.alias-tmp ;;
           alias-gui-tmp)  echo ~/.alias-gui-tmp ;;
           fish)           echo ~/.config/fish/config.fish ;;
@@ -591,10 +595,8 @@ are designed to be easily integrated into dmenu scripts.
           nvim)           echo ~/.config/nvim/init.vim ;;
           vifm)           echo ~/.config/vifm/vifmrc ;;
           vifm-theme)     echo ~/.config/vifm/colors/customtheme.vifm ;;
-          git.org)        echo ~/.haris/git.org ;;
           gh)             echo ~/.config/gh/config.yml ;;
           hg)             echo ~/.hgrc ;;
-          wm.org)         echo ~/.haris/wm.org ;;
           picom)          echo ~/.config/picom.conf ;;
           dmenu)          echo ~/.local/bin/dmenu_run ;;
           firefox)        echo ~/.mozilla/firefox/haris/user.js ;;
@@ -625,7 +627,6 @@ are designed to be easily integrated into dmenu scripts.
           monero)         echo ~/.config/monero-project/monero-core.conf ;;
           xmrig)          echo ~/.config/xmrig.json ;;
           tmux)           echo ~/.tmux.conf ;;
-          browser.org)    echo ~/.haris/browser.org ;;
       esac
   done
 #+end_src
