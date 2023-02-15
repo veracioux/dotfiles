@@ -434,7 +434,7 @@ a terminal and runs the aliased command.
   alias l1='ls -1'
   alias src='cd ~/src'
   alias tmp='cd /tmp'
-  alias stage='mkdir -p /tmp/stage; chmod o+w /tmp/stage; cd /tmp/stage'
+  alias stage="mkdir -p /tmp/stage-$USER; cd /tmp/stage-$USER"
   alias bin='cd ~/.local/bin'
   alias usb='cd ~/mnt/usb'
 
@@ -494,14 +494,14 @@ a terminal and runs the aliased command.
 
   # Systemd
   abbr -g ctl       'systemctl'
-  abbr -g start     'systemctl start'
-  abbr -g stop      'systemctl stop'
-  abbr -g en        'systemctl enable'
-  abbr -g dis       'systemctl disable'
+  abbr -g start     'sudo systemctl start'
+  abbr -g stop      'sudo systemctl stop'
+  abbr -g en        'sudo systemctl enable'
+  abbr -g dis       'sudo systemctl disable'
   abbr -g sts       'systemctl status'
   abbr -g dreload   'systemctl daemon-reload'
-  abbr -g reload    'systemctl reload'
-  abbr -g restart   'systemctl restart'
+  abbr -g reload    'sudo systemctl reload'
+  abbr -g restart   'sudo systemctl restart'
   abbr -g sus       'systemctl suspend -i'
   #   --user versions
   abbr -g ctlu      'systemctl --user'
