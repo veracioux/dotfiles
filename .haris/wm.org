@@ -96,7 +96,7 @@ These scripts are used by the other sections:
   set $mode_wm      " WM"
   set $mode_qr      " QR [i]n [o]ut [s]creen"
   set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle c[z]ech"
-  set $mode_mic     " Microphone [+] [-] [m]ute"
+  set $mode_audio   " [+] [-] [m]ute |   [c]onnect [d]isconnect"
   set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term"
   set $mode_trans   " Translate to | [e]nglish [c]zech [b]osnian [g]erman"
 #+end_src
@@ -258,7 +258,7 @@ change it according to your preference:
 * Key bindings and menus
 Here I define only a core set of keybindings whose behavior is coupled to i3.
 All the other bindings are provided by an external program - sxhkd on X and
-swhkd on Wayland. See [[*Startup][Startup]].
+swhkd on Wayland. See [[*Start-up][Start-up]].
 #+begin_src i3wm-config
   exec --no-startup-id swhks
 #+end_src
@@ -415,18 +415,44 @@ swhkd on Wayland. See [[*Startup][Startup]].
 
   bindsym $mod+Shift+o      mode $mode_org
 #+end_src
-** Microphone control menu
-#+NAME: microphone-menu
+** Audio control menu
+#+NAME: audio-menu
 #+begin_src i3wm-config
-  mode $mode_mic {
+  mode $mode_audio {
   bindsym plus            exec --no-startup-id ~/.config/i3/scripts/mic-volume-up
   bindsym minus           exec --no-startup-id ~/.config/i3/scripts/mic-volume-down
   bindsym m               exec --no-startup-id ~/.config/i3/scripts/mic-mute-toggle
+  bindsym c               exec --no-startup-id ~/.local/lib/haris/bluetoothctl-wrapper connect
+  bindsym d               exec --no-startup-id ~/.local/lib/haris/bluetoothctl-wrapper disconnect
   bindsym Escape          mode default
   bindsym F9              mode default
   }
 
-  bindsym F9 mode $mode_mic
+  bindsym F9 mode $mode_audio
+#+end_src
+
+To modify the bluetooth device ID of the headphones, edit
+[[~/.local/lib/haris/bt-headphones-id][this file]].
+
+#+NAME: bluetoothctl-wrapper
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/haris/bluetoothctl-wrapper") :tangle-mode (eval #o744)
+  #!/usr/bin/env sh
+
+  id_file=~/.local/lib/haris/bt-headphones-id
+
+  if [ ! -f "$id_file" ]; then
+      ACTION="$(
+        dunstify --action=default,Edit \
+          "Bluetooth headphones ID not defined" \
+          "Click this notification to fix that (wait a bit for Emacs to open)"
+      )"
+      [ "$ACTION" = "default" ] && myemacs -c "$id_file"
+      exit 1
+  fi
+
+  output="$(bluetoothctl "$1" "$(cat "$id_file")" | tail -n +2)"
+
+  notify-send 'Status' "$output"
 #+end_src
 ** Emacs apps menu
 This is a menu that allows me to launch some utility apps I commonly use, but
