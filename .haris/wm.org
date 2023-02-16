@@ -1,5 +1,5 @@
 #+TITLE: Window Manager Config
-#+PROPERTY: header-args :tangle (haris/tangle-home ".config/i3/config") :mkdirp yes :noweb yes
+#+PROPERTY: header-args :tangle (haris/tangle-home ".config/i3/config") :mkdirp yes :noweb yes :results silent
 #+begin_src i3wm-config :exports none :mkdirp yes
   # -*- mode: emacs-lisp-mode; -*- vim: filetype=i3 shiftwidth=2
 #+end_src
@@ -98,10 +98,16 @@ These scripts are used by the other sections:
   set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle c[z]ech"
   set $mode_audio   " [+] [-] [m]ute |   [c]onnect [d]isconnect"
   set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term"
-  set $mode_trans   " Translate to | [e]nglish [c]zech [b]osnian [g]erman"
+  set $mode_trans   "<<mode_trans()>>"
 #+end_src
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
   <<variables>>
+#+end_src
+The following block generates the value for the =mode_trans= i3 variable, so it
+can be re-used in ways not supported directly by i3.
+#+NAME: mode_trans
+#+begin_src emacs-lisp :tangle no
+  " Translate to | [e]nglish [c]zech [b]osnian [g]erman"
 #+end_src
 * Visuals
 Only for i3:
@@ -475,6 +481,18 @@ with an emacs interface.
   bindsym $mod+e mode $mode_emacs
 #+end_src
 ** Translate menu
+My main way to translate stuff is using the =trans= command. Because this is a CLI
+tool, I bind all related shortcuts to a command that launches a floating
+terminal with =trans= embedded in it.
+
+There are a few languages that I most frequently want to translate between. I
+define a menu here that allows me to quickly choose which language to translate
+to, so I don't have to type in =:<lang>= after =trans= is launched.
+
+There is a special use case. If the primary selection (the selection that is
+created when text is selected with the mouse instead of using copied to
+clipboard) is not older than some predetermined (short) time, that text is
+directly translated to English, without opening the menu.
 #+begin_src i3wm-config
   mode $mode_trans {
   set $en exec alacritty-float -e trans -shell; mode default
@@ -490,7 +508,42 @@ with an emacs interface.
   bindsym Escape mode default
   }
 
-  bindsym $mod+Shift+t mode $mode_trans
+  bindsym $mod+Shift+t exec --no-startup-id ~/.local/lib/haris/trans-launch
+#+end_src
+*** The command
+#+begin_src shell :tangle (haris/tangle-home ".local/lib/haris/trans-launch") :tangle-mode (eval #o744)
+  #!/usr/bin/env bash
+
+  # In order to get the time when the selection happened I use a timestamp
+  # reported by xclip and to get the current time I use a timestamp reported by
+  # xsel. I have no idea what these timestamps are relative to, but I have
+  # empirically determined that this works.
+
+  # Timestamps
+  ts_current="$(
+    xsel -vvv 2>&1 >/dev/null \
+      | grep '^xsel: Timestamp:' \
+      | awk '{print $3}'
+  )"
+  ts_sel="$(xclip -target TIMESTAMP -out)"
+
+  echo "current timestamp: $ts_current, selection timestamp: $ts_sel"
+
+  elapsed_time_millis="$(expr "$ts_current" - "$ts_sel")"
+
+  if [ "$elapsed_time_millis" -lt "10000" ]; then
+    # Selection was recent
+    selection="$(xsel --primary --output)"
+    trans_argument="$(printf "%q" "$selection")"
+    alacritty-float -e bash -c "trans $trans_argument; trans -shell"
+  else
+    # Selection was not recent
+    i3-msg -t command mode "<<mode_trans()>>"
+  fi
+#+end_src
+*** Dependencies
+#+begin_src sh :tangle (haris/tangle-deps "wm.sh")
+  sudo pacman -S xsel xclip
 #+end_src
 * Workspaces
 #+NAME: workspaces
