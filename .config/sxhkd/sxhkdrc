@@ -37,8 +37,6 @@ mod4 + shift + f
 	firefox -P haris
 mod4 + shift + v
 	alacritty --class Alacritty,Float -e fish -C vifm
-mod4 + shift + c
-    alacritty --class Alacritty,Float -e trans -shell -from 'cs+en' -to 'en+cs'
 mod4 + shift + s
     flameshot gui
 mod4 + shift + Print
