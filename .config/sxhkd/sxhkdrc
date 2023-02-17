@@ -47,6 +47,8 @@ mod4 + shift + e
 	myemacs -c
 mod4 + shift + g
     dmenu_run gpg
+mod4 + shift + c
+    auto-browser -P haris "https://chat.openai.com/chat"
 
 # Volume and brightness
 XF86AudioRaiseVolume
