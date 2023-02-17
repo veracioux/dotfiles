@@ -30,8 +30,9 @@ i3/sway session:
   (shell-command (format "%s-msg -t command restart" wm))
 #+end_src
 * Helper scripts and local variables
-#+PROPERTIES:
-:header-args: :results output :mkdirp yes
+:PROPERTIES:
+:header-args: :mkdirp yes :tangle-mode (eval #o744)
+:END:
 
 These scripts are used by the other sections:
 #+NAME: mic-volume-up
@@ -45,6 +46,25 @@ These scripts are used by the other sections:
 #+NAME: mic-mute-toggle
 #+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-mute-toggle") :shebang "#!/usr/bin/env sh"
   pactl set-source-mute "$(pactl get-default-source)" toggle
+#+end_src
+#+NAME: mic-test
+#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-test")
+  #!/usr/bin/env sh
+
+  default_source="$(pactl get-default-source)"
+  muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
+
+  if [ -n "$muted" ]; then
+      pactl set-source-mute "$default_source" 0
+  fi
+
+  file="$(mktemp)"
+  arecord -f cd -d 1 "$file"
+  aplay "$file"
+
+  if [ -n "$muted" ]; then
+      pactl set-source-mute "$default_source" 1
+  fi
 #+end_src
 * Variable definitions
 #+NAME: variables
@@ -96,7 +116,7 @@ These scripts are used by the other sections:
   set $mode_wm      " WM"
   set $mode_qr      " QR [i]n [o]ut [s]creen"
   set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle c[z]ech"
-  set $mode_audio   " [+] [-] [m]ute |   [c]onnect [d]isconnect"
+  set $mode_audio   " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
   set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term"
   set $mode_trans   "<<mode_trans()>>"
 #+end_src
@@ -428,8 +448,11 @@ swhkd on Wayland. See [[*Start-up][Start-up]].
   bindsym plus            exec --no-startup-id ~/.config/i3/scripts/mic-volume-up
   bindsym minus           exec --no-startup-id ~/.config/i3/scripts/mic-volume-down
   bindsym m               exec --no-startup-id ~/.config/i3/scripts/mic-mute-toggle
+  bindsym t               exec --no-startup-id ~/.config/i3/scripts/mic-test
   bindsym c               exec --no-startup-id ~/.local/lib/haris/bluetoothctl-wrapper connect
   bindsym d               exec --no-startup-id ~/.local/lib/haris/bluetoothctl-wrapper disconnect
+  bindsym Shift+t         exec --no-startup-id speaker-test --speaker 1 --test wav
+
   bindsym Escape          mode default
   bindsym F9              mode default
   }
@@ -456,7 +479,7 @@ To modify the bluetooth device ID of the headphones, edit
       exit 1
   fi
 
-  output="$(bluetoothctl "$1" "$(cat "$id_file")" | tail -n +2)"
+  output="$(bluetoothctl "$1" "$(cat "$id_file")")"
 
   notify-send 'Status' "$output"
 #+end_src
