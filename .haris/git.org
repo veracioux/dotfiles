@@ -52,7 +52,11 @@
       # Fetch
       f = fetch
       fo = fetch origin
+      fom = fetch origin master:master
+      fod = fetch origin develop:develop
       fu = fetch upstream
+      fum = fetch origin master:master
+      fud = fetch origin develop:develop
       # Pull
       ppo = pull origin
       ppom = pull origin master
