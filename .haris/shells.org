@@ -50,6 +50,11 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   bind -M default \cn down-or-search
   bind -M insert \cn down-or-search
 #+end_src
+** Fish behavior control bindings
+#+begin_src fish
+  bind -M default \er src_fish
+  bind -M insert \er src_fish
+#+end_src
 ** Other bindings
 #+begin_src fish
   # Copy the current contents of the command line
@@ -74,9 +79,6 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 
   bind -M default \et term
   bind -M insert  \et term
-
-  bind -M default \en '__haris_prepend_cmdline cmd-with-notify'
-  bind -M insert  \en '__haris_prepend_cmdline cmd-with-notify'
 
   bind -M default \eg 'dragon (command ls | fzf --multi) >/dev/null 2>&1'
   bind -M insert  \eg 'dragon (command ls | fzf --multi) >/dev/null 2>&1'
@@ -111,7 +113,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   end
 
   function __haris_show_man
-      man (commandline -po)
+      man (commandline --current-process --tokenize | grep -v '^sudo$' | head -1)
   end
 
   function __haris_print_help_or_toggle
@@ -302,6 +304,23 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 
       git --git-dir="$gitdir" $worktree_option $argv
   end
+
+  # Customize fish to notify me when a command finishes in a background terminal
+  # window.
+  function fish_right_prompt
+      set -l _status "$status"
+
+      # Check if terminal window is hidden
+      if xdotool search --all --onlyvisible "" 2>/dev/null | ! grep -q "$WINDOWID"
+          set -l exit_message
+          if [ "$_status" = 0 ]
+              set exit_message "exited successfully"
+          else
+              set exit_message "exited with $_status"
+          end
+          notify-send (echo "Command "(history | head -1)"" "$exit_message")
+      end
+  end
 #+end_src
 *** =^=
 #+begin_src fish
@@ -487,10 +506,10 @@ a terminal and runs the aliased command.
   abbr -g psi   'pacman -Si'
   abbr -g pss   'pacman -Ss'
   abbr -g pqdtq 'pacman -Qdtq'
-  abbr -g sp    'cmd-with-notify sudo pacman'
-  abbr -g sps   'cmd-with-notify sudo pacman -S'
-  abbr -g spr   'cmd-with-notify sudo pacman -R'
-  abbr -g sprq  'cmd-with-notify sudo pacman -R (pacman -Qdtq)'
+  abbr -g sp    'sudo pacman'
+  abbr -g sps   'sudo pacman -S'
+  abbr -g spr   'sudo pacman -R'
+  abbr -g sprq  'sudo pacman -R (pacman -Qdtq)'
 
   # Systemd
   abbr -g ctl       'systemctl'
