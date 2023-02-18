@@ -1721,57 +1721,52 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
                                                                     'No such file or directory'
 #+end_src
 ** =tangle=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle") :noweb yes
-  #!/usr/bin/env bash
+#+NAME: tangle
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".local/bin/tangle") :noweb yes
+  #!/usr/bin/env -S emacs --script
 
-  # Tangle all code blocks from the given file
-  # Usage: tangle FILENAME
+  (load-file "~/.haris/bootstrap/tangle.el")
+  (setq org-confirm-babel-evaluate nil)
 
-  tmpfile="$(mktemp -t XXXXXXXXXXX)"
-
-  cat > "$tmpfile" <<EOF
-    <<tangle-helper>>
-  EOF
-
-  cat "$tmpfile"
-  echo
-
-  emacs --script "$tmpfile"
-
-  rm -f "$tmpfile"
-
-  # vim: filetype=sh
+  (org-babel-tangle-file (file-truename (elt argv 0)))
+#+end_src
+Because this script is needed for bootstrapping my dotfiles on a new system, I
+also tangle it to a standalone destination that I also keep under version control.
+#+begin_src shell :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh")
+  <<tangle>>
 #+end_src
 *** Helper code that tangles
 #+NAME: tangle-helper
 #+begin_src emacs-lisp :results none
-(require 'ob-tangle)
-; (with-temp-buffer (progn (insert-file-contents "~/" nil nil nil t)))
-(org-babel-tangle-file "$1")
+  (require 'ob-tangle)
+  ; (with-temp-buffer (progn (insert-file-contents "~/" nil nil nil t)))
+  (load-file "~/.haris/bootstrap/lib.el")
+  (org-babel-tangle-file "$1")
 #+end_src
 ** =tangle-all=
+#+NAME: tangle-all
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".local/bin/tangle-all")
-#!/usr/bin/emacs --script
+  #!/usr/bin/env -S emacs --script
 
-; Tangle config files written in org format. Output dotfiles are saved to
-; /tmp/tangle-$USER and dependency installation scripts are saved to
-; /tmp/dependencies-$USER. If this script is not running in a docker container, the
-; files will be deleted.
+  ; Tangle all my dotfiles. If --dest is used, then the files are tangled to
+  ; their final destinations under $HOME, instead of the directory returned by
+  ; (haris/tangle-home). Dependency installation scripts will be saved to the
+  ; destination returned by (haris/tangle-deps) regardless.
 
-(setq tangle-home (concat "/tmp/tangle-" (user-login-name)))
+  (setq command-switch-alist '(("--dest" . ignore)))
+  (setq dest (member "--dest" command-line-args))
 
-(shell-command (concat "rm -rf " tangle-home))
+  (setq org-confirm-babel-evaluate nil)
 
-(require 'ob-tangle)
+  (load-file "~/.haris/bootstrap/tangle.el")
+  (haris/tangle-all dest)
 
-(org-babel-tangle-file "~/README.org")
-(org-babel-tangle-file "~/.shells.org")
-(org-babel-tangle-file "~/.emacs.d/haris-config.org")
-(org-babel-tangle-file "~/.config/i3/README.org")
-
-(shell-command (concat "rsync -rvu " tangle-home " ~/"))
-
-; vim: filetype=lisp
+  ; vim: filetype=lisp
+#+end_src
+Because this script is needed for bootstrapping my dotfiles on a new system, I
+also tangle it to a standalone destination that I also keep under version control.
+#+begin_src shell :tangle (haris/tangle-home ".haris/bootstrap/tangle-all.sh")
+  <<tangle-all>>
 #+end_src
 ** TODO =bootstrap=
 - Soon to be obsolete

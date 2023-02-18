@@ -395,13 +395,13 @@ use to generate the configs from my org files. That is why code blocks in my
 literal configs use temporary "staging" destinations. So, whenever I run
 =(org-babel-tangle)=, the files are output into =/tmp/tangle-<username>= or
 =/tmp/dependencies-<username>= (varies by code block). Then, if I want to apply
-those files to my live config under =~/=, I can call =(haris/tangle)=.
+those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src emacs-lisp
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((shell    . t)
                                  (C        . t)
                                  (python   . t)))
-  (defun haris/tangle ()
+  (defun haris/tangle-dest ()
     "Copy all files from the temporary staging tangle destinations into their real destinations"
     (interactive)
     (let ((tangle-home (haris/tangle-home)))
@@ -410,18 +410,12 @@ those files to my live config under =~/=, I can call =(haris/tangle)=.
       (org-babel-tangle)
       (shell-command (concat "rsync -ru " tangle-home " ~/"))))
 
-  (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle)
+  (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle-dest)
 #+end_src
-The following functions help me define common tangle destinations.
+There are a few custom functions I define for tangling that are in a separate
+file, so that file can be used as a minimalistic source for boostrapping.
 #+begin_src emacs-lisp
-  (defun haris/tangle-deps (subpath)
-    "Prefix 'subpath' with the directory where dependency install scripts are
-     tangled"
-    (concat "/tmp/dependencies-" (user-login-name) "/" subpath))
-  (defun haris/tangle-home (&optional subpath)
-    "Prefix 'subpath' with the directory that is used as staging for /home/haris
-     when tangling"
-    (concat "/tmp/tangle-" (user-login-name) "/" subpath))
+  (load-file "~/.haris/bootstrap/tangle.el")
 #+end_src
 ** LaTeX preview
 #+begin_src emacs-lisp
