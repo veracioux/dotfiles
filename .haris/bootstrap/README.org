@@ -1,0 +1,16 @@
+This directory contains the code and scripts that must be separate from the
+literate configs, because they are needed to tangle the literate configs in the
+first place.
+
+The =Dockerfile= defines an image that can be run to generate all the configs as a
+tar.gz archive.
+
+#+begin_src shell
+  docker run docker.veracioux.me/dotfiles-generator -u <USER>
+#+end_src
+
+Run with =--help= to see detailed usage.
+
+* Potential improvements
+- When I move all versioned dotfiles into =~/.haris=, I can remove the need to
+  clone the repo inside the docker container.
