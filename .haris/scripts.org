@@ -162,11 +162,12 @@ This is a wrapper around GNU =pass=.
 #+NAME: sudo-askpass
 #+begin_src shell :tangle no
   #!/usr/bin/env bash
-  notify-send "SUDO" "Please enter your password"
+  id="$(notify-send "SUDO" "Please enter your password" --print-id --expire-time 0)"
   echo -n "[sudo] password for $(getent passwd "$USER" | cut -d: -f1): " >&2
   stty -echo
   head -1
   echo >&2
+  dunstify --close="$id"
 #+end_src
 ** =alacritty=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty")
