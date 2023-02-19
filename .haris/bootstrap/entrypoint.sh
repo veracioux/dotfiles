@@ -34,6 +34,7 @@ while :; do
             shift 2
             ;;
         -u | --user)
+            user="$2"
             if [ -z "$home" ]; then
                 export HOME="/home/$user"
             fi
@@ -60,8 +61,6 @@ git init
 git remote add origin "$remote"
 git fetch origin "$branch:$branch" --depth 1
 git checkout "$branch"
-
-cd ~
 
 emacs --script .haris/bootstrap/tangle-all.sh
 
