@@ -14,3 +14,5 @@
 (haris/tangle-all dest)
 
 ; vim: filetype=lisp
+; NOTE: Although this file is kept under version control, it is tangled from
+; ~/.haris/scripts.org, so don't modify it directly

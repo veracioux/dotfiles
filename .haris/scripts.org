@@ -1732,8 +1732,10 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
 also tangle it to a standalone destination that I also keep under version control.
-#+begin_src shell :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh")
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh")
   <<tangle>>
+  ; NOTE: Although this file is kept under version control, it is tangled from
+  ; ~/.haris/scripts.org, so don't modify it directly
 #+end_src
 *** Helper code that tangles
 #+NAME: tangle-helper
@@ -1765,8 +1767,10 @@ also tangle it to a standalone destination that I also keep under version contro
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
 also tangle it to a standalone destination that I also keep under version control.
-#+begin_src shell :tangle (haris/tangle-home ".haris/bootstrap/tangle-all.sh")
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle-all.sh")
   <<tangle-all>>
+  ; NOTE: Although this file is kept under version control, it is tangled from
+  ; ~/.haris/scripts.org, so don't modify it directly
 #+end_src
 ** TODO =bootstrap=
 - Soon to be obsolete
