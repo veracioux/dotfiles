@@ -145,7 +145,7 @@ This is a wrapper around GNU =pass=.
   # Sudo but with a hook that sends a notification when the prompt is shown
 
   tmpfile="$(mktemp -t sudo_askpass.XXXXXXXXXXXXXX)"
-  cat > "$tmpfile" <<EOF
+  cat > "$tmpfile" <<'EOF'
   <<sudo-askpass>>
   EOF
 
