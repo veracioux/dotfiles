@@ -1430,34 +1430,7 @@ sys.exit()
   notify-send "OTP" "Saved to clipboard"
 #+end_src
 ** Quickmenu
-#+name: dmenu-quickmenu
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/quickmenu")
-  #!/usr/bin/env bash
-
-  choices=(
-      "Algorithms"
-      "Bullshit Jobs"
-      "MONEY - Tony Robbins"
-      "I will teach you to be rich - Ramit Sethi"
-  )
-
-  choice="$(printarg "${choices[@]}" | dmenu)"
-
-  case "$choice" in
-      "Algorithms")
-          zathura ~/data/literature/prog/"Thomas H. Cormen - Introduction to Algorithms (2022).pdf"
-          ;;
-      "Bullshit Jobs")
-          zathura ~/data/literature/world/"David Graeber - Bullshit Jobs_ A Theory-Simon & Schuster (2018).epub"
-          ;;
-      "MONEY - Tony Robbins")
-          zathura ~/data/literature/finance/"Tony Robbins - MONEY Master the Game - 7 Simple Steps to Financial Freedom (2014).epub"
-          ;;
-      "I will teach you to be rich - Ramit Sethi")
-          zathura ~/data/literature/finance/"Ramit Sethi - I Will Teach You to Be Rich, Second Edition (2019).epub"
-          ;;
-  esac
-#+end_src
+#+transclude: [[~/.haris/temporary.org::dmenu-quickmenu]]
 # Leave this line empty - otherwise transclusion might hoist the next section up
 * System maintenance
 ** =texclean=
