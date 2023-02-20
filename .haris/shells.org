@@ -453,7 +453,7 @@ a terminal and runs the aliased command.
   alias l1='ls -1'
   alias src='cd ~/src'
   alias tmp='cd /tmp'
-  alias stage="mkdir -p /tmp/stage-$USER; cd /tmp/stage-$USER"
+  alias stage='mkdir -p /tmp/stage-"$USER"; cd /tmp/stage-"$USER"'
   alias bin='cd ~/.local/bin'
   alias usb='cd ~/mnt/usb'
 
@@ -607,6 +607,8 @@ a terminal and runs the aliased command.
   export MOZ_USE_XINPUT2=1
 
   export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator
+
+  mkdir -p /tmp/stage-"$USER"
 
   [ -f ~/.alias ]         && . ~/.alias
   [ -f ~/.alias-tmp ]     && . ~/.alias-tmp
