@@ -81,7 +81,7 @@ file is loaded by spacemacs and internally, it loads the other files based on
 the type of the purpose of the current emacs daemon (by reading the
 =server-name= variable). This is the config file:
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
- (load-file (cond ((equal server-name "irc") "~/.emacs.d/haris/irc.el")
+  (load-file (cond ((equal server-name "irc") "~/.emacs.d/haris/irc.el")
                    ("~/.emacs.d/haris/default.el")))
 #+end_src
 * General settings
@@ -189,6 +189,9 @@ the type of the purpose of the current emacs daemon (by reading the
   ;; "SPC +" will pop up eshell
   (spacemacs/set-leader-keys "+" 'haris/popup-eshell)
 #+end_src
+#+begin_src emacs-lisp
+  (spacemacs/declare-prefix "o" "custom")
+#+end_src
 *** Launching other programs at current context
 Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
 #+begin_src emacs-lisp
@@ -282,7 +285,6 @@ Some custom keybindings are defined here as well.
                                             (interactive)
                                             (counsel-shell-history)))
 
-  (spacemacs/declare-prefix "o" "custom")
   (spacemacs/set-leader-keys "or" 'rename-buffer)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
@@ -319,9 +321,22 @@ Some custom keybindings are defined here as well.
           visual-fill-column-center-text  t)
     (visual-fill-column-mode 1))
 
+  (defun haris/org-babel-goto-tangle-file ()
+    (if-let* ((args (nth 2 (org-babel-get-src-block-info t)))
+              (tangle (alist-get :tangle args)))
+        (when (not (equal "no" tangle))
+          (let* ((home-dir-re (concat "^" (regexp-quote (haris/tangle-home))))
+                 (deps-dir-re (concat "^" (regexp-quote (haris/tangle-deps ""))))
+                 (__file (eval (car (read-from-string tangle))))
+                 (_file (replace-regexp-in-string home-dir-re "~/" __file))
+                 (file (replace-regexp-in-string deps-dir-re "~/" _file)))
+            (find-file file))
+          t)))
+
   (add-hook 'org-mode-hook 'org-appear-mode)
   (add-hook 'org-mode-hook 'haris/org-mode-visual-fill)
   (add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'org-open-at-point-functions 'haris/org-babel-goto-tangle-file)
 
   (setq org-indent-mode                     nil
         org-M-RET-may-split-line            nil
@@ -922,5 +937,6 @@ I use this variable to check if the config loaded correctly.
 #+end_src
 ** Local variables                                                :noexport:
 # Local variables:
+# org-confirm-babel-evaluate: nil
 # eval: (org-sbe "begin_details")
 # End:
