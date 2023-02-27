@@ -55,3 +55,4 @@ x-scheme-handler/https=firefox.desktop;
 x-scheme-handler/file=nemo.desktop
 x-scheme-handler/viber=viber.desktop
 x-scheme-handler/tg=userapp-Telegram Desktop-Y1VJF1.desktop
+x-scheme-handler/msteams=teams.desktop
