@@ -194,6 +194,13 @@ This is a wrapper around GNU =pass=.
   export XDG_CURRENT_DESKTOP=Sway
   /usr/bin/sway --unsupported-gpu "$@"
 #+end_src
+** =xlock=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/xlock")
+  #!/usr/bin/env sh
+
+  pkill gpg-agent 2>/dev/null
+  /usr/bin/xlock
+#+end_src
 * Utilities
 ** =bootstrap=
 This is everything you need to get a new user set up. Just run this script, and
