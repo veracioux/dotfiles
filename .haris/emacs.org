@@ -516,10 +516,32 @@ The following functions help me define common tangle destinations.
   [Install]
   WantedBy=default.target
 #+end_src
+* TODO Slack
+slack-register-team automatically connects to slack. If I add it to the
+slack-mode-hook hook, it never connects. Investigate
+#+begin_src emacs-lisp
+  ;; (add-hook
+  ;;  'slack-mode-hook
+  ;;  (lambda ()
+  ;;    ;; Add slack teams here
+  ;;    (slack-register-team
+  ;;     :name "efektivnialtruismus"
+  ;;     :token (auth-source-pick-first-password
+  ;;             :host "efektivnialtruismus.slack.com"
+  ;;             :user "hgusic.pub@gmail.com")
+  ;;     :cookie (auth-source-pick-first-password
+  ;;              :host "efektivnialtruismus.slack.com"
+  ;;              :user "hgusic.pub@gmail.com^cookie")
+  ;;     :subscribed-channels '((main-announcements
+  ;;                             main-community-events
+  ;;                             main-opportunities
+  ;;                             main-random
+  ;;                             project-eahouse)))))
+#+end_src
 * Git
 ** TODO deprecated GitHub
 #+begin_src emacs-lisp
-  (setq auth-sources '("~/.authinfo.dev.gpg" "~/.netrc.gpg"))
+  (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
 #+end_src
 * Octave mode
 #+begin_src emacs-lisp
@@ -845,6 +867,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      (org :variables
           org-enable-appear-support t
           org-enable-transclusion-support t)
+     slack
      mu4e
      pass
      ;; eaf
