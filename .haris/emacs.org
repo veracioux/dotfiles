@@ -341,6 +341,7 @@ Some custom keybindings are defined here as well.
   (add-hook 'org-mode-hook 'org-appear-mode)
   (add-hook 'org-mode-hook 'haris/org-mode-visual-fill)
   (add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'org-mode-hook 'org-transclusion-add-all)
   (add-hook 'org-open-at-point-functions 'haris/org-babel-goto-tangle-file)
 
   (setq org-indent-mode                     nil
@@ -460,7 +461,9 @@ The following functions help me define common tangle destinations.
 
   (erc-notify-mode t)
   (erc-notifications-mode t)
-
+#+end_src
+** Keybindings
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
   (defun haris/erc-quit-channel () (interactive)
          (erc-part-from-channel ""))
   (defun haris/euirc () (interactive)
