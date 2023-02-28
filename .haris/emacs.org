@@ -141,6 +141,7 @@ the type of the purpose of the current emacs daemon (by reading the
 ** Global packages
 #+begin_src emacs-lisp
   (use-package focus-autosave-mode :defer t)
+  (use-package multi-vterm :defer t)
 #+end_src
 ** General custom functions
 #+begin_src emacs-lisp
@@ -159,6 +160,10 @@ the type of the purpose of the current emacs daemon (by reading the
 #+begin_src emacs-lisp
   (define-key evil-normal-state-map (kbd "M-w") 'avy-goto-word-0)
   (define-key evil-normal-state-map (kbd "M-f") 'avy-goto-char)
+#+end_src
+** Alert
+#+begin_src emacs-lisp
+  (setq alert-default-style 'libnotify)
 #+end_src
 ** Bindings
 #+begin_src emacs-lisp
@@ -436,7 +441,7 @@ The following functions help me define common tangle destinations.
 #+end_src
 * ERC
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
-  (use-package erc :defer t)
+  (use-package erc)
   (setq erc-server "irc.libera.chat"
         erc-nick "veracioux"
         erc-user-full-name "Haris Gušić"
@@ -474,7 +479,8 @@ The following functions help me define common tangle destinations.
 
   (evil-define-key  'motion erc-list-menu-mode-map  (kbd "RET")   nil)
   (evil-define-key  'normal erc-list-menu-mode-map  (kbd "RET")   nil)
-  (define-key       erc-list-menu-mode-map  (kbd "RET")   'erc-list-join)
+  ;; TODO shadowed by evil binding, don't know how to fix
+  ;; (evil-define-key  'normal erc-list-menu-mode-map  (kbd ",j")   'erc-list-join)
 #+end_src
 ** Theme tweak
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
@@ -545,8 +551,9 @@ The following functions help me define common tangle destinations.
 #+end_src
 * Vterm
 #+begin_src emacs-lisp
-  (setq vterm-shell "fish")
   (setq vterm-exit-functions 'delete-frame)
+  ;; If I set vterm-shell directly, it is overriden by shell layer
+  (setq shell-default-term-shell "fish")
 
   (add-hook 'vterm-mode-hook (lambda () (read-only-mode -1)))
 
@@ -633,6 +640,11 @@ I use mu4e as my email client.
   (mu4e-alert-set-default-style 'libnotify)
 #+end_src
 * Programming languages
+** YAML
+YAML indentation is just broken. This disables it completely.
+#+begin_src emacs-lisp
+  (defun yaml-indent-line ())
+#+end_src
 ** LSP
 #+begin_src emacs-lisp
   ;;(add-to-list 'projectile-project-root-files-functions 'custom/lsp-default-dir)(setq lsp-auto-guess-root t)
@@ -843,7 +855,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
    dotspacemacs-additional-packages
    '(
      org-fragtog org-drill org-ref org-attach-screenshot org-special-blocks ob-ipython
-     yasnippet-snippets vterm multi-vterm
+     yasnippet-snippets vterm
      i3wm-config-mode rainbow-mode fish-mode
      evil-easymotion reddigg md4rd pydoc pylint python-info
      nodejs-repl))
