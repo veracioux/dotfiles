@@ -576,6 +576,14 @@ them as code blocks here for better readability.
 #+end_src
 ** =minemacs=
 The bare minimum of emacs that is required to tangle all the dotfiles.
+** =alternative-command=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/alternative-command")
+  #!/usr/bin/env bash
+
+  cmd="$(which -a "$1" | uniq | sed -n 2p)"
+
+  "$cmd" "${@:2}"
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
