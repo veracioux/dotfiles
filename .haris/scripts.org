@@ -722,7 +722,13 @@ are designed to be easily integrated into dmenu scripts.
   # Open emacs and open the docker UI there
 
   create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
-  myemacs $create_frame --eval '(progn (switch-to-buffer "*scratch*") (docker))'
+  exe=myemacs
+
+  if [ -n "$create_frame" ]; then
+      exe=myemacs-float
+  fi
+
+  "$exe" $create_frame --eval "(progn (spacemacs/switch-to-scratch-buffer) (run-with-timer 0.3 nil 'docker))"
 #+end_src
 ** =magit=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/magit")
