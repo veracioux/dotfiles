@@ -264,34 +264,6 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       end
   end
 
-  function SSH
-      set -l session ~/.cache/ssh_session.gpg
-      mkdir -p /dev/shm/(whoami)
-      set -l tmpfile /dev/shm/(whoami)/gpg_decrypt_target
-      if [ "$argv" = '-r' ]
-          rm -f $session
-          pkill -u (whoami) ssh-agent
-          return
-      end
-      if [ ! -s $session ]
-          ssh-agent -c > $tmpfile
-          source $tmpfile
-          gpg --encrypt -r B97C0CA3BD9790A48EAA6EC9E64CF503559BB9E2 \
-              -o $session $tmpfile
-          rm -f $tmpfile
-          ssh-add ~/.ssh/$argv
-      else
-          gpg --decrypt -o $tmpfile $session
-          source $tmpfile
-          rm -f $tmpfile
-      end
-  end
-
-  function git
-      SSH 1>/dev/null 2>/dev/null
-      command git $argv
-  end
-
   function sconf
       set -l gitdir ~/.secret
       set -l worktree_option --work-tree="$HOME"
@@ -396,7 +368,10 @@ Completions for the functions defined in [[Functions]].
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
 ** Private
-#+transclude: [[file:./private/README.org::fish-private][fish-private]] 
+#+name: fish-private
+#+begin_src fish
+  complete -c synchro -fa 'secrets gpg mail projects personal'
+#+end_src
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (concat "/tmp/tangle-" (user-login-name) "/.bashrc")
@@ -446,7 +421,6 @@ a terminal and runs the aliased command.
   alias snips='cd ~/.vim/snips'
   alias vidir='VISUAL=nvim command vidir'
   alias wkpd='wikicurses'
-  alias SSHaur='eval (ssh-agent -c) && ssh-add ~/.ssh/aur'
   alias cppman='PAGER=viman command cppman'
   alias aurvote='ssh aur@aur.archlinux.org vote'
   alias ...='cd ../..'
@@ -475,7 +449,6 @@ a terminal and runs the aliased command.
 #+begin_src fish
   alias src_fish  'source ~/.config/fish/config.fish'
   alias term      'term & disown'
-  alias gh        '[ -z $SSH_AGENT_PID ] && SSH; command gh'
   alias alpine    'docker run -it --rm --name alpine alpine'
   alias debian    'docker run -it --name debian debian:bookworm-slim'
 
