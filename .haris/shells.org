@@ -368,10 +368,7 @@ Completions for the functions defined in [[Functions]].
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
 ** Private
-#+name: fish-private
-#+begin_src fish
-  complete -c synchro -fa 'secrets gpg mail projects personal'
-#+end_src
+#+transclude: [[./private/README.org::fish-private]]
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (concat "/tmp/tangle-" (user-login-name) "/.bashrc")
@@ -585,10 +582,11 @@ a terminal and runs the aliased command.
 
   mkdir -p /tmp/stage-"$USER"
 
-  [ -f ~/.alias ]         && . ~/.alias
-  [ -f ~/.alias-tmp ]     && . ~/.alias-tmp
-  [ -f ~/.alias-gui ]     && . ~/.alias-gui
-  [ -f ~/.alias-gui-tmp ] && . ~/.alias-gui-tmp
+  [ -f ~/.alias ]           && . ~/.alias
+  [ -f ~/.alias-tmp ]       && . ~/.alias-tmp
+  [ -f ~/.alias-gui ]       && . ~/.alias-gui
+  [ -f ~/.alias-gui-tmp ]   && . ~/.alias-gui-tmp
+  [ -f ~/.profile-private ] && . ~/.profile-private
 #+end_src
 * Dependencies
 #+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/shells.sh") :mkdirp yes
