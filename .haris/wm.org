@@ -204,10 +204,11 @@ Here are the configs you can choose from:
 
   eval $(ssh-agent)
 
-  TERM=dumb sxhkd &                             # Load default bindings
-  TERM=dumb sxhkd.private -c ~/.sxhkd.private & # Load private bindings
+  export TERM=dumb
+  sxhkd &                                       # Load default bindings
+  sxhkd.private -c ~/.sxhkd.private &           # Load private bindings
 
-  exec i3                           # Window manager
+  exec i3                                       # Window manager
 #+end_src
 #+NAME: xinitrc-gnome
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc-gnome")
@@ -497,12 +498,12 @@ with an emacs interface.
 #+NAME: emacs-apps-menu
 #+begin_src i3wm-config
   mode $mode_emacs {
-  bindsym p              exec --no-startup-id sh -c 'TERM=menu epython', mode default
-  bindsym o              exec --no-startup-id sh -c 'TERM=menu eoctave'; mode default
-  bindsym i              exec --no-startup-id sh -c 'TERM=menu erc',     mode default
-  bindsym d              exec --no-startup-id sh -c 'TERM=menu edocker', mode default
-  bindsym e              exec --no-startup-id sh -c 'TERM=menu elisp',   mode default
-  bindsym Return         exec --no-startup-id sh -c 'TERM=menu eterm',   mode default
+  bindsym p              exec --no-startup-id sh -c 'epython', mode default
+  bindsym o              exec --no-startup-id sh -c 'eoctave'; mode default
+  bindsym i              exec --no-startup-id sh -c 'erc',     mode default
+  bindsym d              exec --no-startup-id sh -c 'edocker', mode default
+  bindsym e              exec --no-startup-id sh -c 'elisp',   mode default
+  bindsym Return         exec --no-startup-id sh -c 'eterm',   mode default
   # TODO: make a way (script?) to open magit for the currently active project
   #bindsym g              exec --no-startup-id magit; mode default
   bindsym Escape         mode default
