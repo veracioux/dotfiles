@@ -454,7 +454,7 @@ swhkd on Wayland. See [[*Start-up][Start-up]].
   mode $mode_audio {
   bindsym plus            exec --no-startup-id ~/.config/i3/scripts/mic-volume-up
   bindsym minus           exec --no-startup-id ~/.config/i3/scripts/mic-volume-down
-  bindsym m               exec --no-startup-id ~/.config/i3/scripts/mic-mute-toggle
+  bindsym m               exec --no-startup-id ~/.config/i3/scripts/mic-mute-toggle; mode default
   bindsym t               exec --no-startup-id ~/.config/i3/scripts/mic-test
   bindsym c               exec --no-startup-id ~/.local/lib/haris/bluetoothctl-wrapper connect
   bindsym d               exec --no-startup-id ~/.local/lib/haris/bluetoothctl-wrapper disconnect
@@ -696,6 +696,8 @@ directly translated to English, without opening the menu.
   for_window [class="SpeedCrunch"]                      floating enable
   for_window [class="SpeedCrunch" floating]             $resize1
   for_window [class="SpeedCrunch" floating]             move position center
+  for_window [class="VirtualBox" \
+              title=".*(Settings|Preferences).*"]       floating enable
 
   for_window [instance="zbar" class="zbar"]             floating enable
 

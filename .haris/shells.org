@@ -512,7 +512,7 @@ a terminal and runs the aliased command.
   abbr -g sprq  'sudo pacman -R (pacman -Qdtq)'
 
   # Systemd
-  abbr -g ctl       'systemctl'
+  abbr -g ctl       'sudo systemctl'
   abbr -g start     'sudo systemctl start'
   abbr -g stop      'sudo systemctl stop'
   abbr -g en        'sudo systemctl enable'

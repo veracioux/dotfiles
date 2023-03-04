@@ -388,7 +388,6 @@ n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
   xrandr --output HDMI-1-0 "$@" --pos 1920x1080
 #+end_src
 ** =pipetest=
-[[file:~/.local/bin/pipetest][Output file]]
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/pipetest") :noweb yes
   #!/usr/bin/env bash
 
@@ -404,7 +403,7 @@ n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
   #
   # The output automatically updates when one of SCRIPT, SOURCE changes.
   #
-  # USAGE: pipetest [SCRIPT] [SOURCE]
+  # USAGE: pipetest [SOURCE] [SCRIPT]
   #
   # If the optional arguments SCRIPT and SOURCE are given, the SCRIPT and SOURCE
   # buffers will have an initial content equal to the content of those files.
@@ -497,6 +496,11 @@ n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
   EOF
 
   tmux new "$main_script"
+
+  #
+  # Print the resulting script
+  #
+  cat "$SCRIPT"
 
   #
   # Remove created temporary directory
@@ -1218,7 +1222,7 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
   if os.path.exists(cache_file):
       text = open(cache_file).read()
   else:
-      url = 'https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.yml'
+      url = 'https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/metadata/icons.yml'
       data = urlopen(url).read()
       text = data.decode('utf-8')
       open(cache_file, 'w').write(text)
@@ -1278,7 +1282,7 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
      run(['alacritty', '--class', 'Alacritty,Float', '-e', 'fish', '-C',
            'cd (dirname ' + __file__ + '); vim -c "norm 45z." ' + __file__])
   elif choice[2:] == 'FontAwesome...':
-      run(['firefox', 'https://fontawesome.com/cheatsheet'])
+      run(['firefox', 'https://fontawesome.com/search'])
   elif choice[2:] == 'From code...':
       p = run(['dmenu', '-p', 'Code:'], stdout=PIPE, input=char_entries, encoding='utf-8')
       open('/home/haris/src/testlog', 'w').write(choice)
