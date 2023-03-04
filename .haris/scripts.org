@@ -150,35 +150,52 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =sudo=
 #+NAME: sudo
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/sudo") :noweb yes
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/sudo") :noweb yes
   #!/usr/bin/env bash
 
   # Sudo but with a hook that sends a notification when the prompt is shown
 
-  tmpfile="$(mktemp -t sudo_askpass.XXXXXXXXXXXXXX)"
-  cat > "$tmpfile" <<'EOF'
-  <<sudo-askpass>>
+  if [ -z "$SUDO_ASKPASS" ]; then
+      export SUDO_ASKPASS="$(mktemp)"
+      chmod u+x "$SUDO_ASKPASS"
+      if [ "$TERM" != "dumb" ]; then
+          cat > "$SUDO_ASKPASS" <<'EOF'
+  <<sudo-askpass-tty>>
   EOF
+      else
+          cat > "$SUDO_ASKPASS" <<'EOF'
+  <<sudo-askpass-notty>>
+  EOF
+      fi
+      trap "rm -f $SUDO_ASKPASS" EXIT
+  fi
 
-  chmod a+x "$tmpfile"
-  SUDO_ASKPASS="$tmpfile" /usr/bin/sudo --askpass "$@"
-
-  status="$?"
-
-  rm -f "$tmpfile"
-
-  exit "$status"
-
+  /usr/bin/sudo --askpass "$@"
 #+end_src
-#+NAME: sudo-askpass
+#+NAME: sudo-askpass-tty
 #+begin_src shell :tangle no
   #!/usr/bin/env bash
   id="$(notify-send "SUDO" "Please enter your password" --print-id --expire-time 0)"
   echo -n "[sudo] password for $(getent passwd "$USER" | cut -d: -f1): " >&2
-  stty -echo
-  head -1
+
+  trap "dunstify --close=$id" EXIT
+
+  stty -echo </dev/tty
+  head -1 </dev/tty
+
   echo >&2
-  dunstify --close="$id"
+#+end_src
+#+NAME: sudo-askpass-notty
+#+begin_src bash :tangle no
+  #!/usr/bin/env bash
+
+  {
+      echo SETTITLE sudo password
+      echo SETDESC Enter sudo password to run command
+      echo SETPROMPT Sudo password:
+      echo GETPIN
+      echo BYE
+  } | pinentry -g 2>&1 | sed -n "/^D/ s/^D //p" | tr -d '\n'
 #+end_src
 ** =alacritty=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty")
