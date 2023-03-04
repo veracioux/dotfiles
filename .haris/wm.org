@@ -194,19 +194,19 @@ Here are the configs you can choose from:
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc-i3")
   ~/.xinitrc.common
 
-  sxhkd &                                     # Load default bindings
-  sxhkd.private -c ~/.sxhkd.private &         # Load private bindings
+  TERM=dumb sxhkd &                             # Load default bindings
+  TERM=dumb sxhkd.private -c ~/.sxhkd.private & # Load private bindings
   xrdb ~/.Xresources
 
-  dunst &                                     # Notification daemon
-  clipmenud &                                 # Daemon for dmenu clipboard
-  picom &                                     # Compositor
-  autotiling &                                # Autotiling for i3
+  dunst &                                       # Notification daemon
+  clipmenud &                                   # Daemon for dmenu clipboard
+  picom &                                       # Compositor
+  autotiling &                                  # Autotiling for i3
   dbus-update-activation-environment --systemd
     DBUS_SESSION_BUS_ADDRESS \
     DISPLAY \
-    XAUTHORITY                                # Fixes dbus problems with i3
-  exec i3                                     # Window manager
+    XAUTHORITY                                  # Fixes dbus problems with i3
+  exec i3                                       # Window manager
 
 #+end_src
 #+NAME: xinitrc-gnome

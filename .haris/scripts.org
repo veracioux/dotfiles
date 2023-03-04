@@ -676,7 +676,7 @@ are designed to be easily integrated into dmenu scripts.
   #!/usr/bin/env sh
 
   # Run an elisp interpreter through emacs
-  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
   myemacs $create_frame --eval "(ielm)" "$@"
 #+end_src
 ** =eoctave=
@@ -685,7 +685,7 @@ are designed to be easily integrated into dmenu scripts.
 
   # Run octave interpreter through emacs
 
-  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
   myemacs $create_frame --eval "(progn (run-octave) (delete-other-windows))" "$@"
 #+end_src
 ** =epython=
@@ -694,7 +694,7 @@ are designed to be easily integrated into dmenu scripts.
 
   # Run a python interpreter through emacs
 
-  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
   myemacs $create_frame --eval "(progn (call-interactively 'run-python) (delete-other-windows))" "$@"
 #+end_src
 ** =eterm=
@@ -711,7 +711,7 @@ are designed to be easily integrated into dmenu scripts.
 
   # Open emacs and run ERC in it
 
-  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
   myemacs --socket-name="irc" $create_frame \
           --eval "(unless erc-server-connected (call-interactively 'erc-tls))"
 #+end_src
@@ -721,7 +721,7 @@ are designed to be easily integrated into dmenu scripts.
 
   # Open emacs and open the docker UI there
 
-  create_frame="$([ "$TERM" = "menu" ] && echo --create-frame || echo '')"
+  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
   myemacs $create_frame --eval '(progn (switch-to-buffer "*scratch*") (docker))'
 #+end_src
 ** =magit=
@@ -838,7 +838,7 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
   # Otherwise open a generic dmenu where the user will choose what dmenu script
   # or other program to run
 
-  export TERM=menu
+  export TERM=dumb
 
   run_script() { ~/.local/lib/dmenu/"$1"; }
 
@@ -894,6 +894,7 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
       echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
       echo "Config"           # Open documentation selection
       echo "System"           # System actions
+      echo "Services"         # Control systemd services
       echo "Update cache"     # Update desktop app cache
       echo "Tem"              # Launch tem development environment
       echo "Octave"           # Launch octave in emacs
@@ -944,6 +945,8 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
           run_script config ;;
       "System")
           run_script system ;;
+      "Services")
+          run_script services ;;
       "Update cache")
           rm ~/.cache/.desktop-apps.txt ;;
       "Tem")
@@ -991,10 +994,13 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
   edit=" Edit..."
   sync=" Sync..."
 
-  entries="$(buku -p --format 30 | grep -v '^$')"
-  entries="$edit\n$sync\n$entries"
-
-  choice="$(echo "$entries" | dmenu -p 'Open:')"
+  choice="$(
+      {
+          echo "$edit"
+          echo "$sync"
+          unbuffer buku -p --format 30 | grep -v '^$'
+      } | dmenu -p 'Open:'
+  )"
 
   [ -z "$choice" ] && exit
 
@@ -1427,6 +1433,114 @@ sys.exit()
       sudo grub-reboot "$(echo "$choice" | cut -c 1)"
       sudo reboot
   fi
+#+end_src
+** Services
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/services")
+  #!/usr/bin/env bash
+
+  # Unicode glyphs
+  started=""
+  stopped=""
+  arrow=""
+  restart=""
+  user=""
+
+  list() {
+      systemctl "list-$1" \
+                --all \
+                --full \
+                --plain \
+                --no-pager \
+                --no-legend \
+                --type=service 2>&- \
+                "${@:2}" \
+          | cut -f1 -d' '
+  }
+
+  get_prefix() {
+      if [ "$1" == "--user" ]; then \
+          echo -n "$user "
+      else
+          echo -n "   " # NOTE: This string contains a THIN SPACE unicode character
+      fi
+  }
+
+  entries() {
+      local opt="$1" running_services stopped_services
+      readarray -t running_services < <(list units --state=running $opt)
+
+      # Running services
+      paste -d' ' <(
+          systemctl show "${running_services[@]}" \
+                    $opt \
+              | grep ^Restart= \
+              | sed -e "s/^Restart=no$/$started $arrow $stopped/" \
+                    -e "s/^Restart=.*/$started $arrow $restart/" \
+                    -e "s/^/$(get_prefix $opt)/"
+      ) \
+            <(printf "%s\n" "${running_services[@]}")
+
+      # Stopped services
+      {
+          for state in exited failed; do
+              list units      --state="$state" $opt
+          done
+      } | sed -e "s/^/$stopped $arrow $started /" \
+              -e "s/^/$(get_prefix $opt)/"
+
+      # Other services
+      if [ -z "$opt" ]; then
+          comm -23 \
+               <(list unit-files --state=disabled $opt | sort) \
+               <(printf "%s\n" "${running_services[@]}" | sort) \
+              | sed "s/^/$(get_prefix $opt)$stopped $arrow $started /"
+      fi
+  }
+  selection="$(
+      {
+          entries
+          entries --user
+      } | dmenu -p 'Services:' -l 20
+  )"
+
+  if [ -z "$selection" ]; then
+      exit 1
+  fi
+
+  service="$(echo "$selection" | grep --only-matching '\S\+$')"
+
+  opt=''
+  sudo='sudo'
+  if grep -q "$user" <<<"$selection"; then
+      echo here
+      opt="--user"
+      sudo=""
+  fi
+
+  cmd=''
+  if grep -q "$started $arrow $stopped" <<<"$selection"; then
+      cmd=stop
+  elif grep -q "$stopped $arrow $started" <<<"$selection"; then
+      cmd=start
+  else
+      cmd=restart
+  fi
+
+  set -e
+
+  $sudo systemctl "$cmd" $opt "$service"
+
+  # Notify the user
+  service_name="${service%.service}"
+
+  case "$cmd" in
+      start)
+          notify-send "Starting service..." "$service_name" ;;
+      restart)
+          notify-send "Starting service: " "$service_name" ;;
+      stop)
+          notify-send "Stopping service: " "$service_name" ;;
+  esac
 #+end_src
 ** GPG
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/gpg")
