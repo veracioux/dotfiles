@@ -202,8 +202,6 @@ Here are the configs you can choose from:
     DISPLAY \
     XAUTHORITY                                  # Fixes dbus problems with i3
 
-  eval $(ssh-agent)
-
   export TERM=dumb
   sxhkd &                                       # Load default bindings
   sxhkd.private -c ~/.sxhkd.private &           # Load private bindings
