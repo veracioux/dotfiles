@@ -1,0 +1,101 @@
+#+TITLE: GTK config
+#+PROPERTY: header-args :mkdirp yes :results silent :noweb yes
+
+* Zathura
+#+begin_src shell :tangle (haris/tangle-home ".config/zathura/zathurarc")
+  set selection-clipboard clipboard
+
+  set default-bg "#1e1e1e"
+  set default-fg "#dddddd"
+
+  set recolor             true
+  set recolor-darkcolor   "#cccccc"
+  set recolor-lightcolor  "#161616"
+  set recolor-keephue     true
+
+  set notification-fg     "#1e1e1e"
+  set notification-bg     "#d098ff"
+  set notification-error-fg     "#1e1e1e"
+  set notification-error-bg     "#ff5555"
+  set notification-warning-fg     "#1e1e1e"
+  set notification-warning-bg     "#f2b374"
+
+  set statusbar-fg "#dddddd"
+  set statusbar-bg "#161616"
+
+  set inputbar-fg "#dddddd"
+  set inputbar-bg "#1e1e1e"
+
+  set completion-fg           "#dddddd"
+  set completion-bg           "#1e1e1e"
+  set completion-group-fg     "#dddddd"
+  set completion-group-bg     "#161616"
+  set completion-highlight-bg "#f2b374"
+  set completion-highlight-fg "#1e1e1e"
+
+  set index-fg "#dddddd"
+  set index-bg "#1e1e1e"
+  set index-active-fg "#1e1e1e"
+  set index-active-bg "#99a3ff"
+
+  map b toggle_statusbar
+  map <M-f> exec "zathura %"
+#+end_src
+* GTK
+** Settings
+*** 2.0
+#+begin_src conf :tangle (haris/tangle-home ".gtkrc-2.0")
+  gtk-primary-button-warps-slider=0
+  gtk-toolbar-style=3
+  gtk-menu-images=1
+  gtk-button-images=1
+  gtk-cursor-theme-size=24
+  gtk-cursor-theme-name="breeze_cursors"
+  gtk-icon-theme-name="breeze-dark"
+  gtk-font-name="Noto Sans,  10"
+  gtk-enable-animations=1
+  gtk-theme-name = "Dracula"
+  gtk-icon-theme-name = "Flat-Remix-Blue"
+  gtk-font-name = "Ubuntu 10"
+  gtk-error-bell = false
+#+end_src
+*** 3.0
+#+NAME: gtk-settings-3.0
+#+begin_src conf :tangle (haris/tangle-home ".config/gtk-3.0/settings.ini")
+  [Settings]
+  gtk-application-prefer-dark-theme=true
+  gtk-button-images=true
+  gtk-cursor-theme-name=breeze_cursors
+  gtk-cursor-theme-size=24
+  gtk-decoration-layout=icon:minimize,maximize,close
+  gtk-enable-animations=true
+  gtk-font-name=Noto Sans,  10
+  gtk-icon-theme-name=breeze-dark
+  gtk-menu-images=true
+  gtk-modules=colorreload-gtk-module
+  gtk-primary-button-warps-slider=false
+  gtk-theme-name=Dracula
+  gtk-toolbar-style=3
+  gtk-error-bell=false
+#+end_src
+*** 4.0
+#+begin_src conf :tangle (haris/tangle-home ".config/gtk-4.0/settings.ini")
+  <<gtk-settings-3.0>>
+#+end_src
+** File dialog bookmarks
+#+begin_src conf :tangle (haris/tangle-home ".config/gtk-3.0/bookmarks")
+  file:///home/haris/proj  projects
+  file:///home/haris/src src
+  file:///home/haris/data  data
+  file:///home/haris/cloud cloud
+  file:///home/haris/repo repo
+  file:///home/haris/data/literature literature
+  file:///home/haris/cloud unbound
+  file:///home/haris/eo enocean
+  file:///tmp/stage-<<eval-user-home()>> stage
+#+end_src
+* Helpers
+#+NAME: eval-user-home
+#+begin_src emacs-lisp
+  (user-login-name)
+#+end_src

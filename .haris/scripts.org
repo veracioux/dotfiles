@@ -631,7 +631,7 @@ are designed to be easily integrated into dmenu scripts.
           wm.org)         echo ~/.haris/wm.org ;;
           git.org)        echo ~/.haris/git.org ;;
           browser.org)    echo ~/.haris/browser.org ;;
-          gtk.org)        echo ~/.haris/gtk.org ;;
+          gui.org)        echo ~/.haris/gui.org ;;
           misc.org)       echo ~/.haris/misc.org ;;
           alacritty)      echo ~/.config/alacritty/alacritty.yml ;;
           alias-tmp)      echo ~/.alias-tmp ;;
@@ -652,7 +652,7 @@ are designed to be easily integrated into dmenu scripts.
           dunst)          echo ~/.config/dunst/dunstrc ;;
           tem)            echo ~/.config/tem/config ;;
           mime)           echo ~/.config/mimeapps.list ;;
-          zathura)        echo ~/.config/zathura/zathurarc ;;
+          zathura)        echo ~/.haris/gui.org ;;
           emacs)          echo ~/.haris/emacs.org ;;
           spacemacs)      echo ~/.spacemacs ;;
           cron)           echo ~/.crontab ;;
