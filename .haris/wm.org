@@ -15,6 +15,8 @@ file, and whenever I want to tangle an i3 config code block to sway as well, I
 create a new code block with a different tangle destination and use a noweb
 reference to replicate the code for sway.
 
+With i3, I also use [[*Compositor][picom as my compositor]].
+
 * Quick interaction                                                :noexport:
 - [[~/.config/i3/config][Tangled destination file for i3]].
 - [[~/.config/sway/config][Tangled destination file for sway]].
@@ -647,67 +649,7 @@ directly translated to English, without opening the menu.
   }
   }
 #+end_src
-* Window rules
-#+begin_src i3wm-config
-  for_window [instance="Float"      class="Alacritty"]  floating enable
-  for_window [instance="Float"      class="Alacritty"]  move scratchpad
-  for_window [instance="Float"      class="Alacritty"]  scratchpad show
-
-  for_window [window_role="Float"   class="Gvim"]       floating enable
-  for_window [floating              class="Gvim"]       $resize1
-
-  for_window [instance="Background" class="Alacritty"]  floating enable
-  for_window [instance="Background" class="Alacritty"]  move scratchpad
-  for_window [instance="Background" class="Alacritty"]  scratchpad show
-
-  for_window [class="Alacritty" floating]               $resize1
-  for_window [class="Alacritty" floating]               move position center
-
-  for_window [class="flameshot"]                        floating enable
-
-  # I use feh to display a QR code, so I make it floating
-  for_window [class="feh"]                              floating enable
-  for_window [class="feh" floating]                     move position center
-
-  # Display command too sometimes
-  for_window [class="Display"]                          floating enable
-  for_window [class="Display" floating]                 move position center
-
-  # Matplotlib plots
-  for_window [class="matplotlib"]                       floating enable
-  for_window [class="matplotlib" floating]              move position center
-
-  # Emacs
-  for_window [class="Emacs" floating]                   $resize2; move position center
-
-  # Emacs config editor
-  for_window [title="EmacsFloat"]                       floating enable
-  for_window [title="EmacsFloat" floating]              move position center
-  for_window [title="EmacsFloat"]                       move scratchpad
-  for_window [title="EmacsFloat"]                       scratchpad show
-
-  # Octave plots
-  for_window [class="GNU Octave"]                       floating enable
-  for_window [class="GNU Octave" floating]              move position center
-  for_window [class="GNU Octave"]                       move scratchpad
-  for_window [class="GNU Octave"]                       scratchpad show
-
-  # Miscellaneous
-  for_window [class="SpeedCrunch"]                      floating enable
-  for_window [class="SpeedCrunch" floating]             $resize1
-  for_window [class="SpeedCrunch" floating]             move position center
-  for_window [class="VirtualBox" \
-              title=".*(Settings|Preferences).*"]       floating enable
-
-  for_window [instance="zbar" class="zbar"]             floating enable
-
-  for_window [class="Typora"]                           floating enable
-  for_window [class="Typora" floating]                  move position center
-
-  assign [class="Gimp.*"] number $ws6
-  assign [class="VirtualBox Manager"] number $ws8
-#+end_src
-* i3status
+** i3status
 :PROPERTIES:
 :header-args: :tangle (haris/tangle-home ".config/i3status/config") :mkdirp yes
 :END:
@@ -928,6 +870,175 @@ directly translated to English, without opening the menu.
   tztime localtime {
   format = "<span color='#f298c3'>  %H:%M:%S</span> "
   }
+#+end_src
+* Window rules
+#+begin_src i3wm-config
+  for_window [instance="Float"      class="Alacritty"]  floating enable
+  for_window [instance="Float"      class="Alacritty"]  move scratchpad
+  for_window [instance="Float"      class="Alacritty"]  scratchpad show
+
+  for_window [window_role="Float"   class="Gvim"]       floating enable
+  for_window [floating              class="Gvim"]       $resize1
+
+  for_window [instance="Background" class="Alacritty"]  floating enable
+  for_window [instance="Background" class="Alacritty"]  move scratchpad
+  for_window [instance="Background" class="Alacritty"]  scratchpad show
+
+  for_window [class="Alacritty" floating]               $resize1
+  for_window [class="Alacritty" floating]               move position center
+
+  for_window [class="flameshot"]                        floating enable
+
+  # I use feh to display a QR code, so I make it floating
+  for_window [class="feh"]                              floating enable
+  for_window [class="feh" floating]                     move position center
+
+  # Display command too sometimes
+  for_window [class="Display"]                          floating enable
+  for_window [class="Display" floating]                 move position center
+
+  # Matplotlib plots
+  for_window [class="matplotlib"]                       floating enable
+  for_window [class="matplotlib" floating]              move position center
+
+  # Emacs
+  for_window [class="Emacs" floating]                   $resize2; move position center
+
+  # Emacs config editor
+  for_window [title="EmacsFloat"]                       floating enable
+  for_window [title="EmacsFloat" floating]              move position center
+  for_window [title="EmacsFloat"]                       move scratchpad
+  for_window [title="EmacsFloat"]                       scratchpad show
+
+  # Octave plots
+  for_window [class="GNU Octave"]                       floating enable
+  for_window [class="GNU Octave" floating]              move position center
+  for_window [class="GNU Octave"]                       move scratchpad
+  for_window [class="GNU Octave"]                       scratchpad show
+
+  # Miscellaneous
+  for_window [class="SpeedCrunch"]                      floating enable
+  for_window [class="SpeedCrunch" floating]             $resize1
+  for_window [class="SpeedCrunch" floating]             move position center
+  for_window [class="VirtualBox" \
+              title=".*(Settings|Preferences).*"]       floating enable
+
+  for_window [instance="zbar" class="zbar"]             floating enable
+
+  for_window [class="Typora"]                           floating enable
+  for_window [class="Typora" floating]                  move position center
+
+  assign [class="Gimp.*"] number $ws6
+  assign [class="VirtualBox Manager"] number $ws8
+#+end_src
+* Compositor
+:PROPERTIES:
+:header-args: :tangle (haris/tangle-home ".config/picom.conf") :noweb yes :mkdirp yes
+:END:
+I use picom as my compositor with the i3 window manager.
+** General
+#+begin_src conf
+  # Daemonize process. Fork to background after initialization. Causes issues with certain (badly-written) drivers.
+  daemon = false
+
+  # Specify the backend to use: `xrender`, `glx`, or `xr_glx_hybrid`.
+  # `xrender` is the default one.
+  backend = "glx";
+
+  # Enable/disable VSync.
+  vsync = true
+
+  # Enable remote control via D-Bus.
+  dbus = false
+
+  # Try to detect WM windows (a non-override-redirect window with no
+  # child that has 'WM_STATE') and mark them as active.
+  mark-wmwin-focused = true;
+
+  # Mark override-redirect windows that doesn't have a child window with 'WM_STATE' focused.
+  mark-ovredir-focused = true;
+
+  # Try to detect windows with rounded corners and don't consider them
+  # shaped windows. The accuracy is not very high, unfortunately.
+  detect-rounded-corners = true;
+
+  # Detect '_NET_WM_OPACITY' on client windows, useful for window managers
+  # not passing '_NET_WM_OPACITY' of client windows to frame windows.
+  detect-client-opacity = true;
+
+  # Specify refresh rate of the screen. If not specified or 0, picom will
+  # try detecting this with X RandR extension.
+  refresh-rate = 0
+
+  detect-transient = true
+
+  # Use 'WM_CLIENT_LEADER' to group windows, and consider windows in the same
+  # group focused at the same time. 'WM_TRANSIENT_FOR' has higher priority if
+  # detect-transient is enabled, too.
+  detect-client-leader = true
+  use-damage = true
+  max-brightness = 1.0
+
+  log-level = "warn";
+
+  wintypes:
+  {
+    tooltip = { fade = true; shadow = true; opacity = 0.75; focus = true; full-shadow = false; };
+    dock = { shadow = false; }
+    dnd = { shadow = false; }
+    popup_menu = { opacity = 0.9; }
+    dropdown_menu = { opacity = 0.8; }
+  };
+#+end_src
+** Transparency rules
+#+begin_src conf
+  frame-opacity = 0.7;
+  inactive-opacity-override = true;
+  inactive-opacity = 0.95
+
+  # Use fixed inactive dim value, instead of adjusting according to window opacity.
+  # inactive-dim-fixed = 1.0
+
+  opacity-rule = [
+       "95:class_g = 'dmenu'",
+       "95:class_g = 'Alacritty'",
+       "100:class_g = 'Zathura'",
+       "95:class_g = 'Gvim'",
+       "100:class_g = 'firefox'",
+       "94:class_g = 'emacs'",
+       "94:class_g = 'Emacs'",
+       ];
+
+  blur:
+  {
+    method = "gaussian";
+    size = 8;
+    deviation = 5;
+  }
+#+end_src
+** Fading
+#+begin_src conf
+  # Fade windows in/out when opening/closing and when opacity changes,
+  #  unless no-fading-openclose is used.
+  fading = true
+
+  # Opacity change between steps while fading in. (0.01 - 1.0, defaults to 0.028)
+  fade-in-step = 0.03;
+
+  # Opacity change between steps while fading out. (0.01 - 1.0, defaults to 0.03)
+  fade-out-step = 0.03;
+
+  # The time between steps in fade step, in milliseconds. (> 0, defaults to 10)
+   fade-delta = 5
+
+  # Specify a list of conditions of windows that should not be faded.
+  fade-exclude = []
+
+  # Do not fade on window open/close.
+  no-fading-openclose = false
+
+  # Do not fade destroyed ARGB windows with WM frame. Workaround of bugs in Openbox, Fluxbox, etc.
+  no-fading-destroyed-argb = false
 #+end_src
 * Dependencies
 ** i3
