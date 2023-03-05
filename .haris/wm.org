@@ -499,10 +499,11 @@ with an emacs interface.
 #+begin_src i3wm-config
   mode $mode_emacs {
   bindsym p              exec --no-startup-id sh -c 'epython', mode default
-  bindsym o              exec --no-startup-id sh -c 'eoctave'; mode default
+  bindsym o              exec --no-startup-id sh -c 'eoctave', mode default
   bindsym i              exec --no-startup-id sh -c 'erc',     mode default
   bindsym d              exec --no-startup-id sh -c 'edocker', mode default
   bindsym e              exec --no-startup-id sh -c 'elisp',   mode default
+  bindsym g              exec --no-startup-id sh -c 'magit',   mode default
   bindsym Return         exec --no-startup-id sh -c 'eterm',   mode default
   # TODO: make a way (script?) to open magit for the currently active project
   #bindsym g              exec --no-startup-id magit; mode default

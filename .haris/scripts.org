@@ -646,7 +646,7 @@ are designed to be easily integrated into dmenu scripts.
           vifm-theme)     echo ~/.config/vifm/colors/customtheme.vifm ;;
           gh)             echo ~/.config/gh/config.yml ;;
           hg)             echo ~/.hgrc ;;
-          picom)          echo ~/.config/picom.conf ;;
+          picom)          echo ~/.haris/wm.org ;;
           schim)          echo ~/.config/schim/schim.conf ;;
           schim-volatile) echo ~/.config/schim/volatile.conf ;;
           dunst)          echo ~/.config/dunst/dunstrc ;;
@@ -1346,60 +1346,61 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
   [ "$choice" = " Yes, kill $process" ] && pkill "$process"
 #+end_src
 ** Config
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/config")
-#!/usr/bin/env python3
+#+begin_src python :tangle (haris/tangle-home ".local/lib/dmenu/config")
+  #!/usr/bin/env python3
 
-from subprocess import run, PIPE
-import os
-import os.path
-import sys
+  from subprocess import run, PIPE
+  import os
+  import os.path
+  import sys
 
-# Load regular configuration entries
-entries = run('lscf', stdout=PIPE, encoding='utf-8').stdout.replace('-', ' ')
-# Load dmenu scripts
-dmenu_scripts = os.listdir(os.path.expanduser('~/.local/lib/dmenu/'))
+  # Load regular configuration entries
+  entries = run('lscf', stdout=PIPE, encoding='utf-8').stdout.replace('-', ' ')
+  # Load dmenu scripts
+  dmenu_scripts = os.listdir(os.path.expanduser('~/.local/lib/dmenu/'))
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃ Additional entries and customization ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-entries = ' Edit...\n' +                               \
-          ' ' + entries.replace('\n', '\n ') +        \
-          'dmenu ' + '\n dmenu '.join(dmenu_scripts)
+  # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  # ┃ Additional entries and customization ┃
+  # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  entries = ' Edit...\n' +                               \
+            ' ' + entries.replace('\n', '\n ') +        \
+            'dmenu ' + '\n dmenu '.join(dmenu_scripts)
 
-# Run dmenu
-choice = run(['dmenu', '-l', '20',  '-p', 'Config:'],
-             input=entries, encoding='utf-8', stdout=PIPE).stdout
+  # Run dmenu
+  choice = run(['dmenu', '-l', '20',  '-p', 'Config:'],
+               input=entries, encoding='utf-8', stdout=PIPE).stdout
 
-if not choice:
-    sys.exit()
+  if not choice:
+      sys.exit()
 
-# Strip decoration from the entry
-choice = choice[2:-1].replace(' ', '-')
+  # Strip decoration from the entry
+  choice = choice[2:-1].replace(' ', '-')
 
-def run_command(cmd):
-    run(['alacritty', '--class', 'Alacritty,Float', '-e',
-         'fish', '-C', cmd])
+  def run_command(cmd):
+      run(['alacritty', '--class', 'Alacritty,Float', '-e',
+           'fish', '-C', cmd])
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃ Actions based on user's choice ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-if choice.startswith('dmenu-'):
-    run_command('cd (dirname ' + __file__ + '); vim ' + choice.replace(
-        'dmenu-',
-        os.path.expanduser('~/.local/lib/dmenu/')
-    ))
-elif choice == 'Edit...':
-    EVAL = '''
-        (progn (find-file "~/.haris/scripts.org")
-               (goto-char (org-find-property "CUSTOM_ID" "cf")))
-    '''
-    run(["myemacs-float", "--create-frame", "--eval", EVAL])
-else:
-    if 'emacs' in choice or choice.endswith('.el') or choice.endswith('.org'):
-        run("fish -c 'ecf {}'".format(choice), shell=True)
-    else:
-        run_command('cdcf {0}; vicf {0}'.format(choice))
-sys.exit()
+  # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  # ┃ Actions based on user's choice ┃
+  # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  if choice.startswith('dmenu-'):
+      submenu = choice.replace("dmenu-", "")
+      submenu = submenu[0].upper() + submenu[1:]
+      run(["notify-send", submenu])
+      EVAL = fr'''
+          (progn (find-file "~/.haris/scripts.org")
+                 (call-interactively (swiper "\\*\\* {submenu}")))
+      '''
+      run(["myemacs-float", "--eval", EVAL])
+  elif choice == 'Edit...':
+      EVAL = '''
+          (progn (find-file "~/.haris/scripts.org")
+                 (goto-char (org-find-property "CUSTOM_ID" "cf")))
+      '''
+      run(["myemacs-float", "--eval", EVAL])
+  else:
+      run("fish -c 'ecf {}'".format(choice), shell=True)
+  sys.exit()
 #+end_src
 ** System
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/system")
