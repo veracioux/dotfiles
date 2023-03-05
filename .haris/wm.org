@@ -185,7 +185,7 @@ Shared between i3 and sway:
 :END:
 Since i3 is used under X server, it needs to be launched within [[~/.xinitrc]].
 There are three =.xinitrc= configuration presets, that I switch between using
-[[~/.haris-bin/xpreset][xpreset]]. The default one is defined here (you can change it if you want):
+[[~/.haris/scripts.org::*=xpreset=][xpreset]]. The default one is defined here (you can change it if you want):
 #+NAME: xinitrc-default
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc")
   <<xinitrc-i3>>

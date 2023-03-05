@@ -385,6 +385,18 @@ fi
 }
 return $err
 #+end_src
+** =xpreset=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/xpreset")
+  #!/usr/bin/env sh
+
+  [ "$#" != 1 ] && exit 1
+
+  ln -sf .xinitrc-"$1" ~/.xinitrc
+#+end_src
+*** Fish completions
+#+begin_src fish :tangle-mode (identity #o644) :tangle (haris/tangle-home ".config/fish/completions/xpreset.fish")
+  complete -c xpreset -f -a "(pushd ~; ls .xinitrc-* | string replace .xinitrc- ''; popd)"
+#+end_src
 ** =xrandr-toggle=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr-toggle")
 #!/usr/bin/env sh
