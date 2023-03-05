@@ -1,5 +1,5 @@
 #+TITLE: Shell Config
-#+PROPERTY: header-args :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/config.fish") :mkdirp yes
+#+PROPERTY: header-args :tangle (haris/tangle-home ".config/fish/config.fish") :mkdirp yes :results silent :noweb yes
 
 This is a config for the shells I use:
 
@@ -164,7 +164,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   fzf_configure_bindings
 #+end_src
 *** Dependencies
-#+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/fish.sh") :mkdirp yes
+#+begin_src shell :tangle (haris/tangle-deps "fish.sh")
   paru -S fish fisher
   touch ~/.config/fish/{private,tmp}.fish
   fish -c 'fisher install edc/bass \
@@ -355,7 +355,7 @@ Completions for the functions defined in [[Functions]].
           -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
   end
 #+end_src
-#+begin_src fish :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/completions/adhoc.fish")
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/adhoc.fish")
   complete -c adhoc -f \
       -a "(complete -C'adsfadadflasdjflasdflnasdflasdu /tmp/adhoc-files/' | string replace /tmp/adhoc-files/ \"\")"
 #+end_src
@@ -364,11 +364,14 @@ Completions for the functions defined in [[Functions]].
   complete -c pass -a 'add' -n "no_positional_args"
   complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
 #+end_src
-#+begin_src shell :mkdirp yes :tangle (concat "/tmp/tangle-" (user-login-name) "/.config/fish/completions/otp.fish"))
+#+begin_src shell :tangle (haris/tangle-home ".config/fish/completions/otp.fish")
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
 ** Private
-#+transclude: [[./private/README.org::fish-private]]
+#+name: fish-private
+#+begin_src fish
+  complete -c synchro -fa 'secrets gpg mail projects personal'
+#+end_src
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (concat "/tmp/tangle-" (user-login-name) "/.bashrc")
@@ -589,6 +592,6 @@ a terminal and runs the aliased command.
   [ -f ~/.profile-private ] && . ~/.profile-private
 #+end_src
 * Dependencies
-#+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/shells.sh") :mkdirp yes
+#+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/shells.sh")
   sudo pacman -S dash fish
 #+end_src
