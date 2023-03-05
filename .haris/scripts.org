@@ -752,7 +752,7 @@ are designed to be easily integrated into dmenu scripts.
   }
 
   if [ "$1" = 'in' ]; then
-      copy_or_show_or_open "$(timeout 10s zbarcam /dev/video0 -1 | sed 's/^QR-Code://')"
+      copy_or_show_or_open "$(timeout 20s zbarcam /dev/video0 -1 | sed 's/^QR-Code://')"
   elif [ "$1" = 'screen' -o "$1" = 's' ]; then
       copy_or_show_or_open "$(zbarimg -q <(flameshot screen --raw) | sed 's/^QR-Code://')"
   else # out

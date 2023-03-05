@@ -422,9 +422,9 @@ swhkd on Wayland. See [[*Start-up][Start-up]].
 #+NAME: qr-code-menu
 #+begin_src i3wm-config
   mode $mode_qr {
-  bindsym i               exec --no-startup-id "qr in"
-  bindsym o               exec --no-startup-id "qr out"
-  bindsym s               exec --no-startup-id "qr screen"
+  bindsym i               exec --no-startup-id "qr in"; mode default
+  bindsym o               exec --no-startup-id "qr out"; mode default
+  bindsym s               exec --no-startup-id "qr screen"; mode default
 
   bindsym Escape          mode default
   }
