@@ -39,6 +39,86 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 
   function fish_user_key_bindings               # Start bindings
 #+end_src
+** Behavior overrides
+*** =fish_prompt=
+#+begin_src shell :tangle (haris/tangle-home ".config/fish/functions/fish_prompt.fish")
+  function fish_prompt --description 'Write out the prompt'
+      set -l last_pipestatus $pipestatus
+      set -l normal (set_color normal)
+
+      # Color the prompt differently when we're root
+      set -l color_cwd $fish_color_cwd
+      set -l prefix
+      set -l suffix '$'
+      if contains -- $USER root toor
+          if set -q fish_color_cwd_root
+              set color_cwd $fish_color_cwd_root
+          end
+          set suffix '#'
+      end
+
+      # If we're running via SSH, change the host color.
+      set -l color_host $fish_color_host
+      if set -q SSH_TTY
+          set color_host $fish_color_host_remote
+      end
+
+      set -l prompt_status (__fish_print_pipestatus " [" "]" "|" \
+          (set_color brred) (set_color --bold brred) $last_pipestatus)
+
+      echo -n -s  (set_color --bold brblue)   "$USER" ' '                  \
+                  (set_color magenta)         (prompt_pwd)        $normal  \
+                  (set_color brmagenta)       (fish_vcs_prompt)            \
+                  (set_color brmagenta)       $prompt_status               \
+                  (set_color yellow)          ' ' $suffix ' '
+  end
+#+end_src
+**** =fish_mode_prompt=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_mode_prompt.fish")
+  function fish_mode_prompt
+      [ -n "$EMACS_VTERM_PATH" ] && return
+      switch $fish_bind_mode
+          case default
+              set_color --bold brred
+              echo '[N] '
+          case insert
+              # Show nothing
+          case replace_one
+              set_color --bold green
+              echo '[r] '
+          case replace
+              set_color --bold blue
+              echo '[R] '
+          case visual
+              set_color --bold magenta
+              echo '[V] '
+          case '*'
+              set_color --bold red
+              echo '?'
+      end
+      set_color normal
+  end
+
+#+end_src
+*** =fish_right_prompt=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_right_prompt.fish")
+  # Customize fish to notify me when a command finishes in a background terminal
+  # window.
+  function fish_right_prompt
+      set -l _status "$status"
+
+      # Check if terminal window is hidden
+      if xdotool search --all --onlyvisible "" 2>/dev/null | ! grep -q "$WINDOWID"
+          set -l exit_message
+          if [ "$_status" = 0 ]
+              set exit_message "exited successfully"
+          else
+              set exit_message "exited with $_status"
+          end
+          notify-send (echo "Command "(history | head -1)"" "$exit_message")
+      end
+  end
+#+end_src
 ** Quasi-vim-like key bindings
 #+begin_src fish
   bind -M default \el forward-char
@@ -164,13 +244,20 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   fzf_configure_bindings
 #+end_src
 *** Dependencies
+Fish plugins:
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/fish_plugins")
+  edc/bass
+  oh-my-fish/plugin-pj
+  PatrickF1/fzf.fish
+  jorgebucaran/nvm.fish
+  evanlucas/fish-kubectl-completions
+#+end_src
+This code block installs all system dependencies and all plugins in fish based
+on the plugin list above.
 #+begin_src shell :tangle (haris/tangle-deps "fish.sh")
   paru -S fish fisher
   touch ~/.config/fish/{private,tmp}.fish
-  fish -c 'fisher install edc/bass \
-                          oh-my-fish/plugin-pj \
-                          PatrickF1/fzf.fish \
-                          evanlucas/fish-kubectl-completions'
+  fish -c "fisher update"
   sudo pacman -S fd bat # Dependencies for fzf.fish
 #+end_src
 ** Functions
@@ -276,22 +363,15 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 
       git --git-dir="$gitdir" $worktree_option $argv
   end
-
-  # Customize fish to notify me when a command finishes in a background terminal
-  # window.
-  function fish_right_prompt
-      set -l _status "$status"
-
-      # Check if terminal window is hidden
-      if xdotool search --all --onlyvisible "" 2>/dev/null | ! grep -q "$WINDOWID"
-          set -l exit_message
-          if [ "$_status" = 0 ]
-              set exit_message "exited successfully"
-          else
-              set exit_message "exited with $_status"
-          end
-          notify-send (echo "Command "(history | head -1)"" "$exit_message")
-      end
+#+end_src
+*** =enved=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/enved.fish")
+  function enved --argument envvar --description "Edit an environment variable by name"
+      set tmp (mktemp /tmp/envvar-XXXXXXXXX)
+      bass echo \$"$envvar" > "$tmp"
+      "$EDITOR" "$tmp"
+      bass export "$envvar"=(cat "$tmp")
+      /usr/bin/rm -f "$tmp"
   end
 #+end_src
 *** =^=
