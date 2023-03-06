@@ -15,6 +15,26 @@ Note: For code reusability, I use some [[* Helper code][helper code blocks]] def
 of this document. These code blocks are utilized via =org-sbe= or via noweb references.
 
 * Wrappers around existing commands
+** =git=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/git")
+  #!/usr/bin/env bash
+
+  git() {
+      alternative-command git "$@"
+  }
+
+  git_root="$(git root)"
+  if [ "$git_root" = ~ ]; then
+      if [ "$PWD" = ~ ] || [[ "${PWD#~/}" =~ ^\. ]]; then
+          git "$@"
+      else
+          export GIT_CEILING_DIRECTORIES=~
+          git "$@"
+      fi
+  else
+      git "$@"
+  fi
+#+end_src
 ** =rm=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/rm")
   #!/usr/bin/env sh
