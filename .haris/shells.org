@@ -368,10 +368,7 @@ Completions for the functions defined in [[Functions]].
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
 ** Private
-#+name: fish-private
-#+begin_src fish
-  complete -c synchro -fa 'secrets gpg mail projects personal'
-#+end_src
+#+transclude: [[~/.haris/private/README.org::fish-private]]
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (concat "/tmp/tangle-" (user-login-name) "/.bashrc")
