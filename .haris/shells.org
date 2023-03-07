@@ -492,7 +492,6 @@ a terminal and runs the aliased command.
   alias x='startx'
   alias conf='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
   alias sconf='git --git-dir=$HOME/.secret/ --work-tree=$HOME'
-  alias vifm='SHELL=fish ~/.config/vifm/scripts/vifmrun'
   alias vim='nvim'
   alias vi='command vim'
   alias snips='cd ~/.vim/snips'
