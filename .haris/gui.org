@@ -1,4 +1,4 @@
-#+TITLE: GTK config
+#+TITLE: GUI app configs
 #+PROPERTY: header-args :mkdirp yes :results silent :noweb yes
 
 * Zathura
@@ -93,6 +93,29 @@
   file:///home/haris/cloud unbound
   file:///home/haris/eo enocean
   file:///tmp/stage-<<eval-user-home()>> stage
+#+end_src
+* Desktop entries
+** CLion
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/clion.desktop")
+  [Desktop Entry]
+  Encoding=UTF-8
+  Version=1.0
+  Type=Application
+  NoDisplay=true
+  Exec=/usr/bin/clion
+  Name=CLion
+  Comment=CLion
+#+end_src
+** WebStorm
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/webstorm.desktop")
+  [Desktop Entry]
+  Encoding=UTF-8
+  Version=1.0
+  Type=Application
+  NoDisplay=true
+  Exec=/usr/bin/webstorm
+  Name=Webstorm
+  Comment=Webstorm
 #+end_src
 * Helpers
 #+NAME: eval-user-home
