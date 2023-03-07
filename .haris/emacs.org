@@ -973,7 +973,7 @@ I use this variable to check if the config loaded correctly.
   (setq haris/config-loaded-fine (current-time-string))
 #+end_src
 ** Local variables                                                :noexport:
-# Local variables:
+# Local Variables:
 # org-confirm-babel-evaluate: nil
 # eval: (org-sbe "begin_details")
 # End:
