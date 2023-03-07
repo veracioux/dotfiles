@@ -662,6 +662,7 @@ are designed to be easily integrated into dmenu scripts.
           shells.org)     echo ~/.haris/shells.org ;;
           wm.org)         echo ~/.haris/wm.org ;;
           git.org)        echo ~/.haris/git.org ;;
+          vim.org)        echo ~/.haris/vim.org ;;
           browser.org)    echo ~/.haris/browser.org ;;
           gui.org)        echo ~/.haris/gui.org ;;
           misc.org)       echo ~/.haris/misc.org ;;

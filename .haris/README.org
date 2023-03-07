@@ -2,3 +2,12 @@
 
 The bootstrap directory contains everything that is needed to tangle all my
 org-mode configs into actual usable config files.
+
+* Installing dependencies
+Most of my org-mode dotfiles have a *Setup* and/or *Dependencies* section with bash
+scripts that will install all the dependencies for the configs defined in the
+file.
+
+TODO: The scripts should not be run directly, but instead using a frontend script that I
+will create in the future.
+* TODO Common keybindings

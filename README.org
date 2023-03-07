@@ -12,7 +12,7 @@ help of Emacs and it's excellent =org-mode=, I can run a command and those code
 blocks go exactly into the config file they need to. This approach is known as
 literate programming.
 
-I find it superior to keeping the config files directly because:
+I find it superior compared to keeping the config files directly because:
 - It is much easier to document my configuration as it has become quite complex
   and reading/writing it this way feels more natural.
 - I can group related configuration from multiple programs in a single file, and
@@ -44,42 +44,6 @@ Here are the occasions when I want to tangle these config files:
   =org-babel-tangle= function available, mapped to the =, b t= shortcut.
 - As part of a CI workflow to have them available for download on GitHub
 
-* Set up for use
-- Custom scripts are located in [[~/.haris-bin][=~/.haris-bin/=]]. In order to have them available
-  in your PATH, you must copy them over to =.local/bin/=:
-  #+begin_src shell
-    cp --link --interactive ~/.haris-bin/* ~/.local/bin/
-  #+end_src
-** Vim configuration
-Install vim-plug:
-#+begin_src shell :tangle (haris/tangle-deps "vim") :mkdirp yes :shebang "#!/usr/bin/env sh"
-  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  touch ~/.vimrc.tmp
-#+end_src
-After that, open vim and run =:PlugInstall=.
-*** YouCompleteMe
-After installing using vim-plug, go to the directory where YouCompleteMe is
-located and run  =./setup.py --all=.
-*** Dependencies
-First complete the above steps.
-#+begin_src shell :tangle (haris/tangle-deps "vim") :mkdirp yes
-  sudo pacman -S gvim neovim fzf
-  rm -rf ~/.config/nvim/*/
-
-  ln -sf -t ~/.config/nvim/ $(realpath ~/.vim/*/)
-  touch ~/.vimrc.tmp ~/.config/nvim/init.tmp.vim
-  # YouCompleteMe
-  sudo pacman -S go nodejs npm jdk-openjdk
-  echo "Run :PlugInstall to install plugins..." | vim
-  cd ~/.vim/plugged/YouCompleteMe && python install.py --all
-#+end_src
-* X11
-I store a couple of =.xinitrc= presets in my dotfiles, for different WMs, DEs
-etc. So I can easily switch among them. They are named =~/.xinitrc-<identifier>=.
-I switch among them using =xpreset <identifier>=. There is also the
-=~/.xinitrc.common-x11= file which contains some common commands for all presets.
-* Firefox
 * Installing all dependencies
 Each configuration file contains a list of dependencies for the program it
 configures. These dependencies are conveniently placed in a shell source block
@@ -97,6 +61,3 @@ so you don't have to do anything except answer the package manager's prompts.
 
 *NOTE:* The dependency scripts were made with *Arch Linux* in mind, so they use
 =pacman= as the package manager and =paru= as an AUR helper.
-* Notes and ideas
-- Use tem to organize scripts (unless I decide to keep all scripts in an org
-  file and just tangle them)
