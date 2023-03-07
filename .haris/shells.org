@@ -541,6 +541,7 @@ a terminal and runs the aliased command.
   # Error correction
   abbr -g claer 'clear'
   abbr -g pas   'pass'
+  abbr -g gs    'git status'
 
   # Pacman commands
   abbr -g p     'pacman'
@@ -615,18 +616,17 @@ a terminal and runs the aliased command.
   abbr -g va    'vagrant'
   abbr -g u     'fusermount -u'
   abbr -g um    'sudo umount'
+  abbr -g cmd   'command'
 
-  abbr -g yt 'ytfzf -t -s'
-  abbr -g t  'tem'
-  abbr -g v  'vim (fzf)'
-  abbr -g fm 'vifm'
-  abbr -g fb 'facebook-cli'
-  abbr -g c  'conf'
-  abbr -g fl 'flameshot'
-
+  abbr -g yt    'ytfzf -t -s'
+  abbr -g t     'tem'
+  abbr -g v     'vim (fzf)'
+  abbr -g fm    'vifm'
+  abbr -g fb    'facebook-cli'
+  abbr -g c     'conf'
+  abbr -g fl    'flameshot'
   abbr -g tb    'nc termbin.com 9999'
   abbr -g asc   'asciinema'
-  abbr -g mic   'amixer set Capture toggle'
   abbr -g priv  'fish --private'
   abbr -g hk    'heroku'
   abbr -g mhc   'man http-codes'

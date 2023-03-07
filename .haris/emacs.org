@@ -297,6 +297,7 @@ Some custom keybindings are defined here as well.
 ** Vim-like configuration
 #+begin_src emacs-lisp
   (use-package evil-quickscope)
+  (use-package vimrc-mode :defer t)
   (global-evil-quickscope-always-mode)
 #+end_src
 * Ivy

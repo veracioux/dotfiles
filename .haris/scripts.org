@@ -121,7 +121,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   fi
 #+end_src
 ** =redshift=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/reshift")
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/redshift")
   #!/usr/bin/env sh
 
   /usr/bin/redshift -l 43.84:18.35
@@ -1627,6 +1627,14 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
 ** Quickmenu
 #+transclude: [[~/.haris/temporary.org::dmenu-quickmenu]]
 # Leave this line empty - otherwise transclusion might hoist the next section up
+** Dependencies
+#+begin_src bash :tangle (haris/tangle-deps "dmenu.sh")
+  # Root menu (dmenu_run)
+  sudo pacman -S clipmenu
+  # Open
+  paru -S buku
+  sudo pacman -S xdotool xorg-xprop
+#+end_src
 * System maintenance
 ** =texclean=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/texclean")
