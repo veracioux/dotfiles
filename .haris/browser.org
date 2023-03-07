@@ -404,3 +404,9 @@ This code block is that blank page, and is tangled to the appropriate location:
   }
 
 #+end_src
+
+* Dependencies
+#+begin_src bash :tangle (haris/tangle-deps "browser.sh")
+  sudo pacman -S firefox-tridactyl
+  paru -S buku-git bukubrow
+#+end_src
