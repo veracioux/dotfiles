@@ -49,12 +49,7 @@ Each configuration file contains a list of dependencies for the program it
 configures. These dependencies are conveniently placed in a shell source block
 and can be exported using =(org-babel-tangle)=. The export destination is
 =/tmp/dependencies-$USER/PROGRAM_NAME.sh=. The dependencies are installed by sourcing
-these files in a POSIX-compliant shell, individually or in bulk.
-
-In order to install all the dependencies, simply run
-#+begin_src sh
-  ./.mkdeps
-#+end_src
+these files in bash, individually or in bulk.
 ** TODO Not yet implemented
 This script will also take care of extracting the shell blocks from org files,
 so you don't have to do anything except answer the package manager's prompts.
