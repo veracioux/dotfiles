@@ -20,8 +20,8 @@ eval set -- "$parsed_args"
 
 remote=https://github.com/veracioux/dotfiles
 branch=master
-home= # Intentionally empty
-user="$(whoami)"
+home=''
+user=''
 
 while :; do
     case "$1" in
@@ -36,13 +36,12 @@ while :; do
         -u | --user)
             user="$2"
             if [ -z "$home" ]; then
-                export HOME="/home/$user"
+                home="/home/$user"
             fi
             shift 2
             ;;
         -H | --home)
-            home="$1"
-            export HOME="$2"
+            home="$2"
             shift 2
             ;;
         --)
@@ -55,6 +54,11 @@ while :; do
     esac
 done
 
+if [ -z "$user" ]; then
+    echo "ERROR: --user option is required" >&2
+    exit 1
+fi
+
 cd ~
 git config --global init.defaultBranch non-master-to-avoid-conflict
 git init
@@ -62,6 +66,8 @@ git remote add origin "$remote"
 git fetch origin "$branch:$branch" --depth 1
 git checkout "$branch"
 
+# These are used by the tangle script to determine destinations
+export USER="$user" HOME="$home"
 emacs --script .haris/bootstrap/tangle-all.sh
 
 exec 1>&3

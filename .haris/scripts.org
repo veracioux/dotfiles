@@ -1722,78 +1722,50 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
 #+end_src
 ** =tangle=
 #+NAME: tangle
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".local/bin/tangle") :noweb yes
-  #!/usr/bin/env -S emacs --script
-
-  (load-file "~/.haris/bootstrap/tangle.el")
-  (setq org-confirm-babel-evaluate nil)
-
-  (org-babel-tangle-file (file-truename (elt argv 0)))
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle") :noweb yes
+  #!/usr/bin/env sh
+  ~/.haris/bootstrap/tangle.sh "$@"
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
 also tangle it to a standalone destination that I also keep under version control.
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh")
-  <<tangle>>
+  #!/usr/bin/env -S emacs --script
+
+  (load-file (concat (file-name-directory load-file-name) "/tangle.el"))
+  (setq org-confirm-babel-evaluate nil)
+
+  (org-babel-tangle-file (file-truename (elt argv 0)))
   ; NOTE: Although this file is kept under version control, it is tangled from
   ; ~/.haris/scripts.org, so don't modify it directly
 #+end_src
-*** Helper code that tangles
-#+NAME: tangle-helper
-#+begin_src emacs-lisp :results none
-  (require 'ob-tangle)
-  ; (with-temp-buffer (progn (insert-file-contents "~/" nil nil nil t)))
-  (load-file "~/.haris/bootstrap/lib.el")
-  (org-babel-tangle-file "$1")
-#+end_src
 ** =tangle-all=
 #+NAME: tangle-all
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".local/bin/tangle-all")
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle-all")
+  #!/usr/bin/env sh
+  ~/.haris/bootstrap/tangle-all.sh "$@"
+#+end_src
+Because this script is needed for bootstrapping my dotfiles on a new system, I
+also tangle it to a standalone destination that I also keep under version control.
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle-all.sh")
   #!/usr/bin/env -S emacs --script
 
-  ; Tangle all my dotfiles. If --dest is used, then the files are tangled to
-  ; their final destinations under $HOME, instead of the directory returned by
-  ; (haris/tangle-home). Dependency installation scripts will be saved to the
-  ; destination returned by (haris/tangle-deps) regardless.
+  ;; Tangle all my dotfiles. If --dest is used, then the files are tangled to
+  ;; their final destinations under $HOME, instead of the directory returned by
+  ;; (haris/tangle-home). Dependency installation scripts will be saved to the
+  ;; destination returned by (haris/tangle-deps) regardless.
 
   (setq command-switch-alist '(("--dest" . ignore)))
   (setq dest (member "--dest" command-line-args))
 
   (setq org-confirm-babel-evaluate nil)
 
-  (load-file "~/.haris/bootstrap/tangle.el")
+  (load-file (concat (file-name-directory load-file-name) "/tangle.el"))
   (haris/tangle-all dest)
 
-  ; vim: filetype=lisp
-#+end_src
-Because this script is needed for bootstrapping my dotfiles on a new system, I
-also tangle it to a standalone destination that I also keep under version control.
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle-all.sh")
-  <<tangle-all>>
-  ; NOTE: Although this file is kept under version control, it is tangled from
-  ; ~/.haris/scripts.org, so don't modify it directly
-#+end_src
-** TODO =bootstrap=
-- Soon to be obsolete
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/bootstrap")
-#!/usr/bin/env sh
-
-# Clone my dotfiles repo into $HOME/.cfg, as per my usual strategy
-
-conf() {
-    git --work-tree="$HOME" --git-dir="$HOME/.cfg" "$@"
-}
-
-conf clone https://github.com/veracioux/dotfiles --bare "$HOME/.cfg"
-
-conf remote set-url origin_ro https://github.com/veracioux/dotfiles
-conf remote set-url origin git@github.com:veracioux/dotfiles
-conf checkout
-
-touch ~/.alias-tmp
-touch ~/.alias-gui-tmp
-touch ~/.sxhkd.tmp
-
-touch ~/.config/fish/tmp.fish
+  ;; vim: filetype=lisp
+  ;; -*- mode: emacs-lisp -*-
+  ;; NOTE: Although this file is kept under version control, it is tangled from
+  ;; ~/.haris/scripts.org, so don't modify it directly
 #+end_src
 * Miscellaneous
 ** =aurvote=
