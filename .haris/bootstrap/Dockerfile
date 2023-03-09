@@ -1,4 +1,4 @@
-# Dockerfile for generating ronfig files from the literate dotfiles
+# Dockerfile for generating config files from the literate dotfiles
 
 FROM alpine
 
