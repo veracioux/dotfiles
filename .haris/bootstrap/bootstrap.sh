@@ -39,7 +39,7 @@ check_missing_then_install docker rsync
 echo "--------------------------------"
 echo "Generating configs into tar file"
 echo "--------------------------------"
-docker run docker.veracioux.me/dotfiles-generator >"$tmpfile" --user "$(whoami)" --home ~ --branch bootstrap # TODO tmp
+docker run docker.veracioux.me/dotfiles-generator >"$tmpfile" --user "$(whoami)" --home ~
 
 echo "--------------------------------"
 echo "Extracting tar file"
