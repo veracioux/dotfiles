@@ -10,8 +10,6 @@
    when tangling"
   (concat "/tmp/tangle-" (user-login-name) "/" subpath))
 
-(setq-local org-dotfiles-root (concat (file-name-directory load-file-name) "/.."))
-
 (defun haris/tangle-all (&optional to-destination)
   "Tangle all my dotfiles.
 
@@ -22,7 +20,9 @@ Optional argument TO-DESTINATION can be used to tangle the files directly to the
 home directory."
   (interactive)
   (when to-destination (delete-directory (haris/tangle-home) t))
-  (dolist (file (append (directory-files org-dotfiles-root t "\\.org$")))
-    (message "Tangling file: %s" file)
-    (org-babel-tangle-file file))
-  (when to-destination (shell-command (concat "rsync -rvu " (haris/tangle-home) " ~/"))))
+  (let ((org-dotfiles-root (concat (file-name-directory load-file-name) "/..")))
+    (dolist (file (append (directory-files-recursively org-dotfiles-root "\\.org$")))
+      (message "Tangling file: %s" file)
+      (org-babel-tangle-file file)))
+  (when to-destination
+    (shell-command (concat "rsync -rvu " (haris/tangle-home) " ~/"))))

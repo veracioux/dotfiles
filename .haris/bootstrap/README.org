@@ -1,4 +1,4 @@
-#+PROPERTY: header-args :results silent
+#+PROPERTY: header-args :results silent :mkdirp yes
 
 This directory contains the code and scripts that must be separate from the
 literate configs, because they are needed to tangle the literate configs in the
@@ -17,6 +17,38 @@ tar.gz archive.
 
 Run with =--help= to see detailed usage.
 
+* Tangle elisp library
+A library of functions for easier tangling.
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.el")
+  (require 'ob-tangle)
+
+  (defun haris/tangle-deps (subpath)
+    "Prefix 'subpath' with the directory where dependency install scripts are
+     tangled"
+    (concat "/tmp/dependencies-" (user-login-name) "/" subpath))
+
+  (defun haris/tangle-home (&optional subpath)
+    "Prefix 'subpath' with the directory that is used as staging for /home/haris
+     when tangling"
+    (concat "/tmp/tangle-" (user-login-name) "/" subpath))
+
+  (defun haris/tangle-all (&optional to-destination)
+    "Tangle all my dotfiles.
+
+  By default the files are tangled into a temporary location that can be obtained
+  using (haris/tangle-home).
+
+  Optional argument TO-DESTINATION can be used to tangle the files directly to the
+  home directory."
+    (interactive)
+    (when to-destination (delete-directory (haris/tangle-home) t))
+    (let ((org-dotfiles-root (concat (file-name-directory load-file-name) "/..")))
+      (dolist (file (append (directory-files-recursively org-dotfiles-root "\\.org$")))
+        (message "Tangling file: %s" file)
+        (org-babel-tangle-file file)))
+    (when to-destination
+      (shell-command (concat "rsync -rvu " (haris/tangle-home) " ~/"))))
+#+end_src
 * Potential improvements
 - When I move all versioned dotfiles into =~/.haris=, I can remove the need to
   clone the repo inside the docker container.
