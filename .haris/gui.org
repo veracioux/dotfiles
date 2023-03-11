@@ -154,11 +154,11 @@
   TYPE_UNDO=U
 #+end_src
 * Mpv
-#+begin_src conf (haris/tangle-home ".config/mpv/mpv.conf")
+#+begin_src conf :tangle (haris/tangle-home ".config/mpv/mpv.conf")
   osd-fractions=yes
   ytdl-format=bestvideo[height<=?720]+bestaudio/best
 #+end_src
-#+begin_src conf (haris/tangle-home ".config/mpv/input.conf")
+#+begin_src conf :tangle (haris/tangle-home ".config/mpv/input.conf")
   # Panning
   Alt+LEFT add video-pan-x +.01
   Alt+h add video-pan-x +.01
