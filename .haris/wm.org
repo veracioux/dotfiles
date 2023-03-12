@@ -130,7 +130,7 @@ These scripts are used by the other sections:
   set $mode_session "Session"
   set $mode_wm      " WM"
   set $mode_qr      " QR [i]n [o]ut [s]creen"
-  set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [a]ll"
+  set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos [a]ll"
   set $mode_audio   " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
   set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term"
   set $mode_trans   "<<mode_trans()>>"
@@ -522,13 +522,14 @@ External bindings are provided by
 #+NAME: org-menu
 #+begin_src i3wm-config
   mode $mode_org {
-  bindsym t               exec --no-startup-id "myemacs-float ~/data/personal/todo.org"; mode default
-  bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org"; mode default
-  bindsym j               exec --no-startup-id "myemacs-float ~/wiki/journal.org"; mode default
-  bindsym n               exec --no-startup-id "myemacs-float ~/wiki/notes.org"; mode default
-  bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org"; mode default
-  bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org"; mode default
-  bindsym a               exec --no-startup-id "myemacs-float ~/wiki/index.org"; mode default
+  bindsym t               exec --no-startup-id "myemacs-float ~/data/personal/todo.org", mode default
+  bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org", mode default
+  bindsym j               exec --no-startup-id "myemacs-float ~/wiki/journal.org", mode default
+  bindsym n               exec --no-startup-id "myemacs-float ~/wiki/notes.org", mode default
+  bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org", mode default
+  bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org", mode default
+  bindsym Shift+t         exec --no-startup-id "dmenu_run todo", mode default
+  bindsym a               exec --no-startup-id "myemacs-float ~/wiki/index.org", mode default
 
   bindsym Escape          mode default
   }

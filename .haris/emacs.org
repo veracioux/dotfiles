@@ -544,6 +544,9 @@ slack-mode-hook hook, it never connects. Investigate
   ;;                             project-eahouse)))))
 #+end_src
 * Git
+#+begin_src emacs-lisp
+  (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
+#+end_src
 ** TODO deprecated GitHub
 #+begin_src emacs-lisp
   (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
