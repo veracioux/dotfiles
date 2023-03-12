@@ -1,0 +1,626 @@
+#+TITLE: Vim Config
+#+PROPERTY: header-args :tangle (haris/tangle-home ".vimrc") :mkdirp yes :results silent
+
+I actually use neovim, but I have it aliased to =vim= in my shell config. For the
+graphical version, I don't use gvim but instead I have created a [[file:scripts.org::*=gvim=][wrapper]] called
+=gvim= that launches a terminal with neovim in it.
+
+I keep a =.vimrc= containing all the configurations that work with =vim=, i.e. that
+don't depend on neovim. To configure additional neovim features, I use
+[[~/.config/nvim/init.vim]] (defined [[*Neovim][here]]), and source [[~/.vimrc]] from within that file.
+
+I use vim as my MANPAGER by setting the =MANPAGER= variable to [[file:scripts.org::*=viman=][this wrapper
+script]] around vim. The script sets the =g:haris_man= variable to indicate that
+the current instance of vim is used as a MANPAGER. Based on this variable, I
+omit certain features from the MANPAGER to make it load faster.
+
+*NOTE: If you are tangling this config for the first time, make sure you run
+the setup script as well!.*
+
+* General config
+#+begin_src vimrc
+  set shell=fish
+  syntax on
+  set number relativenumber
+  set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\
+  set nocompatible                " required
+  filetype plugin indent on        " required
+  syntax enable
+
+  source ~/.vimrc.tmp
+
+  set noautoread
+  set exrc
+  set showcmd
+  set breakindent
+  set clipboard^=unnamed
+  set maxmempattern=2000
+
+  set tabstop=4 shiftwidth=4
+  set expandtab
+  set softtabstop=0
+  set smarttab
+  set autoindent
+
+  set foldmethod=syntax nofoldenable
+
+  set textwidth=80 colorcolumn=81
+  set virtualedit=all
+  set splitright splitbelow
+
+  set ignorecase smartcase incsearch
+
+  set mouse=a
+
+  if has('gui_running')
+    set guioptions -=T guioptions -=m
+  endif
+  if !has('nvim')
+    set noesckeys
+  endif
+
+  let g:sh_fold_enabled = 3
+  let g:is_bash = 1
+
+  if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
+
+  " Special buffers and syntax highlighting
+
+  augroup custom_syntax
+  autocmd!
+  autocmd BufEnter * if &syntax == '' && expand('%:e') == '' | set ft=sh | endif
+
+  autocmd BufNewFile,BufRead *.spacemacs set syntax=lisp
+  autocmd BufNewFile,BufRead .octave* set syntax=octave | set filetype=octave
+  autocmd BufNewFile,BufRead *.m set filetype=octave
+  autocmd BufNewFile,BufRead *.snippets set filetype=snippets
+  autocmd BufNewFile,BufRead *.py set foldmethod=indent
+  autocmd BufNewFile,BufRead *.fish set ft=fish
+  autocmd BufNewFile,BufRead PKGBUILD set ft=sh
+  autocmd BufNewFile,BufRead * if &filetype == 'make' | set noexpandtab | endif
+
+  autocmd FileType cpp set keywordprg=cppman
+  autocmd FileType sh set foldmethod=syntax
+  autocmd FileType nroff set filetype=troff
+  autocmd FileType groff set filetype=troff
+  " autocmd FileType python set keywordprg=:Pydoc
+  augroup END
+#+end_src
+* Theme
+#+begin_src vimrc
+  colorscheme customtheme
+#+end_src
+#+begin_src vimrc :tangle (haris/tangle-home ".vim/colors/customtheme.vim")
+  " Remove all existing highlighting and set the defaults.
+  hi clear
+
+  " Load the syntax highlighting defaults, if it's enabled.
+  if exists("syntax_on")
+    syntax reset
+  endif
+
+  let colors_name = "customtheme"
+
+  if has('gui_running') | let s:k  = '#1e1e1e' | else | let s:k  =  0 | endif
+  if has('gui_running') | let s:r  = '#ff5555' | else | let s:r  =  1 | endif
+  if has('gui_running') | let s:g  = '#54d1bc' | else | let s:g  =  2 | endif
+  if has('gui_running') | let s:y  = '#f2b374' | else | let s:y  =  3 | endif
+  if has('gui_running') | let s:b  = '#6980fa' | else | let s:b  =  4 | endif
+  if has('gui_running') | let s:m  = '#d098ff' | else | let s:m  =  5 | endif
+  if has('gui_running') | let s:c  = '#8cceff' | else | let s:c  =  6 | endif
+  if has('gui_running') | let s:w  = '#92aab7' | else | let s:w  =  7 | endif
+
+  if has('gui_running') | let s:K  = '#6b746b' | else | let s:K  =  8 | endif
+  if has('gui_running') | let s:R  = '#ff8c8c' | else | let s:R  =  9 | endif
+  if has('gui_running') | let s:G  = '#98eb98' | else | let s:G  = 10 | endif
+  if has('gui_running') | let s:Y  = '#e0d97b' | else | let s:Y  = 11 | endif
+  if has('gui_running') | let s:B  = '#99a3ff' | else | let s:B  = 12 | endif
+  if has('gui_running') | let s:M  = '#f298c3' | else | let s:M  = 13 | endif
+  if has('gui_running') | let s:C  = '#a6d9ff' | else | let s:C  = 14 | endif
+  if has('gui_running') | let s:W  = '#dddddd' | else | let s:W  = 15 | endif
+
+  if has('gui_running') | let s:x  = '#303030' | else | let s:x  = 16 | endif         " color 16
+
+  let s:n  = 'none'
+
+  if has('gui_running')
+    let s:vmode = 'gui'
+  else
+    let s:vmode = 'cterm'
+  endif
+
+  " Remove pipe symbols
+  set fillchars+=vert:\ 
+
+  exe "hi Normal          ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:k."                         "
+  exe "hi Statement       ".s:vmode."fg=".s:B."                           ".s:vmode."=bold      "
+  exe "hi Type            ".s:vmode."fg=".s:b."                           ".s:vmode."=bold      "
+  exe "hi Comment         ".s:vmode."fg=".s:g."                                                 "
+  exe "hi Constant        ".s:vmode."fg=".s:y."                                                 "
+  exe "hi PreProc         ".s:vmode."fg=".s:m."                           ".s:vmode."=bold      "
+  exe "hi Identifier      ".s:vmode."fg=".s:C."                           ".s:vmode."=none      "
+  exe "hi LineNr          ".s:vmode."fg=".s:w."   ".s:vmode."bg=".s:k."                         "
+  exe "hi CursorLineNr    ".s:vmode."fg=".s:G."   ".s:vmode."bg=".s:k."   ".s:vmode."=bold      "
+  exe "hi Special         ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                         "
+  exe "hi Todo            ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:R."   ".s:vmode."=bold      "
+  exe "hi MatchParen      ".s:vmode."fg=".s:m."   ".s:vmode."bg=".s:k."   ".s:vmode."=underline "
+  exe "hi Folded          ".s:vmode."fg=".s:w."   ".s:vmode."bg=".s:x."                         "
+  exe "hi FoldColumn      ".s:vmode."fg=".s:b."   ".s:vmode."bg=".s:x."                         "
+  exe "hi Conceal         ".s:vmode."fg=".s:C."   ".s:vmode."bg=".s:x."                         "
+  exe "hi Error           ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:r."   ".s:vmode."=bold      "
+
+  exe "hi ColorColumn     ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:x."                         "
+  exe "hi SignColumn                              ".s:vmode."bg=".s:k."                         "
+  exe "hi VertSplit       ".s:vmode."fg=".s:K."   ".s:vmode."bg=".s:K."                         "
+
+  exe "hi Search          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:Y."   ".s:vmode."=bold      "
+  exe "hi StatusLine      ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                         "
+  exe "hi StatusLineNC    ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                         "
+  exe "hi Visual          ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."   ".s:vmode."=bold      "
+
+  exe "hi vimCommentTitle ".s:vmode."fg=".s:G."                           ".s:vmode."=bold      "
+
+  " VimDiff
+  exe "hi DiffDelete      ".s:vmode."fg=".s:R."   ".s:vmode."bg=none""    ".s:vmode."=bold      "
+  exe "hi DiffAdd         ".s:vmode."fg=".s:G."   ".s:vmode."bg=none""    ".s:vmode."=bold      "
+  exe "hi DiffChange      ".s:vmode."fg=".s:M."   ".s:vmode."bg=none""    ".s:vmode."=bold      "
+  exe "hi DiffText        ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:x."   ".s:vmode."=bold      "
+
+  " YouCompleteMe
+  exe "hi Pmenu           ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                         "
+  exe "hi PmenuSel        ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:B."                         "
+  exe "hi PmenuSbar       ".s:vmode."fg=".s:k."   ".s:vmode."bg=".s:m."                         "
+
+  " gitgutter
+  exe "hi GitGutterAdd    ".s:vmode."fg=".s:G."                           ".s:vmode."=bold      "
+  exe "hi GitGutterDelete ".s:vmode."fg=".s:R."                           ".s:vmode."=bold      "
+  exe "hi GitGutterChange ".s:vmode."fg=".s:m."                           ".s:vmode."=bold      "
+
+  " vim-easymotion
+  exe "hi EasyMotionTarget    ".s:vmode."fg=".s:B."                       ".s:vmode."=bold      "
+
+  " vim-which-key
+  highlight default link WhichKey           _WhichKey
+  highlight default link WhichKeySeperator  _WhichKeySeperator
+  highlight default link WhichKeyGroup      _WhichKeyGroup
+  highlight default link WhichKeyDesc       _WhichKeyDesc
+  highlight default link WhichKeyFloating   _WhichKeyFloating
+  exe "hi _WhichKey          ".s:vmode."fg=".s:y."   ".s:vmode."bg=".s:k."                      "
+  exe "hi _WhichKeySeparator ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                      "
+  exe "hi _WhichKeyFloating  ".s:vmode."fg=".s:M."   ".s:vmode."bg=".s:k."                      "
+  exe "hi _WhichKeyGroup     ".s:vmode."fg=".s:m."   ".s:vmode."bg=".s:k."                      "
+  exe "hi _WhichKeyDesc      ".s:vmode."fg=".s:B."   ".s:vmode."bg=".s:k."                      "
+
+  " custom
+  exe "hi RedundantSpaces                            ".s:vmode."bg=".s:r."                      "
+
+  " vim: tw=95 cc=96
+#+end_src
+* Neovim
+#+begin_src vimrc :tangle (haris/tangle-home ".config/nvim/init.vim")
+  source ~/.vimrc
+
+  set inccommand=split
+
+  command! Src so ~/.config/nvim/init.vim
+  " For sourcing a local .nvimrc file
+  command! So so .nvimrc
+
+  if exists('g:started_by_firenvim') && g:started_by_firenvim
+
+    set laststatus=0 nonumber noruler noshowcmd relativenumber!
+    noremap <CR> :wq<CR>
+    inoremap <CR> <C-o>:wq<CR>
+
+    fu! AutoResize()
+      if expand('%') !~ '.*overleaf.*'
+        autocmd TextChanged,TextChangedI,TextChangedP * silent let &lines=line('$')
+      else
+        autocmd! TextChanged,TextChangedI,TextChangedP *
+      endif
+    endfu
+
+    autocmd BufNewFile,BufEnter,BufRead * call AutoResize()
+
+    let g:firenvim_config = {
+        \ 'globalSettings': {
+          \ 'alt': 'all',
+        \  },
+        \ 'localSettings': {
+            \ '.*': {
+          \ 'cmdline': 'firenvim',
+          \ 'priority': 0,
+          \ 'selector': 'textarea',
+          \ 'takeover': 'always',
+        \ },
+      \ }
+    \ }
+
+    let fc = g:firenvim_config['localSettings']
+
+    let fc['.*'] = {'takeover': 'never'}
+    let fc['localhost:.*'] = { 'takeover': 'never' }
+    let fc['facebook.*'] = { 'takeover': 'never' }
+    let fc['mail\.google.*'] = { 'takeover': 'never' }
+    let fc['desmos.com*'] = { 'takeover': 'never' }
+    let fc['github.com*'] = { 'takeover': 'never' }
+    let fc['exam.net*'] = { 'takeover': 'never' }
+
+    au BufEnter localhost* silent set ft=python
+    au BufEnter github.com* silent set ft=markdown
+
+  endif
+
+  source ~/.config/nvim/init.tmp.vim
+
+  let g:python3_host_prog = '/bin/python3'
+
+#+end_src
+* File types
+** rst
+#+begin_src vimrc :tangle (haris/tangle-home ".vim/ftplugin/rst.vim")
+  setlocal shiftwidth=3
+  setlocal tabstop=3
+#+end_src
+* Plugin setup
+#+begin_src vimrc
+  call plug#begin('~/.vim/plugged')
+
+  if !exists('g:haris_man')
+    Plug 'tpope/vim-abolish'
+    Plug 'preservim/nerdcommenter'
+    Plug 'sirver/ultisnips'
+    Plug 'honza/vim-snippets'
+    Plug 'Rykka/InstantRst', { 'for': 'rst' }
+    Plug 'Rykka/riv.vim', { 'for': 'rst' }
+    Plug 'tpope/vim-surround'
+    Plug 'alx741/vinfo', { 'on': ['Vinfo'] }
+    Plug 'KabbAmine/vCoolor.vim', { 'on': ['VCoolor'] }
+    Plug 'ap/vim-css-color'
+
+    " Syntax highlighting
+    Plug 'dag/vim-fish', { 'for': 'fish' }
+    Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
+    Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
+    Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
+    Plug 'itspriddle/vim-shellcheck'
+    Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
+
+    " IDE
+    Plug 'ycm-core/YouCompleteMe'
+    Plug 'ervandew/supertab'            " Fixes problem with YCM and UltiSnips
+    Plug 'sheerun/vim-polyglot'
+    Plug 'preservim/tagbar'             " NOTE: requires ctags installed
+    Plug 'dyng/ctrlsf.vim'                " NOTE: requires ack installed
+    Plug 'derekwyatt/vim-fswitch'
+    Plug 'derekwyatt/vim-protodef'
+    Plug 'junegunn/fzf.vim'
+    Plug 'junegunn/vim-easy-align'
+    " Python
+    Plug 'fs111/pydoc.vim'
+
+    Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+
+    " Misc
+    if has('nvim')
+      Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+    endif
+  endif
+  " Always loaded
+  Plug 'vim-utils/vim-man', { 'for': 'man'}
+  Plug 'easymotion/vim-easymotion'
+
+  call plug#end()
+#+end_src
+* Custom key mappings
+#+begin_src vimrc
+  let mapleader = "\<Space>"
+
+  nnoremap        Y            y$
+  nnoremap        vv            V
+  nnoremap        V            v$
+  nnoremap        <M-.>        :<up><CR>
+
+  " Navigation
+  map             <C-c>        "+y
+  noremap         <M-t>         :silent !term<CR>
+  noremap         <M-j>       <C-e>
+  noremap         <M-k>       <C-y>
+
+  nmap            <leader>w    :w<CR>
+
+  " Window navigation
+  noremap         <C-j>       <C-W>j
+  noremap         <C-k>       <C-W>k
+  noremap         <C-h>       <C-W>h
+  noremap         <C-l>       <C-W>l
+  noremap         <M-tab>     <C-w><C-w>
+
+  noremap         Q           :q<CR>
+
+  " Alt+/ runs :noh
+  noremap         <M-/>       :noh<CR>
+
+  """ Insertions
+
+  " Header under/overline
+  noremap     <leader>h yyp0Vr
+  noremap     <leader>H yyP0Vr
+  " Line separator -- depends on NERDCommenter
+  noremap        <leader>S 60i#
+  " Create a nice Unicode box around the current line of text, and comment out
+  nmap <leader>b <leader>B#<esc>
+  " Same as above, but lets you specify a comment delimiter
+  nmap <leader>B I <esc>yyPhVr━jphVr━A┛<esc>kr┃kr┓I ┏<esc>j0i ┃<esc>jI ┗<esc>h<C-v>kkI
+
+  " Commands
+
+  cnoreabbrev W w
+  " Subvert is part of Abolish plugin
+  cnoreabbrev S Subvert
+  command! Src so ~/.vimrc
+  command! Chx !chmod u+x %
+  command! RmWs %s/\s\+$//               " remove trailing whitespaces
+  " display highlight group of current text
+  command! WhichHi :echo synIDattr(synID(line("."), col("."), 1), "name")
+
+  " Run the current buffer as a script
+  nmap <leader>r :w \| !%:p<CR>
+  nmap <leader>m :!make<CR>
+  nmap <leader>c :w \| !cmake -S . -B _build && cmake --build _build<CR>
+  nmap <leader>f :silent !gvim '%:p' & disown<CR>
+
+  " NERDTree
+  noremap        <leader>n :NERDTreeToggle<CR>
+
+  " GVim - toggle menubar
+  function ToggleMenubar()
+  if &go=~#'m'
+    set go-=m
+  else
+    set go+=m
+  endif
+  endfunction
+  noremap        <M-m> :call ToggleMenubar()<CR>
+#+end_src
+* Plugin configs
+** YouCompleteMe
+#+begin_src vimrc
+  if !exists('g:ycm_semantic_triggers')
+    let g:ycm_semantic_triggers = {}
+  endif
+
+  " Make YCM work with UltiSnips
+  let g:ycm_key_list_select_completion = ['<C-n>']
+  let g:ycm_key_list_previous_completion = ['<C-p>']
+  let g:SuperTabDefaultCompletionType = '<C-n>'
+
+  let g:ycm_auto_hover = ''
+  nmap <leader>D <plug>(YCMHover)
+
+  let g:ycm_show_diagnostics_ui = 0
+  let g:ycm_autoclose_preview_window_after_insertion = 1
+  let g:ycm_confirm_extra_conf = 0
+  let g:ycm_min_num_of_chars_for_completion = 1
+
+  " Otherwise completion is very very slow
+  set completeopt=menu,menuone
+
+  " Make autocompletion work with css
+  let g:ycm_semantic_triggers['css'] = [ 're!^', 're!^\s+', ': ' ]
+  let g:ycm_semantic_triggers['scss'] = [ 're!^', 're!^\s+', ': ' ]
+
+  " Alt+Tab inserts a tab character
+  inoremap <M-tab> <tab>
+#+end_src
+** UltiSnips
+#+begin_src vimrc
+  let g:UltiSnipsExpandTrigger = "<tab>"
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
+  let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+  let g:UltiSnipsSnippetsDir = "~/.vim/snips"
+  let g:UltiSnipsSnippetDirectories = [ '/home/haris/.vim/snips']
+#+end_src
+** Supertab
+#+begin_src vimrc
+  let g:SuperTabDefaultCompletionType    = '<tab>'
+  let g:SuperTabCrMapping                = 0
+#+end_src
+** Jedi
+#+begin_src vimrc
+  let g:jedi#popup_on_dot = 0
+  let g:jedi#auto_vim_configuration = 1
+  let g:jedi#show_call_signatures = 1
+  let g:jedi#usages_command = ""
+  let g:jedi#rename_command = "<leader>R"
+#+end_src
+** EasyMotion
+#+begin_src vimrc
+  nmap \      <Plug>(easymotion-prefix)
+  nmap <M-w>  <Plug>(easymotion-bd-w)
+  nmap <M-W>  <Plug>(easymotion-bd-W)
+  nmap <M-e>  <Plug>(easymotion-bd-e)
+  nmap <M-E>  <Plug>(easymotion-bd-E)
+  nmap <M-f>  <Plug>(easymotion-bd-f)
+  nmap <M-F>  <Plug>(easymotion-bd-F)
+  nmap <M-T>  <Plug>(easymotion-bd-T)
+  nmap <M-a>  <Plug>(easymotion-jumptoanywhere)
+
+  vmap \      <Plug>(easymotion-prefix)
+  vmap <M-w>  <Plug>(easymotion-bd-w)
+  vmap <M-W>  <Plug>(easymotion-bd-W)
+  vmap <M-e>  <Plug>(easymotion-bd-e)
+  vmap <M-E>  <Plug>(easymotion-bd-E)
+  vmap <M-f>  <Plug>(easymotion-bd-f)
+  vmap <M-F>  <Plug>(easymotion-bd-F)
+  vmap <M-t>  <Plug>(easymotion-bd-t)
+  vmap <M-T>  <Plug>(easymotion-bd-T)
+  vmap <M-a>  <Plug>(easymotion-jumptoanywhere)
+#+end_src
+** NERDTree
+#+begin_src vimrc
+  let NERDTreeShowBookmarks   = 1             " Show the bookmarks table
+  let NERDTreeShowHidden      = 1             " Show hidden files
+  let NERDTreeShowLineNumbers = 0             " Hide line numbers
+  let NERDTreeMinimalMenu     = 1             " Use the minimal menu (m)
+  let NERDTreeWinPos          = 'left'         " Panel opens on the left side
+  let NERDTreeWinSize         = 31            " Set panel width to 31 columns
+#+end_src
+** Tagbar
+#+begin_src vimrc
+  let g:tagbar_autofocus   = 1                 " Focus the panel when opening
+  let g:tagbar_autoshowtag = 1                " Highlight the active tag
+  let g:tagbar_position = 'botright vertical' " Make vertical and place right
+  nmap <F8> :TagbarToggle<CR>
+  set tags=.tags
+#+end_src
+** CtrlFS
+#+begin_src vimrc
+  let g:ctrlsf_backend = 'ack'                             " Use the ack tool as the backend
+  let g:ctrlsf_auto_close = { "normal":0, "compact":0 }     " Auto close the results panel when opening a file
+  let g:ctrlsf_auto_focus = { "at":"start" }                " Immediately switch focus to the search window
+  let g:ctrlsf_auto_preview = 0                            " Don't open the preview window automatically
+  let g:ctrlsf_case_sensitive = 'smart'                    " Use the smart case sensitivity search scheme
+  let g:ctrlsf_default_view = 'normal'                    " Normal mode, not compact mode
+  let g:ctrlsf_regex_pattern = 0                            " Use absoulte search by default
+  let g:ctrlsf_position = 'right'                            " Position of the search window
+  let g:ctrlsf_winsize = '46'                                " Width or height of search window
+  let g:ctrlsf_default_root = 'cwd'                        " Search from the current working directory
+
+  " (Ctrl-F + f) Open search prompt (Normal Mode)
+  nmap <C-F>f <Plug>CtrlSFPrompt
+  " (Ctrl-F + f) Open search prompt with selection (Visual Mode)
+  xmap <C-F>f <Plug>CtrlSFVwordPath
+  " (Ctrl-F + F) Perform search with selection (Visual Mode)
+  xmap <C-F>F <Plug>CtrlSFVwordExec
+  " (Ctrl-F + n) Open search prompt with current word (Normal Mode)
+  nmap <C-F>n <Plug>CtrlSFCwordPath
+  " (Ctrl-F + o )Open CtrlSF window (Normal Mode)
+  nnoremap <C-F>o :CtrlSFOpen<CR>
+  " (Ctrl-F + t) Toggle CtrlSF window (Normal Mode)
+  nnoremap <C-F>t :CtrlSFToggle<CR>
+  " (Ctrl-F + t) Toggle CtrlSF window (Insert Mode)
+  inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+#+end_src
+** FSwitch
+#+begin_src vimrc
+  au! BufEnter *.cpp let b:fswitchdst = 'hpp,h'
+  au! BufEnter *.h let b:fswitchdst = 'cpp,c'
+  nmap <silent> <Leader>of :FSHere<cr>
+  nmap <silent> <Leader>ol :FSSplitRight<cr>
+  nmap <silent> <Leader>oh :FSSplitLeft<cr>
+  nmap <silent> <Leader>ok :FSSplitAbove<cr>
+  nmap <silent> <Leader>oj :FSSplitBelow<cr>
+  nmap <silent> <Leader>oL :FSRight<cr>
+  nmap <silent> <Leader>oH :FSLeft<cr>
+  nmap <silent> <Leader>oK :FSAbove<cr>
+  nmap <silent> <Leader>oJ :FSBelow<cr>
+#+end_src
+** Protodef
+#+begin_src vimrc
+  " Pull in prototypes
+  nmap <buffer> <silent> <leader> ,PP
+  " Pull in prototypes without namespace definition
+  nmap <buffer> <silent> <leader> ,PN
+#+end_src
+** NERDCommenter
+#+begin_src vimrc
+  let g:NERDCreateDefaultMappings  = 1
+  let g:NERDCompactSexyComs        = 0
+  let g:NERDSpaceDelims            = 1
+  let g:NERDTrimTrailingWhitespace = 1
+
+  function! NERDCommenter_after()
+  map <leader>cl <plug>NERDCommenterToggle
+  map <leader>cc yyP:call NERDComment('', 'Comment')<CR>j
+  map <leader>ci <plug>NERDCommenterInsert
+  map <leader>C <plug>NERDCommenterToEOL
+  endfunction
+#+end_src
+** Align
+#+begin_src vimrc
+  xmap ga <Plug>(EasyAlign)
+  nmap ga <Plug>(EasyAlign)
+#+end_src
+** FZF
+#+begin_src vimrc
+  nmap <leader>/ :FZF<CR>
+  nmap <leader>? :Rg<CR>
+#+end_src
+** Riv
+#+begin_src vimrc
+  let g:riv_disable_folding = 0
+  let g:riv_fold_level = 1
+  let g:riv_fold_auto_update = 0
+  let g:riv_auto_fold_force = 0
+  let g:riv_auto_format_table = 0
+#+end_src
+** Man
+#+begin_src vimrc
+  let g:ft_man_folding_enable = 1
+  let g:man_hardwrap = 0
+#+end_src
+** pydoc.vim
+#+begin_src vimrc
+  let g:pydoc_open_cmd = 'vsplit'
+#+end_src
+** Markdown Preview
+#+begin_src vimrc
+  let g:mkdp_auto_close = 0
+#+end_src
+** vCoolor
+#+begin_src vimrc
+  let g:vcoolor_map='<M-c>'
+  let g:vcoolor_disable_mappings = 1
+#+end_src
+
+* Setup
+:PROPERTIES:
+:header-args: :tangle (haris/tangle-deps "vim.sh") :mkdirp yes :tangle-mode (identity #o744) :results silent :shebang "#!/usr/bin/env bash"
+:END:
+** Dependencies
+#+begin_src shell
+  sudo pacman -S gvim neovim fzf
+  # Dependencies for YouCompleteMe
+  sudo pacman -S go nodejs npm jdk-openjdk
+
+  # Install vim-plug
+  mkdir -p ~/.vim/autoload
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+#+end_src
+** Additional setup
+We must purge all the directories from [[~/.config/nvim]] and replace them with
+ symlinks to directories under [[~/.vim]] so that vim and neovim can share all the
+ configs.
+#+begin_src bash
+  dirs=(
+      autoload
+      bundle
+      colors
+      doc
+      ftplugin
+      plugged
+      plugin
+      spell
+      view
+  )
+
+  mkdir -p ~/.config/nvim
+  rm -rf  "${dirs[@]/#/~/.config/nvim/}"
+  ln -sf -t ~/.config/nvim/ "${dirs[@]/#/~/.vim/}"
+#+end_src
+
+The [[~/.vimrc.tmp]] file is optionally used, but we have to create it to avoid errors.
+#+begin_src bash
+  mkdir -p ~/.config/nvim
+  touch ~/.vimrc.tmp ~/.config/nvim/init.tmp.vim
+#+end_src
+
+This script sets up the YouCompleteMe plugin:
+#+begin_src bash
+  vim '+PlugInstall'
+  cd ~/.vim/plugged/YouCompleteMe && python install.py --all
+#+end_src
+

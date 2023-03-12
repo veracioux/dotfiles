@@ -1,0 +1,315 @@
+#+TITLE: VCS config
+#+PROPERTY: header-args :mkdirp yes
+
+My config for version control systems I use (overwhelmingly git + GitHub).
+
+* Main config
+:PROPERTIES:
+:HEADER-ARGS: :tangle (haris/tangle-home ".gitconfig") :mkdirp yes
+:END:
+#+begin_src gitconfig
+  [user]
+    email = harisgusic.dev@gmail.com
+    name = Haris Gušić
+    signingkey = 2333BDF9F505C46F2E3F5FDB0348E6D2D1D44A6D
+  [include]
+    path = ~/.gitconfig.private
+  [core]
+    autocrlf      = input
+    pager         = less -F -X
+    editor        = vim
+    whitespace    = trailing-space
+    filemode      = false
+  [apply]
+    whitespace    = fix
+  [format]
+    signOff = true
+  [init]
+    defaultBranch = main
+
+  [clone]
+    depth = 300
+
+  [github]
+    user = veracioux
+#+end_src
+** Aliases
+*** General
+#+begin_src gitconfig
+  [alias]
+    i = init
+    s = status
+    a = add
+    b = branch
+    chx = update-index --chmod=+x
+#+end_src
+*** ls
+#+begin_src gitconfig
+  [alias]
+    ls = ls-tree -r --name-only
+    lsh = ls-tree -r --name-only HEAD
+    lsm = ls-tree -r --name-only master
+#+end_src
+*** log
+#+begin_src gitconfig
+  [alias]
+    l = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+    -%C(auto)%d%Creset %s' \
+    --abbrev-commit --date=short
+    ll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+    -%C(auto)%d%Creset %s %C(brightcyan)(%ad)' \
+    --abbrev-commit --date=short
+    lll = ldog --pretty=format:'%C(magenta bold)%h%Creset \
+    -%C(auto)%d%Creset %s %C(brightcyan)(%ad) %C(brightblue)<%an>' \
+    --abbrev-commit --date=short
+    lpf = log --pretty=fuller
+    ldog = log --decorate --oneline --graph
+    whenadded = log --diff-filter=A
+#+end_src
+*** remote
+#+begin_src gitconfig
+  [alias]
+    r = remote
+    rg = remote get-url
+    rgo = remote get-url origin
+    rgu = remote get-url upstream
+#+end_src
+*** diff
+#+begin_src gitconfig
+  [alias]
+    d = diff
+    ds = diff --staged
+    dd = diff HEAD~1..HEAD
+#+end_src
+*** push
+#+begin_src gitconfig
+  [alias]
+    p = push
+    po = push origin
+    pom = push origin master
+    poh = push origin HEAD
+    pu = push upstream
+    puh = push upstream HEAD
+    pa = push all
+    pam = push all master
+#+end_src
+*** fetch
+#+begin_src gitconfig
+  [alias]
+    f = fetch
+    fo = fetch origin
+    fom = fetch origin master:master
+    fod = fetch origin develop:develop
+    fu = fetch upstream
+    fum = fetch origin master:master
+    fud = fetch origin develop:develop
+#+end_src
+*** pull
+#+begin_src gitconfig
+  [alias]
+    ppo = pull origin
+    ppom = pull origin master
+    ppu = pull upstream
+    ppum = pull upstream master
+#+end_src
+*** checkout
+#+begin_src gitconfig
+  [alias]
+    co = checkout
+    coh = checkout HEAD
+    com = checkout master
+    cod = checkout develop
+#+end_src
+*** commit
+#+begin_src gitconfig
+  [alias]
+    c = commit
+    ci = commit -m 'Initial commit'
+    cc = commit --all --message
+    cam = commit --amend --message
+    extend = commit --amend --no-edit
+    ex = commit --amend --no-edit
+    t = commit --amend --no-edit
+#+end_src
+*** submodule
+#+begin_src gitconfig
+  [alias]
+    sub = submodule
+    foreach = submodule foreach
+#+end_src
+*** Tree manipulation
+#+begin_src gitconfig
+  [alias]
+    remain = reset --hard upstream/main
+    redev = reset --hard upstream/develop
+    redev = reset --hard upstream/develop
+    res = restore
+    uns = restore --staged
+#+end_src
+*** rebase
+#+begin_src gitconfig
+  [alias]
+    rb = rebase
+    rbc = rebase --continue
+    rba = rebase --abort
+#+end_src
+*** stash
+#+begin_src gitconfig
+  [alias]
+    ss = stash
+    sl = stash list
+    sa = stash apply
+    sp = stash pop
+    sd = stash drop
+#+end_src
+*** bisect
+#+begin_src gitconfig
+  [alias]
+    good = bisect good
+    bad = bisect bad
+    bsr = bisect reset
+#+end_src
+** URL aliases
+#+begin_src gitconfig
+  [url "https://github.com/"]
+    insteadOf = gh:
+  [url "https://github.com/veracioux/"]
+    insteadOf = mygh:
+  [url "git@github.com:veracioux/"]
+    insteadOf = myghg:
+  [url "git@github.com:"]
+    insteadOf = ghg:
+
+  [url "https://gitlab.com/"]
+    insteadOf = gl:
+  [url "git@gitlab.com:"]
+    insteadOf = glg:
+  [url "git@gitlab.com:veracioux/"]
+    insteadOf = mygl:
+
+  [url "ssh://aur@aur.archlinux.org/"]
+    insteadOf = aurg:
+
+  [url "ssh://git@heroku.com/"]
+    insteadOf = https://git.heroku.com/
+#+end_src
+** Colors
+#+begin_src gitconfig
+  [color "diff"]
+    context       = white
+    frag          = magenta
+    meta          = brightblue bold
+    hunk          = red
+    old           = brightred
+    new           = brightgreen
+    oldMoved      = yellow
+    newMoved      = brightcyan
+
+  [color "branch"]
+    current       = blue bold
+    local         = brightcyan
+    remote        = brightmagenta
+    upstream      = magenta
+
+  [color "decorate"]
+    head          = brightblue bold
+    branch        = brightmagenta bold
+    remoteBranch  = brightgreen bold
+#+end_src
+* Script aliases
+** =bak=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/git-bak") :tangle-mode (eval #o744)
+  #!/usr/bin/env sh
+
+  # Create a branch backup-<branchname> which is an exact copy of <branchname>
+
+  branch="$(git branch --show-current)"
+  git branch backup-"$branch"
+  git checkout backup-"$branch"
+  git reset --soft "$branch"
+  git checkout "$branch"
+#+end_src
+** =remaster=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/git-remaster") :tangle-mode (eval #o744)
+  #!/usr/bin/env bash
+
+  # Reset the local trunk branch to its remote counterpart
+  # The script will determine if trunk is 'master' or 'main'. If both branches
+  # exist, main will be used.
+  # For the remote, origin is used if it exists, otherwise upstream is used.
+
+  set -e
+
+  trunk="$(git branch | cut -b 3- | grep -E '^(main|master)$' | head -1)"
+  current="$(git branch --show-current)"
+  remote=""
+
+  # Verify $trunk valid
+  if [ -z "$trunk" ]; then
+      echo "Trunk branch could not be found. Aborting.." >&2
+      exit 1
+  fi
+
+  # Determine remote
+  if git remote | grep -q origin; then
+      remote="origin"
+  elif git remote | grep -q upstream; then
+      remote="upstream"
+  else
+      echo "Neither origin nor upstream were found. Aborting.." >&2
+      exit 1
+  fi
+
+  remote_trunk="$remote/$trunk"
+
+  # How many commits is trunk ahead of remote trunk
+  ahead="$(git rev-list --left-only "$trunk"..."$remote_trunk")"
+
+  if [ "$ahead" -gt 0 ]; then
+      echo "Local $trunk branch has commits ahead of $remote_trunk. Aborting.." >&2
+      exit 1
+  fi
+
+  if [ "$current" = "$trunk" ]; then
+      git reset --merge "$remote_trunk"
+  else
+      git fetch "$remote" "$trunk:$trunk"
+  fi
+#+end_src
+
+** =redate=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/git-redate") :tangle-mode (eval #o744)
+  #!/usr/bin/env sh
+
+  GIT_COMMITTER_DATE="$1" git commit --amend --no-edit --date "$1"
+#+end_src
+
+* GitHub CLI
+#+begin_src yaml :tangle (haris/tangle-home ".config/gh/config.yml")
+  git_protocol: ssh
+  prompt: enabled
+  pager:
+  aliases:
+      co: pr checkout
+      clone: repo clone
+      web: repo view --web
+      v: repo view
+      ls: repo list
+      rel: release create
+      prc: pr create
+      co: pr checkout
+#+end_src
+* Mercury (hg)
+#+begin_src conf :tangle (haris/tangle-home ".hgrc")
+  [alias]
+  s = status
+  a = add
+  c = commit
+  d = diff
+  co = checkout
+  com = checkout tip
+
+  [ui]
+  username = Haris Gušić <harisgusic.dev@gmail.com>
+
+#+end_src

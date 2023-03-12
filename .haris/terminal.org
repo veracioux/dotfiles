@@ -1,0 +1,785 @@
+#+TITLE: Terminal configs
+#+PROPERTY: header-args :mkdirp yes :results silent
+
+A collection of configs for my terminal(s) and terminal apps.
+
+* Alacritty
+:PROPERTIES:
+:header-args: :tangle (haris/tangle-home ".config/alacritty/alacritty.yml") :mkdirp yes :results silent
+:END:
+** General
+#+begin_src yaml
+  shell:
+    program: fish
+
+  selection:
+    save_to_clipboard: true
+  hints:
+    alphabet: "jfkdls;ahgurieowpq"
+    enabled:
+      - regex: "(mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
+                [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+        command: xdg-open
+        post_processing: true
+        mouse:
+          enabled: true
+          mods: None
+        binding:
+          key: F
+          mods: Control
+#+end_src
+** Appearance
+#+begin_src yaml
+  window:
+    padding:
+      x: 4
+      y: 4
+
+  font:
+    # The normal (roman) font face to use.
+    normal:
+      family: Ubuntu Mono
+      style: Regular
+
+    # The bold font face
+    bold:
+      family: Ubuntu Mono
+      style: Bold
+
+    # The italic font face
+    italic:
+      family: Ubuntu Mono
+      style: Italic
+
+    # Point size of the font
+    size: 7
+
+  colors:
+    # Default colors
+    primary:
+      background: '#1e1e1e'
+      foreground: '#d2dcf9'
+
+    # Normal colors
+    normal:
+      black:      '#1e1e1e'
+      red:        '#ff5555'
+      green:      '#54d1bc'
+      yellow:     '#f2b374'
+      blue:       '#6980fa'
+      magenta:    '#d098ff'
+      cyan:       '#8cceff' # TODO Change to something darker
+      white:      '#92aab7'
+
+    # Bright colors
+    bright:
+      black:      '#6b746b'
+      red:        '#ff8c8c'
+      green:      '#98eb98'
+      yellow:     '#e0d97b'
+      blue:       '#99a3ff'
+      magenta:    '#f298c3'
+      cyan:       '#a6d9ff'
+      white:      '#dddddd'
+
+    indexed_colors:
+      - { index: 16, color: '0x303030' }
+      - { index: 17, color: '0x993333' }
+      - { index: 18, color: '0x28594e' }
+      - { index: 19, color: '0x522d59' }
+      - { index: 20, color: '0x182466' }
+      - { index: 21, color: '0x522d59' }
+      - { index: 22, color: '0xff0000' }
+      - { index: 23, color: '0xff0000' }
+
+    hints:
+      start:
+        foreground: '#ff8c8c'
+        background: '#000000'
+#+end_src
+** Key bindings
+#+begin_src yaml
+  key_bindings:
+    - { key: U,     mods: Alt,      action: ScrollPageUp,     mode: ~AppCursor }
+    - { key: D,     mods: Alt,      action: ScrollPageDown,   mode: ~AppCursor }
+    - { key: J,     mods: Alt,      action: ScrollLineDown,   mode: ~AppCursor }
+    - { key: K,     mods: Alt,      action: ScrollLineUp,     mode: ~AppCursor }
+    - { key: H,     mods: Alt,      chars: "\x1b[D"                            }
+    - { key: L,     mods: Alt,      chars: "\x1b[C"                            }
+    - { key: T,     mods: Alt,      action: SpawnNewInstance, mode: ~AppCursor }
+
+    # These allow me to use Ctrl + N/P to navigate the command history in shells
+    # where I can't make custom bindings (e.g. in docker containers)
+    - { key: P,     mods: Control,  chars: "\x1b[A",          mode: ~AppCursor }
+    - { key: N,     mods: Control,  chars: "\x1b[B",          mode: ~AppCursor }
+    - { key: Space, mods: Control,  action: ToggleViMode,     mode: ~AppCursor }
+    - { key: Key4,  mods: Shift,    action: Last,             mode: Vi }
+    - { key: Key4,                  action: Last,             mode: Vi }
+    # Alt+X deletes current character
+    - { key: X,     mods: Alt,      chars: "\x1b[3~",         mode: ~AppCursor }
+#+end_src
+
+* Tuterm
+#+begin_src shell :tangle (haris/tangle-home ".config/tuterm/config.sh")
+  TUTERM_SHELL='fish'
+
+  prompt() {
+      echo -ne "\033[1;94m$TUTERM_NAME \033[1;35m$(pwd | sed "s:$HOME:~:")\033[0;33m $\033[0m "
+  }
+#+end_src
+* Tmux
+#+begin_src shell :tangle (haris/tangle-home ".tmux.conf")
+  set -g status off
+  set -g default-command /usr/bin/fish
+
+  # Change prefix key
+  unbind-key C-b
+  set -g prefix M-b
+  bind-key M-b send-prefix
+
+  # Vim-like navigation bindings
+  bind h select-pane -L
+  bind j select-pane -D
+  bind k select-pane -U
+  bind l select-pane -R
+
+  new
+#+end_src
+* Cheat
+#+begin_src yaml :tangle (haris/tangle-home ".config/cheat/conf.yml")
+  colorize: true
+  style: monokai
+  pager: less -FRX
+  cheatpaths:
+    - name: community
+      path: /usr/share/cheat/cheatsheets/community
+      tags: [ _ ]
+      readonly: true
+    - name: haris
+      path: ~/repo/cheat
+      tags: [ haris ]
+      readonly: false
+#+end_src
+* Tem
+#+begin_src shell :tangle (haris/tangle-home ".config/tem/config")
+  [general]
+  repo_path = /home/haris/.local/share/tem/repo
+      /home/haris/.local/share/tem/tmp
+      /home/haris/proj/tem/repo
+      /home/haris/repo/src
+      /home/haris/repo/cheat
+  editor = nvim
+
+  [ls]
+  command = lsd -1
+
+  [git]
+
+  [alias]
+  a = add
+  r = repo
+  p = path
+  pl = path --list
+  e = env
+  c = config
+  g = git
+  s = path --new --edit
+  f = find
+  v = var
+#+end_src
+* Vifm
+:PROPERTIES:
+:header-args: :tangle (haris/tangle-home ".config/vifm/vifmrc") :mkdirp yes :results silent
+:END:
+#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+  " vim: filetype=vifm
+
+  set vicmd=nvim
+
+  set syscalls
+  set shell=/usr/bin/fish
+  set norunexec
+
+  set trash
+  set history=100
+  set nofollowlinks
+
+  set sortnumbers
+  set undolevels=100
+  set vimhelp
+
+  colorscheme customtheme
+
+  set timefmt=%m/%d\ %H:%M
+
+  set wildmenu
+  set wildstyle=popup
+
+  set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
+
+  set ignorecase
+  set smartcase
+  set nohlsearch
+  set incsearch
+
+  set scrolloff=4
+
+  if !has('win')
+  set slowfs=curlftpfs
+  endif
+
+  set statusline='  Hint: %z%= %A %10u:%-7g %15s %20d  '
+#+end_src
+** Marks
+#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+  " :mark mark /full/directory/path [filename]
+  mark h ~/
+  mark p ~/proj
+  mark t /tmp
+  mark p ~/play
+  mark d ~/data
+  mark S ~/src
+  mark T ~/tmp
+#+end_src
+** Custom commands
+#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+  command! df df -h %m 2> /dev/null
+  command! diff vim -d %f %F
+  command! zip zip -r %f.zip %f
+  command! run !! ./%f
+  command! make !!make %a
+  command! mkcd :mkdir %a | cd %a
+  command! vgrep vim "+grep %a"
+  command! reload :write | restart
+  " Open another instance of vifm with the same layout
+  command! fork :!term -e fish -C "vifm %d:p %D:p" &
+#+end_src
+** File types
+#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+  " Web
+  filextype *.html,*.htm
+  \ {Open with firefox}
+  \ firefox -P minimal %f &,
+  filetype *.html,*.htm links, lynx
+
+  " Object
+  filetype *.o nm %f | less
+
+  " Man page
+  filetype *.[1-8] man ./%c
+  fileviewer *.[1-8] man ./%c | col -b
+
+  " Mindmap
+  filextype *.vym
+  \ {Open with VYM}
+  \ vym %f &,
+
+  " MD5
+  filetype *.md5
+  \ {Check MD5 hash sum}
+  \ md5sum -c %f %S,
+
+  " SHA1
+  filetype *.sha1
+  \ {Check SHA1 hash sum}
+  \ sha1sum -c %f %S,
+
+  " SHA256
+  filetype *.sha256
+  \ {Check SHA256 hash sum}
+  \ sha256sum -c %f %S,
+
+  " SHA512
+  filetype *.sha512
+  \ {Check SHA512 hash sum}
+  \ sha512sum -c %f %S,
+
+  " GPG signature
+  filetype *.asc
+  \ {Check signature}
+  \ !!gpg --verify %c,
+
+  " Torrent
+  filetype *.torrent ktorrent %f &
+  fileviewer *.torrent dumptorrent -v %c
+
+  " FuseZipMount
+  filetype *.zip,*.jar,*.war,*.ear,*.oxt,*.apkg
+  \ xarchiver %f &
+  \ {Mount with fuse-zip}
+  \ FUSE_MOUNT|fuse-zip %SOURCE_FILE %DESTINATION_DIR,
+  \ {View contents}
+  \ zip -sf %c | less,
+  \ {Extract here}
+  \ tar -xf %c,
+  fileviewer *.zip,*.jar,*.war,*.ear,*.oxt zip -sf %c
+
+  " ArchiveMount
+  filetype *.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz
+  \ {Mount with archivemount}
+  \ FUSE_MOUNT|archivemount %SOURCE_FILE %DESTINATION_DIR,
+  fileviewer *.tgz,*.tar.gz tar -tzf %c
+  fileviewer *.tar.bz2,*.tbz2 tar -tjf %c
+  fileviewer *.tar.txz,*.txz xz --list %c
+  fileviewer *.tar tar -tf %c
+
+  " Rar2FsMount and rar archives
+  filetype *.rar
+  \ {Mount with rar2fs}
+  \ FUSE_MOUNT|rar2fs %SOURCE_FILE %DESTINATION_DIR,
+  fileviewer *.rar unrar v %c
+
+  " IsoMount
+  filetype *.iso
+  \ {Mount with fuseiso}
+  \ FUSE_MOUNT|fuseiso %SOURCE_FILE %DESTINATION_DIR,
+
+  " SshMount
+  filetype *.ssh
+  \ {Mount with sshfs}
+  \ FUSE_MOUNT2|sshfs %PARAM %DESTINATION_DIR %FOREGROUND,
+
+  " FtpMount
+  filetype *.ftp
+  \ {Mount with curlftpfs}
+  \ FUSE_MOUNT2|curlftpfs -o ftp_port=-,,disable_eprt %PARAM %DESTINATION_DIR %FOREGROUND,
+
+  " Fuse7z and 7z archives
+  filetype *.7z
+  \ {Mount with fuse-7z}
+  \ FUSE_MOUNT|fuse-7z %SOURCE_FILE %DESTINATION_DIR,
+  fileviewer *.7z 7z l %c
+
+  " Office files
+  filextype *.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.pptx libreoffice %f &
+  fileviewer *.doc catdoc %c
+  fileviewer *.docx docx2txt.pl %f -
+
+  " LaTeY files
+  filetype *.tex,*.bib vim %c
+
+  " TuDu files
+  filetype *.tudu tudu -f %c
+
+  " Qt projects
+  filextype *.pro qtcreator %f &
+
+  " Directories
+  filextype */
+  \ {View in thunar}
+  \ Thunar %f &,
+
+  " Fallback mechanism
+  filextype * xdg-open %c 2>/dev/null >/dev/null &
+
+  " Syntax highlighting in preview
+  " fileviewer *[^/] pygmentize -O style=monokai -f console256 -g
+#+end_src
+** Config persistence
+#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+  " What should be saved automatically between vifm sessions.  Drop "savedirs"
+  " value if you don't want vifm to remember last visited directories for you.
+  set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
+  \phistory,fhistory,dirstack,registers,bookmarks,bmarks
+#+end_src
+** Key bindings
+#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+  " Start shell in current directory
+  nnoremap s :shell<cr>
+
+  " Display sorting dialog
+  nnoremap S :sort<cr>
+
+  " Toggle visibility of preview window
+  nnoremap w :view<cr>
+  vnoremap w :view<cr>gv
+
+  " Open file in vim
+  nnoremap o :!vim %f<cr>
+  " Open file in gvim
+  nnoremap O :!gvim %f<cr>
+  " Open file in emacs
+  nnoremap E :!emacs %f<cr>
+
+  " Open file in the background using its default program
+  nnoremap gb :file &<cr>l
+
+  " Interaction with system clipboard
+  if has('win')
+  " Yank current directory path to Windows clipboard with forward slashes
+  nnoremap yp :!echo %"d:gs!\!/! %i | clip<cr>
+  " Yank path to current file to Windows clipboard with forward slashes
+  nnoremap yf :!echo %"c:gs!\!/! %i | clip<cr>
+  elseif executable('xclip')
+  " Yank current directory path into the clipboard
+  nnoremap yd :!echo %d | xclip %i<cr>
+  " Yank current file path into the clipboard
+  nnoremap yf :!echo %c:p | xclip %i<cr>
+  elseif executable('xsel')
+  " Yank current directory path into primary and selection clipboards
+  nnoremap yd :!echo -n %d | xsel --input --primary %i &&
+  \ echo -n %d | xsel --clipboard --input %i<cr>
+  " Yank current file path into into primary and selection clipboards
+  nnoremap yf :!echo -n %c:p | xsel --input --primary %i &&
+  \ echo -n %c:p | xsel --clipboard --input %i<cr>
+  endif
+
+  " Maps for faster renaming
+  nnoremap I cw<c-a>
+  nnoremap cc cw<c-u>
+  nnoremap A cw
+
+  " Open console in current directory
+  nnoremap <M-t> :!term & <cr>
+  " Open selected files in dragon-drag-and-drop
+  noremap <M-g> :!dragon %f & <cr>
+  " Open current directory in nemo
+  nnoremap <M-n> :![ -f %f ] && nemo %f || nemo . & disown<cr>
+
+  " Open editor to edit vifmrc and apply settings after returning to vifm
+  nnoremap <space>c :write | edit $MYVIFMRC | restart<cr>
+  " Open gvim to edit vifmrc
+  nnoremap <space>C :!gvim --remote-tab-silent $MYVIFMRC &<cr>
+  nnoremap <space>f :fork<cr>
+
+  " Toggle wrap setting on <space>w key
+  nnoremap <space>w :set wrap!<cr>
+#+end_src
+** Theme
+#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+  " vim: filetype=vifm :
+
+  hi clear
+
+  hi Border       cterm=none              ctermfg=0       ctermbg=none
+  hi TopLine      cterm=none              ctermfg=0       ctermbg=12
+  hi TopLineSel   cterm=bold              ctermfg=0
+  hi StatusLine   cterm=bold              ctermfg=0       ctermbg=12
+  hi CmdLine      cterm=none              ctermfg=15      ctermbg=none
+
+  hi Selected     cterm=bold              ctermfg=0       ctermbg=3
+
+  " Entry types
+  hi Link         cterm=underline         ctermfg=14      ctermbg=none
+  hi Directory    cterm=bold              ctermfg=5       ctermbg=none
+  hi BrokenLink   cterm=bold              ctermfg=9       ctermbg=none
+  hi Executable   cterm=bold              ctermfg=10      ctermbg=none
+  hi HardLink     cterm=bold,underline    ctermfg=none    ctermbg=none
+  hi Fifo         cterm=none              ctermfg=3       ctermbg=none
+#+end_src
+* Dialog
+#+begin_src python :tangle (haris/tangle-home ".dialogrc")
+  aspect                      = 0
+  separate_widget             = ""
+  tab_len                     = 1
+  visit_items                 = OFF
+  use_shadow                  = OFF
+  use_colors                  = ON
+  screen_color                = (CYAN,BLUE,ON)
+  dialog_color                = (WHITE,BLACK,OFF)
+  title_color                 = (WHITE,BLACK,ON)
+  border_color                = (CYAN,BLACK,ON)
+  button_active_color         = (BLACK,MAGENTA,ON)
+  button_inactive_color       = dialog_color
+  button_key_active_color     = button_active_color
+  button_key_inactive_color   = (YELLOW,BLACK,OFF)
+  tag_key_selected_color      = (BLACK,YELLOW,ON)
+  button_label_active_color   = (WHITE,BLACK,ON)
+  button_label_inactive_color = (BLACK,WHITE,ON)
+  inputbox_color              = dialog_color
+  inputbox_border_color       = dialog_color
+  searchbox_color             = dialog_color
+  searchbox_title_color       = title_color
+  searchbox_border_color      = border_color
+  position_indicator_color    = title_color
+  menubox_color               = dialog_color
+  menubox_border_color        = border_color
+  item_color                  = dialog_color
+  item_selected_color         = button_active_color
+  tag_color                   = title_color
+  tag_selected_color          = button_label_active_color
+  tag_key_color               = button_key_inactive_color
+  check_color                 = dialog_color
+  check_selected_color        = button_active_color
+  uarrow_color                = (GREEN,WHITE,ON)
+  darrow_color                = uarrow_color
+  itemhelp_color              = (WHITE,BLACK,OFF)
+  form_active_text_color      = button_active_color
+  form_text_color             = (WHITE,CYAN,ON)
+  form_item_readonly_color    = (CYAN,WHITE,ON)
+  gauge_color                 = title_color
+  border2_color               = border_color
+  inputbox_border2_color      = dialog_color
+  searchbox_border2_color     = dialog_color
+  menubox_border2_color       = border_color
+#+end_src
+* Translate shell
+** Main
+#+begin_src lisp :tangle (haris/tangle-home ".config/translate-shell/init.trans")
+  {
+  :theme "custom.trans"
+  }
+#+end_src
+** Color scheme
+#+begin_src lisp :tangle (haris/tangle-home ".config/translate-shell/custom.trans")
+  {
+  :translate-shell "0.9.0"
+
+  :sgr-original ["green" "bold"]
+  :sgr-original-phonetics ["light blue" "bold"]
+  :sgr-translation ["cyan" "bold"]
+  :sgr-translation-phonetics ["light cyan" "bold"]
+  :sgr-brief-translation ["light blue" "bold"]
+  :sgr-brief-translation-phonetics ["light cyan" "bold"]
+
+  :sgr-original-dictionary-detailed-word-class "light blue"
+  :sgr-original-dictionary-detailed-explanation ["white" "bold"]
+  :sgr-original-dictionary-detailed-example ["magenta" "bold"]
+  :sgr-original-dictionary-detailed-synonyms "light blue"
+  :sgr-original-dictionary-detailed-synonyms-item ["light blue" "bold"]
+  :sgr-original-dictionary-synonyms "light blue"
+  :sgr-original-dictionary-synonyms-word-class "light blue"
+  :sgr-original-dictionary-synonyms-synonyms "light blue"
+  :sgr-original-dictionary-synonyms-synonyms-item ["yellow" "bold"]
+  :sgr-original-dictionary-examples "light blue"
+  :sgr-original-dictionary-examples-example ["light green" "bold"]
+  :sgr-original-dictionary-examples-original ["light cyan" "bold" "negative"]
+  :sgr-original-dictionary-see-also "light blue"
+  :sgr-original-dictionary-see-also-phrases "light blue"
+  :sgr-original-dictionary-see-also-phrases-item ["light cyan" "bold" "underline"]
+
+  :sgr-dictionary-word-class "light blue"
+  :sgr-dictionary-word ["light cyan" "bold"]
+
+  :sgr-dictionary-explanation-item ["light blue" "bold"]
+
+  :sgr-alternatives-original ["light blue" "bold"]
+  :sgr-alternatives-translations "light blue"
+  :sgr-alternatives-translations-item ["light cyan" "bold"]
+
+  :sgr-prompt-message "light blue"
+  :sgr-prompt-message-original ["light blue" "bold"]
+  :sgr-languages "light blue"
+  :sgr-languages-sl ["light blue" "bold"]
+  :sgr-languages-tl ["light cyan" "bold"]
+  :fmt-languages "[ %s → %t ]"
+
+  :chr-source-seperator "═"
+  :sgr-source-seperator "light blue"
+  :chr-target-seperator "─"
+  :sgr-target-seperator "light blue"
+
+  :fmt-welcome-message "Translate Shell"
+  :sgr-welcome-message ["light blue" "bold"]
+  :fmt-welcome-submessage "(:q to quit)"
+  :sgr-welcome-submessage "light blue"
+  :fmt-prompt "%s> "
+  :sgr-prompt ["magenta" "bold"]
+  }
+#+end_src
+
+* Cointop
+:PROPERTIES:
+:header-args: :tangle (haris/tangle-home ".config/cointop/config.toml") :mkdirp yes :noweb yes :results silent
+:END:
+#+begin_src toml
+  currency = "USD"
+  default_view = "favorites"
+  default_chart_range = "24H"
+  api = "coingecko"
+  colorscheme = "cointop"
+  refresh_rate = 120
+  cache_dir = "<<eval-user-home()>>/.cache/cointop"
+  compact_notation = false
+  enable_mouse = true
+
+  [favorites]
+  character = "*"
+  columns = ["rank", "name", "symbol", "price", "1h_change", "24h_change", "7d_change", "24h_volume", "market_cap", "available_supply", "total_supply", "last_updated"]
+  compact_notation = false
+  names = ["BNB", "Binance USD", "Bitcoin", "Ethereum Classic", "Litecoin", "Monero", "Solana", "Ethereum"]
+
+  [portfolio]
+  columns = ["rank", "name", "symbol", "price", "holdings", "balance", "1h_change", "24h_change", "7d_change", "percent_holdings", "cost_price", "cost", "pnl", "pnl_percent", "last_updated"]
+  compact_notation = false
+  holdings = []
+
+  [price_alerts]
+  alerts = []
+
+  [coinmarketcap]
+  pro_api_key = ""
+
+  [table]
+  columns = ["rank", "name", "symbol", "price", "1h_change", "24h_change", "7d_change", "24h_volume", "market_cap", "available_supply", "total_supply", "last_updated"]
+  compact_notation = false
+  keep_row_focus_on_sort = false
+
+  [chart]
+  height = 30
+  max_width = 175
+#+end_src
+** Keybindings
+#+begin_src toml
+  [shortcuts]
+  "!" = "sort_column_cost"
+  "#" = "sort_column_pnl_percent"
+  "$" = "last_page"
+  "%" = "sort_column_percent_holdings"
+  "+" = "show_price_alert_add_menu"
+  "/" = "open_search"
+  1 = "sort_column_1h_change"
+  2 = "sort_column_24h_change"
+  3 = "sort_column_30d_change"
+  7 = "sort_column_7d_change"
+  "<" = "scroll_left"
+  ">" = "scroll_right"
+  "?" = "help"
+  "@" = "sort_column_pnl"
+  A = "toggle_price_alerts"
+  C = "show_currency_convert_menu"
+  E = "show_portfolio_edit_menu"
+  f = "toggle_show_favorites"
+  G = "move_to_page_last_row"
+  H = "move_to_page_visible_first_row"
+  L = "move_to_page_visible_last_row"
+  M = "move_to_page_visible_middle_row"
+  O = "open_link"
+  P = "toggle_portfolio"
+  "[" = "previous_chart_range"
+  "\\\\" = "toggle_table_fullscreen"
+  "]" = "next_chart_range"
+  a = "sort_column_available_supply"
+  b = "sort_column_balance"
+  c = "show_currency_convert_menu"
+  "ctrl+s" = "save"
+  "ctrl+c" = "quit"
+  "ctrl+d" = "page_down"
+  "ctrl+j" = "enlarge_chart"
+  "ctrl+k" = "shorten_chart"
+  "ctrl+r" = "refresh"
+  "ctrl+space" = "toggle_portfolio_balances"
+  "ctrl+u" = "page_up"
+  e = "show_portfolio_edit_menu"
+  enter = "toggle_row_chart"
+  esc = "quit_view"
+  space = "toggle_favorite"
+  g = "move_to_page_first_row"
+  h = "previous_page"
+  j = "move_down"
+  k = "move_up"
+  l = "next_page"
+  m = "sort_column_market_cap"
+  n = "sort_column_name"
+  o = "open_link"
+  p = "sort_column_price"
+  q = "quit_view"
+  r = "sort_column_rank"
+  s = "sort_column_symbol"
+  t = "sort_column_total_supply"
+  tab = "move_down_or_next_page"
+  u = "sort_column_last_updated"
+  v = "sort_column_24h_volume"
+  y = "sort_column_1y_change"
+  "{" = "first_chart_range"
+  "|" = "toggle_chart_fullscreen"
+  "}" = "last_chart_range"
+#+end_src
+** Daemon
+This server runs in the background and listens for price changes and notifies me accordingly.
+#+begin_src conf :tangle (haris/tangle-home ".config/systemd/user/cointop.service")
+  [Unit]
+  Description=Cointop daemon
+
+  [Service]
+  ExecStart=/usr/bin/cointop server --host-key-file ~/.ssh/cointop-server --port 10022
+  Restart=on-failure
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+
+*** One-time setup
+You have to generate an SSH key for the cointop SSH server:
+#+begin_src shell :tangle no
+  ssh-keygen -t ssh-ed25519 -f ~/.ssh/cointop-server -N ''
+#+end_src
+* Ticker
+#+begin_src yaml :tangle (haris/tangle-home ".ticker.yml")
+  # ~/.ticker.yaml
+  show-summary: true
+  show-tags: true
+  show-fundamentals: true
+  show-separator: true
+  show-summary: true
+  show-holdings: true
+  interval: 5
+  currency: USD
+  currency-summary-only: false
+  watchlist:
+    - DIS
+    - NFLX
+    - NET
+    - TEAM
+    - ESTC
+#+end_src
+** Ticker stock portfolio
+#+begin_src yaml :tangle (haris/tangle-home ".ticker.yml")
+  lots:
+    - symbol: "ABNB"
+      quantity: 35.0
+      unit_cost: 146.00
+    - symbol: "ARKW"
+      quantity: 20.0
+      unit_cost: 152.25
+    - symbol: "ARKW"
+      quantity: 20.0
+      unit_cost: 145.35
+      fixed_cost: 7.00 # e.g. brokerage commission fee
+#+end_src
+# ---
+* Tickrs
+[[https://github.com/tarkah/tickrs/wiki/Config-file][Config file reference]]
+#+begin_src yaml :tangle (haris/tangle-home ".config/tickrs/config.yml")
+  symbols:
+    - SPY
+    - AMD
+    - NET
+    - DIS
+    - NFLX
+    - NVDA
+    - TSLA
+
+  # candle, line, kagi
+  chart_type: line
+
+  # Possible values: 1D, 1W, 1M, 3M, 6M, 1Y, 5Y
+  time_frame: 1D
+
+  # Seconds
+  update_interval: 10
+
+  # Enable pre / post market hours for graphs
+  enable_pre_post: true
+
+  # Hide help icon in top right
+  hide_help: false
+
+  # Hide previous close line on 1D chart
+  hide_prev_close: false
+
+  # Hide toggle block
+  hide_toggle: false
+
+  # Show volumes graph
+  show_volumes: true
+
+  # Show x-axis labels
+  show_x_labels: true
+
+  # Start in summary mode
+  summary: true
+
+  # Truncate pre market graphing to only 30 minutes prior to markets opening
+  trunc_pre: false
+#+end_src
