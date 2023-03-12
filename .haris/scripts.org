@@ -733,6 +733,32 @@ are designed to be easily integrated into dmenu scripts.
 
   myemacs --create-frame --eval '(multi-vterm)' "$@"
 #+end_src
+** =eman=
+#+begin_src bash :async :tangle (haris/tangle-home ".local/bin/eman")
+  #!/usr/bin/env bash
+
+  tmpfile="$(mktemp)"
+  cat >"$tmpfile" <<'EOF'
+    <<eman-impl>>
+  EOF
+
+  emacs --script "$tmpfile" "$@"
+  rm -f "$tmpfile"
+#+end_src
+#+NAME: eman-impl
+#+begin_src emacs-lisp
+  #!/usr/bin/env -S emacs --script
+
+  (setq eval-code
+        `(let ((Man-notify-method 'bully))
+           ,(if argv
+               `(man ,(car argv))
+             '(call-interactively 'man))))
+
+  (call-process "myemacs-float"
+                nil nil nil
+                "--create-frame" "--eval" (prin1-to-string eval-code))
+#+end_src
 ** =erc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/erc") :noweb yes
   #!/usr/bin/env sh

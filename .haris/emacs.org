@@ -145,7 +145,6 @@ the type of the purpose of the current emacs daemon (by reading the
 #+end_src
 *** Language modes
 #+begin_src emacs-lisp
-  (use-package javascript-mode :defer t)
   (use-package json-mode :defer t)
   (use-package fish-mode :defer t)
   (use-package vimrc-mode :defer t)
@@ -319,6 +318,7 @@ Some custom keybindings are defined here as well.
 #+end_src
 * Org mode
 #+begin_src emacs-lisp
+  (require 'ob-async)
   (require 'ob-shell)
   (require 'ob-C)
   (require 'ob-python)
@@ -442,6 +442,15 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (evil-define-key 'normal org-mode-map (kbd ", i c")       'org-columns)
 
   (evil-define-key 'normal org-mode-map (kbd "SPC h o")     'org-info-find-node)
+#+end_src
+* Man
+** Bindings
+#+begin_src emacs-lisp
+  (defun haris/man-search () (interactive)
+    (swiper "^[[:space:]]+"))
+
+  ;; TODO 'not prefix key' error
+  ;; (evil-define-key Man-mode-map (kbd "g/") 'haris/man-search)
 #+end_src
 * ERC
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")

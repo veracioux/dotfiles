@@ -132,7 +132,7 @@ These scripts are used by the other sections:
   set $mode_qr      " QR [i]n [o]ut [s]creen"
   set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos [a]ll"
   set $mode_audio   " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
-  set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term"
+  set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
   set $mode_trans   "<<mode_trans()>>"
 #+end_src
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
@@ -584,13 +584,14 @@ with an emacs interface.
 #+NAME: emacs-apps-menu
 #+begin_src i3wm-config
   mode $mode_emacs {
-  bindsym p              exec --no-startup-id sh -c 'epython', mode default
-  bindsym o              exec --no-startup-id sh -c 'eoctave', mode default
-  bindsym i              exec --no-startup-id sh -c 'erc',     mode default
-  bindsym d              exec --no-startup-id sh -c 'edocker', mode default
-  bindsym e              exec --no-startup-id sh -c 'elisp',   mode default
-  bindsym g              exec --no-startup-id sh -c 'magit',   mode default
-  bindsym Return         exec --no-startup-id sh -c 'eterm',   mode default
+  bindsym p              exec --no-startup-id epython, mode default
+  bindsym o              exec --no-startup-id eoctave, mode default
+  bindsym i              exec --no-startup-id erc,     mode default
+  bindsym d              exec --no-startup-id edocker, mode default
+  bindsym e              exec --no-startup-id elisp,   mode default
+  bindsym g              exec --no-startup-id magit,   mode default
+  bindsym Return         exec --no-startup-id eterm,   mode default
+  bindsym m              exec --no-startup-id eman,    mode default
   # TODO: make a way (script?) to open magit for the currently active project
   #bindsym g              exec --no-startup-id magit; mode default
   bindsym Escape         mode default
