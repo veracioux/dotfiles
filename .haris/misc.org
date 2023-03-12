@@ -113,11 +113,3 @@ I'm not sure if this file is actually used by rsync.
   node_modules/
   __pycache__/
 #+end_src
-* Helper code                                                      :noexport:
-#+NAME: eval-user-home
-#+begin_src emacs-lisp :tangle no
-  (expand-file-name "~")
-#+end_src
-# Local Variables:
-# org-confirm-babel-evaluate: nil
-# End:

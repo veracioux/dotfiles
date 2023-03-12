@@ -783,3 +783,12 @@ You have to generate an SSH key for the cointop SSH server:
   # Truncate pre market graphing to only 30 minutes prior to markets opening
   trunc_pre: false
 #+end_src
+
+* Helper code                                                      :noexport:
+#+NAME: eval-user-home
+#+begin_src emacs-lisp :tangle no
+  (expand-file-name "~")
+#+end_src
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:
