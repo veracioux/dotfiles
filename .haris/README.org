@@ -1,13 +1,128 @@
-#+TITLE: My configs
+#+TITLE: Haris' Config
+#+PROPERTY: header-args :results silent :mkdirp yes
 
-The bootstrap directory contains everything that is needed to tangle all my
-org-mode configs into actual usable config files.
+Welcome. This is my personal dotfile repository. I use Arch Linux, so these
+dotfiles are customized to work there. I have also used a Macbook when
+professionally required, so most of the configs will work there too, but expect
+some incompatibilities and occasional breakage.
 
+I do not directly keep my dotfiles in this repository. Rather, I write them as
+literary documents with the actual configs embedded as code blocks. With the
+help of Emacs and it's excellent =org-mode=, I can run a command and those code
+blocks go exactly into the config file they need to. This approach is known as
+literate programming.
+
+I find it superior compared to keeping the config files directly because:
+- It is much easier to document my configuration as it has become quite complex
+  and reading/writing it this way feels more natural.
+- I can group related configuration from multiple programs in a single file, and
+  then export (/tangle/ is the technical term) them where they need to go. See for
+  example: [[file:~/.haris/shells.org][.haris/shells.org]].
+- For each application, I can use the same org file to keep its configuration
+  and a script that installs all of its dependencies.
+- I can use the breadth of =org-mode= features to more easily navigate my configs.
+- It is very satisfying.
+- *[In progress]* I can put all the configs into a =~/.haris= folder and make that a
+  regular git repository, instead of keeping a bare repo in my home directory,
+  which has some drawbacks.
+
+*NOTE:* I am still in the process of migrating my traditional configs to this
+format, so this repo is a bit fragmented and incomplete.
+
+*NOTE:* The dotfiles are meant exclusively for Linux desktop. They have mostly
+been created with an Arch Linux setup in mind, but most things should be
+applicable to other distros as well (although I didn't specifically test this).
+
+* Usage
+I keep all persistent user configs in org files, and use =org-babel-tangle= (part
+of Emacs) to tangle them, i.e. send all the configs to the files they need to be in
+for the programs to read them.
+
+If you are setting up these dotfiles for the first time, you can just run:
+#+begin_src shell
+  curl https://veracioux.me/dotfiles/bootstrap.sh | bash
+#+end_src
+
+This will tangle all the dotfiles to where they need to go to be usable. You may
+still need to [[*Installing dependencies][install dependencies]] to ensure you have all the programs the
+dotfiles are meant to configure.
+
+If you would like to do things in a more supervised manner, follow the
+[[file:bootstrap/README.org][bootstrap]] instructions. (*TODO*: instructions still incomplete)
+
+Once you have set everything up, any changes you make to the org-mode dotfiles
+will need to be applied to the live configs by calling =haris/tangle-dest=. There
+are also emacs key bindings for this, which you can inspect yourself. Note that
+merely calling =org-babel-tangle= will just tangle the files to a temporary
+location at =/tmp/tangle-$USER= (useful for inspecting changes before applying
+them to your home directory).
 * Installing dependencies
 Most of my org-mode dotfiles have a *Setup* and/or *Dependencies* section with bash
 scripts that will install all the dependencies for the configs defined in the
 file.
 
-TODO: The scripts should not be run directly, but instead using a frontend script that I
+*NOTE:* The dependency scripts were made with *Arch Linux* in mind, so they use
+=pacman= as the package manager and =paru= as an AUR helper.
+*TODO:* I will probably gradually make these scripts compatible with Ubuntu as well.
+*TODO:* The scripts should not be run directly, but instead using a frontend script that I
 will create in the future.
+* Default applications
+This is a mapping of mime types to default applications that I use:
+#+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
+  [Added Associations]
+  text/plain=gvim.desktop;
+  text/markdown=emacs.desktop;
+  image/svg+xml=inkscape.desktop;org.inkscape.Inkscape.desktop;
+  image/vnd.dwg=inkscape.desktop;
+  image/vnd.dxf=inkscape.desktop;org.inkscape.Inkscape.desktop;
+  image/jpeg=vimiv.desktop;sxiv.desktop;
+  image/png=vimiv.desktop;sxiv.desktop;
+  image/tiff=vimiv.desktop;sxiv.desktop;
+  application/pdf=zathura.desktop;
+  application/x-bibtex=emacs.desktop;gvim.desktop;
+  application/msword=libreoffice-writer.desktop;org.pwmt.zathura.desktop;
+  application/octet-stream=emacs.desktop;gvim.desktop;
+  x-scheme-handler/tg=userapp-Telegram Desktop-Y1VJF1.desktop;
+
+  [Default Applications]
+  text/plain=emacs.desktop;gvim.desktop;
+  text/x-org=emacs.desktop;
+  text/html=firefox.desktop;
+  text/xml=emacs.desktop;gvim.desktop;firefox.desktop;
+  text/x-shellscript=emacs.desktop;gvim.desktop;
+  text/x-script.python=emacs.desktop;gvim.desktop;
+  text/x-tex=emacs.desktop;gvim.desktop;
+  text/x-bibtex=emacs.desktop;gvim.desktop;
+  text/x-c=emacs.desktop;gvim.desktop;
+  text/x-chdr=emacs.desktop;gvim.desktop;
+  text/x-csrc=emacs.desktop;gvim.desktop;
+  text/x-c++=emacs.desktop;gvim.desktop;
+  text/x-c++hdr=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
+  text/x-c++src=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
+  text/x-arduino=arduino-arduinoide.desktop;
+  text/doc=libreoffice-writer.desktop;
+  image/vnd.dwg=inkscape.desktop;
+  image/vnd.dxf=org.inkscape.Inkscape.desktop;
+  image/jpeg=vimiv.desktop;sxiv.desktop;
+  image/png=vimiv.desktop;sxiv.desktop;
+  image/tiff=vimiv.desktop;sxiv.desktop;
+  image/webp=vimiv.desktop;sxiv.desktop;
+  image/svg+xml=vimiv.desktop;sxiv.desktop;
+  video/mp4=mpv.desktop;
+  video/x-matroska=mpv.desktop;
+  video/mpeg=mpv.desktop;
+  video/webm=mpv.desktop;
+  x-directory/normal=nemo.desktop;
+  x-directory/gnome-default-handler=nemo.desktop;
+  application/pdf=org.pwmt.zathura.desktop;
+  application/octet-stream=emacs.desktop;gvim.desktop;
+  application/x-gnome-saved-search=nemo.desktop;
+  application/x-dxf=librecad.desktop;
+  x-scheme-handler/http=firefox.desktop;
+  x-scheme-handler/https=firefox.desktop;
+  x-scheme-handler/file=nemo.desktop;
+  x-scheme-handler/viber=viber.desktop;
+  x-scheme-handler/tg=userapp-Telegram Desktop-Y1VJF1.desktop;
+  x-scheme-handler/msteams=teams.desktop;
+#+end_src
 * TODO Common keybindings

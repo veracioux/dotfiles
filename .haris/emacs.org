@@ -1,5 +1,5 @@
 #+TITLE: Emacs Config
-#+PROPERTY: header-args :tangle (haris/tangle-home ".emacs.d/haris/default.el") :mkdirp yes :noweb yes
+#+PROPERTY: header-args :tangle (haris/tangle-home ".emacs.d/haris/default.el") :mkdirp yes :noweb yes :results silent
 #+begin_src emacs-lisp :exports none
   ;; -*- mode: emacs-lisp-mode; -*- vim: ft=lisp sw=2
 #+end_src
@@ -96,6 +96,7 @@ the type of the purpose of the current emacs daemon (by reading the
   (setq evil-want-keybinding nil)
   (setq mouse-wheel-scroll-amount '(6))
   (setq dotspacemacs-search-tools '("rg" "grep"))
+  (setq uniquify-buffer-name-style 'forward)
 
   ;; Handle URLs as files
   (url-handler-mode)
@@ -141,6 +142,11 @@ the type of the purpose of the current emacs daemon (by reading the
 #+begin_src emacs-lisp
   (use-package focus-autosave-mode :defer t)
   (use-package multi-vterm :defer t)
+#+end_src
+*** Language modes
+#+begin_src emacs-lisp
+  (use-package javascript-mode :defer t)
+  (use-package json-mode :defer t)
 #+end_src
 ** General custom functions
 #+begin_src emacs-lisp
