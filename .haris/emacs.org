@@ -147,6 +147,10 @@ the type of the purpose of the current emacs daemon (by reading the
 #+begin_src emacs-lisp
   (use-package javascript-mode :defer t)
   (use-package json-mode :defer t)
+  (use-package fish-mode :defer t)
+  (use-package vimrc-mode :defer t)
+  (use-package sxhkdrc-mode :defer t)
+  (use-package i3wm-config-mode :defer t)
 #+end_src
 ** General custom functions
 #+begin_src emacs-lisp
@@ -303,7 +307,6 @@ Some custom keybindings are defined here as well.
 ** Vim-like configuration
 #+begin_src emacs-lisp
   (use-package evil-quickscope)
-  (use-package vimrc-mode :defer t)
   (global-evil-quickscope-always-mode)
 #+end_src
 * Ivy
@@ -880,8 +883,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
    dotspacemacs-additional-packages
    '(
      org-fragtog org-drill org-ref org-attach-screenshot org-special-blocks ob-ipython
-     yasnippet-snippets vterm
-     i3wm-config-mode rainbow-mode fish-mode
+     yasnippet-snippets vterm rainbow-mode
      evil-easymotion reddigg md4rd pydoc pylint python-info
      nodejs-repl))
 #+end_src
