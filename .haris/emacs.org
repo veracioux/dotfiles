@@ -318,7 +318,6 @@ Some custom keybindings are defined here as well.
 #+end_src
 * Org mode
 #+begin_src emacs-lisp
-  (require 'ob-async)
   (require 'ob-shell)
   (require 'ob-C)
   (require 'ob-python)
