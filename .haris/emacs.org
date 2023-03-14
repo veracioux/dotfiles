@@ -357,7 +357,8 @@ Some custom keybindings are defined here as well.
         org-ellipsis                        " ▾"
         org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
         org-hide-emphasis-markers           t
-        org-download-screenshot-method      "flameshot gui --path screenshots/%s")
+        org-download-screenshot-method      "flameshot gui --path screenshots/%s"
+        org-projectile-per-project-filepath "TODO.org")
 
   (add-to-list 'org-file-apps '("\\.x?html?\\'" . "firefox %s"))
   (add-to-list 'org-export-backends 'md)
@@ -554,7 +555,8 @@ slack-mode-hook hook, it never connects. Investigate
 * Git
 #+begin_src emacs-lisp
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
-        magit-diff-refine-hunk 'all)
+        magit-diff-refine-hunk 'all
+        magit-buffer-log-args '("-n32"))
 #+end_src
 ** TODO deprecated GitHub
 #+begin_src emacs-lisp
