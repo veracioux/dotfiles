@@ -643,7 +643,7 @@ are designed to be easily integrated into dmenu scripts.
 
   for arg in "$@"; do
       case "$arg" in
-          README.org)     echo ~/README.org ;;
+          README.org)     echo ~/.haris/README.org ;;
           private.org)    echo ~/.haris/private/README.org ;;
           temporary.org)  echo ~/.haris/temporary.org ;;
           scripts.org)    echo ~/.haris/scripts.org ;;
