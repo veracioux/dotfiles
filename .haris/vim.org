@@ -577,7 +577,7 @@ the setup script as well!.*
 
 * Setup
 :PROPERTIES:
-:header-args: :tangle (haris/tangle-deps "vim.sh") :mkdirp yes :tangle-mode (identity #o744) :results silent :shebang "#!/usr/bin/env bash"
+:header-args+: :tangle (haris/tangle-deps "vim.sh") :tangle-mode (identity #o744) :shebang "#!/usr/bin/env bash"
 :END:
 ** Dependencies
 #+begin_src shell

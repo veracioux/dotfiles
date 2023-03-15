@@ -17,7 +17,7 @@
 #+end_src
 * Dunst
 :PROPERTIES:
-:header-args: :tangle (haris/tangle-home ".config/dunst/dunstrc") :mkdirp yes :noweb yes :results silent
+:header-args+: :tangle (haris/tangle-home ".config/dunst/dunstrc")
 :END:
 #+begin_src conf
   # vim: ft=cfg

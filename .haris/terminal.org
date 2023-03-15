@@ -1,11 +1,11 @@
 #+TITLE: Terminal configs
-#+PROPERTY: header-args :mkdirp yes :results silent
+#+PROPERTY: header-args :mkdirp yes :results silent :noweb yes
 
 A collection of configs for my terminal(s) and terminal apps.
 
 * Alacritty
 :PROPERTIES:
-:header-args: :tangle (haris/tangle-home ".config/alacritty/alacritty.yml") :mkdirp yes :results silent
+:header-args+: :tangle (haris/tangle-home ".config/alacritty/alacritty.yml")
 :END:
 ** General
 #+begin_src yaml
@@ -189,7 +189,7 @@ A collection of configs for my terminal(s) and terminal apps.
 #+end_src
 * Vifm
 :PROPERTIES:
-:header-args: :tangle (haris/tangle-home ".config/vifm/vifmrc") :mkdirp yes :results silent
+:header-args+: :tangle (haris/tangle-home ".config/vifm/vifmrc")
 :END:
 #+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
   " vim: filetype=vifm
@@ -580,7 +580,7 @@ A collection of configs for my terminal(s) and terminal apps.
 
 * Cointop
 :PROPERTIES:
-:header-args: :tangle (haris/tangle-home ".config/cointop/config.toml") :mkdirp yes :noweb yes :results silent
+:header-args+: :tangle (haris/tangle-home ".config/cointop/config.toml")
 :END:
 #+begin_src toml
   currency = "USD"

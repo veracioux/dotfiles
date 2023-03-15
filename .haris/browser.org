@@ -47,7 +47,7 @@ All my browser preferences that I don't need to keep secret go here.
 #+end_src
 * CSS customizations
 :PROPERTIES:
-:header-args: :tangle (haris/tangle-home ".mozilla/firefox/haris/chrome/userChrome.css") :mkdirp yes
+:header-args+: :tangle (haris/tangle-home ".mozilla/firefox/haris/chrome/userChrome.css")
 :END:
 #+begin_src css
   #navigator-toolbox:not(:hover) #nav-bar {

@@ -33,7 +33,7 @@ i3/sway session:
 #+end_src
 * Helper scripts and local variables
 :PROPERTIES:
-:header-args: :mkdirp yes :tangle-mode (eval #o744)
+:header-args+: :tangle-mode (eval #o744)
 :END:
 
 These scripts are used by the other sections:
@@ -186,7 +186,7 @@ Shared between i3 and sway:
 * Start-up
 ** .xinitrc
 :PROPERTIES:
-:header-args: :tangle-mode (eval #o744) :noweb yes
+:header-args+: :tangle-mode (eval #o744)
 :END:
 Since i3 is used under X server, it needs to be launched within [[~/.xinitrc]].
 There are three =.xinitrc= configuration presets, that I switch between using
@@ -739,7 +739,7 @@ directly translated to English, without opening the menu.
 #+end_src
 ** i3status
 :PROPERTIES:
-:header-args: :tangle (haris/tangle-home ".config/i3status/config") :mkdirp yes
+:header-args+: :tangle (haris/tangle-home ".config/i3status/config")
 :END:
 
 #+begin_src conf :exports none :mkdirp yes
@@ -1021,7 +1021,7 @@ directly translated to English, without opening the menu.
 #+end_src
 * Compositor
 :PROPERTIES:
-:header-args: :tangle (haris/tangle-home ".config/picom.conf") :noweb yes :mkdirp yes
+:header-args+: :tangle (haris/tangle-home ".config/picom.conf")
 :END:
 I use picom as my compositor with the i3 window manager.
 ** General

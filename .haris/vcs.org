@@ -5,7 +5,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 
 * Main config
 :PROPERTIES:
-:HEADER-ARGS: :tangle (haris/tangle-home ".gitconfig") :mkdirp yes
+:header-args+: :tangle (haris/tangle-home ".gitconfig")
 :END:
 #+begin_src gitconfig
   [user]
