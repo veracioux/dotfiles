@@ -576,6 +576,12 @@ slack-mode-hook hook, it never connects. Investigate
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
         magit-diff-refine-hunk 'all
         magit-buffer-log-args '("-n32"))
+
+  (setq magit-repository-directories
+        '(("~/.haris" . 0)
+          ("~/proj" . 1)
+          ("~/proj/drytoe" . 1)
+          ("~" . 0)))
 #+end_src
 ** TODO deprecated GitHub
 #+begin_src emacs-lisp
