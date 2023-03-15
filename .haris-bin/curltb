@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-
-# Usage: curltb [CURL_OPTIONS] TERMBIN_BLOB
-# Get https://termbin.com/<TERMBIN_BLOB> using curl
-
-curl https://termbin.com/"$1" "${@:2}"

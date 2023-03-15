@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-
-# Suspend when battery low
-
-if acpi | grep -q '\s[0-9]%' && acpi | grep -q 'Discharging'; then
-    ~/.haris-bin/notify-send 'Low battery' 'Suspending in 5s'
-    sleep 5s
-    sudo systemctl suspend -i
-fi

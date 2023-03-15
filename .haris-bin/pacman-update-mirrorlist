@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-
-# Update /etc/pacman.d/mirrorlist using reflector
-# (requires sudo)
-
-reflector --sort rate --save /etc/pacman.d/mirrorlist

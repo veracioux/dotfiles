@@ -1,8 +1,0 @@
-#!/usr/bin/env sh
-
-# Temporarily bind keys
-
-pkill sxhkd.tmp
-gvim -c 'set ft=sxhkd' ~/.sxhkd.tmp
-
-sxhkd.tmp -c ~/.sxhkd.tmp &
