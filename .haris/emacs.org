@@ -321,11 +321,11 @@ Some custom keybindings are defined here as well.
   (require 'ob-shell)
   (require 'ob-C)
   (require 'ob-python)
-  (require 'org-tempo)
 
   (use-package org-transclusion :defer t)
   (use-package org-preview-html :defer t)
   (use-package org-drill        :defer t)
+  (use-package ob-restclient)
 
   (use-package ol-man :ensure nil :defer t)
 
