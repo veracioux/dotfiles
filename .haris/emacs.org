@@ -1,7 +1,7 @@
 #+TITLE: Emacs Config
 #+PROPERTY: header-args :tangle (haris/tangle-home ".emacs.d/haris/default.el") :mkdirp yes :noweb yes :results silent
 #+begin_src emacs-lisp :exports none
-  ;; -*- mode: emacs-lisp-mode; -*- vim: ft=lisp sw=2
+  ;; -*- mode: emacs-lisp; -*- vim: ft=lisp sw=2
 #+end_src
 
 Emacs is a very versatile tool. I use it as:
@@ -318,16 +318,14 @@ Some custom keybindings are defined here as well.
 #+end_src
 * Org mode
 #+begin_src emacs-lisp
-  (require 'ob-shell)
-  (require 'ob-C)
-  (require 'ob-python)
-
-  (use-package org-transclusion :defer t)
-  (use-package org-preview-html :defer t)
-  (use-package org-drill        :defer t)
-  (use-package ob-restclient)
-
-  (use-package ol-man :ensure nil :defer t)
+  (eval-after-load "org"
+    (progn
+      (use-package org-transclusion :defer t)
+      (use-package org-preview-html :defer t)
+      (use-package org-drill        :defer t)
+      (use-package ob-restclient)
+      (use-package ol-man :ensure nil)
+      (use-package org-tempo :ensure nil)))
 
   (defun haris/org-mode-visual-fill ()
     (setq visual-fill-column-width        90
@@ -336,16 +334,8 @@ Some custom keybindings are defined here as well.
 
   (defun haris/org-babel-goto-tangle-file ()
     "Go to the file that the code block at point tangles to"
-    (if-let* ((args (nth 2 (org-babel-get-src-block-info t)))
-              (tangle (alist-get :tangle args)))
-        (when (not (equal "no" tangle))
-          (let* ((home-dir-re (concat "^" (regexp-quote (haris/tangle-home))))
-                 (deps-dir-re (concat "^" (regexp-quote (haris/tangle-deps ""))))
-                 (__file (eval (car (read-from-string tangle))))
-                 (_file (replace-regexp-in-string home-dir-re "~/" __file))
-                 (file (replace-regexp-in-string deps-dir-re "~/" _file)))
-            (find-file file))
-          t)))
+    (let ((file (haris/extract-tangle-final-dest)))
+      (when file (find-file file))))
 
   (defun haris/org-babel-restclient-split-window-fix ()
     "Fixes a bug where executing a restclient code block splits the window."
@@ -394,12 +384,12 @@ Takes too long to load.
   (setq org-structure-template-alist
         (cl-remove-duplicates
          (append (default-value 'org-structure-template-alist)
-                 '(("el"   . "src emacs-lisp")
+                 '(("el"   . "src elisp")
                    ("sh"   . "src shell")
                    ("py"   . "src python")
                    ("dep"  . "src shell :tangle (haris/tangle-deps \"TODO\")")
                    ("sht"  . "src shell :tangle (haris/tangle-home \"TODO\")")
-                   ("elt"  . "src emacs-lisp :tangle (haris/tangle-home \"TODO\")")
+                   ("elt"  . "src elisp :tangle (haris/tangle-home \"TODO\")")
                    ("st"   . "src :tangle (haris/tangle-home \"TODO\")")
                    ("rest" . "src restclient")))
          :test (lambda (a b) (string= (car a) (car b)))))
@@ -420,7 +410,9 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
                                  (python     . t)
                                  (restclient . t)))
   (defun haris/tangle-dest ()
-    "Copy all files from the temporary staging tangle destinations into their real destinations"
+    "Tangle the current file to its final destinations. If code blocks within the
+     file have the temporary staging destination as their :tangle argument, they
+     will be tangled to the appropriate place under ~/ as well."
     (interactive)
     (let ((tangle-home (haris/tangle-home)))
       (shell-command (concat "rm -rf " tangle-home))
@@ -434,6 +426,27 @@ There are a few custom functions I define for tangling that are in a separate
 file, so that file can be used as a minimalistic source for boostrapping.
 #+begin_src emacs-lisp
   (load-file "~/.haris/bootstrap/tangle.el")
+#+end_src
+*** Utility functions
+#+begin_src elisp
+  (defun haris/extract-tangle-dest ()
+    "Extract the tangle destination from the code block under point."
+    (let* ((args (nth 2 (org-babel-get-src-block-info)))
+           (tangle-arg (alist-get :tangle args)))
+      (if (and tangle-arg (not (string= "no" tangle-arg)))
+          tangle-arg)))
+
+  (defun haris/extract-tangle-final-dest ()
+    "Extract the tangle destination of the current code block. If the destination
+  is defined in terms of (haris/tangle-home), then the final destination under
+  ~/ is returned."
+    (let* ((dest (haris/extract-tangle-dest)))
+      (if dest
+          (let* ((home-dir-re (concat "^" (regexp-quote (haris/tangle-home))))
+                 (deps-dir-re (concat "^" (regexp-quote (haris/tangle-deps ""))))
+                 (_file (replace-regexp-in-string home-dir-re "~/" dest)))
+            (replace-regexp-in-string deps-dir-re "~/" _file))
+        nil)))
 #+end_src
 ** LaTeX preview
 #+begin_src emacs-lisp
@@ -450,17 +463,28 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (evil-define-key 'normal org-src-mode-map (kbd ", w")         'org-edit-src-save)
   (evil-define-key 'normal org-mode-map     (kbd ", i c")       'org-columns)
   (evil-define-key 'normal org-mode-map     (kbd ", b E")       'haris/execute-named-code-block)
+  (evil-define-key 'normal org-mode-map     (kbd "C-c t")       'haris/org-babel-tangle-single-block)
 
   (evil-define-key 'normal org-mode-map (kbd "SPC h o")     'org-info-find-node)
 #+end_src
-
+*** Helper functions
 #+begin_src elisp
   (defun haris/execute-named-code-block ()
-    "Execute a named code block from the current buffer, interactively prompting the user"
+    "Execute a named code block from the current buffer, interactively prompting
+     the user."
     (interactive)
     (save-excursion
       (call-interactively 'org-babel-goto-named-src-block)
       (org-babel-execute-src-block-maybe)))
+
+  (defun haris/org-babel-tangle-single-block()
+    (interactive)
+    (let ((current-prefix-arg '(4))
+          (dest (haris/extract-tangle-dest))
+          (final-dest (haris/extract-tangle-final-dest)))
+      (call-interactively 'org-babel-tangle)
+      (if (and dest final-dest (not (string= dest final-dest)))
+          (copy-file dest final-dest t))))
 #+end_src
 * Man
 ** Bindings
