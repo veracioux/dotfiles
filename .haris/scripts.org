@@ -152,7 +152,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       extra_args="$extra_args --socket-name emacs"
   fi
 
-  emacsclient --alternate-editor /usr/bin/emacs $extra_args "$@"
+  emacsclient --alternate-editor gvim $extra_args "$@"
 #+end_src
 ** =myemacs-float=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs-float")
@@ -630,6 +630,40 @@ The bare minimum of emacs that is required to tangle all the dotfiles.
   (x=`tput op` y=`printf %40s`;for i in $(seq "$f" "$l");do o=00$i;echo -e ${o:${#o}-3:3} \
     `tput setaf $i;tput setab $i`${y// /=}$x;done)
 #+end_src
+** =myemacs-load=
+Wrapper to [[*=myemacs=][myemacs]] that will load its first argument instead of opening it. The
+remaining args simply passed to myemacs as usual. The main use for this is as a
+shebang for elisp scripts.
+*NOTE:* It must be implemented in such a convoluted way as a shell script, because
+process management in emacs is shit.
+#+NAME: myemacs-load
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/myemacs-load") :eval no
+  #!/usr/bin/env bash
+
+  tmpfile="$(mktemp)"
+  cat >"$tmpfile" <<'EOF'
+    <<stringify-arg-to-eval-option>>
+  EOF
+
+  arg="$(emacs --batch --load "$tmpfile" "$(realpath "$1")" "${@:2}" 2>&1)"
+  myemacs --no-wait --eval "$arg"
+
+  rm -f "$tmpfile"
+#+end_src
+#+NAME: stringify-arg-to-eval-option
+#+begin_src elisp :tangle no
+  (let* ((file (car argv))
+         (code `(progn
+                  (defvar argv)
+                  (defvar process-environment)
+                  (defvar default-directory)
+                  (let ((argv (list ,@(cdr argv)))
+                        (process-environment (list ,@process-environment))
+                        (default-directory ,default-directory))
+                    (load ,file)))))
+    (prin1 code))
+#+end_src
+#+CALL: stringify-arg-to-eval-option[:var argv='("a" "b")]()
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
@@ -656,6 +690,7 @@ are designed to be easily integrated into dmenu scripts.
           misc.org)       echo ~/.haris/misc.org ;;
           terminal.org)   echo ~/.haris/terminal.org ;;
           repl.org)       echo ~/.haris/repl.org ;;
+          bootstrap.org)  echo ~/.haris/bootstrap/README.org ;;
           alacritty)      echo ~/.haris/terminal.org ;;
           alias-tmp)      echo ~/.alias-tmp ;;
           alias-gui-tmp)  echo ~/.alias-gui-tmp ;;
@@ -722,30 +757,15 @@ are designed to be easily integrated into dmenu scripts.
   myemacs --create-frame --eval '(multi-vterm)' "$@"
 #+end_src
 ** =eman=
-#+begin_src bash :async :tangle (haris/tangle-home ".local/bin/eman")
-  #!/usr/bin/env bash
-
-  tmpfile="$(mktemp)"
-  cat >"$tmpfile" <<'EOF'
-    <<eman-impl>>
-  EOF
-
-  emacs --script "$tmpfile" "$@"
-  rm -f "$tmpfile"
-#+end_src
-#+NAME: eman-impl
-#+begin_src emacs-lisp
-  #!/usr/bin/env -S emacs --script
-
-  (setq eval-code
-        `(let ((Man-notify-method 'bully))
-           ,(if argv
-               `(man ,(car argv))
-             '(call-interactively 'man))))
-
-  (call-process "myemacs-float"
-                nil nil nil
-                "--create-frame" "--eval" (prin1-to-string eval-code))
+#+NAME: eman
+#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
+#+begin_src elisp :tangle (haris/tangle-home ".local/bin/eman")
+  (with-selected-frame (make-frame `((name . "EmacsFloat")
+                                     (display . ,(getenv "DISPLAY"))))
+    (let ((Man-notify-method 'bully))
+      (if argv
+          (man (car argv))
+        (call-interactively 'man))))
 #+end_src
 ** =erc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/erc") :noweb yes
@@ -758,27 +778,20 @@ are designed to be easily integrated into dmenu scripts.
           --eval "(unless erc-server-connected (call-interactively 'erc-tls))"
 #+end_src
 ** =edocker=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/edocker")
-  #!/usr/bin/env sh
-
-  # Open emacs and open the docker UI there
-
-  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
-  exe=myemacs
-
-  if [ -n "$create_frame" ]; then
-      exe=myemacs-float
-  fi
-
-  "$exe" $create_frame --eval "(progn (spacemacs/switch-to-scratch-buffer) (run-with-timer 0.3 nil 'docker))"
+#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
+#+begin_src elisp :tangle (haris/tangle-home ".local/bin/edocker")
+    (with-selected-frame (make-frame `((name . "EmacsFloat")
+                                       (display . ,(getenv "DISPLAY"))))
+      (spacemacs/switch-to-scratch-buffer)
+      (run-with-timer 0.3 nil 'docker))
 #+end_src
 ** =magit=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/magit")
-  #!/usr/bin/env sh
-
-  myemacs --create-frame --frame-parameters='(quote (name . "EmacsFloat"))' \
-          --eval "(progn (cd \"$PWD\") (magit-status) (delete-other-windows))" \
-          >/dev/null 2>&1 &
+#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
+#+begin_src elisp :tangle (haris/tangle-home ".local/bin/magit")
+  (let ((dir default-directory))
+    (with-selected-frame (make-frame `((name . "EmacsFloat")
+                                       (display . ,(getenv "DISPLAY"))))
+      (magit-status dir)))
 #+end_src
 ** =qr=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/qr")
