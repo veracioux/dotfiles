@@ -308,56 +308,54 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   [ ! -t 0 ] &&\
       cat | sed 's:\s\+$::' ||\
           sed 's:\s\+$::' "$@"
-
 #+end_src
-
 ** =adhoc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/adhoc")
-#!/usr/bin/env bash
+  #!/usr/bin/env bash
 
-# Create an ad-hoc file, edit it in $EDITOR and then print its path. If a '-'
-# argument is given, the file contents are printed instead of its path.
+  # Create an ad-hoc file, edit it in $EDITOR and then print its path. If a '-'
+  # argument is given, the file contents are printed instead of its path.
 
-destdir="/tmp/adhoc-files"
-mkdir -p "$destdir"
-cd "$destdir"
+  destdir="/tmp/adhoc-files"
+  mkdir -p "$destdir"
+  cd "$destdir"
 
-if [ "$#" != 0 ] && [ "$1" = "-" ]; then
-    print_content=true
-    files=("${@:2}")
-else
-    files=("$@")
-fi
+  if [ "$#" != 0 ] && [ "$1" = "-" ]; then
+      print_content=true
+      files=("${@:2}")
+  else
+      files=("$@")
+  fi
 
-# Convert files to realpaths
-readarray -t files < <(realpath "${files[@]}" 2>/dev/null)
+  # Convert files to realpaths
+  readarray -t files < <(realpath "${files[@]}" 2>/dev/null)
 
-if [ -z "$files" ]; then
-    files=("$(mktemp "$destdir"/XXXXXXXXXXX)")
-fi
+  if [ -z "$files" ]; then
+      files=("$(mktemp "$destdir"/XXXXXXXXXXX)")
+  fi
 
-term --class Float -e fish -c "nvim ${files[*]}"
+  term --class Float -e fish -c "nvim ${files[*]}"
 
-if [ -n "$print_content" ]; then
-    cat "${files[@]}"
-else
-    realpath "${files[@]}"
-fi
+  if [ -n "$print_content" ]; then
+      cat "${files[@]}"
+  else
+      realpath "${files[@]}"
+  fi
 #+end_src
 ** =cmd-with-notify=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cmd-with-notify")
-#!/usr/bin/env sh
+  #!/usr/bin/env sh
 
-if [ "$TERM" = "linux" ]; then
-    "$@"
-    exit
-fi
+  if [ "$TERM" = "linux" ]; then
+      "$@"
+      exit
+  fi
 
-"$@" && notify-send "Command $* exited successfully." || {
-    err=$?
-    notify-send -u critical "Command $* exited with error $err."
-}
-return $err
+  "$@" && notify-send "Command $* exited successfully." || {
+          err=$?
+          notify-send -u critical "Command $* exited with error $err."
+      }
+  return $err
 #+end_src
 ** =xpreset=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xpreset")
@@ -368,23 +366,24 @@ return $err
   ln -sf .xinitrc-"$1" ~/.xinitrc
 #+end_src
 *** Fish completions
-#+begin_src fish :tangle-mode (identity #o644) :tangle (haris/tangle-home ".config/fish/completions/xpreset.fish")
+#+HEADER: :tangle-mode (identity #o644)
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/xpreset.fish")
   complete -c xpreset -f -a "(pushd ~; ls .xinitrc-* | string replace .xinitrc- ''; popd)"
 #+end_src
 ** =xrandr-toggle=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr-toggle")
-#!/usr/bin/env sh
+  #!/usr/bin/env sh
 
-n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
+  n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
 
-[ "$n" = 1 ] && {\
-    xrandr2 --auto
-    MSG='enabled'
-} || {\
-    xrandr2 --off
-    MSG='disabled'
-}
-[ "$?" = 0 ] && notify-send "second monitor sucessfully $MSG" || notify-send -u "monitor operation unsuccessful"
+  [ "$n" = 1 ] && {\
+                   xrandr2 --auto
+                   MSG='enabled'
+  } || {\
+        xrandr2 --off
+        MSG='disabled'
+  }
+  [ "$?" = 0 ] && notify-send "second monitor sucessfully $MSG" || notify-send -u "monitor operation unsuccessful"
 #+end_src
 ** =xrandr2=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr2")
@@ -396,7 +395,7 @@ n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
   xrandr --output HDMI-1-0 "$@" --pos 1920x1080
 #+end_src
 ** =pipetest=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/pipetest") :noweb yes
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/pipetest") :noweb yes
   #!/usr/bin/env bash
 
   # Create three tmux panes:
@@ -522,7 +521,6 @@ them as code blocks here for better readability.
 #+NAME: pipetest_on_change
 #+begin_src shell
   #!/usr/bin/env sh
-
   echo > "$fifo"
 #+end_src
 **** =vimrc=
@@ -536,7 +534,6 @@ them as code blocks here for better readability.
 #+NAME: pipetest_custom_vim
 #+begin_src shell
   #!/usr/bin/env sh
-
   "$vim_executable" -c "source $vimrc" "\$@"
 #+end_src
 **** =output_script=
@@ -767,6 +764,8 @@ are designed to be easily integrated into dmenu scripts.
           (man (car argv))
         (call-interactively 'man))))
 #+end_src
+#+CALL: eman[:var argv='()]()
+#+CALL: eman[:var argv='("vim")]()
 ** =erc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/erc") :noweb yes
   #!/usr/bin/env sh
@@ -826,72 +825,72 @@ are designed to be easily integrated into dmenu scripts.
 ** =rb=
 # TODO: linux-only
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/rb")
-#!/usr/bin/env bash
-# One-time reboot into selected OS
+  #!/usr/bin/env bash
+  # One-time reboot into selected OS
 
-set -e # Quit if any command fails
+  set -e # Quit if any command fails
 
-index="$(grep "menuentry '\|submenu '" /boot/grub/grub.cfg |\
-  grep -v -P '\t' |\
-  grep -i -n "$1" |\
-  head -1 | awk -F':' '{print $1}')"
+  index="$(grep "menuentry '\|submenu '" /boot/grub/grub.cfg |\
+    grep -v -P '\t' |\
+    grep -i -n "$1" |\
+    head -1 | awk -F':' '{print $1}')"
 
-if [ -z $index ]; then
-  echo "No entry found"
-else
-  index=$(( $index - 1 ))
-  echo "Selected menuentry: $index. Proceed?"
-  read response
-  if [ "$response" == 'y' ]; then
-    sudo grub-reboot $index >/home/haris/src/grublog 2>&1
-    reboot
+  if [ -z $index ]; then
+      echo "No entry found"
+  else
+      index=$(( $index - 1 ))
+      echo "Selected menuentry: $index. Proceed?"
+      read response
+      if [ "$response" == 'y' ]; then
+          sudo grub-reboot $index >/home/haris/src/grublog 2>&1
+          reboot
+      fi
   fi
-fi
 #+end_src
 ** =viman=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/viman")
-#!/usr/bin/env sh
+  #!/usr/bin/env sh
 
-# Wrapper script for vim which:
-#   1. By default opens vim with a configuration for displaying man pages,
-#       without loading unnecessary plugins
-#   2. If the --floating option is provided, opens a popup window
+  # Wrapper script for vim which:
+  #   1. By default opens vim with a configuration for displaying man pages,
+  #       without loading unnecessary plugins
+  #   2. If the --floating option is provided, opens a popup window
 
-[ "$1" = '--floating' ] && {
-    shift
-    cat > /dev/shm/viman
-    alacritty --class Alacritty,Float -e fish \
-        -C "cat /dev/shm/viman | nvim --cmd 'let g:haris_man = \"true\"' +Man! $*"
-    rm -f /dev/shm/viman
-} || {
-    nvim --cmd 'let g:haris_man = "true"' +Man! "$@"
-}
+  [ "$1" = '--floating' ] && {
+      shift
+      cat > /dev/shm/viman
+      alacritty --class Alacritty,Float -e fish \
+                -C "cat /dev/shm/viman | nvim --cmd 'let g:haris_man = \"true\"' +Man! $*"
+      rm -f /dev/shm/viman
+  } || {
+      nvim --cmd 'let g:haris_man = "true"' +Man! "$@"
+  }
 #+end_src
 ** =vimdiff=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vimdiff")
-#!/usr/bin/env sh
+  #!/usr/bin/env sh
 
-# Like regular vimdiff, but in nvim
+  # Like regular vimdiff, but in nvim
 
-nvim -d "$@"
+  nvim -d "$@"
 #+end_src
 ** =vicc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vicc")
-#!/usr/bin/env sh
+  #!/usr/bin/env sh
 
-# Find and open in vim a header file from the default include path
+  # Find and open in vim a header file from the default include path
 
-vim "$(echo "#include <$1>" | cpp -H 2>&1 >/dev/null | head -1 | sed 's/^. //')"
+  vim "$(echo "#include <$1>" | cpp -H 2>&1 >/dev/null | head -1 | sed 's/^. //')"
 #+end_src
 ** =vipydoc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vipydoc")
-#!/usr/bin/env sh
+  #!/usr/bin/env sh
 
-# Open alacritty with pydoc in it
-# - All arguments are passed to pydoc
-# - Alacritty window class tracks those defined in my i3 config
+  # Open alacritty with pydoc in it
+  # - All arguments are passed to pydoc
+  # - Alacritty window class tracks those defined in my i3 config
 
-alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
+  alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
 #+end_src
 ** =rgf=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/rgf")
@@ -1335,7 +1334,7 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
           # Create cache file if it does not exist or is older than 5 hours
           if [ ! -f "$cache_file" ] || [ $age -gt 18000 ]; then
               curl -s 'https://aur.archlinux.org/packages.gz' \
-                  -o - | gunzip -c > "$cache_file"
+                   -o - | gunzip -c > "$cache_file"
           fi
           # Pull the list of AUR packages
           list="$(cat "$cache_file")"
@@ -1385,14 +1384,14 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
   colors[',m magenta']='       #d098ff'
   colors[',c cyan']='          #8cceff' # TODO Change to something darker
   colors[',w white']='         #92aab7'
-  colors['.k brblack']='      #6b746b'
-  colors['.r brred']='        #ff8c8c'
-  colors['.g brgreen']='      #98eb98'
-  colors['.y bryellow']='     #e0d97b'
-  colors['.b brblue']='       #99a3ff'
-  colors['.m brmagenta']='    #f298c3'
-  colors['.c brcyan']='       #a6d9ff'
-  colors['.w brwhite']='      #dddddd'
+  colors['.k brblack']='       #6b746b'
+  colors['.r brred']='         #ff8c8c'
+  colors['.g brgreen']='       #98eb98'
+  colors['.y bryellow']='      #e0d97b'
+  colors['.b brblue']='        #99a3ff'
+  colors['.m brmagenta']='     #f298c3'
+  colors['.c brcyan']='        #a6d9ff'
+  colors['.w brwhite']='       #dddddd'
 
   get_entries() {
       echo ' Edit...'
@@ -1603,16 +1602,15 @@ alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
       systemctl suspend -i
 
   elif [ "$choice" = "Reboot..." ]; then
-
       print_entries() {
           # Extract only lines with menu entries from grub
-          grep "menuentry '\|submenu '" /boot/grub/grub.cfg   |\
-          # Only top-level menus are considered
-          grep -v -P '\t'                                     |\
-          # Take only the entry name
-          sed "s_\S* '\([^']*\)'.*_\1_"                       |\
-          # Add numbers
-          nl -w 1 -v 0 -n rn | sed -E 's/\s+/ /g'
+          grep "menuentry '\|submenu '" /boot/grub/grub.cfg \
+              # Only top-level menus are considered
+              | grep -v -P '\t' \
+              # Take only the entry name
+              | sed "s_\S* '\([^']*\)'.*_\1_" \
+              # Add numbers
+              | nl -w 1 -v 0 -n rn | sed -E 's/\s+/ /g'
       }
 
       entries="$(print_entries)"
