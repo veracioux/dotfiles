@@ -592,8 +592,6 @@ with an emacs interface.
   bindsym g              exec --no-startup-id magit,   mode default
   bindsym Return         exec --no-startup-id eterm,   mode default
   bindsym m              exec --no-startup-id eman,    mode default
-  # TODO: make a way (script?) to open magit for the currently active project
-  #bindsym g              exec --no-startup-id magit; mode default
   bindsym Escape         mode default
   bindsym $mod+e         mode default
   }

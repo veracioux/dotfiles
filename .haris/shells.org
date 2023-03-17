@@ -333,17 +333,13 @@ on the plugin list above.
   function ecmd;   set file (fcmd "$argv"); test -f "$file" && myemacs     "$file" ; end
   function rmcmd;  set file (fcmd "$argv"); rm "$file";                              end
   function vicmd
-      set file (fcmd "$argv");
+      set -l file (fcmd "$argv");
       if [ -f "$file" ]
           vim "$file"
       else
           read -n 1 -P "Create new script? [y/N]: " choice
           if [ "$choice" = 'y' ]
-              set file ~/.haris-bin/"$argv[1]"
-              tem put sh -o "$file"
-              chx "$file"
-              cp --link "$file" ~/.local/bin/
-              vim +'$' "$file"
+              myemacs-float ~/.haris/scripts.org
           else
               echo 'Aborting...'
               return 1

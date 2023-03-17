@@ -1098,7 +1098,7 @@ are designed to be easily integrated into dmenu scripts.
   # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   # ┃ Actions based on user's choice ┃
   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  choice="$(get_commands | dmenu $@)"
+  choice="$(get_commands | dmenu)"
   case "$choice" in
       "")
           exit ;;
@@ -1604,13 +1604,13 @@ are designed to be easily integrated into dmenu scripts.
   elif [ "$choice" = "Reboot..." ]; then
       print_entries() {
           # Extract only lines with menu entries from grub
-          grep "menuentry '\|submenu '" /boot/grub/grub.cfg \
+          grep "menuentry '\|submenu '" /boot/grub/grub.cfg |
               # Only top-level menus are considered
-              | grep -v -P '\t' \
+              grep -v -P '\t' |
               # Take only the entry name
-              | sed "s_\S* '\([^']*\)'.*_\1_" \
+              sed "s_\S* '\([^']*\)'.*_\1_" |
               # Add numbers
-              | nl -w 1 -v 0 -n rn | sed -E 's/\s+/ /g'
+              nl -w 1 -v 0 -n rn | sed -E 's/\s+/ /g'
       }
 
       entries="$(print_entries)"

@@ -169,6 +169,8 @@ Tridactyl extension.
   bind ;D js debugger;
   bind ;? hint -W exclaim_quiet notify-send
 
+  bind <space>ji fillcmdline goto
+
   unbind <C-b>
   unbind <C-f>
 
