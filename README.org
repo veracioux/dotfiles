@@ -22,12 +22,9 @@ I find it superior compared to keeping the config files directly because:
   and a script that installs all of its dependencies.
 - I can use the breadth of =org-mode= features to more easily navigate my configs.
 - It is very satisfying.
-- *[In progress]* I can put all the configs into a =~/.haris= folder and make that a
-  regular git repository, instead of keeping a bare repo in my home directory,
-  which has some drawbacks.
-
-*NOTE:* I am still in the process of migrating my traditional configs to this
-format, so this repo is a bit fragmented and incomplete.
+- I can put all the configs into a =~/.haris= folder and make that a regular git
+  repository, instead of keeping a bare repo in my home directory, which has
+  some drawbacks.
 
 *NOTE:* The dotfiles are meant exclusively for Linux desktop. They have mostly
 been created with an Arch Linux setup in mind, but most things should be

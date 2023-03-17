@@ -59,7 +59,8 @@ if [ -z "$user" ]; then
     exit 1
 fi
 
-cd ~
+mkdir -p ~/.haris
+cd ~/.haris
 git config --global init.defaultBranch non-master-to-avoid-conflict
 git init
 git remote add origin "$remote"
