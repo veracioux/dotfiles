@@ -897,6 +897,10 @@ Fix for empty image list (not sure if the fix works):
 #+begin_src emacs-lisp
   (use-package transient :defer t)
 #+end_src
+** Bluetooth
+#+begin_src emacs-lisp
+  (use-package bluetooth :defer t)
+#+end_src
 * Spacemacs
 These are a list of spacemacs layers and a list of additional packages loaded by
 spacemacs. This code block is loaded from [[~/.spacemacs]]. You can re-install a
