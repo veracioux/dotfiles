@@ -1021,7 +1021,10 @@ are designed to be easily integrated into dmenu scripts.
   #!/usr/bin/env sh
 
   # If an argument is provided, run corresponding custom dmenu script
-  [ -n "$1" ] && ~/.local/lib/dmenu/"$1"
+  if [ -n "$1" ]; then
+      ~/.local/lib/dmenu/"$1"
+      exit
+  fi
   # Otherwise open a generic dmenu where the user will choose what dmenu script
   # or other program to run
 
