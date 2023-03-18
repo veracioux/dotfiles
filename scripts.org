@@ -698,7 +698,7 @@ are designed to be easily integrated into dmenu scripts.
           gh)             echo ~/.haris/vcs.org ;;
           hg)             echo ~/.haris/vcs.org ;;
           picom)          echo ~/.haris/wm.org ;;
-          dunst)          echo ~/.config/dunst/dunstrc ;;
+          dunst)          echo ~/..haris/misc.org ;;
           tem)            echo ~/.haris/terminal.org ;;
           mime)           echo ~/.haris/README.org ;;
           zathura)        echo ~/.haris/gui.org ;;

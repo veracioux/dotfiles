@@ -134,6 +134,7 @@ These scripts are used by the other sections:
   set $mode_audio   " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
   set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
   set $mode_trans   "<<mode_trans()>>"
+  set $mode_notif   " Notifications | [c]lose [C]lose-all [h]istory [a]ction [m]enu"
 #+end_src
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
   <<variables>>
@@ -354,7 +355,7 @@ These bindings are available in the default mode, i.e. when no submenu is active
   <<general-bindings>>
 #+end_src
 ** External bindings
-External bindings are provided by
+External bindings are served by sxhkd.
 #+begin_src sxhkdrc :tangle (haris/tangle-home ".config/sxhkd/sxhkdrc")
   # Lock screen
   mod4 + ctrl + l
@@ -375,14 +376,6 @@ External bindings are provided by
      dmenu_run system
   mod4 + ctrl + q
      dmenu_run quickmenu
-
-  # Dunst stuff
-  mod4 + shift + comma
-     dunstctl close
-  mod4 + shift + period
-     dunstctl close-all
-  mod4 + question
-     dunstctl history-pop
 
   # Applications
   mod4 + Return
@@ -662,6 +655,20 @@ directly translated to English, without opening the menu.
 *** Dependencies
 #+begin_src sh :tangle (haris/tangle-deps "wm.sh")
   sudo pacman -S xsel xclip
+#+end_src
+** Notification menu
+A menu for managing notifications.
+#+begin_src i3wm-config
+  mode $mode_notif {
+  bindsym a       exec dunstctl action, mode default
+  bindsym c       exec dunstctl close
+  bindsym Shift+c exec dunstctl close-all, mode default
+  bindsym m       exec dunstctl context, mode default
+  bindsym h       exec dunstctl history-pop
+  bindsym Escape  mode default
+  }
+
+  bindsym $mod+Shift+n mode $mode_notif
 #+end_src
 * Workspaces
 #+NAME: workspaces
@@ -1137,3 +1144,8 @@ I use picom as my compositor with the i3 window manager.
   sudo pacman -S sway
   paru -S swhkd-git
 #+end_src
+
+* Local variables                                                  :noexport:
+# Local variables:
+# org-confirm-babel-evaluate: nil
+# End:
