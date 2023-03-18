@@ -448,7 +448,7 @@ Completions for the functions defined in [[Functions]].
 #+transclude: [[~/.haris/private/README.org::fish-private]]
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
-#+begin_src bash :tangle (concat "/tmp/tangle-" (user-login-name) "/.bashrc")
+#+begin_src bash :tangle (haris/tangle-home ".bashrc")
   PS1='\[\e[1;36m\]\u\[\e[1;31m\]@\[\e[1;34m\]\h \[\e[1;32m\]\W \[\e[1;31m\]\$ \[\e[0;32m\]\[\e[0m\]'
 
   source ~/.alias
@@ -469,7 +469,7 @@ Note: =~/.bashrc= is sourced by fish as well.
   bind '"\C-j":next-history'
   } 2>/dev/null
 
-  export SHELL='/usr/bin/fish'
+  export SHELL='fish'
   export MPD_HOST="localhost"
   export MPD_PORT="6601"
 #+end_src
@@ -485,7 +485,7 @@ It makes no sense to launch CLI programs from dmenu. Still, I make aliases
 from ~~/.alias~ available in ~dmenu_run~. When I enter them in dmenu, it launches
 a terminal and runs the aliased command.
 ** CLI
-#+begin_src shell :tangle (concat "/tmp/tangle-" (user-login-name) "/.alias")
+#+begin_src shell :tangle (haris/tangle-home ".alias")
   alias x='startx'
   alias conf='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
   alias sconf='git --git-dir=$HOME/.secret/ --work-tree=$HOME'
@@ -508,7 +508,7 @@ a terminal and runs the aliased command.
   export api="$me/api"
 #+end_src
 ** GUI
-#+begin_src shell :tangle (concat "/tmp/tangle-" (user-login-name) "/.alias-gui")
+#+begin_src shell :tangle (haris/tangle-home ".alias-gui")
   alias calc='speedcrunch'
   alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
   alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
@@ -628,6 +628,7 @@ a terminal and runs the aliased command.
   abbr -g hk    'heroku'
   abbr -g mhc   'man http-codes'
   abbr -g rgh   'rg --hidden'
+  abbr -g man   'eman'
 
   # Pass
   abbr -g pn 'pass insert'
@@ -646,7 +647,7 @@ a terminal and runs the aliased command.
   set aur 'aur@aur.archlinux.org'
 #+end_src
 * .profile
-#+begin_src shell :tangle (concat "/tmp/tangle-" (user-login-name) "/.profile")
+#+begin_src shell :tangle (haris/tangle-home ".profile")
   export MAKEFLAGS='-j6'
   export GPG_TTY=$(tty)
   [ "$(uname)" = "Linux" ] && export QT_QPA_PLATFORMTHEME=gtk2
@@ -665,6 +666,6 @@ a terminal and runs the aliased command.
   [ -f ~/.profile-private ] && . ~/.profile-private
 #+end_src
 * Dependencies
-#+begin_src shell :tangle (concat "/tmp/dependencies-" (user-login-name) "/shells.sh")
+#+begin_src shell :tangle (haris/tangle-deps "shells.sh")
   sudo pacman -S dash fish
 #+end_src
