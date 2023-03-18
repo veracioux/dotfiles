@@ -757,7 +757,7 @@ are designed to be easily integrated into dmenu scripts.
 #+NAME: eman
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/eman")
-  (with-selected-frame (make-frame `((name . "EmacsFloat")
+  (with-selected-frame (make-frame `((name . "EmacsMan")
                                      (display . ,(getenv "DISPLAY"))))
     (let ((Man-notify-method 'bully))
       (if argv

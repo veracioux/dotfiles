@@ -33,6 +33,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   source "$__fish_config_dir"/private.fish      # Private aliases
 
   set -gx MANPAGER 'viman'                      # Set default pager to vim
+  set -gx MANPATH  ":$__fish_data_dir/man"      # Add fish manpages to MANPATH
   set -gx MANWIDTH 80
   set -gx EDITOR 'nvim'
   set -gx VISUAL 'gvim'
@@ -193,7 +194,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   end
 
   function __haris_show_man
-      man (commandline --current-process --tokenize | grep -v '^sudo$' | head -1)
+      eman (commandline --current-process --tokenize | grep -v '^sudo$' | head -1)
   end
 
   function __haris_print_help_or_toggle
