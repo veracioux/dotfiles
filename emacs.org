@@ -356,6 +356,7 @@ Some custom keybindings are defined here as well.
         org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
         org-hide-emphasis-markers           t
         org-download-screenshot-method      "flameshot gui --path screenshots/%s"
+        org-projectile-file                 "TODO.org"
         org-projectile-per-project-filepath "TODO.org")
 
   (add-to-list 'org-file-apps '("\\.x?html?\\'" . "firefox %s"))
@@ -493,6 +494,7 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (defun haris/man-search () (interactive)
     (swiper "^[[:space:]]+"))
 
+  (define-key Man-mode-map (kbd "SPC s ^") 'haris/man-search)
   ;; TODO 'not prefix key' error
   ;; (evil-define-key Man-mode-map (kbd "g/") 'haris/man-search)
 #+end_src
