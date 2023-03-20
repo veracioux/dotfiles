@@ -135,6 +135,7 @@ These scripts are used by the other sections:
   set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
   set $mode_trans   "<<mode_trans()>>"
   set $mode_notif   " Notifications | [c]lose [C]lose-all [h]istory [a]ction [m]enu"
+  set $mode_talk    " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill"
 #+end_src
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
   <<variables>>
@@ -400,8 +401,6 @@ External bindings are served by sxhkd.
       dmenu_run gpg
   mod4 + ctrl + s
       dmenu_run services
-  mod4 + shift + c
-      auto-browser -P haris "https://chat.openai.com/chat"
 
   # Volume and brightness
   XF86AudioRaiseVolume
@@ -560,6 +559,7 @@ To modify the bluetooth device ID of the headphones, edit
   if [ ! -f "$id_file" ]; then
       ACTION="$(
         dunstify --action=default,Edit \
+          --urgency=critical \
           "Bluetooth headphones ID not defined" \
           "Click this notification to fix that (wait a bit for Emacs to open)"
       )"
@@ -669,6 +669,104 @@ A menu for managing notifications.
   }
 
   bindsym $mod+Shift+n mode $mode_notif
+#+end_src
+** Talk menu
+Menu of utilities that allow me to talk to my computer.
+#+begin_src i3wm-config
+  mode $mode_talk {
+  bindsym d       exec ~/.config/i3/scripts/dictate.sh, mode default
+  bindsym s       exec ~/.config/i3/scripts/chatgpt.sh --speak, mode default
+  bindsym c       exec ~/.config/i3/scripts/chatgpt.sh, mode default
+  bindsym b       exec auto-browser -P haris "https://chat.openai.com/chat", \
+                  mode default
+  bindsym k       exec pkill audsp, exec pkill minigpt, mode default
+  bindsym Escape  mode default
+  }
+
+  bindsym $mod+Shift+c mode $mode_talk
+#+end_src
+*** Scripts
+:PROPERTIES:
+:header-args+: :tangle-mode (eval #o744)
+:header-args:bash+: :shebang "#!/usr/bin/env bash"
+:END:
+**** Dictate
+#+NAME: dictate
+#+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/dictate.sh")
+  default_source="$(pactl get-default-source)"
+  mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
+  restore_mute_state() {
+      if [ -n "$mic_muted" ]; then pactl set-source-mute "$default_source" 1; fi
+  }
+  on_error() {
+      notify-send "Dictation" "Dictation failed!" --urgency critical
+      restore_mute_state
+  }
+  trap on_error ERR
+
+  set -e
+
+  # Unmute the microphone
+  if [ -n "$mic_muted" ]; then
+      pactl set-source-mute "$default_source" 0
+      sleep 2s  # Wait for it to unmute
+  fi
+
+  id="$(notify-send "Dictation" "Started" --print-id)"
+
+  minigpt textify --copy --api-key "$(pass show @openai/api-secret-key)"
+
+  dunstify --close="$id"
+
+  notify-send "Dictation" "Dictation copied to clipboard"
+  restore_mute_state
+#+end_src
+**** ChatGPT
+#+NAME: chatgpt
+#+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/chatgpt.sh")
+  default_source="$(pactl get-default-source)"
+  mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
+  restore_mute_state() {
+      if [ -n "$mic_muted" ]; then pactl set-source-mute "$default_source" 1; fi
+  }
+  on_error() {
+      notify-send "ChatGPT" "Processing failed!" --urgency critical
+      restore_mute_state
+  }
+  trap on_error ERR
+
+  set -e
+
+  # Unmute the microphone
+  if [ -n "$mic_muted" ]; then
+      pactl set-source-mute "$default_source" 0
+      sleep 2s  # Wait for it to unmute
+  fi
+
+  export MINIGPT_API_KEY="$(pass show @openai/api-secret-key)"
+
+  id="$(notify-send "ChatGPT" "Speak your mind" --print-id)"
+
+  text="$(minigpt textify)"
+
+  restore_mute_state
+
+  notify-send "ChatGPT" "$(echo -e "Prompt recorded:\n $text")"
+
+  response="$(echo "$text" | minigpt chat --copy)"
+
+  notify-send "ChatGPT" "Response copied to clipboard!"
+
+  if [ "$1" = "--speak" ]; then
+      echo "$response" | festival --tts
+  fi
+
+  dunstify --close="$id"
+#+end_src
+*** Dependencies
+#+begin_src shell :tangle (haris/tangle-deps "talk-menu.sh")
+  sudo pacman -S festival
+  pip install minigpt
 #+end_src
 * Workspaces
 #+NAME: workspaces
