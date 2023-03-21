@@ -1718,8 +1718,6 @@ are designed to be easily integrated into dmenu scripts.
 
   set -e
 
-  $sudo systemctl "$cmd" $opt "$service"
-
   # Notify the user
   service_name="${service%.service}"
 
@@ -1727,10 +1725,13 @@ are designed to be easily integrated into dmenu scripts.
       start)
           notify-send "Starting service..." "$service_name" ;;
       restart)
-          notify-send "Starting service: " "$service_name" ;;
+          notify-send "Restarting service: " "$service_name" ;;
       stop)
           notify-send "Stopping service: " "$service_name" ;;
   esac
+
+  # Execute the action
+  $sudo systemctl "$cmd" $opt "$service"
 #+end_src
 ** GPG
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/gpg")
