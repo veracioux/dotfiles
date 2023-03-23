@@ -492,9 +492,10 @@ file, so that file can be used as a minimalistic source for boostrapping.
 ** Bindings
 #+begin_src emacs-lisp
   (defun haris/man-search () (interactive)
-    (swiper "^[[:space:]]+"))
+         (swiper "^[[:space:]]+"))
 
-  (define-key Man-mode-map (kbd "SPC s ^") 'haris/man-search)
+  (add-hook 'Man-mode-hook (lambda ()
+                             (define-key Man-mode-map (kbd "SPC s ^") 'haris/man-search)))
 #+end_src
 * ERC
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
@@ -735,6 +736,7 @@ I use mu4e as my email client.
 YAML indentation is just broken. This disables it completely.
 #+begin_src emacs-lisp
   (defun yaml-indent-line ())
+  (setq yaml-indent-offset 2)
 #+end_src
 ** LSP
 #+begin_src emacs-lisp
