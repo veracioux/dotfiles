@@ -126,16 +126,17 @@ These scripts are used by the other sections:
   set $col_a_m #f298c377
 
   # Bind mode names
-  set $mode_resize  " resize"
-  set $mode_session "Session"
-  set $mode_wm      " WM"
-  set $mode_qr      " QR [i]n [o]ut [s]creen"
-  set $mode_org     " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos [a]ll"
-  set $mode_audio   " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
-  set $mode_emacs   " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
-  set $mode_trans   "<<mode_trans()>>"
-  set $mode_notif   " Notifications | [c]lose [C]lose-all [h]istory [a]ction [m]enu"
-  set $mode_talk    " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill"
+  set $mode_resize     " resize"
+  set $mode_session    "Session"
+  set $mode_wm         " WM"
+  set $mode_qr         " QR [i]n [o]ut [s]creen"
+  set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos [a]ll"
+  set $mode_audio      " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
+  set $mode_emacs      " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
+  set $mode_trans      "<<mode_trans()>>"
+  set $mode_notif      " Notifications | [c]lose [C]lose-all [h]istory [a]ction [m]enu"
+  set $mode_talk       " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill"
+  set $mode_screenshot " Screenshot | [g]ui [s]creen [f]ull [c]onfig [d]aemon"
 #+end_src
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
   <<variables>>
@@ -389,10 +390,6 @@ External bindings are served by sxhkd.
     firefox -P haris
   mod4 + shift + v
     alacritty --class Alacritty,Float -e fish -C vifm
-  mod4 + shift + s
-      flameshot gui
-  mod4 + shift + Print
-    flameshot config
   mod4 + v
     gvim
   mod4 + shift + e
@@ -767,6 +764,19 @@ Menu of utilities that allow me to talk to my computer.
 #+begin_src shell :tangle (haris/tangle-deps "talk-menu.sh")
   sudo pacman -S festival
   pip install minigpt
+#+end_src
+** Screenshot menu
+#+begin_src i3wm-config
+  mode $mode_screenshot {
+  bindsym g       exec flameshot gui, mode default
+  bindsym s       exec flameshot screen, mode default
+  bindsym f       exec flameshot full, mode default
+  bindsym c       exec flameshot config, mode default
+  bindsym d       exec sh -c 'pgrep flameshot && pkill flameshot || flameshot & disown'
+  bindsym Escape  mode default
+  }
+
+  bindsym $mod+Shift+s mode $mode_screenshot
 #+end_src
 * Workspaces
 #+NAME: workspaces
