@@ -130,7 +130,7 @@ These scripts are used by the other sections:
   set $mode_session    "Session"
   set $mode_wm         " WM"
   set $mode_qr         " QR [i]n [o]ut [s]creen"
-  set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos [a]ll"
+  set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos con[v]ersations [a]ll"
   set $mode_audio      " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
   set $mode_emacs      " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
   set $mode_trans      "<<mode_trans()>>"
@@ -518,12 +518,23 @@ External bindings are served by sxhkd.
   bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org", mode default
   bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org", mode default
   bindsym Shift+t         exec --no-startup-id "dmenu_run todo", mode default
+  bindsym v               exec --no-startup-id "~/.config/i3/scripts/open-conversations", mode default
   bindsym a               exec --no-startup-id "myemacs-float ~/wiki/index.org", mode default
 
   bindsym Escape          mode default
   }
 
   bindsym $mod+Shift+o      mode $mode_org
+#+end_src
+*** Open conversations file
+#+HEADER: :tangle (haris/tangle-home ".config/i3/scripts/open-conversations")
+#+begin_src elisp :shebang "#!/usr/bin/env myemacs-load" :eval no
+  (with-selected-frame (make-frame '((name . "EmacsFloat")))
+    (find-file "~/data/personal/wiki/conversations.org"))
+#+end_src
+#+NAME: open-conversations
+#+begin_src bash :tangle no
+  ~/.config/i3/scripts/open-conversations
 #+end_src
 ** Audio control menu
 #+NAME: audio-menu
@@ -690,18 +701,14 @@ Menu of utilities that allow me to talk to my computer.
 **** Dictate
 #+NAME: dictate
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/dictate.sh")
-  default_source="$(pactl get-default-source)"
-  mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
-  restore_mute_state() {
-      if [ -n "$mic_muted" ]; then pactl set-source-mute "$default_source" 1; fi
-  }
+  <<prelude>>
   on_error() {
       notify-send "Dictation" "Dictation failed!" --urgency critical
       restore_mute_state
   }
-  trap on_error ERR
 
   set -e
+  export MINIGPT_API_KEY="$(pass show @openai/api-secret-key)"
 
   # Unmute the microphone
   if [ -n "$mic_muted" ]; then
@@ -711,7 +718,8 @@ Menu of utilities that allow me to talk to my computer.
 
   id="$(notify-send "Dictation" "Started" --print-id)"
 
-  minigpt textify --copy --api-key "$(pass show @openai/api-secret-key)"
+  text="$(minigpt textify --copy)"
+  convert_to_org "$text" >>"$dest_file"
 
   dunstify --close="$id"
 
@@ -721,16 +729,11 @@ Menu of utilities that allow me to talk to my computer.
 **** ChatGPT
 #+NAME: chatgpt
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/chatgpt.sh")
-  default_source="$(pactl get-default-source)"
-  mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
-  restore_mute_state() {
-      if [ -n "$mic_muted" ]; then pactl set-source-mute "$default_source" 1; fi
-  }
+  <<prelude>>
   on_error() {
       notify-send "ChatGPT" "Processing failed!" --urgency critical
       restore_mute_state
   }
-  trap on_error ERR
 
   set -e
 
@@ -747,18 +750,62 @@ Menu of utilities that allow me to talk to my computer.
   text="$(minigpt textify)"
 
   restore_mute_state
-
   notify-send "ChatGPT" "$(echo -e "Prompt recorded:\n $text")"
 
   response="$(echo "$text" | minigpt chat --copy)"
+
+  convert_to_org "$text" "$response" >>"$dest_file"
 
   notify-send "ChatGPT" "Response copied to clipboard!"
 
   if [ "$1" = "--speak" ]; then
       echo "$response" | festival --tts
+      dunstify --close="$id"
   fi
-
-  dunstify --close="$id"
+#+end_src
+**** Shared
+#+NAME: prelude
+#+begin_src bash :tangle no
+  default_source="$(pactl get-default-source)"
+  mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
+  trap on_error ERR
+  restore_mute_state() {
+      if [ -n "$mic_muted" ]; then pactl set-source-mute "$default_source" 1; fi
+  }
+  dest_file=~/data/personal/wiki/conversations.org
+  <<func:convert_to_org>>
+#+end_src
+#+NAME: func:convert_to_org
+#+begin_src bash :tangle no
+  # Usage:
+  #   record_conversation PROMPT RESPONSE
+  #   record_conversation DICTATION
+  convert_to_org() {
+      local shell_options dest_file prompt response
+      shell_options="$-"
+      prompt="$1"
+      response="$2"
+      {
+          # Insert header
+          if [ -z "$response" ]; then
+              echo "# Dictation from $(date)"
+          else
+              echo "# Conversation from $(date)"
+          fi
+          # Insert prompt
+          if [ -n "$prompt" ]; then
+              echo "## User"
+              echo "$prompt"
+              echo
+          fi
+          # Insert response
+          if [ -n "$response" ]; then
+              echo "## Computer"
+              echo "$response"
+          fi
+      } | pandoc --from markdown --to org |
+          grep -vE '^(:PROPERTIES:|:CUSTOM_ID:|:END:)'
+  }
 #+end_src
 *** Dependencies
 #+begin_src shell :tangle (haris/tangle-deps "talk-menu.sh")
