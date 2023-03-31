@@ -139,9 +139,12 @@ so I move it to the top-right corner.
   }
 #+end_src
 * Tridactyl
+:PROPERTIES:
+:header-args+: :tangle (haris/tangle-home ".config/tridactyl/tridactylrc")
+:END:
 I try to use Vim mode everywhere - including my web browser. For this I use the
 Tridactyl extension.
-#+begin_src shell :tangle (haris/tangle-home ".config/tridactyl/tridactylrc")
+#+begin_src shell
   command colo colorscheme
 
   command Src source ~/.config/tridactyl/tridactylrc
@@ -169,15 +172,10 @@ Tridactyl extension.
   bind ;D js debugger;
   bind ;? hint -W exclaim_quiet notify-send
 
-  bind <space>ji fillcmdline goto
+  bind \ji fillcmdline goto
 
   unbind <C-b>
   unbind <C-f>
-
-  autocmd DocStart savannah.gnu.org mode ignore
-  autocmd DocStart octave.sourceforge.io mode ignore
-  autocmd DocStart gnu.org mode ignore
-  autocmd DocStart buildyourownlisp.com mode ignore
 
   # Flameshot delete imgur upload
   bind ,D js document.querySelectorAll(".button-big")[1].click();
@@ -186,6 +184,14 @@ Tridactyl extension.
 
   # Remove check_suite_focus from URL
   command artifact js location.href = location.href.replace("?check_suite_focus=true", "");
+#+end_src
+** Disabled websites
+#+begin_src shell
+  blacklistadd www.duolingo.com \
+               savannah.gnu.org \
+               octave.sourceforge.io \
+               gnu.org \
+               buildyourownlisp.com
 #+end_src
 ** Default home page
 Tridactyl doesn't work on the default home page, so I change the page to
@@ -209,7 +215,6 @@ This code block is that blank page, and is tangled to the appropriate location:
 #+begin_src emacs-lisp
   (user-login-name)
 #+end_src
-
 ** Custom theme
 #+begin_src css :tangle (haris/tangle-home ".config/tridactyl/themes/custom.css")
   /* ┏━━━━━━━━━━━━━━━━━━━┓
