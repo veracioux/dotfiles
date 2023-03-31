@@ -628,8 +628,9 @@ a terminal and runs the aliased command.
   abbr -g hk    'heroku'
   abbr -g mhc   'man http-codes'
   abbr -g rgh   'rg --hidden'
-  abbr -g man   'eman'
-
+  if [ -n "$DISPLAY" ]
+      abbr -g man   'eman'
+  end
   # Pass
   abbr -g pn 'pass insert'
   abbr -g pg 'pass generate --clip'
