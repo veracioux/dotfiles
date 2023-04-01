@@ -67,9 +67,12 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       set -l prompt_status (__fish_print_pipestatus " [" "]" "|" \
           (set_color brred) (set_color --bold brred) $last_pipestatus)
 
+      # Using a timeout here prevents hang on remotely mounted filesystems
+      set -l vcs_prompt (timeout 0.1 fish --no-config -c fish_vcs_prompt)
+
       echo -n -s  (set_color --bold brblue)   "$USER" ' '                  \
                   (set_color magenta)         (prompt_pwd)        $normal  \
-                  (set_color brmagenta)       (fish_vcs_prompt)            \
+                  (set_color brmagenta)       "$vcs_prompt"                \
                   (set_color brmagenta)       $prompt_status               \
                   (set_color yellow)          ' ' $suffix ' '
   end
