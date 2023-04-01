@@ -151,6 +151,7 @@ the type of the purpose of the current emacs daemon (by reading the
   (use-package sxhkdrc-mode :defer t)
   (use-package i3wm-config-mode :defer t)
   (use-package git-modes :defer t)
+  (use-package systemd :defer t)
 #+end_src
 ** General custom functions
 #+begin_src emacs-lisp
