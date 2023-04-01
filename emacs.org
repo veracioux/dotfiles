@@ -870,18 +870,6 @@ This is a very elegant reader for reddit that uses org-mode.
   (defun reddit-view-elec () (interactive)
          (reddigg-view-sub "plc+ElectricalEngineering+embedded"))
 #+end_src
-** Music
-Emms.
-#+begin_src emacs-lisp
-  ;; (emms-standard)
-  ;; (setq emms-player-list '(emms-player-mpd))
-  ;; (setq emms-player-mpd-server-name "localhost")
-  ;; (setq emms-player-mpd-server-port "6601")
-#+end_src
-*** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "emacs_emms.sh")
-  sudo pacman -S mpd
-#+end_src
 ** Ibuffer
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
   (define-key ibuffer-mode-map (kbd "j") 'evil-next-line)
