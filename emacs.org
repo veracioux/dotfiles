@@ -896,10 +896,12 @@ Fix for empty image list (not sure if the fix works):
 ** EDBI
 Database viewer in Emacs.
 #+begin_src elisp
-  (use-package edbi :defer t)
-
-  (define-key edbi:dbview-keymap (kbd "SPC") nil)
-  (define-key edbi:dbview-keymap (kbd "RET") 'edbi:dbview-show-tabledef-command)
+  (use-package edbi
+    :defer t
+    :config (progn
+              (define-key edbi:dbview-keymap (kbd "SPC") nil)
+              (define-key edbi:dbview-keymap (kbd "RET")
+                'edbi:dbview-show-tabledef-command)))
 #+end_src
 *** Dependencies
 #+begin_src shell :tangle (haris/tangle-deps "edbi.sh")
