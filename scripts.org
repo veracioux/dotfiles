@@ -787,7 +787,8 @@ are designed to be easily integrated into dmenu scripts.
   (let ((dir default-directory))
     (with-selected-frame (make-frame `((name . "EmacsFloat")
                                        (display . ,(getenv "DISPLAY"))))
-      (magit-status dir)))
+      (let ((default-directory dir))
+        (magit-status))))
 #+end_src
 ** =qr=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/qr")
