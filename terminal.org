@@ -116,6 +116,8 @@ A collection of configs for my terminal(s) and terminal apps.
     - { key: Space, mods: Control,  action: ToggleViMode,     mode: ~AppCursor }
     - { key: Key4,  mods: Shift,    action: Last,             mode: Vi }
     - { key: Key4,                  action: Last,             mode: Vi }
+    - { key: N,                     action: SearchPrevious,   mode: Vi }
+    - { key: N,     mods: Shift,    action: SearchNext,       mode: Vi }
     # Alt+X deletes current character
     - { key: X,     mods: Alt,      chars: "\x1b[3~",         mode: ~AppCursor }
 #+end_src
