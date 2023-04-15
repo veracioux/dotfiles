@@ -206,6 +206,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 #+NAME: sudo-askpass-notty
 #+begin_src bash :tangle no
+  #!/usr/bin/env bash
   {
       echo SETTITLE sudo password
       echo SETDESC Enter sudo password to run command
