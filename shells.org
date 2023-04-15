@@ -141,6 +141,10 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 #+end_src
 ** Other bindings
 #+begin_src fish
+  # Ctrl+L to clear screen
+  bind -M default \cl 'clear; commandline -f repaint'
+  bind -M insert  \cl 'clear; commandline -f repaint'
+
   # Copy the current contents of the command line
   bind -M default \ec 'commandline -b | xsel -b'
   bind -M insert  \ec 'commandline -b | xsel -b'
