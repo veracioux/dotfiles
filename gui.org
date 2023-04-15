@@ -244,6 +244,17 @@
   Name=Webstorm
   Comment=Webstorm
 #+end_src
+** WebStorm
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/phpstorm.desktop")
+  [Desktop Entry]
+  Encoding=UTF-8
+  Version=1.0
+  Type=Application
+  NoDisplay=true
+  Exec=/usr/bin/phpstorm
+  Name=Phpstorm
+  Comment=Phpstorm
+#+end_src
 ** TODO Emacs
 * Helpers
 #+NAME: eval-user-name
