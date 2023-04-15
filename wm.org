@@ -124,28 +124,9 @@ These scripts are used by the other sections:
   set $col_a_k #1e1e1ecc
   # Bright magenta with transparency for bar separator
   set $col_a_m #f298c377
-
-  # Bind mode names
-  set $mode_resize     " resize"
-  set $mode_session    "Session"
-  set $mode_wm         " WM"
-  set $mode_qr         " QR [i]n [o]ut [s]creen"
-  set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos con[v]ersations [a]ll"
-  set $mode_audio      " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
-  set $mode_emacs      " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
-  set $mode_trans      "<<mode_trans()>>"
-  set $mode_notif      " Notifications | [c]lose [C]lose-all [h]istory [a]ction [m]enu"
-  set $mode_talk       " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill"
-  set $mode_screenshot " Screenshot | [g]ui [s]creen [f]ull [c]onfig [d]aemon"
 #+end_src
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
   <<variables>>
-#+end_src
-The following block generates the value for the =mode_trans= i3 variable, so it
-can be re-used in ways not supported directly by i3.
-#+NAME: mode_trans
-#+begin_src emacs-lisp :tangle no
-  " Translate to | [e]nglish [c]zech [b]osnian [g]erman"
 #+end_src
 * Visuals
 Only for i3:
@@ -424,6 +405,7 @@ External bindings are served by sxhkd.
 ** Resize menu
 #+NAME: resize-menu
 #+begin_src i3wm-config
+  set $mode_resize     " resize"
 
   mode $mode_resize {
   bindsym w               resize  shrink  width   1
@@ -462,6 +444,8 @@ External bindings are served by sxhkd.
 ** Controlling the i3 session
 #+NAME: i3-session-bindings
 #+begin_src i3wm-config
+  set $mode_session    "Session"
+
   mode $mode_session {
   bindsym r               reload
   bindsym Ctrl+r          restart
@@ -476,6 +460,8 @@ External bindings are served by sxhkd.
 ** Window management menu
 #+NAME: wm-menu
 #+begin_src i3wm-config
+  set $mode_wm         " WM"
+
   mode $mode_wm {
   bindsym h               split h
   bindsym v               split v
@@ -497,6 +483,8 @@ External bindings are served by sxhkd.
 ** QR code menu
 #+NAME: qr-code-menu
 #+begin_src i3wm-config
+  set $mode_qr         " QR [i]n [o]ut [s]creen"
+
   mode $mode_qr {
   bindsym i               exec --no-startup-id "qr in"; mode default
   bindsym o               exec --no-startup-id "qr out"; mode default
@@ -510,6 +498,8 @@ External bindings are served by sxhkd.
 ** Organization menu (using org-mode)
 #+NAME: org-menu
 #+begin_src i3wm-config
+  set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos con[v]ersations [a]ll"
+
   mode $mode_org {
   bindsym t               exec --no-startup-id "myemacs-float ~/data/personal/todo.org", mode default
   bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org", mode default
@@ -539,6 +529,8 @@ External bindings are served by sxhkd.
 ** Audio control menu
 #+NAME: audio-menu
 #+begin_src i3wm-config
+  set $mode_audio      " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
+
   mode $mode_audio {
   bindsym plus            exec --no-startup-id ~/.config/i3/scripts/mic-volume-up
   bindsym minus           exec --no-startup-id ~/.config/i3/scripts/mic-volume-down
@@ -584,6 +576,8 @@ This is a menu that allows me to launch some utility apps I commonly use, but
 with an emacs interface.
 #+NAME: emacs-apps-menu
 #+begin_src i3wm-config
+  set $mode_emacs      " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
+
   mode $mode_emacs {
   bindsym p              exec --no-startup-id epython, mode default
   bindsym o              exec --no-startup-id eoctave, mode default
@@ -613,6 +607,8 @@ created when text is selected with the mouse instead of using copied to
 clipboard) is not older than some predetermined (short) time, that text is
 directly translated to English, without opening the menu.
 #+begin_src i3wm-config
+  set $mode_trans      "<<mode_trans()>>"
+
   mode $mode_trans {
   set $en exec alacritty-float -e trans -shell; mode default
   set $cs exec alacritty-float -e trans -shell -to cs; mode default
@@ -660,6 +656,13 @@ directly translated to English, without opening the menu.
     i3-msg -t command mode "<<mode_trans()>>"
   fi
 #+end_src
+*** Helper code
+The following block generates the value for the =mode_trans= i3 variable, so it
+can be re-used in ways not supported directly by i3.
+#+NAME: mode_trans
+#+begin_src emacs-lisp :tangle no
+  " Translate to | [e]nglish [c]zech [b]osnian [g]erman"
+#+end_src
 *** Dependencies
 #+begin_src sh :tangle (haris/tangle-deps "wm.sh")
   sudo pacman -S xsel xclip
@@ -667,6 +670,8 @@ directly translated to English, without opening the menu.
 ** Notification menu
 A menu for managing notifications.
 #+begin_src i3wm-config
+  set $mode_notif      " Notifications | [c]lose [C]lose-all [h]istory [a]ction [m]enu"
+
   mode $mode_notif {
   bindsym a       exec dunstctl action, mode default
   bindsym c       exec dunstctl close
@@ -681,6 +686,8 @@ A menu for managing notifications.
 ** Talk menu
 Menu of utilities that allow me to talk to my computer.
 #+begin_src i3wm-config
+  set $mode_talk       " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill"
+
   mode $mode_talk {
   bindsym d       exec ~/.config/i3/scripts/dictate.sh, mode default
   bindsym s       exec ~/.config/i3/scripts/chatgpt.sh --speak, mode default
@@ -814,6 +821,8 @@ Menu of utilities that allow me to talk to my computer.
 #+end_src
 ** Screenshot menu
 #+begin_src i3wm-config
+  set $mode_screenshot " Screenshot | [g]ui [s]creen [f]ull [c]onfig [d]aemon"
+
   mode $mode_screenshot {
   bindsym g       exec flameshot gui, mode default
   bindsym s       exec flameshot screen, mode default
