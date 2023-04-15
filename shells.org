@@ -69,6 +69,9 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 
       # Using a timeout here prevents hang on remotely mounted filesystems
       set -l vcs_prompt (timeout 0.2 fish --no-config -c fish_vcs_prompt)
+      if [ (echo "$vcs_prompt" | wc -c) -gt 15 ]
+         set vcs_prompt ''
+      end
 
       echo -n -s  (set_color --bold brblue)   "$USER" ' '                  \
                   (set_color magenta)         (prompt_pwd)        $normal  \
