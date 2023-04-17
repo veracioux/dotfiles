@@ -450,7 +450,7 @@ External bindings are served by sxhkd.
   bindsym r               reload
   bindsym Ctrl+r          restart
   bindsym q               exit
-  bindsym k               exec --no-startup-id kbind
+  bindsym k               exec --no-startup-id kbind, mode default
   bindsym Escape          mode default
   }
 
