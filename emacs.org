@@ -745,6 +745,56 @@ YAML indentation is just broken. This disables it completely.
   (defun yaml-indent-line ())
   (setq yaml-indent-offset 2)
 #+end_src
+*** YAML Pro Mode
+#+begin_src elisp
+  (eval-after-load "yaml" (progn
+                            (use-package yaml-pro)
+                            (use-package counsel-jq)))
+  (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook))
+        (hook))
+    (dolist (hook hooks)
+      (add-hook hook 'eldoc-mode)
+      (add-hook hook 'yaml-pro-ts-mode)
+      (add-hook hook (lambda ()
+                       (setq-local counsel-jq-command "yq")))))
+#+end_src
+*** Keybindings
+#+begin_src elisp
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-n") 'yaml-pro-ts-next-subtree)
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g j") 'yaml-pro-ts-next-subtree)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c C-n") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-p") 'yaml-pro-ts-prev-subtree)
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g k") 'yaml-pro-ts-prev-subtree)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c C-p") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g h") 'yaml-pro-ts-up-level)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c C-u") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", '") 'yaml-pro-edit-ts-scalar)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c '") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", <") 'yaml-pro-ts-unindent-subtree)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c <") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", >") 'yaml-pro-ts-indent-subtree)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c >") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", v") 'yaml-pro-ts-mark-subtree)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c @") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-j") 'yaml-pro-ts-move-subtree-down)
+  (define-key yaml-pro-ts-mode-map (kbd "s-<down>") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-k") 'yaml-pro-ts-move-subtree-up)
+  (define-key yaml-pro-ts-mode-map (kbd "s-<up>") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", d") 'yaml-pro-kill-subtree)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-w") nil)
+
+  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", p") 'yaml-pro-ts-paste-subtree)
+  (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-y") nil)
+#+end_src
 ** LSP
 #+begin_src emacs-lisp
   ;;(add-to-list 'projectile-project-root-files-functions 'custom/lsp-default-dir)(setq lsp-auto-guess-root t)
