@@ -661,6 +661,9 @@ This doesn't work consistently.
   ;; (define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
 #+end_src
 * TODO Email
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 I use mu4e as my email client.
 #+begin_src emacs-lisp
   ;; This is set to 't' to avoid mail syncing issues when using mbsync
@@ -726,7 +729,10 @@ I use mu4e as my email client.
 
   (add-hook 'message-setup-hook 'flyspell-mode)
 #+end_src
-** Notifications
+** TODO Notifications
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 #+begin_src emacs-lisp
   (use-package mu4e-alert :defer t)
   (setq mu4e-enable-notifications t)
@@ -949,7 +955,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
           org-enable-transclusion-support t)
      restclient
      slack
-     mu4e
+     ;; mu4e
      pass
      ;; eaf
      ;; emms
