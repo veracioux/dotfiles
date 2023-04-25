@@ -28,7 +28,7 @@ i3/sway session:
 
 #+NAME: tangle-and-apply
 #+begin_src emacs-lisp :tangle no :results none :var wm="i3"
-  (haris/tangle)
+  (haris/tangle-dest)
   (shell-command (format "%s-msg -t command restart" wm))
 #+end_src
 * Helper scripts and local variables
@@ -401,6 +401,22 @@ External bindings are served by sxhkd.
       echo | xsel -b
 
   # vim: ft=sxhkd
+#+end_src
+** Applications menu
+#+begin_src i3wm-config
+  set $mode_apps "Apps | [p]acman [c]lipmenu [e]lement [v]iber [u]nicode"
+
+  mode $mode_apps {
+  bindsym p exec dmenu_run pacman, mode default
+  bindsym c exec dmenu_run Clipboard, mode default
+  bindsym e exec element-desktop, mode default
+  bindsym v exec viber, mode default
+  bindsym u exec dmenu_run Unicode, mode default
+
+  bindsym Escape mode default
+  }
+
+  bindsym $mod+Shift+a mode $mode_apps
 #+end_src
 ** Resize menu
 #+NAME: resize-menu

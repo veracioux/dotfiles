@@ -1050,8 +1050,11 @@ are designed to be easily integrated into dmenu scripts.
 
   # If an argument is provided, run corresponding custom dmenu script
   if [ -n "$1" ]; then
-      ~/.local/lib/dmenu/"$1"
-      exit
+      script=~/.local/lib/dmenu/"$1"
+      if [ -e "$script" ]; then
+          "$script"
+          exit
+      fi
   fi
   # Otherwise open a generic dmenu where the user will choose what dmenu script
   # or other program to run
@@ -1129,7 +1132,11 @@ are designed to be easily integrated into dmenu scripts.
   # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   # ┃ Actions based on user's choice ┃
   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  choice="$(get_commands | dmenu)"
+  if [ -n "$1" ]; then
+      choice="$1"
+  else
+      choice="$(get_commands | dmenu)"
+  fi
   case "$choice" in
       "")
           exit ;;
