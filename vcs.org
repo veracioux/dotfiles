@@ -171,6 +171,14 @@ My config for version control systems I use (overwhelmingly git + GitHub).
     bad = bisect bad
     bsr = bisect reset
 #+end_src
+*** worktree
+#+begin_src gitconfig
+  wt  = worktree
+  wtl = worktree list
+  wta = worktree list
+  wtm = worktree move
+  wtr = worktree remove
+#+end_src
 ** URL aliases
 #+begin_src gitconfig
   [url "https://github.com/"]
