@@ -144,9 +144,9 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   export TERM='xterm-256color'
   extra_args=''
   if printarg "$@" | grep -q -- '-c'; then
-      extra_args='-n'
+      extra_args='--no-wait'
   else
-      extra_args='-t'
+      extra_args='--tty'
   fi
   if ! printarg "$@" | grep -qE '^(-s|--socket-name)'; then
       extra_args="$extra_args --socket-name emacs"
