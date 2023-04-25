@@ -84,14 +84,14 @@
 #+end_src
 ** File dialog bookmarks
 #+begin_src conf :tangle (haris/tangle-home ".config/gtk-3.0/bookmarks")
-  file:///home/haris/proj  projects
-  file:///home/haris/src src
-  file:///home/haris/data  data
-  file:///home/haris/cloud cloud
-  file:///home/haris/repo repo
-  file:///home/haris/data/literature literature
-  file:///home/haris/cloud unbound
-  file:///home/haris/eo enocean
+  file:///home/<<eval-user-name()>>/proj  projects
+  file:///home/<<eval-user-name()>>/src src
+  file:///home/<<eval-user-name()>>/data  data
+  file:///home/<<eval-user-name()>>/cloud cloud
+  file:///home/<<eval-user-name()>>/repo repo
+  file:///home/<<eval-user-name()>>/data/literature literature
+  file:///home/<<eval-user-name()>>/cloud unbound
+  file:///home/<<eval-user-name()>>/eo enocean
   file:///tmp/stage-<<eval-user-name()>> stage
 #+end_src
 * Flameshot
@@ -258,7 +258,7 @@
 ** TODO Emacs
 * Helpers
 #+NAME: eval-user-name
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :cache yes
   (user-login-name)
 #+end_src
 #+NAME: eval-user-home
