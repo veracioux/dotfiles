@@ -458,6 +458,10 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (setq org-preview-latex-image-directory        "/tmp/org-mode/ltximg/")
   (setq org-image-actual-width 400)
 #+end_src
+** Verb
+#+begin_src elisp
+  (add-hook 'verb-response-body-mode-hook 'verb-toggle-show-headers)
+#+end_src
 ** Bindings
 #+begin_src emacs-lisp
   (evil-define-key 'normal org-mode-map     (kbd ", S")         'org-attach-screenshot)
@@ -1004,7 +1008,8 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      lua
      (org :variables
           org-enable-appear-support t
-          org-enable-transclusion-support t)
+          org-enable-transclusion-support t
+          org-enable-verb-support t)
      restclient
      slack
      ;; mu4e
