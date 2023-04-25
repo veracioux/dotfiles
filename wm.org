@@ -404,14 +404,18 @@ External bindings are served by sxhkd.
 #+end_src
 ** Applications menu
 #+begin_src i3wm-config
-  set $mode_apps "Apps | [p]acman [c]lipmenu [e]lement [v]iber [u]nicode"
+  set $mode_apps "Apps | [p]acman [c]lipmenu [e]lement [v]iber [u]nicode [V]pn"
 
   mode $mode_apps {
-  bindsym p exec dmenu_run pacman, mode default
-  bindsym c exec dmenu_run Clipboard, mode default
-  bindsym e exec element-desktop, mode default
-  bindsym v exec viber, mode default
-  bindsym u exec dmenu_run Unicode, mode default
+  bindsym p       exec dmenu_run pacman, mode default
+  bindsym c       exec dmenu_run Clipboard, mode default
+  bindsym e       exec element-desktop, mode default
+  bindsym v       exec viber, mode default
+  bindsym u       exec dmenu_run Unicode, mode default
+  bindsym Shift+v exec sh -c 'systemctl is-active protonvpn \
+  && sudo systemctl stop protonvpn \
+  || sudo systemctl start protonvpn', \
+  mode default
 
   bindsym Escape mode default
   }
@@ -988,22 +992,31 @@ Menu of utilities that allow me to talk to my computer.
       except KeyboardInterrupt:
           sys.exit()
 
+  def run(*args, **kwargs):
+      return sp.run(*args, shell=True, stdout=sp.PIPE, encoding='utf-8', check=False, **kwargs)
+
   def get_mic_volume_widget():
-     def run(*args, **kwargs):
-         return sp.run(*args, shell=True, stdout=sp.PIPE, encoding='utf-8', check=False, **kwargs)
-     source = run('pactl get-default-source').stdout.strip()
-     volume_output = run(f'pactl get-source-volume {source}').stdout
-     volume = re.search(r'(\d+\.?\d*%)', volume_output)[1]
-     is_muted = 'yes' in run(f'pactl get-source-mute {source}').stdout
-     if is_muted:
-         return None
-     else:
-         return {
-             'full_text': f' {volume}',
-             'name': 'volume_mic',
-             'separator': False,
-             'color': '#d098ff',
-         }
+      source = run('pactl get-default-source').stdout.strip()
+      volume_output = run(f'pactl get-source-volume {source}').stdout
+      volume = re.search(r'(\d+\.?\d*%)', volume_output)[1]
+      is_muted = 'yes' in run(f'pactl get-source-mute {source}').stdout
+      if not is_muted:
+          return {
+              'full_text': f' {volume}',
+              'name': 'volume_mic',
+              'separator': False,
+              'color': '#d098ff',
+          }
+
+  def get_vpn_widget():
+      active = run('systemctl is-active protonvpn').returncode == 0
+      if active:
+          return {
+              'full_text': '',
+              'name': 'vpn',
+              'separator': False,
+              'color': '#99a3ff'
+          }
 
   if __name__ == '__main__':
       lines = sp.Popen(['i3status'], stdout=sp.PIPE, universal_newlines=True, encoding='utf-8').stdout
@@ -1022,7 +1035,10 @@ Menu of utilities that allow me to talk to my computer.
           j = json.loads(line)
           # insert information into the start of the json, but could be anywhere
           # CHANGE THIS LINE TO INSERT SOMETHING ELSE
+          vpn_widget = get_vpn_widget()
           volume_widget = get_mic_volume_widget()
+          if vpn_widget:
+              j.insert((3 if volume_widget else 2), vpn_widget)
           if volume_widget:
               j.insert(0, volume_widget)
 
