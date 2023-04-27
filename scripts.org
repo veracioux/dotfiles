@@ -1038,7 +1038,7 @@ are designed to be easily integrated into dmenu scripts.
 
   # Temporarily bind keys
 
-  pkill sxhkd.tmp
+  pkill -f '^sxhkd\.tmp '
   gvim -c 'set ft=sxhkd' ~/.sxhkd.tmp
 
   sxhkd.tmp -c ~/.sxhkd.tmp &
