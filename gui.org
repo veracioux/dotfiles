@@ -177,6 +177,7 @@
   Alt+s playlist-shuffle
 
   Del run rm ${path}
+  Alt+f run mpv --no-terminal ${path}
 
   Ctrl+l ab-loop
 
