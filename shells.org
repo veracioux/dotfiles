@@ -1,7 +1,6 @@
 #+TITLE: Shell Config
 #+PROPERTY: header-args :tangle (haris/tangle-home ".config/fish/config.fish") :mkdirp yes :results silent :noweb yes
-
-This is a config for the shells I use:
+#+PROPERTY: header-args:fish :shebang "#!/usr/bin/env fish"
 
 - *dash* as the system shell (because it's faster)
 - *fish* as my interactive shell
@@ -279,9 +278,6 @@ on the plugin list above.
   # Print first argument
   function 1; echo $argv[1]; end
 
-  # Run a command and disown
-  function o; $argv & disown >/dev/null 2>/dev/null; end
-
   # Run z through fzf
   function a
       z -l $argv | read -z choices
@@ -370,6 +366,73 @@ on the plugin list above.
 
       git --git-dir="$gitdir" $worktree_option $argv
   end
+#+end_src
+*** =o=
+#+NAME: o
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/o.fish") :eval no
+  # Run a command and disown. Put it into a tmux session. Notify the user when done.
+  # Persist a shell for a small time so the user can follow up on the command. If
+  # the user doesn't follow up within 20 minutes, the background shell will exit
+  # automatically.
+  function o
+      set -l argv_escaped (string escape -- $argv)
+      tmux new -d fish --private -C "
+          set __cmdline $argv_escaped;"'
+          <<o/background-task>>
+      '
+  end
+#+end_src
+Test the function by executing this code block:
+#+NAME: o/test
+#+begin_src fish :tangle no :cmdline --no-config
+  <<o>>
+  o notify-send "test test"
+  sleep 0.5s
+  alacritty-float -e tmux attach
+#+end_src
+**** Background task and follow-up shell
+Note: This code block must not contain any apostrophes!
+#+NAME: o/background-task
+#+HEADER: :shebang "#!/usr/bin/env fish"
+#+begin_src fish :tangle no :eval no
+  functions -e fish_greeting
+  $__cmdline
+
+  set __status "$status"
+
+  set __urgency
+  if [ "$__status" != 0 ]; set __urgency "--urgency=critical"; end
+
+  # Send a notification and wait for it to close. The reason we wait for it is
+  # because if the user is AFK, then the follow-up shell would exit prematurely.
+  # This way, if the user has set up notiication persistence while AFK, we
+  # leverage that feature.
+
+  set _notification_id_file (mktemp)
+  set _hook (string escape run-shell "sh -c \"dunstify --close=\$(cat $_notification_id_file)\" || true")
+  tmux set-hook client-attached "$_hook"
+
+  unbuffer \
+      notify-send "Background task done" \
+          "$__cmdline exited with code $__status" \
+          --wait --print-id $__urgency \
+          2>/dev/null >"$_notification_id_file"
+
+  rm -f "$_notification_id_file"
+
+  # Start a timeout for the shell to close if the user does not perform any
+  # follow-up commands
+  sh -c "sleep 20m; kill $fish_pid" &
+  jobs --last --pid | read _timeout_pid
+
+  function __haris_on_interaction_stop_timeout --on-event fish_preexec
+      kill "$_timeout_pid"
+      functions --erase __haris_on_interaction_stop_timeout
+  end
+#+end_src
+**** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/o.fish")
+  complete -c o --wraps command
 #+end_src
 *** =enved=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/enved.fish")
