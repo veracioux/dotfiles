@@ -1,6 +1,6 @@
 #+TITLE: Shell Config
-#+PROPERTY: header-args :tangle (haris/tangle-home ".config/fish/config.fish") :mkdirp yes :results silent :noweb yes
-#+PROPERTY: header-args:fish :shebang "#!/usr/bin/env fish"
+#+PROPERTY: header-args:fish :tangle (haris/tangle-home ".config/fish/config.fish") :mkdirp yes :results silent :noweb yes
+#+PROPERTY: header-args:fish+ :shebang "#!/usr/bin/env fish"
 
 - *dash* as the system shell (because it's faster)
 - *fish* as my interactive shell
@@ -28,8 +28,6 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 
   # I'm setting HOME to prevent errors when running inside tuterm
   HOME="/home/$USER" bass source ~/.bashrc        # Load bash's config
-  source "$__fish_config_dir"/tmp.fish          # Temporary aliases
-  source "$__fish_config_dir"/private.fish      # Private aliases
 
   set -gx MANPAGER 'viman'                      # Set default pager to vim
   set -gx MANPATH  ":$__fish_data_dir/man"      # Add fish manpages to MANPATH
@@ -41,7 +39,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 #+end_src
 ** Behavior overrides
 *** =fish_prompt=
-#+begin_src shell :tangle (haris/tangle-home ".config/fish/functions/fish_prompt.fish")
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_prompt.fish")
   function fish_prompt --description 'Write out the prompt'
       set -l last_pipestatus $pipestatus
       set -l normal (set_color normal)
@@ -519,6 +517,9 @@ Completions for the functions defined in [[Functions]].
 #+end_src
 ** Private
 #+transclude: [[~/.haris/private/README.org::fish-private]]
+#+begin_src fish
+  source ~/.config/fish/private.fish
+#+end_src
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (haris/tangle-home ".bashrc")
@@ -738,6 +739,11 @@ a terminal and runs the aliased command.
   [ -f ~/.alias-gui ]       && . ~/.alias-gui
   [ -f ~/.alias-gui-tmp ]   && . ~/.alias-gui-tmp
   [ -f ~/.profile-private ] && . ~/.profile-private
+#+end_src
+* Temporary configs
+[[~/.config/fish/tmp.fish][Click to edit]]
+#+begin_src fish
+  source ~/.config/fish/tmp.fish
 #+end_src
 * Dependencies
 #+begin_src shell :tangle (haris/tangle-deps "shells.sh")
