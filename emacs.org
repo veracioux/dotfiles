@@ -412,6 +412,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
                                  (C          . t)
                                  (python     . t)
                                  (restclient . t)))
+                                 (verb . t)))
   (defun haris/tangle-dest ()
     "Tangle the current file to its final destinations. If code blocks within the
      file have the temporary staging destination as their :tangle argument, they
@@ -800,6 +801,12 @@ YAML indentation is just broken. This disables it completely.
 
   (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", p") 'yaml-pro-ts-paste-subtree)
   (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-y") nil)
+#+end_src
+** JSON
+#+begin_src elisp
+  (defun haris/json/set-indent-level () (setq-local js-indent-level 2))
+
+  (add-hook 'json-mode-hook 'haris/json/set-indent-level)
 #+end_src
 ** LSP
 #+begin_src emacs-lisp
