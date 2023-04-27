@@ -411,7 +411,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
                                '((shell      . t)
                                  (C          . t)
                                  (python     . t)
-                                 (restclient . t)))
+                                 (restclient . t)
                                  (verb . t)))
   (defun haris/tangle-dest ()
     "Tangle the current file to its final destinations. If code blocks within the
