@@ -196,6 +196,10 @@ the type of the purpose of the current emacs daemon (by reading the
          (let ((shell-default-shell 'eshell))
            (spacemacs/default-pop-shell)) )
 
+  (defun haris/describe-symbol-at-point ()
+    (interactive)
+    (helpful-symbol (helpful--symbol-at-point)))
+
   ;; M-TAB in normal mode switches windows
   (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
   ;; M-TAB in insert mode inserts a tab emulated by spaces
@@ -204,6 +208,16 @@ the type of the purpose of the current emacs daemon (by reading the
   (define-key evil-normal-state-map (kbd "SPC /") 'haris/search-in-files-with-initial)
   ;; "SPC +" will pop up eshell
   (spacemacs/set-leader-keys "+" 'haris/popup-eshell)
+
+  ;; Help bindings
+  (spacemacs/set-leader-keys "hdo" 'helpful-symbol)
+
+  (evil-define-key 'normal org-mode-map        (kbd "C-q")
+    'haris/describe-symbol-at-point)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd "C-q")
+    'haris/describe-symbol-at-point)
+  (evil-define-key 'normal ielm-map            (kbd "C-q")
+    'haris/describe-symbol-at-point)
 #+end_src
 #+begin_src emacs-lisp
   (spacemacs/declare-prefix "o" "custom")
