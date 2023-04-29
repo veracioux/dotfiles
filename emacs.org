@@ -462,6 +462,10 @@ file, so that file can be used as a minimalistic source for boostrapping.
 ** Verb
 #+begin_src elisp
   (add-hook 'verb-response-body-mode-hook 'verb-toggle-show-headers)
+
+  (spacemacs/set-leader-keys-for-minor-mode
+    'verb-response-body-mode
+    "rs" #'verb-show-request)
 #+end_src
 ** Bindings
 #+begin_src emacs-lisp
