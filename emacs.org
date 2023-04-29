@@ -639,7 +639,11 @@ slack-mode-hook hook, it never connects. Investigate
              (magit-fetch-arguments))))
     (magit-git-fetch remote (cons (concat branch ":" branch) args)))
 
-  (transient-append-suffix 'magit-fetch "o" '(1 "O" "another, to local" haris/magit-fetch-to-local))
+  (add-hook 'magit-status-mode-hook
+            (lambda ()
+               (transient-append-suffix
+                 'magit-fetch "o"
+                 '(1 "O" "another, to local" haris/magit-fetch-to-local))))
 #+end_src
 ** TODO GitHub                                                  :deprecated:
 #+begin_src emacs-lisp
