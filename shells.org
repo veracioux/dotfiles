@@ -328,15 +328,15 @@ on the plugin list above.
       ln -s "$path" ~/.wallpaper
   end
 
-  function cdcf;   set file (cf "$argv");   test -f "$file" && cd (dirname        "$file"); end
-  function catcf;  set file (cf "$argv");   test -f "$file" && cat                "$file" ; end
-  function vicf;   set file (cf "$argv");   test -f "$file" && vim                "$file" ; end
-  function ecf;    set file (cf "$argv");   test -f "$file" && myemacs-float "$file" ; end
+  function cdcf;   set -l file (cf "$argv");   test -f "$file" && cd (dirname        "$file"); end
+  function catcf;  set -l file (cf "$argv");   test -f "$file" && cat                "$file" ; end
+  function vicf;   set -l file (cf "$argv");   test -e "$file" && vim                "$file" ; end
+  function ecf;    set -l file (cf "$argv");   test -e "$file" && myemacs-float "$file" ; end
 
-  function cdcmd;  set file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
-  function catcmd; set file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
-  function ecmd;   set file (fcmd "$argv"); test -f "$file" && myemacs     "$file" ; end
-  function rmcmd;  set file (fcmd "$argv"); rm "$file";                              end
+  function cdcmd;  set -l file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
+  function catcmd; set -l file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
+  function ecmd;   set -l file (fcmd "$argv"); test -f "$file" && myemacs     "$file" ; end
+  function rmcmd;  set -l file (fcmd "$argv"); rm "$file";                              end
   function vicmd
       set -l file (fcmd "$argv");
       if [ -f "$file" ]
