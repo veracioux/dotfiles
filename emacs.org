@@ -127,7 +127,7 @@ the type of the purpose of the current emacs daemon (by reading the
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<basic-settings>>
 #+end_src
-** Package initialization
+** Package bootstrapping
 #+NAME: package-init
 #+begin_src emacs-lisp
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
@@ -142,6 +142,7 @@ the type of the purpose of the current emacs daemon (by reading the
 #+begin_src emacs-lisp
   (use-package focus-autosave-mode :defer t)
   (use-package multi-vterm :defer t)
+  (use-package command-log-mode :defer t)
 #+end_src
 *** Language modes
 #+begin_src emacs-lisp
@@ -620,8 +621,22 @@ slack-mode-hook hook, it never connects. Investigate
           ("~/proj" . 1)
           ("~/proj/drytoe" . 1)
           ("~" . 0)))
+
 #+end_src
-** TODO deprecated GitHub
+** Custom transient commands
+#+begin_src elisp
+  (defun haris/magit-fetch-to-local (remote branch args)
+    "Fetch a remote branch to a local branch of the same name"
+    (interactive
+     (let ((remote (magit-read-remote-or-url "Fetch from remote or url")))
+       (list remote
+             (magit-read-remote-branch "Fetch branch" remote)
+             (magit-fetch-arguments))))
+    (magit-git-fetch remote (cons (concat branch ":" branch) args)))
+
+  (transient-append-suffix 'magit-fetch "o" '(1 "O" "another, to local" haris/magit-fetch-to-local))
+#+end_src
+** TODO GitHub                                                  :deprecated:
 #+begin_src emacs-lisp
   (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
 #+end_src
