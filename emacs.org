@@ -142,7 +142,7 @@ the type of the purpose of the current emacs daemon (by reading the
 #+begin_src emacs-lisp
   (use-package focus-autosave-mode :defer t)
   (use-package multi-vterm :defer t)
-  (use-package command-log-mode :defer t)
+  (use-package command-log-mode)
 #+end_src
 *** Language modes
 #+begin_src emacs-lisp
@@ -919,17 +919,6 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
                 '((auto-completion :variables
                                    auto-completion-enable-snippets-in-popup t)))
 #+end_src
-* Maxima
-I used this mode like 2-3 times, but I'm keeping it in case I have to use it again.
-#+begin_src emacs-lisp
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
-  (autoload 'maxima-mode "maxima" "Maxima mode" t)
-  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
-  (autoload 'maxima "maxima" "Maxima interaction" t)
-  (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
-  (setq imaxima-use-maxima-mode-flag t)
-  (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
-#+end_src
 * Info mode
 Remove Info mode annoying keybindings.
 #+NAME: info
@@ -995,6 +984,17 @@ Database viewer in Emacs.
   sudo cpan RPC::EPC::Service DBI
   # For postgres support
   sudo cpan DBD::Pg
+#+end_src
+** Maxima
+I used this mode like 2-3 times, but I'm keeping it in case I have to use it again.
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
+  (autoload 'maxima-mode "maxima" "Maxima mode" t)
+  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
+  (autoload 'maxima "maxima" "Maxima interaction" t)
+  (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
+  (setq imaxima-use-maxima-mode-flag t)
+  (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 #+end_src
 * Spacemacs
 These are a list of spacemacs layers and a list of additional packages loaded by
@@ -1140,7 +1140,9 @@ I use this variable to check if the config loaded correctly.
   (setq haris/config-loaded-fine (current-time-string))
 #+end_src
 ** Local variables                                                :noexport:
+# TODO temporarily disabled
+# eval: (org-sbe "begin_details")
+
 # Local Variables:
 # org-confirm-babel-evaluate: nil
-# eval: (org-sbe "begin_details")
 # End:
