@@ -681,6 +681,12 @@ slack-mode-hook hook, it never connects. Investigate
   (defun comint-clear-buffer-goto () (interactive)
          (comint-clear-buffer) (evil-goto-line))
   (define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer-goto)
+
+  (evil-define-key 'insert comint-mode-map (kbd "C-p") 'comint-previous-input)
+  (evil-define-key 'insert comint-mode-map (kbd "C-n") 'comint-next-input)
+
+  (evil-define-key 'insert comint-mode-map (kbd "C-k") 'comint-previous-prompt)
+  (evil-define-key 'insert comint-mode-map (kbd "C-j") 'comint-next-prompt)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<comint>>
