@@ -247,12 +247,15 @@ Some custom keybindings are defined here as well.
 
 #+NAME: consistent-vim-bindings
 #+begin_src emacs-lisp
+  (setq evil-collection-setup-minibuffer t)
+  (evil-collection-init 'minibuffer)
+
   (define-key evil-normal-state-map (kbd "Q")     'delete-window)
   (define-key evil-motion-state-map (kbd "Q")     'delete-window)
 
   (define-key evil-visual-state-map (kbd "v")     'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V")     (kbd "v$"))
-  (define-key evil-normal-state-map (kbd "Y")     (kbd "y$"))
+  (setq evil-want-Y-yank-to-eol t)
 
   (define-key evil-normal-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
   (define-key evil-visual-state-map (kbd "C-a")   'evil-numbers/inc-at-pt)
@@ -314,6 +317,7 @@ Some custom keybindings are defined here as well.
 * Ivy
 #+NAME: ivy
 #+begin_src emacs-lisp
+  (evil-collection-init 'ivy)
   (setq ivy-initial-inputs-alist ())
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
@@ -502,6 +506,8 @@ file, so that file can be used as a minimalistic source for boostrapping.
 * Man
 ** Bindings
 #+begin_src emacs-lisp
+  (evil-collection-init 'man)
+
   (defun haris/man-search () (interactive)
          (swiper "^[[:space:]]+"))
 
@@ -621,7 +627,6 @@ slack-mode-hook hook, it never connects. Investigate
           ("~/proj" . 1)
           ("~/proj/drytoe" . 1)
           ("~" . 0)))
-
 #+end_src
 ** Custom transient commands
 #+begin_src elisp
@@ -654,6 +659,7 @@ slack-mode-hook hook, it never connects. Investigate
 * Comint
 #+NAME: comint
 #+begin_src emacs-lisp
+  (evil-collection-init 'comint)
   (defun comint-clear-buffer-goto () (interactive)
          (comint-clear-buffer) (evil-goto-line))
   (define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer-goto)
@@ -928,21 +934,14 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 Remove Info mode annoying keybindings.
 #+NAME: info
 #+begin_src emacs-lisp
-  (evil-define-key 'motion Info-mode-map (kbd "C-o")  'Info-history-back)
-  (evil-define-key 'motion Info-mode-map (kbd "C-i")  'Info-history-forward)
-  (evil-define-key 'motion Info-mode-map (kbd "[")    'Info-prev)
-  (evil-define-key 'motion Info-mode-map (kbd "]")    'Info-next)
-  (evil-define-key 'motion Info-mode-map (kbd "RET")  'Info-follow-nearest-node)
-  (evil-define-key 'motion Info-mode-map (kbd "TAB")  'Info-next-reference)
-  (evil-define-key 'motion Info-mode-map (kbd "p")    nil)
+  (evil-collection-init 'info)
+  (evil-define-key 'normal Info-mode-map (kbd "[")    'Info-prev)
+  (evil-define-key 'normal Info-mode-map (kbd "]")    'Info-next)
+  (evil-define-key 'normal Info-mode-map (kbd "C-p")  'Info-backward-node)
+  (evil-define-key 'normal Info-mode-map (kbd "C-n")  'Info-forward-node)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<info>>
-#+end_src
-** TODO Fix bindings that were messed up by evil.
-#+begin_src emacs-lisp
-  ;; (evil-define-key 'motion-state Info-mode-map   (kbd "[ [")  'Info-prev)
-  ;; (evil-define-key 'motion-state Info-mode-map   (kbd "] ]")  'Info-next)
 #+end_src
 * Miscellaneous
 ** Reddit
