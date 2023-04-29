@@ -701,6 +701,7 @@ are designed to be easily integrated into dmenu scripts.
 
   for arg in "$@"; do
       case "$arg" in
+          .haris)         echo ~/.haris/ ;;
           README.org)     echo ~/.haris/README.org ;;
           private.org)    echo ~/.haris/private/README.org ;;
           temporary.org)  echo ~/.haris/temporary.org ;;
