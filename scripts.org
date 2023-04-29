@@ -787,13 +787,24 @@ are designed to be easily integrated into dmenu scripts.
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/eman")
   (with-selected-frame (make-frame `((name . "EmacsMan")
                                      (display . ,(getenv "DISPLAY"))))
-    (let ((Man-notify-method 'bully))
-      (if argv
-          (man (car argv))
-        (call-interactively 'man))))
+    (let ((man-buffer nil))
+      (defvar haris/last-man-buffer nil "The last man buffer that was opened")
+      (setq man-buffer
+            (if argv
+                (man (car argv))
+              (progn
+                (if (and (boundp 'haris/last-man-buffer)
+                         (buffer-live-p haris/last-man-buffer))
+                    (switch-to-buffer haris/last-man-buffer)
+                  (call-interactively 'man)))))
+      (when man-buffer (setq haris/last-man-buffer man-buffer))))
 #+end_src
-#+CALL: eman[:var argv='()]()
-#+CALL: eman[:var argv='("vim")]()
+#+CALL: eman(argv='())
+#+CALL: eman(argv='("vim"))
+*** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/eman.fish")
+  complete -c eman --wraps man
+#+end_src
 ** =erc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/erc") :noweb yes
   #!/usr/bin/env sh

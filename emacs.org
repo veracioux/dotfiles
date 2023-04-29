@@ -518,6 +518,9 @@ file, so that file can be used as a minimalistic source for boostrapping.
           (copy-file dest final-dest t))))
 #+end_src
 * Man
+#+begin_src elisp
+  (setq Man-notify-method 'bully)
+#+end_src
 ** Bindings
 #+begin_src emacs-lisp
   (evil-collection-init 'man)
