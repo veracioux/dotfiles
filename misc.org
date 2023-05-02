@@ -97,6 +97,67 @@
   frame_color             = "#ff8c8c"
   timeout                 = 20
 #+end_src
+* PNPM
+PNPM is an alternative to npm and yarn, which uses disk space more efficiently
+by keeping a common package store that is shared among projects. It can be
+configured to use a server to access the package store, allowing me to have a
+store that is shared among all users of my PC.
+
+I use =/var/cache/pnpm-store= as that shared package store. Here's the PNPM config
+for the user:
+#+NAME: .npmrc
+#+begin_src conf :tangle (haris/tangle-home ".npmrc") :mkdirp yes
+  use-running-store-server=true
+  store-dir=/var/cache/pnpm-store
+#+end_src
+
+Note that you will need to have a pnpm store server running. You must set this
+up as root.
+** Setting up a store server
+First, create the store as root and allow all users read and execute (directory)
+access.
+#+begin_src shell :dir "/sudo::"
+  mkdir -p /var/cache/pnpm-store
+  chmod 755 /var/cache/pnpm-store
+#+end_src
+
+Apply PNPM config to the root user, so the server knows which store-dir to use:
+#+begin_src shell :dir "/sudo::"
+  cat >>/root/.npmrc <<'EOF'
+    <<.npmrc>>
+  EOF
+#+end_src
+
+Then move the pnpm-server service to the appropriate system directory, start and
+enable it.
+#+begin_src shell :dir "/sudo::"
+  cat >/etc/systemd/system/pnpm-server.service <<'EOF'
+    <<pnpm-server.service>>
+  EOF
+  systemctl enable --now pnpm-server.service
+#+end_src
+#+NAME: pnpm-server.service
+#+begin_src conf
+  [Unit]
+  Description=PNPM store server
+
+  [Service]
+  ExecStart=/usr/bin/pnpm server start --ignore-upload-requests --protocol ipc --ignore-stop-requests
+  ExecStop=/usr/bin/pnpm server stop
+  Restart=on-failure
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+
+You should also apply the same settings from the [[.npmrc]] to each user that you
+want to have access to the store.
+
+*NOTE*: The store is useful only if it resides in the same filesystem as the node
+project. Otherwise you won't be able to make use of the disk space reduction,
+making the store pointless. If you have projects on multiple filesystems, you
+could run one pnpm server for each filesystem (e.g. by creating
+=pnpm-server-<N>.service=), tied to a store that lives on that filesystem.
 * TODO Rsync exclude
 I'm not sure if this file is actually used by rsync.
 #+begin_src text :tangle (haris/tangle-home ".rsync-exclude")
