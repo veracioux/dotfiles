@@ -30,6 +30,8 @@ i3/sway session:
 #+begin_src emacs-lisp :tangle no :results none :var wm="i3"
   (haris/tangle-dest)
   (shell-command (format "%s-msg -t command restart" wm))
+  (call-process "pkill" nil 0 nil "-u" (user-login-name) "sxhkd")
+  (call-process "sxhkd" nil 0 nil)
 #+end_src
 * Helper scripts and local variables
 :PROPERTIES:
@@ -197,6 +199,7 @@ Here are the configs you can choose from:
   sxhkd &                                       # Load default bindings
   sxhkd.private -c ~/.sxhkd.private &           # Load private bindings
 
+  export DESKTOP_SESSION=i3
   exec i3                                       # Window manager
 #+end_src
 #+NAME: xinitrc-gnome
@@ -214,7 +217,12 @@ Here are the configs you can choose from:
   export DESKTOP_SESSION=plasma
   exec dbus-launch startplasma-x11
 #+end_src
+#+NAME: xinitrc-xfce4
+#+begin_src shell :tangle (haris/tangle-home ".xinitrc-xfce4")
+  ~/.xinitrc.common
 
+  startxfce4
+#+end_src
 The following is shared by all presets. It also contains configuration specific
 to the laptop I currently use. Please change to suit your needs.
 #+NAME: xinitrc-common
