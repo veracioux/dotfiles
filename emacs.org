@@ -199,7 +199,10 @@ the type of the purpose of the current emacs daemon (by reading the
 
   (defun haris/describe-symbol-at-point ()
     (interactive)
-    (helpful-symbol (helpful--symbol-at-point)))
+    (let ((was-in-minibuffer (minibufferp))
+          (original-buffer (current-buffer)))
+      (helpful-symbol (helpful--symbol-at-point))
+      (when was-in-minibuffer (switch-to-buffer original-buffer))))
 
   ;; M-TAB in normal mode switches windows
   (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
@@ -218,6 +221,8 @@ the type of the purpose of the current emacs daemon (by reading the
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "C-q")
     'haris/describe-symbol-at-point)
   (evil-define-key 'normal ielm-map            (kbd "C-q")
+    'haris/describe-symbol-at-point)
+  (evil-define-key 'normal read--expression-map (kbd "C-q")
     'haris/describe-symbol-at-point)
 #+end_src
 #+begin_src emacs-lisp
@@ -280,6 +285,9 @@ Some custom keybindings are defined here as well.
   (defun haris/nohighlight () (interactive)       (evil-ex-call-command "" "noh" ""))
   (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
   (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
+
+  (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
+  (define-key evil-visual-state-map (kbd "C-i") 'evil-jump-forward)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<consistent-vim-bindings>>
