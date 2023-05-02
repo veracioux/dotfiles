@@ -98,6 +98,8 @@ the type of the purpose of the current emacs daemon (by reading the
   (setq mouse-wheel-scroll-amount '(6))
   (setq dotspacemacs-search-tools '("rg" "grep"))
   (setq uniquify-buffer-name-style 'forward)
+  (setq frame-title-format "%b"
+        dotspacemacs-frame-title-format nil)
 
   ;; Handle URLs as files
   (url-handler-mode)
