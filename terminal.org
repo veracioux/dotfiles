@@ -113,6 +113,10 @@ A collection of configs for my terminal(s) and terminal apps.
     # where I can't make custom bindings (e.g. in docker containers)
     - { key: P,     mods: Control,  chars: "\x1b[A",          mode: ~AppCursor }
     - { key: N,     mods: Control,  chars: "\x1b[B",          mode: ~AppCursor }
+    # Same thing, but better matches my Emacs muscle memory
+    - { key: P,     mods: Alt,      chars: "\x1b[A",          mode: ~AppCursor }
+    - { key: N,     mods: Alt,      chars: "\x1b[B",          mode: ~AppCursor }
+    # Vi mode in the terminal
     - { key: Space, mods: Control,  action: ToggleViMode,     mode: ~AppCursor }
     - { key: Key4,  mods: Shift,    action: Last,             mode: Vi }
     - { key: Key4,                  action: Last,             mode: Vi }
