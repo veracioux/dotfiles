@@ -433,7 +433,7 @@ External bindings are served by sxhkd.
 ** Resize menu
 #+NAME: resize-menu
 #+begin_src i3wm-config
-  set $mode_resize     " resize | [w]idth [h]eight [+] [-] (Shift modifier available) | Presets [0] [1] [2] [3] [4] (Shift to center)"
+  set $mode_resize     " resize | [w]idth [h]eight [+] [-] (Shift modifier available) | Presets [0/Shift+0] [1] [2] [3] [4]"
 
   mode $mode_resize {
   bindsym w               resize  shrink  width   1
@@ -455,13 +455,9 @@ External bindings are served by sxhkd.
   bindsym 0               $resizeW0
   bindsym Shift+0         $resizeH0
   bindsym 1               $resize1; move position center
-  bindsym Shift+1         $resize1
   bindsym 2               $resize2; move position center
-  bindsym Shift+2         $resize2
   bindsym 3               $resize3; move position center
-  bindsym Shift+3         $resize3
   bindsym 4               $resize4; move position center
-  bindsym Shift+4         $resize4
 
   # Back to normal: Enter or Escape or $mod+r
   bindsym Escape          mode default
