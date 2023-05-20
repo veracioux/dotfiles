@@ -104,6 +104,10 @@ the type of the purpose of the current emacs daemon (by reading the
   ;; Handle URLs as files
   (url-handler-mode)
 
+  ;; Scrolling
+  (pixel-scroll-precision-mode)
+  (setq scroll-bar-mode-explicit nil)
+
   (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
   (if (not (boundp 'haris/prepended-path))
       (progn
@@ -206,8 +210,6 @@ the type of the purpose of the current emacs daemon (by reading the
       (helpful-symbol (helpful--symbol-at-point))
       (when was-in-minibuffer (switch-to-buffer original-buffer))))
 
-  ;; M-TAB in normal mode switches windows
-  (define-key evil-normal-state-map (kbd "M-TAB") 'other-window)
   ;; M-TAB in insert mode inserts a tab emulated by spaces
   (define-key evil-insert-state-map (kbd "M-TAB") 'haris/insert-tab-as-spaces)
   ;; Use ripgrep for search
@@ -315,6 +317,7 @@ Some custom keybindings are defined here as well.
     (with-current-buffer (window-buffer (active-minibuffer-window))
       (insert text)
       (exit-minibuffer)))
+
   (global-set-key (kbd "M-y")
                   (lambda ()
                     (interactive)
@@ -330,6 +333,8 @@ Some custom keybindings are defined here as well.
                                             (counsel-shell-history)))
 
   (spacemacs/set-leader-keys "or" 'rename-buffer)
+  (spacemacs/set-leader-keys "oc" 'clone-buffer)
+  (spacemacs/set-leader-keys "oi" 'ibuffer)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<bindings-miscellaneous>>
@@ -349,6 +354,7 @@ Some custom keybindings are defined here as well.
   <<ivy>>
 #+end_src
 * Org mode
+** Packages
 #+begin_src emacs-lisp
   (eval-after-load "org"
     (progn
@@ -358,7 +364,9 @@ Some custom keybindings are defined here as well.
       (use-package ob-restclient)
       (use-package ol-man :ensure nil)
       (use-package org-tempo :ensure nil)))
-
+#+end_src
+** Basic config
+#+begin_src emacs-lisp
   (defun haris/org-mode-visual-fill ()
     (setq visual-fill-column-width        90
           visual-fill-column-center-text  t)
@@ -369,24 +377,26 @@ Some custom keybindings are defined here as well.
     (let ((file (haris/extract-tangle-final-dest)))
       (when file (find-file file))))
 
-  (defun haris/org-babel-restclient-split-window-fix ()
-    "Fixes a bug where executing a restclient code block splits the window."
-    (interactive)
-    (if (string= (car (org-babel-get-src-block-info)) "restclient") (delete-window)))
-  (add-hook 'org-babel-after-execute-hook 'haris/org-babel-restclient-split-window-fix)
-
   (add-hook 'org-mode-hook 'org-appear-mode)
   (add-hook 'org-mode-hook 'haris/org-mode-visual-fill)
   (add-hook 'org-mode-hook 'org-indent-mode)
   (add-hook 'org-mode-hook 'org-transclusion-add-all)
   (add-hook 'org-open-at-point-functions 'haris/org-babel-goto-tangle-file)
 
-  (setq org-indent-mode                     nil
+  ;; Prettiness
+  (setq org-indent-mode                     t
         org-M-RET-may-split-line            nil
         org-ellipsis                        " ▾"
         org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
         org-hide-emphasis-markers           t
-        org-download-screenshot-method      "flameshot gui --path screenshots/%s"
+        org-pretty-entities                 t
+        org-appear-autoentities             t
+        org-appear-elements                 '(bold italic underline strike-through
+                                                   verbatim code subscript superscript
+                                                   entity))
+
+  ;; Misc variables
+  (setq org-download-screenshot-method      "flameshot gui --path screenshots/%s"
         org-projectile-file                 "TODO.org"
         org-projectile-per-project-filepath "TODO.org")
 
@@ -407,7 +417,7 @@ Doesn't get loaded correctly.
     :ensure t
     :hook (org-mode . org-special-block-extras-mode))
 #+end_src
-** TODO org-alert
+** org-alert
 Takes too long to load.
 #+begin_src emacs-lisp :tangle no
   (use-package org-alert :defer t)
@@ -496,6 +506,14 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (spacemacs/set-leader-keys-for-minor-mode
     'verb-response-body-mode
     "rs" #'verb-show-request)
+#+end_src
+** Restclient
+#+begin_src emacs-lisp
+  (defun haris/org-babel-restclient-split-window-fix ()
+    "Fixes a bug where executing a restclient code block splits the window."
+    (interactive)
+    (if (string= (car (org-babel-get-src-block-info)) "restclient") (delete-window)))
+  (add-hook 'org-babel-after-execute-hook 'haris/org-babel-restclient-split-window-fix)
 #+end_src
 ** Bindings
 #+begin_src emacs-lisp
@@ -970,6 +988,10 @@ Remove Info mode annoying keybindings.
   <<info>>
 #+end_src
 * Miscellaneous
+** TODO Ispell
+#+begin_src elisp
+  (setq ispell-program-name "aspell")
+#+end_src
 ** Reddit
 *** md4rd
 #+begin_src emacs-lisp
@@ -986,6 +1008,7 @@ This is a very elegant reader for reddit that uses org-mode.
 #+end_src
 ** Ibuffer
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
+  (evil-collection-init 'ibuffer)
   (define-key ibuffer-mode-map (kbd "j") 'evil-next-line)
   (define-key ibuffer-mode-map (kbd "k") 'evil-previous-line)
 #+end_src
@@ -1060,6 +1083,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      ipython-notebook
      emacs-lisp
      shell
+     typescript
      yaml
      csv
      rust
