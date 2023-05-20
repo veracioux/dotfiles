@@ -1,5 +1,6 @@
 #+TITLE: Shell Config
-#+PROPERTY: header-args:fish :tangle (haris/tangle-home ".config/fish/config.fish") :mkdirp yes :results silent :noweb yes
+#+PROPERTY: header-args :mkdirp yes :results silent :noweb yes
+#+PROPERTY: header-args:fish :tangle (haris/tangle-home ".config/fish/config.fish")
 #+PROPERTY: header-args:fish+ :shebang "#!/usr/bin/env fish"
 
 - *dash* as the system shell (because it's faster)
@@ -109,6 +110,8 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   # Customize fish to notify me when a command finishes in a background terminal
   # window.
   function fish_right_prompt
+      [ -n "$DISPLAY" ] || return
+
       set -l _status "$status"
 
       # Check if terminal window is hidden
@@ -141,12 +144,15 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 #+begin_src fish
   bind_both_modes \er src_fish
 
-  bind_both_modes \cP \
+  # The linux TTY interprets \cP as \cp, and I use the latter for history navigation
+  if [ "$TERM" != "linux" ]
+      bind_both_modes \cP \
       '
-  echo Starting private mode...;
-  set fish_private_mode true;
-  commandline -f repaint
-  '
+      echo Starting private mode...;
+      set fish_private_mode true;
+      commandline -f repaint
+      '
+  end
 
   # Ctrl+L to clear screen
   bind_both_modes \cl 'clear; commandline -f repaint'
