@@ -89,16 +89,17 @@ These scripts are used by the other sections:
   # vim: filetype=i3
 
   # Default mod key
-  set $mod          Mod4
+  set $mod              Mod4
 
   # Common sizes
-  set $resizeW0     resize set width 20
-  set $resizeH0     resize set height 20
-  set $resize1      resize set width 710  height   600
-  set $resize2      resize set width 900  height   700
-  set $resize3      resize set width 1100 height  800
-  set $resize4      resize set width 1400 height  900
-  set $resize_term  resize set width 710
+  set $resizeW0         resize set width 20
+  set $resizeH0         resize set height 20
+  set $resize1          resize set width 710  height   600
+  set $resize2          resize set width 900  height   700
+  set $resize3          resize set width 1100 height  800
+  set $resize4          resize set width 1400 height  900
+  set $resize_devtools  resize set width 1400 height 600
+  set $resize_term      resize set width 710
 
   # Prefix n stands for normal
   set $col_n_k #1e1e1e
@@ -433,7 +434,7 @@ External bindings are served by sxhkd.
 ** Resize menu
 #+NAME: resize-menu
 #+begin_src i3wm-config
-  set $mode_resize     " resize | [w]idth [h]eight [+] [-] (Shift modifier available) | Presets [0/Shift+0] [1] [2] [3] [4]"
+  set $mode_resize     " resize | [w]idth [h]eight [+] [-] (Shift modifier available) | Presets [0/Shift+0] [1] [2] [3] [4] [d]evtools"
 
   mode $mode_resize {
   bindsym w               resize  shrink  width   1
@@ -458,6 +459,7 @@ External bindings are served by sxhkd.
   bindsym 2               $resize2; move position center
   bindsym 3               $resize3; move position center
   bindsym 4               $resize4; move position center
+  bindsym d               $resize_devtools; move position center
 
   # Back to normal: Enter or Escape or $mod+r
   bindsym Escape          mode default
