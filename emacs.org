@@ -516,7 +516,14 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (add-hook 'org-babel-after-execute-hook 'haris/org-babel-restclient-split-window-fix)
 #+end_src
 ** Bindings
-#+begin_src emacs-lisp
+#+begin_src elisp
+  ;; Make org-cycle work only in evil normal state, so it doesn't interfere with
+  ;; completion etc.
+  (define-key org-mode-map (kbd "TAB") nil t)
+  (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
+  (evil-define-key 'insert org-mode-map (kbd "TAB")
+    (lambda () (interactive) (org-tempo-complete-tag)))
+
   (evil-define-key 'normal org-mode-map     (kbd ", S")         'org-attach-screenshot)
   (evil-define-key 'normal org-mode-map     (kbd ", TAB")       'org-next-link)
   (evil-define-key 'normal org-mode-map     (kbd ", <backtab>") 'org-previous-link)
@@ -967,13 +974,14 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 
   (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
 #+end_src
-* TODO Yasnippet
-#+begin_src emacs-lisp
-  ;; Show snippets in auto-completion popup
-  (setq-default dotspacemacs-configuration-layers
-                '((auto-completion :variables
-                                   auto-completion-enable-snippets-in-popup t)))
+* Completion
+#+begin_src elisp
+  (use-package yasnippet)
+
+  (define-key evil-insert-state-map (kbd "C-SPC") 'company-complete)
+  (evil-define-key 'insert yas-minor-mode-map (kbd "TAB") yas-maybe-expand)
 #+end_src
+Note: Some variables are configured in Spacemacs layers (TODO link).
 * Info mode
 Remove Info mode annoying keybindings.
 #+NAME: info
@@ -1072,7 +1080,6 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      helpful
      ivy
      imenu-list
-     auto-completion
      (c-c++ :variables c-c++-backend 'lsp-clangd c-c++-enable-clang-support t)
      (cmake :variables cmake-backend 'lsp cmake-enable-cmake-ide-support t)
      (python :variables python-formatter 'black python-backend 'lsp)
@@ -1103,7 +1110,12 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      sql
      ;; eaf
      ;; emms
-     debug))
+     debug
+     (auto-completion
+      :variables
+      auto-completion-enable-snippets-in-popup t
+      auto-completion-enable-sort-by-usage     t
+      auto-completion-tab-key-behavior         'complete)))
 
   (setq-default
    dotspacemacs-additional-packages
