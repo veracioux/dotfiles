@@ -450,6 +450,11 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
                                  (python     . t)
                                  (restclient . t)
                                  (verb . t)))
+
+  ;; This variable is by default unbound, and so causes an error whenever a code
+  ;; block with ':session' is evaluated
+  (setq org-babel-prompt-command "")
+
   (defun haris/tangle-dest ()
     "Tangle the current file to its final destinations. If code blocks within the
      file have the temporary staging destination as their :tangle argument, they
@@ -909,8 +914,8 @@ YAML indentation is just broken. This disables it completely.
 #+end_src
 ** TODO C/C++
 #+begin_src emacs-lisp
-  (setq c-default-style
-        "bsd" c-basic-offset 4)
+  (setq c-default-style "bsd"
+        c-basic-offset 4)
 
   (add-hook 'c-mode-hook    (lambda () (setq tab-width 4)))
   (add-hook 'c++-mode-hook  (lambda () (setq tab-width 4)))
@@ -1062,9 +1067,9 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
   (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 #+end_src
 * Spacemacs
-These are a list of spacemacs layers and a list of additional packages loaded by
-spacemacs. This code block is loaded from [[~/.spacemacs]]. You can re-install a
-default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block]].
+The code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file
+is in turn loaded from [[~/.spacemacs]]. code block]].
+** Layers
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".spacemacs-init.el")
   (setq-default
    dotspacemacs-configuration-layers
@@ -1113,7 +1118,11 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
       auto-completion-enable-snippets-in-popup t
       auto-completion-enable-sort-by-usage     t
       auto-completion-tab-key-behavior         'complete)))
-
+#+end_src
+** Additional packages
+Packages installed with =use-package= should be added here as well. Otherwise
+Spacemacs would delete them every time on startup.
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".spacemacs-init.el")
   (setq-default
    dotspacemacs-additional-packages
    '(
@@ -1148,8 +1157,11 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      fish-mode
      currency-convert
      i3wm-config-mode
+     react
      focus-autosave-mode))
 #+end_src
+** Upgrading
+When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][spacemacs/ediff-dotfile-and-template]] to merge any upstream changes to the dotfile.
 * Appendix
 ** Config check
 I use this variable to check if the config loaded correctly.
