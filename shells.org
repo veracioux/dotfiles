@@ -675,6 +675,7 @@ a terminal and runs the aliased command.
   # VirtualBox
   abbr -g vb   'vboxmanage'
 
+  # Misc
   abbr -g g     'git'
   abbr -g v     'vim'
   abbr -g e     'myemacs'
@@ -691,6 +692,7 @@ a terminal and runs the aliased command.
   abbr -g u     'fusermount -u'
   abbr -g um    'sudo umount'
   abbr -g cmd   'command'
+  abbr -g w     'watch -n0.1'
 
   abbr -g yt    'ytfzf -t -s'
   abbr -g t     'tem'
@@ -708,6 +710,7 @@ a terminal and runs the aliased command.
   if [ -n "$DISPLAY" ]
       abbr -g man   'eman'
   end
+
   # Pass
   abbr -g pn 'pass insert'
   abbr -g pg 'pass generate --clip'
