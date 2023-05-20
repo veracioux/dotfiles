@@ -38,11 +38,9 @@ unnecessary code.
 - =irc= :: Used as an IRC chat client
   - Configuration file :: =~/.emacs.d/haris/irc.el=
 
-  #+begin_details "Systemd unit"
   #+begin_src conf :tangle no
     <<irc.service>>
   #+end_src
-  #+end_details
 
 - =ide= :: Used as a multilingual IDE via the lsp protocol
 
@@ -51,11 +49,10 @@ unnecessary code.
   editing and applications that don't warrant a standalone daemon.
   - Configuration file :: =~/.emacs.d/default.el=
 
-  #+begin_details "Systemd unit"
   #+begin_src conf :tangle no
     <<emacs.service>>
   #+end_src
-  #+end_details
+
   #+NAME: emacs.service
   #+begin_src conf :tangle (haris/tangle-home ".config/systemd/user/emacs.service") :exports none
     [Unit]
@@ -1153,87 +1150,7 @@ default [[~/.spacemacs]] file by calling [[install-dotspacemacs][this code block
      i3wm-config-mode
      focus-autosave-mode))
 #+end_src
-
-#+NAME: install-dotspacemacs
-#+begin_src emacs-lisp :tangle no :exports none :results none
-  ;; (dotspacemacs/install)
-
-  (let ((process-nested-list
-         (lambda (list process)
-           "Traverse each node of a tree of lists represented by 'list' and call 'process' on it."
-           (let ((item nil))
-             (while (and list (listp list))
-               ;; Iterate through each item in the list
-               ;;   If the item is not itself a list, call process on it.
-               ;;   If it is a list, call process on the item and call process-nested-list on it.
-               (setq item (car list))
-               (if (listp item)
-                   (progn
-                     (funcall process item)
-                     (funcall process-nested-list item process))
-                 (funcall process item))
-               (setq list (cdr list)))))))
-    (funcall process-nested-list
-             ;; contents of the ~/.spacemacs file as elisp data
-             (car (read-from-string (concat "(progn\n"
-                                            (with-temp-buffer
-                                              (insert-file-contents "~/.spacemacs")
-                                              (buffer-string))
-                                            "\n)")))
-             ;; function applied to each subtree of code
-             (lambda (code)
-               ;; Prepend code to body of function 'dotspacemacs/layers'
-               (message "%s" code)
-               ;; (if (and (eq (car code) 'defun)
-               ;;          (eq (nth 1 code) 'dotspacemacs/layers))
-               ;;     (message "%s" code)
-               ;;     ;; (setcdr (nthcdr 3 code) `((load-file "~/.spacemacs-init.el") . (nthcdr 4 code)))
-               ;;   )
-               )))
-
-  ;; ;; (with-temp-file (dotspacemacs/location))
-  ;; ;; (dotspacemacs/add-layer)
-#+end_src
 * Appendix
-** Lib
-An elisp library of functions used in this file, but may be useful elsewhere
-too. When such use case presents itself, copy these functions from here, or
-extract them into a common library and use that library from both here and there.
-#+NAME: begin_details
-#+begin_src emacs-lisp :tangle no :exports none :results none
-  (o-defblock details (title "Details") (title-color "green")
-              "Enclose contents in a folded up box, for HTML.
-
-  For LaTeX, this is just a boring, but centered, box.
-
-  By default, the TITLE of such blocks is “Details”
-  and its TITLE-COLOR is green.
-
-  In HTML, we show folded, details, regions with a nice greenish colour.
-
-  In the future ---i.e., when I have time---
-  it may be prudent to expose more aspects as arguments,
-  such as ‘background-color’.
-  "
-              (format
-               (pcase backend
-                 (`latex "\\begin{quote}
-                    \\begin{tcolorbox}[colback=%s,title={%s},sharp corners,boxrule=0.4pt]
-                      %s
-                    \\end{tcolorbox}
-                  \\end{quote}")
-                 (_ "<details>
-                    <summary>
-                      <strong>
-                        <font face=\"Courier\" size=\"3\" color=\"%s\">
-                           %s
-                        </font>
-                      </strong>
-                    </summary>
-                    %s
-                 </details>"))
-               title-color title contents))
-#+end_src
 ** Config check
 I use this variable to check if the config loaded correctly.
 #+NAME: config-loaded-fine
@@ -1241,9 +1158,6 @@ I use this variable to check if the config loaded correctly.
   (setq haris/config-loaded-fine (current-time-string))
 #+end_src
 ** Local variables                                                :noexport:
-# TODO temporarily disabled
-# eval: (org-sbe "begin_details")
-
 # Local Variables:
 # org-confirm-babel-evaluate: nil
 # End:
