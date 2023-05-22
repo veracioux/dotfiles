@@ -224,40 +224,44 @@
   name='Terminal'
 #+end_src
 * Desktop entries
-** CLion
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/clion.desktop")
+#+NAME: desktop-base
+#+begin_src desktop
   [Desktop Entry]
   Encoding=UTF-8
   Version=1.0
   Type=Application
   NoDisplay=true
+#+end_src
+** CLion
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/clion.desktop")
+  <<desktop-base>>
   Exec=/usr/bin/clion
   Name=CLion
-  Comment=CLion
 #+end_src
 ** WebStorm
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/webstorm.desktop")
-  [Desktop Entry]
-  Encoding=UTF-8
-  Version=1.0
-  Type=Application
-  NoDisplay=true
+  <<desktop-base>>
   Exec=/usr/bin/webstorm
-  Name=Webstorm
-  Comment=Webstorm
+  Name=WebStorm
 #+end_src
-** WebStorm
+** PhpStorm
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/phpstorm.desktop")
-  [Desktop Entry]
-  Encoding=UTF-8
-  Version=1.0
-  Type=Application
-  NoDisplay=true
+  <<desktop-base>>
   Exec=/usr/bin/phpstorm
-  Name=Phpstorm
-  Comment=Phpstorm
+  Name=PhpStorm
 #+end_src
-** TODO Emacs
+** IDEA
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/idea.desktop")
+  <<desktop-base>>
+  Exec=/usr/bin/intellij-idea-ultimate-edition
+  Name=IDEA
+#+end_src
+** Emacs
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/emacs.desktop")
+  <<desktop-base>>
+  Exec=myemacs -c
+  Name=Emacs
+#+end_src
 * Helpers
 #+NAME: eval-user-name
 #+begin_src emacs-lisp :cache yes
