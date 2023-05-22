@@ -263,12 +263,12 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
           id="$(notify-send "$window_title" "$notification" --print-id --expire-time 0)"
           trap "dunstify --close=$id" EXIT
       fi
-      echo -n "$prompt: " >&2
+      echo -n "$prompt: " >/dev/tty
 
       stty -echo </dev/tty
       head -1 </dev/tty | tr -d '\n'
 
-      echo >&2
+      echo >/dev/tty
   else
       {
           echo SETTITLE "$window_title"
