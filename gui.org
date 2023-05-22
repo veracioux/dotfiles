@@ -106,7 +106,7 @@
   disabledTrayIcon=false
   drawColor=#ff8c8c
   drawThickness=2
-  savePath=/home/haris/img
+  savePath=<<eval-user-home()>>/img
   savePathFixed=false
   showDesktopNotification=true
   showHelp=false
