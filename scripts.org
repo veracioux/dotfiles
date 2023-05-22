@@ -1081,14 +1081,14 @@ are designed to be easily integrated into dmenu scripts.
 
   pull_desktop_apps() {
       # Print out desktop apps by reading *.desktop files and also cache them
-      sed -n -e '/^Exec=/p'                       \
-          /usr/share/applications/*.desktop       \
-          ~/.local/share/applications/*.desktop   |
-          sed 's/Exec=\(\S*\).*/\1/'              |
-          while read line; do
-              basename $line
-          done                                        |
-          sort | uniq | tee "$cache_file"
+      sed -n -e '/^Exec=/p' \
+          /usr/share/applications/*.desktop \
+          ~/.local/share/applications/*.desktop \
+          | sed 's/Exec=\(.*\)/\1/' \
+          | while read line; do
+                basename $line
+            done \
+            | sort | uniq | tee "$cache_file"
   }
   get_desktop_apps() {
       cache_file=~/.cache/.desktop-apps.txt
@@ -1593,9 +1593,12 @@ are designed to be easily integrated into dmenu scripts.
   # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   # ┃ Additional entries and customization ┃
   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  entries = ' Edit...\n' +                               \
-            ' ' + entries.replace('\n', '\n ') +        \
-            'dmenu ' + '\n dmenu '.join(dmenu_scripts)
+  entries = (
+      ' Edit...\n' +
+      ' ' + entries.replace('\n', '\n ') +
+      'dmenu\n dmenu ' +
+      '\n dmenu '.join(dmenu_scripts)
+  )
 
   # Run dmenu
   choice = run(['dmenu', '-l', '20',  '-p', 'Config:'],
@@ -1614,24 +1617,33 @@ are designed to be easily integrated into dmenu scripts.
   # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   # ┃ Actions based on user's choice ┃
   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  if choice == 'dmenu':
+      EVAL = fr'''
+          (progn (find-file "~/.haris/scripts.org")
+                 (call-interactively (swiper "^\\* Dmenu"))
+                 (evil-ex-nohiglight))
+      '''
+      run(["myemacs-float", "--eval", EVAL])
   if choice.startswith('dmenu-'):
       submenu = choice.replace("dmenu-", "")
       submenu = submenu[0].upper() + submenu[1:]
       run(["notify-send", submenu])
       EVAL = fr'''
           (progn (find-file "~/.haris/scripts.org")
-                 (call-interactively (swiper "\\*\\* {submenu}")))
+                 (call-interactively (swiper "^\\*\\* {submenu}"))
+                 (evil-ex-nohiglight))
       '''
       run(["myemacs-float", "--eval", EVAL])
   elif choice == 'Edit...':
       EVAL = '''
           (progn (find-file "~/.haris/scripts.org")
-                 (goto-char (org-find-property "CUSTOM_ID" "cf")))
+                 (goto-char (org-find-property "CUSTOM_ID" "cf"))
+                 (evil-ex-nohiglight))
       '''
       run(["myemacs-float", "--eval", EVAL])
   else:
       run("fish -c 'ecf {}'".format(choice), shell=True)
-  sys.exit()
+      sys.exit()
 #+end_src
 ** System
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/system")
