@@ -158,17 +158,9 @@ the type of the purpose of the current emacs daemon (by reading the
   (use-package git-modes :defer t)
   (use-package systemd :defer t)
 #+end_src
-** General custom functions
+** Functions
 #+begin_src emacs-lisp
   (defun haris/stage () (interactive) (mkdir "/tmp/stage" t) (dired "/tmp/stage"))
-#+end_src
-** Nerd commenter
-#+begin_src emacs-lisp
-  (add-hook 'octave-mode-hook
-            (lambda ()
-              (setq comment-start "% "
-                    comment-end "")))
-  (define-key evil-normal-state-map (kbd "SPC c c") 'evilnc-copy-and-comment-lines)
 #+end_src
 ** Avy
 *** Try to make evil-easymotion work bidirectionally
@@ -176,9 +168,66 @@ the type of the purpose of the current emacs daemon (by reading the
   (define-key evil-normal-state-map (kbd "M-w") 'avy-goto-word-0)
   (define-key evil-normal-state-map (kbd "M-f") 'avy-goto-char)
 #+end_src
-** Alert
-#+begin_src emacs-lisp
-  (setq alert-default-style 'libnotify)
+** Interactive commands                                               :blah:
+These are commands that I primarily intend to use interactively and directly,
+without binding them to any keys.
+*** Commands from local shell scripts
+All commands defined in [[file:scripts.org][./scripts.org]] are taken and loaded as equivalent Elisp
+interactive commands. Each command is mapped to a function named
+=haris/script/<script-name-from-scripts.org>=. When this interactive command is
+run, it opens a vterm buffer named based on the command name, and runs the
+command there (without any arguments).
+#+begin_src elisp
+  (defun haris/load-commands-from-local-shell-scripts ()
+    "Load all local shell script commands as interactive Elisp commands."
+    (interactive)
+    (with-temp-buffer
+      (org-mode)
+      (setq-local org-use-tag-inheritance nil)
+      (insert-file-contents "~/.haris/scripts.org")
+
+      ;; Extract all applicable script commands
+      (setq-local
+       _commands
+       (org-map-entries
+        (lambda () (let ((title (nth 4 (org-heading-components))))
+                     (string-replace "=" "" title)))
+        "script" nil))
+
+      ;; Create an interactive function definition for each command
+      (mapcar
+       (lambda (command)
+         (eval
+          `(defun ,(intern (format "haris/script/%s" command))
+               ;; Arglist
+               (prefix-arg)
+             ;; Docstring
+             ,(format "Interactive command corresponding to the custom local shell script '%s'" command)
+             (interactive "P")
+             (let ((command ,command)
+                   (_vterm nil)
+                   (run-command nil))
+               ;; Run multi-vterm
+               (setq _vterm (multi-vterm))
+               (with-current-buffer _vterm
+                 ;; Rename the buffer based on the command name
+                 (rename-buffer (format "*%s*" command))
+                 (setq run-command
+                       (eval `(lambda (&optional argstring)
+                                (interactive ,(format "sCLI arguments: %s " ,command))
+                                "Run the command inside the open vterm buffer"
+                                (comint-send-string
+                                 (get-buffer-process ,_vterm)
+                                 (format "%s %s\n" ,command (or argstring ""))))))
+                 ;; Run the command
+                 (if prefix-arg
+                     ;; With prefix arg - prompt for CLI arguments before running
+                     (call-interactively run-command)
+                   ;; No prefix arg - run without CLI arguments
+                   (run-with-timer 0.6 nil (eval `(lambda () (funcall ,run-command))))))))))
+       _commands)))
+
+  (haris/load-commands-from-local-shell-scripts)
 #+end_src
 ** Bindings
 #+begin_src emacs-lisp
@@ -383,13 +432,8 @@ Some custom keybindings are defined here as well.
         org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
         org-hide-emphasis-markers           t
         org-pretty-entities                 t
-        org-appear-autoentities             t)
-
-  (eval-after-load "org"
-    (lambda () (setq org-appear-elements
-                     '(bold italic underline strike-through
-                            verbatim code subscript superscript
-                            entity))))
+        org-appear-autoentities             t
+        org-appear-autolinks                nil)
 
   ;; Misc variables
   (setq org-download-screenshot-method      "flameshot gui --path screenshots/%s"
@@ -1099,6 +1143,18 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
   (spacemacs/set-leader-keys (kbd "oc") (lambda () (interactive)
                                            (command-log-mode 'toggle)
                                            (clm/toggle-command-log-buffer)))
+#+end_src
+** Nerd commenter
+#+begin_src emacs-lisp
+  (add-hook 'octave-mode-hook
+            (lambda ()
+              (setq comment-start "% "
+                    comment-end "")))
+  (define-key evil-normal-state-map (kbd "SPC c c") 'evilnc-copy-and-comment-lines)
+#+end_src
+** Alert
+#+begin_src emacs-lisp
+  (setq alert-default-style 'libnotify)
 #+end_src
 * Spacemacs
 The code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file
