@@ -793,14 +793,16 @@ are designed to be easily integrated into dmenu scripts.
             (if argv
                 (man (car argv))
               (progn
-                (if (and (boundp 'haris/last-man-buffer)
-                         (buffer-live-p haris/last-man-buffer))
-                    (switch-to-buffer haris/last-man-buffer)
-                  (call-interactively 'man)))))
+                (when (and (boundp 'haris/last-man-buffer)
+                           (buffer-live-p haris/last-man-buffer))
+                  (switch-to-buffer haris/last-man-buffer))
+                (call-interactively 'man))))
       (when man-buffer (setq haris/last-man-buffer man-buffer))))
 #+end_src
 #+CALL: eman(argv='())
 #+CALL: eman(argv='("vim"))
+#+CALL: eman(argv='("git"))
+#+CALL: eman(argv='("emacs"))
 *** Completions
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/eman.fish")
   complete -c eman --wraps man
