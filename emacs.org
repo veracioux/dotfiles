@@ -189,13 +189,6 @@ the type of the purpose of the current emacs daemon (by reading the
           (line-beginning-position)
           (line-end-position)))
 
-  (defun haris/search-in-files-with-initial ()
-    "Search in files, with initial text set to region, or nil if no region is active"
-    (interactive)
-    (if (eq evil-state 'visual)
-        (counsel-rg (projectile-symbol-or-selection-at-point))
-      (counsel-rg)))
-
   (defun haris/popup-eshell () (interactive)
          (let ((shell-default-shell 'eshell))
            (spacemacs/default-pop-shell)) )
@@ -209,10 +202,13 @@ the type of the purpose of the current emacs daemon (by reading the
 
   ;; M-TAB in insert mode inserts a tab emulated by spaces
   (define-key evil-insert-state-map (kbd "M-TAB") 'haris/insert-tab-as-spaces)
-  ;; Use ripgrep for search
-  (define-key evil-normal-state-map (kbd "SPC /") 'haris/search-in-files-with-initial)
   ;; "SPC +" will pop up eshell
   (spacemacs/set-leader-keys "+" 'haris/popup-eshell)
+
+  ;; Don't use it, plus it interferes with bindings such as forward-button
+  (eval-after-load "helpful"
+    (lambda ()
+      (define-key evil-normal-state-map (kbd "TAB") nil)))
 
   ;; Help bindings
   (spacemacs/set-leader-keys "hdo" 'helpful-symbol)
@@ -354,7 +350,7 @@ Some custom keybindings are defined here as well.
 ** Packages
 #+begin_src emacs-lisp
   (eval-after-load "org"
-    (progn
+    (lambda ()
       (use-package org-transclusion :defer t)
       (use-package org-preview-html :defer t)
       (use-package org-drill        :defer t)
@@ -387,10 +383,13 @@ Some custom keybindings are defined here as well.
         org-superstar-headline-bullets-list '("◉" "○" "■" "◆")
         org-hide-emphasis-markers           t
         org-pretty-entities                 t
-        org-appear-autoentities             t
-        org-appear-elements                 '(bold italic underline strike-through
-                                                   verbatim code subscript superscript
-                                                   entity))
+        org-appear-autoentities             t)
+
+  (eval-after-load "org"
+    (lambda () (setq org-appear-elements
+                     '(bold italic underline strike-through
+                            verbatim code subscript superscript
+                            entity))))
 
   ;; Misc variables
   (setq org-download-screenshot-method      "flameshot gui --path screenshots/%s"
@@ -843,9 +842,11 @@ YAML indentation is just broken. This disables it completely.
 #+end_src
 *** YAML Pro Mode
 #+begin_src elisp
-  (eval-after-load "yaml" (progn
-                            (use-package yaml-pro)
-                            (use-package counsel-jq)))
+  (eval-after-load "yaml"
+    (lambda ()
+      (use-package yaml-pro)
+      (use-package counsel-jq)))
+
   (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook))
         (hook))
     (dolist (hook hooks)
@@ -983,7 +984,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (define-key evil-insert-state-map (kbd "C-SPC") 'company-complete)
   (evil-define-key 'insert yas-minor-mode-map (kbd "TAB") yas-maybe-expand)
 #+end_src
-Note: Some variables are configured in Spacemacs layers (TODO link).
+Note: Some additional variables are configured in [[*Layers][Spacemacs layers]].
 * Info mode
 Remove Info mode annoying keybindings.
 #+NAME: info
