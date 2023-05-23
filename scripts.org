@@ -972,7 +972,7 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 * Dmenu
 ** Main entrypoint (=dmenu_run=)
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu_run")
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/dmenu_run")
   # If an argument is provided, run corresponding custom dmenu script
   if [ -n "$1" ]; then
       script=~/.local/lib/dmenu/"$1"
@@ -986,7 +986,9 @@ are designed to be easily integrated into dmenu scripts.
 
   export TERM=dumb
 
-  run_script() { ~/.local/lib/dmenu/"$1"; }
+  run_script() {
+      fish -C "o $(printf "%q " ~/.local/lib/dmenu/"$1")"
+  }
 
   extract_aliases() {
       grep -v '^\s*#' "$@" | sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_"

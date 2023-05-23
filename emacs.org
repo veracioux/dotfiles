@@ -392,7 +392,7 @@ Some custom keybindings are defined here as well.
   (evil-collection-init 'ivy)
   (setq ivy-initial-inputs-alist ())
 
-  (define-key ivy-mode-map (kbd "TAB") #'ivy-insert-current)
+  (define-key ivy-minibuffer-map (kbd "TAB") #'ivy-insert-current)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<ivy>>
@@ -903,40 +903,42 @@ YAML indentation is just broken. This disables it completely.
 #+end_src
 *** Keybindings
 #+begin_src elisp
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-n") 'yaml-pro-ts-next-subtree)
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g j") 'yaml-pro-ts-next-subtree)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c C-n") nil)
+  (eval-after-load "yaml"
+    (lambda ()
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-n") 'yaml-pro-ts-next-subtree)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g j") 'yaml-pro-ts-next-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-n") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-p") 'yaml-pro-ts-prev-subtree)
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g k") 'yaml-pro-ts-prev-subtree)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c C-p") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-p") 'yaml-pro-ts-prev-subtree)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g k") 'yaml-pro-ts-prev-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-p") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g h") 'yaml-pro-ts-up-level)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c C-u") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g h") 'yaml-pro-ts-up-level)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-u") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", '") 'yaml-pro-edit-ts-scalar)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c '") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", '") 'yaml-pro-edit-ts-scalar)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c '") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", <") 'yaml-pro-ts-unindent-subtree)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c <") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", <") 'yaml-pro-ts-unindent-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c <") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", >") 'yaml-pro-ts-indent-subtree)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c >") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", >") 'yaml-pro-ts-indent-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c >") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", v") 'yaml-pro-ts-mark-subtree)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c @") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", v") 'yaml-pro-ts-mark-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c @") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-j") 'yaml-pro-ts-move-subtree-down)
-  (define-key yaml-pro-ts-mode-map (kbd "s-<down>") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-j") 'yaml-pro-ts-move-subtree-down)
+      (define-key yaml-pro-ts-mode-map (kbd "s-<down>") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-k") 'yaml-pro-ts-move-subtree-up)
-  (define-key yaml-pro-ts-mode-map (kbd "s-<up>") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-k") 'yaml-pro-ts-move-subtree-up)
+      (define-key yaml-pro-ts-mode-map (kbd "s-<up>") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", d") 'yaml-pro-kill-subtree)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-w") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", d") 'yaml-pro-kill-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-w") nil)
 
-  (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", p") 'yaml-pro-ts-paste-subtree)
-  (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-y") nil)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", p") 'yaml-pro-ts-paste-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-y") nil)))
 #+end_src
 ** JSON
 #+begin_src elisp
@@ -1142,9 +1144,12 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 #+end_src
 ** Command log mode
 #+begin_src elisp
-  (spacemacs/set-leader-keys (kbd "oc") (lambda () (interactive)
-                                           (command-log-mode 'toggle)
-                                           (clm/toggle-command-log-buffer)))
+  (defun haris/command-log ()
+    (interactive)
+    (command-log-mode 'toggle)
+    (clm/toggle-command-log-buffer))
+
+  (spacemacs/set-leader-keys (kbd "oC") #'haris/command-log)
 #+end_src
 ** Nerd commenter
 #+begin_src emacs-lisp
