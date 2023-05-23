@@ -106,9 +106,13 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 
 #+end_src
 *** =fish_right_prompt=
+Sends a graphical notification when a command running in a non-visible
+context finishes. This applies to commands that are:
+- running in a terminal emulator that is minimized or in a different workspace
+- running without a terminal that can be accessed, e.g. launched via dmenu
+
+This applies only to graphical sessions, the linux TTY is unaffected.
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_right_prompt.fish")
-  # Customize fish to notify me when a command finishes in a background terminal
-  # window.
   function fish_right_prompt
       [ -n "$DISPLAY" ] || return
 
@@ -377,7 +381,9 @@ on the plugin list above.
   # automatically.
   function o
       set -l argv_escaped (string escape -- $argv)
+      [ -z "$__haris_tmux_linger_period" ] && set -l __haris_tmux_linger_period 20m
       tmux new -d fish --private -C "
+          set __haris_tmux_linger_period $__haris_tmux_linger_period;
           set __cmdline $argv_escaped;"'
           <<o/background-task>>
       '
@@ -386,9 +392,9 @@ on the plugin list above.
 Test the function by executing this code block:
 #+NAME: o/test
 #+begin_src fish :tangle no :cmdline --no-config
+  set __haris_tmux_linger_period 3s
   <<o>>
-  o notify-send "test test"
-  sleep 0.5s
+  o sh -c 'echo Simulating long command...; sleep 3s; echo Done.; echo The terminal window should close in a few seconds'
   alacritty-float -e tmux attach
 #+end_src
 **** Background task and follow-up shell
@@ -423,8 +429,9 @@ Note: This code block must not contain any apostrophes!
 
   # Start a timeout for the shell to close if the user does not perform any
   # follow-up commands
-  sh -c "sleep 20m; kill $fish_pid" &
+  sh -c "sleep $__haris_tmux_linger_period; kill $fish_pid" &
   jobs --last --pid | read _timeout_pid
+  disown
 
   function __haris_on_interaction_stop_timeout --on-event fish_preexec
       kill "$_timeout_pid"

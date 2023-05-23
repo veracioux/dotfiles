@@ -630,6 +630,11 @@ process management in emacs is shit.
     (prin1 code))
 #+end_src
 #+CALL: stringify-arg-to-eval-option[:var argv='("a" "b")]()
+** =o=
+Wrapper command around the equivalent [[file:shells.org::*=o=][fish function]].
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/o")
+  fish -C "o $(printf "%q " "$@")"
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
@@ -987,7 +992,7 @@ are designed to be easily integrated into dmenu scripts.
   export TERM=dumb
 
   run_script() {
-      fish -C "o $(printf "%q " ~/.local/lib/dmenu/"$1")"
+      o ~/.local/lib/dmenu/"$1"
   }
 
   extract_aliases() {
