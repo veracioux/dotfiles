@@ -568,8 +568,13 @@ file, so that file can be used as a minimalistic source for boostrapping.
   ;; completion etc.
   (define-key org-mode-map (kbd "TAB") nil t)
   (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
-  (evil-define-key 'insert org-mode-map (kbd "TAB")
-    (lambda () (interactive) (org-tempo-complete-tag)))
+
+  (defun haris/org-mode-TAB ()
+    (interactive)
+    (cond ((org-tempo-complete-tag))
+          ((org-cycle))))
+
+  (evil-define-key 'insert org-mode-map (kbd "TAB") #'haris/org-mode-TAB)
 
   (evil-define-key 'normal org-mode-map     (kbd ", S")         'org-attach-screenshot)
   (evil-define-key 'normal org-mode-map     (kbd ", TAB")       'org-next-link)
@@ -1025,31 +1030,56 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 
   (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
 #+end_src
-* Completion
+* TODO Completion
+I should probably have a single global binding for TAB. In this function, I
+can define the precise order of precedence.
+
+Some notes:
+
+- functions that have no other bindings except TAB should have highest precedence
+- Should remove TAB (and <tab>) bindings from all other modes
 #+begin_src elisp
   (use-package yasnippet)
   (use-package company)
 
-  (defun haris/yas-expand ()
-    (interactive)
-    (condition-case err
-        (yas-next-field)
-      (error (yas-expand))))
+  (add-hook 'sh-mode-hook #'company-mode)
 
-  (defun haris/company-complete-selection ()
+  (defun haris/yas-next-field-or-expand ()
     (interactive)
-    (condition-case err
-        (yas-expand)
-      (error (company-complete-selection))))
+    (cond
+     ;; Give org-cycle precedence
+     ((and (fboundp 'org-at-table-p) (org-at-table-p)) (org-cycle))
+     ((condition-case err
+        (yas-next-field)
+      (error (yas-expand))))))
+
+  (defun haris/company-complete-selection-prefer-yas-expand ()
+    (interactive)
+    (cond
+     ;; Give org-cycle precedence
+     ((and (fboundp 'org-at-table-p) (org-at-table-p)) (org-cycle))
+     ((and yas-minor-mode (yas-expand)))
+     ((company-complete-selection))))
+
+  (defun haris/company-toggle-tooltip ()
+    (interactive)
+    (cond
+     ((company-tooltip-visible-p) (company-cancel))
+     ((company-complete))))
 
   ;; Would prefer this binding would take precedence over everything, but it doesn't
   ;; over company completion
   (evil-define-key 'insert yas-minor-mode-map (kbd "TAB")
-    '(menu-item "" haris/yas-expand :filter yas-maybe-expand-abbrev-key-filter))
-  ;; so I have to replace company-complete-selection with a custom function
-  (define-key company-active-map (kbd "TAB") 'haris/company-complete-selection)
-  (define-key yas-keymap (kbd "TAB") 'yas-next-field)
+    '(menu-item "" haris/yas-next-field-or-expand :filter yas-maybe-expand-abbrev-key-filter))
 
+  ;; company-active-map is too invasive
+  (define-key company-active-map (kbd "TAB") nil)
+  ;; Restrict company-mode TAB to insert mode, just in case
+  (define-key company-mode-map (kbd "TAB") nil)
+  ;; and also give yas-expand precedence
+  (evil-define-key 'insert company-mode-map (kbd "TAB") #'haris/company-complete-selection-prefer-yas-expand)
+
+  (define-key yas-keymap (kbd "TAB") 'yas-next-field)
   (define-key yas-keymap (kbd "<backtab>") 'yas-prev-field)
 
   ;; These are duplicates of TAB and can cause confusion
@@ -1057,7 +1087,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (define-key yas-keymap (kbd "<tab>") nil)
 
   ;; Additional trigger for company
-  (define-key evil-insert-state-map (kbd "C-SPC") 'company-complete)
+  (define-key evil-insert-state-map (kbd "C-SPC") #'haris/company-toggle-tooltip)
 #+end_src
 Note: Some additional variables are configured in [[*Layers][Spacemacs layers]].
 * Info mode
