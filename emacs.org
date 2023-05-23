@@ -391,6 +391,8 @@ Some custom keybindings are defined here as well.
 #+begin_src emacs-lisp
   (evil-collection-init 'ivy)
   (setq ivy-initial-inputs-alist ())
+
+  (define-key ivy-mode-map (kbd "TAB") #'ivy-insert-current)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<ivy>>
