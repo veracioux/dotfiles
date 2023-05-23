@@ -1868,44 +1868,6 @@ also tangle it to a standalone destination that I also keep under version contro
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/term")
   alacritty --working-directory "$PWD" "$@"
 #+end_src
-** TODO =mconf=
-Remove after repository restructuring.
-#+HEADER: :shebang "#!/usr/bin/env -S bash --init-file"
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/mconf")
-  # Manage dotfiles using Emacs Magit
-
-  # Because configuring Magit to support bare repositories is a bit complicated,
-  # this script temporarily turns $HOME into a non-bare repository [1] and then runs
-  # an artificial bash shell. By exiting this shell, you signify that you are done
-  # with editing the dotfiles and the script will proceed to clean up the changes
-  # made in [1].
-
-  cd ~
-
-  if [ -e ".git" ] && [ ! -h ".git" ]; then
-      echo ".git exists and is not a symlink"
-      exit 1
-  fi
-
-
-  ln -sf .cfg .git
-  git config core.bare false
-
-  magit
-
-  PS1="Editing dotfiles using magit... when done press Ctrl+D for proper cleanup"
-
-  cleanup() {
-      git config core.bare true
-      rm .git
-  }
-  trap "cleanup" EXIT
-
-  # Prevent the user from accidently running a command/function
-  stty -echo
-  # Yes, this will cause a recursion, but it works anyway
-  bind -x '"":"kill -SIGINT $$"'
-#+end_src
 ** =aurvote=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/aurvote")
   ssh aur@aur.archlinux.org vote "$@"
