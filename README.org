@@ -246,3 +246,12 @@ This is a mapping of mime types to default applications that I use:
   x-scheme-handler/msteams=teams.desktop;
 #+end_src
 * TODO Common keybindings
+* Global variables
+** =HARIS​_BACKGROUND​_TASKS​_SILENT=
+I have configured my main shell fish to notify me when non-visible background
+tasks finish. Setting this variable to a non-zero value disables this behavior.
+** =TERM=
+This variable is hardly invented by me. But I use it heavily in scripts, most
+notably the =TERM=dumb= value. In general, if =TERM=dumb=, that is a hint to my
+scripts and utilities that graphical interaction is preferred over terminal
+interaction. The [[file:scripts.org::*=askpass=][askpass]] command behaves this way for example.

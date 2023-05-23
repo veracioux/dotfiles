@@ -114,6 +114,7 @@ context finishes. This applies to commands that are:
 This applies only to graphical sessions, the linux TTY is unaffected.
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_right_prompt.fish")
   function fish_right_prompt
+      [ -n "$HARIS_BACKGROUND_TASKS_SILENT" ] && return
       [ -n "$DISPLAY" ] || return
 
       set -l _status "$status"
@@ -384,6 +385,7 @@ on the plugin list above.
       [ -z "$__haris_tmux_linger_period" ] && set -l __haris_tmux_linger_period 20m
       tmux new -d fish --private -C "
           set __haris_tmux_linger_period $__haris_tmux_linger_period;
+          set HARIS_BACKGROUND_TASKS_SILENT $HARIS_BACKGROUND_TASKS_SILENT;
           set __cmdline $argv_escaped;"'
           <<o/background-task>>
       '
@@ -416,14 +418,16 @@ Note: This code block must not contain any apostrophes!
   # leverage that feature.
 
   set _notification_id_file (mktemp)
-  set _hook (string escape run-shell "sh -c \"dunstify --close=\$(cat $_notification_id_file)\" || true")
+  set _hook (string escape run-shell "sh -c \"[ -n \"$_notification_id_file\" ] && dunstify --close=\$(cat $_notification_id_file)\"")
   tmux set-hook client-attached "$_hook"
 
-  unbuffer \
-      notify-send "Background task done" \
-          "$__cmdline exited with code $__status" \
-          --wait --print-id $__urgency \
-          2>/dev/null >"$_notification_id_file"
+  if [ -z "$HARIS_BACKGROUND_TASKS_SILENT" ]
+      unbuffer \
+          notify-send "Background task done" \
+              "$__cmdline exited with code $__status" \
+              --wait --print-id $__urgency \
+              2>/dev/null >"$_notification_id_file"
+  end
 
   rm -f "$_notification_id_file"
 

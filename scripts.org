@@ -263,6 +263,10 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       } | pinentry -g 2>&1 | sed -n "/^D/ s/^D //p" | tr -d '\n'
   fi
 #+end_src
+** =askpass-gui=                                                    :script:
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/askpass-gui")
+  TERM=dumb askpass "$@"
+#+end_src
 ** =chx=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/chx")
   chmod u+x "$@"
@@ -1659,11 +1663,11 @@ are designed to be easily integrated into dmenu scripts.
 
   service="$(echo "$selection" | grep --only-matching '\S\+$')"
 
-  opt=''
+  user_opt=''
   sudo='sudo'
   if grep -q "$user" <<<"$selection"; then
       echo here
-      opt="--user"
+      user_opt="--user"
       sudo=""
   fi
 
@@ -1681,17 +1685,33 @@ are designed to be easily integrated into dmenu scripts.
   # Notify the user
   service_name="${service%.service}"
 
-  case "$cmd" in
-      start)
-          notify-send "Starting service..." "$service_name" ;;
-      restart)
-          notify-send "Restarting service: " "$service_name" ;;
-      stop)
-          notify-send "Stopping service: " "$service_name" ;;
-  esac
-
   # Execute the action
-  $sudo systemctl "$cmd" $opt "$service"
+  export HARIS_BACKGROUND_TASKS_SILENT=true
+  o sh -c "SUDO_ASKPASS=\"$(which askpass-gui)\" $sudo systemctl '$cmd' $user_opt '$service'"
+
+  jctl_session_name="$(
+    tmux new -P -F'#{session_name}' -d journalctl --follow --lines=0 $user_opt -u "$service"
+  )"
+
+  action="$(
+      case "$cmd" in
+          start)
+              notify-send --action 0 "Starting service..." "$service_name"
+              ;;
+          restart)
+              notify-send --action 0 "Restarting service..." "$service_name"
+              ;;
+          stop)
+              notify-send --action 0 "Stopping service..." "$service_name"
+              ;;
+      esac
+  )"
+
+  if [ "$action" = "0" ]; then
+      alacritty-float -e tmux attach -t "$jctl_session_name"
+  else
+      tmux kill-session -t "$jctl_session_name"
+  fi
 #+end_src
 ** GPG
 #+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/gpg")
