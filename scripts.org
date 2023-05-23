@@ -1,5 +1,5 @@
 #+TITLE: Scripts
-#+PROPERTY: header-args :comments headline :mkdirp yes :noweb yes
+#+PROPERTY: header-args :comments headline :mkdirp yes :noweb yes :results silent
 #+PROPERTY: header-args:shell :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744)
 #+PROPERTY: header-args:bash :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744)
 
