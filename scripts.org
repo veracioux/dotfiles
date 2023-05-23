@@ -1090,7 +1090,6 @@ are designed to be easily integrated into dmenu scripts.
           run_script pkill ;;
       "Fix Wifi")
           fix-wifi ;;
-      #nmcli networking off; sleep 6; nmcli networking on ;;
       "Config")
           run_script config ;;
       "System")
@@ -1130,7 +1129,7 @@ are designed to be easily integrated into dmenu scripts.
               fi
           done
           # Fallback, if the entry matches none of the above, just run the command
-          fish -C "cmd-with-notify $choice"
+          fish -C "o $choice"
           ;;
   esac
 #+end_src
