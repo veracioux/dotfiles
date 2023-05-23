@@ -980,9 +980,36 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 * Completion
 #+begin_src elisp
   (use-package yasnippet)
+  (use-package company)
 
+  (defun haris/yas-expand ()
+    (interactive)
+    (condition-case err
+        (yas-next-field)
+      (error (yas-expand))))
+
+  (defun haris/company-complete-selection ()
+    (interactive)
+    (condition-case err
+        (yas-expand)
+      (error (company-complete-selection))))
+
+  ;; Would prefer this binding would take precedence over everything, but it doesn't
+  ;; over company completion
+  (evil-define-key 'insert yas-minor-mode-map (kbd "TAB")
+    '(menu-item "" haris/yas-expand :filter yas-maybe-expand-abbrev-key-filter))
+  ;; so I have to replace company-complete-selection with a custom function
+  (define-key company-active-map (kbd "TAB") 'haris/company-complete-selection)
+  (define-key yas-keymap (kbd "TAB") 'yas-next-field)
+
+  (define-key yas-keymap (kbd "<backtab>") 'yas-prev-field)
+
+  ;; These are duplicates of TAB and can cause confusion
+  (define-key company-active-map (kbd "<tab>") nil)
+  (define-key yas-keymap (kbd "<tab>") nil)
+
+  ;; Additional trigger for company
   (define-key evil-insert-state-map (kbd "C-SPC") 'company-complete)
-  (evil-define-key 'insert yas-minor-mode-map (kbd "TAB") yas-maybe-expand)
 #+end_src
 Note: Some additional variables are configured in [[*Layers][Spacemacs layers]].
 * Info mode
@@ -1117,8 +1144,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      (auto-completion
       :variables
       auto-completion-enable-snippets-in-popup t
-      auto-completion-enable-sort-by-usage     t
-      auto-completion-tab-key-behavior         'complete)))
+      auto-completion-enable-sort-by-usage     t)))
 #+end_src
 ** Additional packages
 Packages installed with =use-package= should be added here as well. Otherwise
