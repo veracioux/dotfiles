@@ -1,5 +1,7 @@
 #+TITLE: Scripts
-#+PROPERTY: header-args :comments headline :mkdirp yes :tangle-mode (identity #o744) :results silent :noweb yes
+#+PROPERTY: header-args :comments headline :mkdirp yes :noweb yes
+#+PROPERTY: header-args:shell :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744)
+#+PROPERTY: header-args:bash :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744)
 
 This is where my custom scripts live. That includes shell scripts, dmenu scripts,
 and potentially programming language-specific scripts. One of the things I
@@ -16,9 +18,7 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
 
 * Wrappers around existing commands
 ** =git=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/git")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/git")
   git() {
       alternative-command git "$@"
   }
@@ -170,7 +170,6 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =sudo=
 #+NAME: sudo
-#+HEADER: :shebang "#!/usr/bin/env bash"
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sudo") :noweb yes
   # Sudo but with a hook that sends a notification when the prompt is shown
 
@@ -187,13 +186,10 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 #+NAME: sudo-askpass
 #+begin_src shell :tangle no
-  #!/usr/bin/env sh
   askpass "[sudo] password for $(getent passwd "$USER" | cut -d: -f1)" "SUDO password" "Please enter your password"
 #+end_src
 ** =ssh=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/ssh")
-  #!/usr/bin/env bash
-
   if [ -z "$SSH_ASKPASS" ]; then
       export SSH_ASKPASS="$(mktemp)"
       export SSH_ASKPASS_REQUIRE="prefer"
@@ -208,50 +204,38 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 #+NAME: ssh-askpass
 #+begin_src shell
-  #!/usr/bin/env sh
   # The default prompt supplied as call args
   prompt="$(echo "$1" | sed 's/: $//')"
   askpass "$prompt" "SSH passphrase" "Please enter SSH passphrase"
 #+end_src
 ** =alacritty=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty")
-  #!/usr/bin/env sh
-
   WINIT_X11_SCALE_FACTOR=1.5 /usr/bin/alacritty "$@"
   #WINIT_X11_SCALE_FACTOR=1.5 prime-run /usr/bin/alacritty "$@"
 #+end_src
 ** =alacritty-float=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty-float")
-  #!/usr/bin/env sh
-
   alacritty --class Alacritty,Float "$@"
 #+end_src
 ** =sway=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/sway")
-  #!/usr/bin/env sh
   export XDG_CURRENT_DESKTOP=Sway
   /usr/bin/sway --unsupported-gpu "$@"
 #+end_src
 ** =xlock=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xlock")
-  #!/usr/bin/env sh
-
   pkill gpg-agent 2>/dev/null
   /usr/bin/xlock
 #+end_src
 * Utilities
 ** =abspath=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/abspath")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/abspath")
   pushd "$(dirname "$1")" >/dev/null
   echo "$PWD/$(basename "$1")"
   popd >/dev/null
 #+end_src
 ** =askpass=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/askpass")
-  #!/usr/bin/env bash
-
   # Usage: askpass [PROMPT] [WINDOW_TITLE] [NOTIFICATION]
 
   prompt="$1"
@@ -281,35 +265,25 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =chx=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/chx")
-  #!/usr/bin/env sh
-
   chmod u+x "$@"
 #+end_src
 ** =diffgpg=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/diffgpg")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/diffgpg")
   # Compare the contents of two GPG encrypted files
 
   diff <(gpg --decrypt --output - "$1") <(gpg --decrypt --output - "$2") "${@:3}"
 #+end_src
 ** =fcmd=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/fcmd")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/fcmd")
   type "$@" 2>/dev/null | awk '{print $3}'
   exit "${PIPESTATUS[0]}"
 #+end_src
 ** =lscf=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/lscf")
-  #!/usr/bin/env sh
-
   cat $(fcmd cf) | sed -n 's/\s*\(.*\)).*/\1/p'
 #+end_src
 ** =n=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/n")
-  #!/usr/bin/env sh
-
   # Print n of the received arguments, where n=$1
 
   [ "$#" = 0 ] && exit 1
@@ -320,15 +294,11 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =printarg=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/printarg")
-  #!/usr/bin/env sh
-
   # Print commandline arguments passed to this function each on its own line
   printf "%s\n" "$@"
 #+end_src
 ** =rmws=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/rmws")
-  #!/usr/bin/env sh
-
   # Remove whitespace from a file (or stdin if input is from a pipe) and write the
   # output to stdout (or rewrite the file if the -i option is given)
 
@@ -337,9 +307,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
           sed 's:\s\+$::' "$@"
 #+end_src
 ** =adhoc=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/adhoc")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/adhoc")
   # Create an ad-hoc file, edit it in $EDITOR and then print its path. If a '-'
   # argument is given, the file contents are printed instead of its path.
 
@@ -371,8 +339,6 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =cmd-with-notify=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cmd-with-notify")
-  #!/usr/bin/env sh
-
   if [ "$TERM" = "linux" ]; then
       "$@"
       exit
@@ -386,8 +352,6 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =xpreset=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xpreset")
-  #!/usr/bin/env sh
-
   [ "$#" != 1 ] && exit 1
 
   ln -sf .xinitrc-"$1" ~/.xinitrc
@@ -399,8 +363,6 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =xrandr-toggle=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr-toggle")
-  #!/usr/bin/env sh
-
   n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
 
   [ "$n" = 1 ] && {\
@@ -414,8 +376,6 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =xrandr2=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr2")
-  #!/usr/bin/env sh
-
   # Wrapper for xrandr command with some options applied based on my current
   # monitor configuration
 
@@ -423,8 +383,6 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =pipetest=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/pipetest") :noweb yes
-  #!/usr/bin/env bash
-
   # Create three tmux panes:
   # - A SOURCE text file opened in vim
   # - A SCRIPT file opened in vim
@@ -547,7 +505,6 @@ them as code blocks here for better readability.
 **** =on_change=
 #+NAME: pipetest_on_change
 #+begin_src shell
-  #!/usr/bin/env sh
   echo > "$fifo"
 #+end_src
 **** =vimrc=
@@ -560,14 +517,11 @@ them as code blocks here for better readability.
 **** =custom_vim=
 #+NAME: pipetest_custom_vim
 #+begin_src shell
-  #!/usr/bin/env sh
   "$vim_executable" -c "source $vimrc" "\$@"
 #+end_src
 **** =output_script=
 #+NAME: pipetest_output_script
 #+begin_src shell
-  #!/usr/bin/env sh
-
   echo "This is the output."
   echo "It will automatically refresh when either of the files change."
   echo "Press Ctrl+C here or quit any of the two vim instances to exit."
@@ -585,8 +539,6 @@ them as code blocks here for better readability.
 **** =main_script=
 #+NAME: pipetest_main_script
 #+begin_src shell
-  #!/usr/bin/env sh
-
   tmux split-window -h "$custom_vim" "$SCRIPT"
   tmux split-window -h sh -c 'cd "$(pwd)"; "$output_script"'
   tmux select-pane -L
@@ -596,9 +548,7 @@ them as code blocks here for better readability.
 #+end_src
 *** TODO consider extracting this script into its own project
 ** =auto-browser=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/auto-browser")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/auto-browser")
   browser='firefox'
   # If a firefox window is currently active, open the link in the active window
   if xprop -id "$(xdotool getactivewindow)" | grep -qi 'firefox'; then
@@ -617,26 +567,20 @@ them as code blocks here for better readability.
 ** =minemacs=
 The bare minimum of emacs that is required to tangle all the dotfiles.
 ** =alternative-command=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/alternative-command")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/alternative-command")
   cmd="$(which -a "$1" | uniq | sed -n 2p)"
 
   "$cmd" "${@:2}"
 #+end_src
 ** =curltb=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/curltb")
-  #!/usr/bin/env sh
-
   # Get https://termbin.com/<TERMBIN_BLOB> using curl
   # Usage: curltb TERMBIN_BLOB [CURL_OPTIONS]
 
   curl https://termbin.com/"$1" "${@:2}"
 #+end_src
 ** =colortest=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/colortest")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/colortest")
   # Print out all 256 colors in the terminals
 
   f=0
@@ -662,8 +606,6 @@ shebang for elisp scripts.
 process management in emacs is shit.
 #+NAME: myemacs-load
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/myemacs-load") :eval no
-  #!/usr/bin/env bash
-
   tmpfile="$(mktemp)"
   cat >"$tmpfile" <<'EOF'
     <<stringify-arg-to-eval-option>>
@@ -693,8 +635,6 @@ These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
 ** =cf=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cf")
-  #!/usr/bin/env sh
-
   # Look up a configuration file by its user-friendly alias.
 
   # Note: This script is statically parsed by lscf. Keep its structure intact.
@@ -749,16 +689,12 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =elisp=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/elisp")
-  #!/usr/bin/env sh
-
   # Run an elisp interpreter through emacs
   create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
   myemacs $create_frame --eval "(ielm)" "$@"
 #+end_src
 ** =eoctave=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/eoctave")
-  #!/usr/bin/env sh
-
   # Run octave interpreter through emacs
 
   create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
@@ -766,8 +702,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =epython=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/epython")
-  #!/usr/bin/env sh
-
   # Run a python interpreter through emacs
 
   create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
@@ -775,8 +709,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =eterm=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/eterm")
-  #!/usr/bin/env sh
-
   # Run an emacs-hosted terminal via vterm
 
   myemacs --create-frame --eval '(multi-vterm)' "$@"
@@ -809,8 +741,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =erc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/erc") :noweb yes
-  #!/usr/bin/env sh
-
   # Open emacs and run ERC in it
 
   create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
@@ -835,9 +765,7 @@ are designed to be easily integrated into dmenu scripts.
         (magit-status))))
 #+end_src
 ** =qr=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/qr")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/qr")
   # Copy, show or open the argument based on its content
   copy_or_show_or_open() {
       notify-send 'QR Code:' "$@"
@@ -867,7 +795,6 @@ are designed to be easily integrated into dmenu scripts.
 ** =rb=
 # TODO: linux-only
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/rb")
-  #!/usr/bin/env bash
   # One-time reboot into selected OS
 
   set -e # Quit if any command fails
@@ -891,8 +818,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =viman=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/viman")
-  #!/usr/bin/env sh
-
   # Wrapper script for vim which:
   #   1. By default opens vim with a configuration for displaying man pages,
   #       without loading unnecessary plugins
@@ -910,24 +835,18 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =vimdiff=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vimdiff")
-  #!/usr/bin/env sh
-
   # Like regular vimdiff, but in nvim
 
   nvim -d "$@"
 #+end_src
 ** =vicc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vicc")
-  #!/usr/bin/env sh
-
   # Find and open in vim a header file from the default include path
 
   vim "$(echo "#include <$1>" | cpp -H 2>&1 >/dev/null | head -1 | sed 's/^. //')"
 #+end_src
 ** =vipydoc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vipydoc")
-  #!/usr/bin/env sh
-
   # Open alacritty with pydoc in it
   # - All arguments are passed to pydoc
   # - Alacritty window class tracks those defined in my i3 config
@@ -936,8 +855,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =rgf=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/rgf")
-  #!/usr/bin/env sh
-
   # Run rg and fzf to search through file contents and jump to a file
 
   where="$1"
@@ -998,9 +915,7 @@ are designed to be easily integrated into dmenu scripts.
   sudo pip install dryparse
 #+end_src
 ** =imount=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/imount")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/imount")
   # List of all blocks
   listing="$(lsblk --list -o NAME,LABEL)"
 
@@ -1048,8 +963,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =kbind=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/kbind")
-  #!/usr/bin/env sh
-
   # Temporarily bind keys
 
   pkill -f '^sxhkd\.tmp '
@@ -1060,8 +973,6 @@ are designed to be easily integrated into dmenu scripts.
 * Dmenu
 ** Main entrypoint (=dmenu_run=)
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu_run")
-  #!/usr/bin/env sh
-
   # If an argument is provided, run corresponding custom dmenu script
   if [ -n "$1" ]; then
       script=~/.local/lib/dmenu/"$1"
@@ -1225,8 +1136,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** Open
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/open")
-  #!/usr/bin/env sh
-
   # Open a website in Firefox
   # Suggests bookmarks managed by buku, but you can input any URL
 
@@ -1262,8 +1171,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** Snippets
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/snips")
-  #!/usr/bin/env sh
-
   # TODO add snippets from tem
 
   edit=" Edit..."
@@ -1307,9 +1214,7 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 *** TODO Use something more universal
 ** Todo
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/todo")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/todo")
   edit=" Edit..."
   lookup="$(
     ls ~/proj/*/TODO.org \
@@ -1338,9 +1243,7 @@ are designed to be easily integrated into dmenu scripts.
   fi
 #+end_src
 ** Mail
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/mail")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/mail")
   edit=" Edit..."
 
   entries="$(echo "$edit"; cd ~/mail && command ls)"
@@ -1357,8 +1260,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** Pacman
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/pacman")
-  #!/usr/bin/env sh
-
   install=" Install..."
   about=" About..."
   remove=" Remove..."
@@ -1423,9 +1324,7 @@ are designed to be easily integrated into dmenu scripts.
 
 #+end_src
 ** Color
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/color")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/color")
   declare -A colors
 
   colors[',k black']='         #1e1e1e'
@@ -1469,7 +1368,7 @@ are designed to be easily integrated into dmenu scripts.
   echo -n "${colors["$choice_filtered"]}" | sed 's_[^ ]* *\(.*\)_\1_' | xsel -b
 #+end_src
 ** Unicode
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/unicode")
+#+begin_src python :tangle (haris/tangle-home ".local/lib/dmenu/unicode")
   #!/usr/bin/env python3
 
   # Choose a font-awesome icon from dmenu and copy it
@@ -1566,8 +1465,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** Kill Process
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/pkill")
-  #!/usr/bin/env sh
-
   choice="$(ps -A -o comm --no-headers | dmenu)"
 
   [ -z "$choice" ] && exit
@@ -1649,8 +1546,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** System
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/system")
-  #!/usr/bin/env sh
-
   choice="$(echo "Shutdown\nSuspend\nReboot..." | dmenu)"
 
   # No choice, bye-bye
@@ -1687,8 +1582,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** Services
 #+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/services")
-  #!/usr/bin/env bash
-
   # Unicode glyphs
   started=""
   stopped=""
@@ -1795,9 +1688,7 @@ are designed to be easily integrated into dmenu scripts.
   $sudo systemctl "$cmd" $opt "$service"
 #+end_src
 ** GPG
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/gpg")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/gpg")
   # Get list of all public keys
   keylist=($(gpg --list-public-keys Haris | grep '^\s' | sed 's/^\s*//g'))
 
@@ -1817,9 +1708,7 @@ are designed to be easily integrated into dmenu scripts.
   echo "$choice" | awk '{print $1}' | xsel -b
 #+end_src
 ** OTP
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/otp")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/otp")
   # Select an app and copy its OTP to clipboard
 
   cd ~
@@ -1850,17 +1739,13 @@ are designed to be easily integrated into dmenu scripts.
 * System maintenance
 ** =pacman-update-mirrorlist=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/pacman-update-mirrorlist")
-  #!/usr/bin/env sh
-
   # Update /etc/pacman.d/mirrorlist using reflector
   # (requires sudo)
 
   reflector --sort rate --save /etc/pacman.d/mirrorlist
 #+end_src
 ** =texclean=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/texclean")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/texclean")
   # Array of extensions
   extarray=($(sed -e '/^#/d' -e '/^$/d' ~/templates/latex/ignored_files))
 
@@ -1875,8 +1760,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =springclean=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/springclean")
-  #!/usr/bin/env sh
-
   docker system prune
   docker volume prune
 
@@ -1890,8 +1773,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =createhome=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/createhome")
-  #!/usr/bin/env sh
-
   # Top level home directory
   dirs=(
       src
@@ -1921,8 +1802,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =cleanhome=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cleanhome")
-  #!/usr/bin/env sh
-
   # Clean home of directories like Downloads, Documents, regularly created by who
   # knows.
 
@@ -1930,9 +1809,7 @@ are designed to be easily integrated into dmenu scripts.
         ~/Templates ~/Public ~/'VirtualBox VMs' ~/mpv_slicing.log
 #+end_src
 ** =cleantex=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/cleantex")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/cleantex")
   # A script to clean tex build files
 
   shopt -s globstar
@@ -1944,12 +1821,11 @@ are designed to be easily integrated into dmenu scripts.
 ** =tangle=
 #+NAME: tangle
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle") :noweb yes
-  #!/usr/bin/env sh
   ~/.haris/bootstrap/tangle.sh "$@"
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
 also tangle it to a standalone destination that I also keep under version control.
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh")
+#+begin_src elisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh")
   #!/usr/bin/env -S emacs --script
 
   (load-file (concat (file-name-directory load-file-name) "/tangle.el"))
@@ -1962,7 +1838,6 @@ also tangle it to a standalone destination that I also keep under version contro
 ** =tangle-all=
 #+NAME: tangle-all
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle-all")
-  #!/usr/bin/env sh
   ~/.haris/bootstrap/tangle-all.sh "$@"
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
@@ -1990,15 +1865,13 @@ also tangle it to a standalone destination that I also keep under version contro
 #+end_src
 * Miscellaneous
 ** =term=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/term")
-  #!/usr/bin/env bash
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/term")
   alacritty --working-directory "$PWD" "$@"
 #+end_src
 ** TODO =mconf=
 Remove after repository restructuring.
+#+HEADER: :shebang "#!/usr/bin/env -S bash --init-file"
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/mconf")
-  #!/usr/bin/env -S bash --init-file
-
   # Manage dotfiles using Emacs Magit
 
   # Because configuring Magit to support bare repositories is a bit complicated,
@@ -2035,14 +1908,10 @@ Remove after repository restructuring.
 #+end_src
 ** =aurvote=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/aurvote")
-  #!/usr/bin/env sh
-
   ssh aur@aur.archlinux.org vote "$@"
 #+end_src
 ** =handle-low-bat=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/handle-low-bat")
-  #!/usr/bin/env sh
-
   # Suspend when battery low
 
   if acpi | grep -q '\s[0-9]%' && acpi | grep -q 'Discharging'; then
@@ -2053,25 +1922,20 @@ Remove after repository restructuring.
 #+end_src
 ** =cronupd=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cronupd")
-  #!/usr/bin/env sh
-
   # TODO change to ~/.crontab
   cat ~/.haris/private/crontab | crontab -
 #+end_src
 ** =fix-wifi=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/fix-wifi")
-  #!/usr/bin/env sh
   sudo rfkill block wifi && sudo rfkill unblock wifi
 #+end_src
 ** =guirun=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/guirun")
-  #!/usr/bin/env bash
   # Open a GUI window in the correct workspace
   i3-msg exec "$(printf "%q " "$@")"
 #+end_src
 ** =snip=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/snip")
-  #!/usr/bin/env bash
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/snip")
   nvim ~/.vim/snips/"$1".snippets
 #+end_src
 ** sxhkd
@@ -2087,12 +1951,10 @@ keep each in a separate config file. And, for each I run a separate process so I
 can conveniently stop/restart each by name.
 *** =sxhkd.private=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sxhkd.private")
-  #!/usr/bin/env bash
   exec -a sxhkd.private sxhkd -c ~/.sxhkd.private "$@"
 #+end_src
 *** =sxhkd.tmp=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sxhkd.tmp")
-  #!/usr/bin/env bash
   exec -a sxhkd.tmp sxhkd -c ~/.sxhkd.tmp "$@"
 #+end_src
 * Helper code
