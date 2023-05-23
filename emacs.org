@@ -1094,6 +1094,12 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
   (setq imaxima-use-maxima-mode-flag t)
   (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 #+end_src
+** Command log mode
+#+begin_src elisp
+  (spacemacs/set-leader-keys (kbd "oc") (lambda () (interactive)
+                                           (command-log-mode 'toggle)
+                                           (clm/toggle-command-log-buffer)))
+#+end_src
 * Spacemacs
 The code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file
 is in turn loaded from [[~/.spacemacs]]. code block]].
