@@ -149,8 +149,11 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+begin_src fish
   bind_both_modes \er src_fish
 
-  # The linux TTY interprets \cP as \cp, and I use the latter for history navigation
-  if [ "$TERM" != "linux" ]
+  # Some terminals like linux TTY and emacs vterm send Ctrl+P as \cP, so I enable
+  # it only for alacritty which has been proven to work. I can add other terminals
+  # here as needed.
+
+  if [ "$TERM" = "alacritty" ]
       bind_both_modes \cP \
       '
       echo Starting private mode...;
