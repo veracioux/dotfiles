@@ -270,6 +270,8 @@ Fish plugins:
   PatrickF1/fzf.fish
   jorgebucaran/nvm.fish
   evanlucas/fish-kubectl-completions
+  # Fixes some vterm issues
+  pymander/vfish
 #+end_src
 This code block installs all system dependencies and all plugins in fish based
 on the plugin list above.
