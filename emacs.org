@@ -330,6 +330,7 @@ Some custom keybindings are defined here as well.
   (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
   (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
 
+  (define-key input-decode-map "\C-i" [C-i])
   (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
   (define-key evil-visual-state-map (kbd "C-i") 'evil-jump-forward)
 #+end_src
@@ -344,6 +345,30 @@ Some custom keybindings are defined here as well.
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<ielm>>
+#+end_src
+*** Custom global map
+#+NAME: custom-global-map
+#+begin_src emacs-lisp
+  ;; Buffer map
+  (setq haris/buffer-prefix-map (make-sparse-keymap))
+  (spacemacs/set-leader-keys "ob" haris/buffer-prefix-map)
+  (define-key haris/buffer-prefix-map (kbd "r") #'rename-buffer)
+  (define-key haris/buffer-prefix-map (kbd "c") #'clone-buffer)
+  (define-key haris/buffer-prefix-map (kbd "i") #'ibuffer)
+
+  ;; Command log mode
+  (setq haris/command-log-prefix-map (make-sparse-keymap))
+  (spacemacs/set-leader-keys "oc" haris/command-log-prefix-map)
+  (define-key haris/command-log-prefix-map (kbd "l") #'haris/command-log)
+
+  ;; Friendly descriptions
+  (which-key-add-key-based-replacements
+    "SPC o b" "Buffer manipulation"
+    "SPC o c" "Command log"
+    "SPC o c l" "Local command log")
+#+end_src
+#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+  <<custom-global-map>>
 #+end_src
 *** Miscellaneous
 #+NAME: bindings-miscellaneous
@@ -371,10 +396,6 @@ Some custom keybindings are defined here as well.
                                             "Search through current history"
                                             (interactive)
                                             (counsel-shell-history)))
-
-  (spacemacs/set-leader-keys "or" 'rename-buffer)
-  (spacemacs/set-leader-keys "oc" 'clone-buffer)
-  (spacemacs/set-leader-keys "oi" 'ibuffer)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<bindings-miscellaneous>>
@@ -1169,12 +1190,13 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 #+end_src
 ** Command log mode
 #+begin_src elisp
+  (setq command-log-mode-auto-show nil)
+
+  ;; TODO: sometimes you have to call this twice for the command-log buffer to appear
   (defun haris/command-log ()
     (interactive)
-    (command-log-mode 'toggle)
-    (clm/toggle-command-log-buffer))
-
-  (spacemacs/set-leader-keys (kbd "oC") #'haris/command-log)
+    (let ((command-log-mode-auto-show t))
+      (call-interactively #'command-log-mode)))
 #+end_src
 ** Nerd commenter
 #+begin_src emacs-lisp
