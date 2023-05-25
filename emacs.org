@@ -289,18 +289,16 @@ Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
 *** Spacemacs-like bindings
 #+NAME: spacemacs-like-bindings
 #+begin_src emacs-lisp
-  (define-key evil-normal-state-map
-    (kbd "SPC f e h")
-    '(lambda () (interactive)
-       (find-file "~/.haris/emacs.org")))
-  (define-key evil-normal-state-map
-    (kbd "SPC f e r")
-    '(lambda () (interactive)
-       (load-file "~/.emacs.d/haris/root.el")))
+  (defun haris/open-emacs.org ()
+    (interactive)
+    (find-file "~/.haris/emacs.org"))
 
-  (define-key evil-normal-state-map
-    (kbd "SPC s a")
-    'spacemacs/search-project-ag-region-or-symbol)
+  (defun haris/load-user-config ()
+    (interactive)
+    (load-file "~/.emacs.d/haris/root.el"))
+
+  (define-key evil-normal-state-map (kbd "SPC f e h") #'haris/open-emacs.org)
+  (define-key evil-normal-state-map (kbd "SPC f e r") #'haris/load-user-config)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<spacemacs-like-bindings>>
@@ -417,8 +415,11 @@ Some custom keybindings are defined here as well.
     (visual-fill-column-mode 1))
 
   (defun haris/org-babel-goto-tangle-file ()
-    "Go to the file that the code block at point tangles to"
-    (let ((file (haris/extract-tangle-final-dest)))
+    "Go to the file that the code block at point tangles to. If there is an
+  interactive prefix argument, open the final destination (production) file."
+    (let ((file (if current-prefix-arg
+                    (haris/extract-tangle-final-dest)
+                  (haris/extract-tangle-dest))))
       (when file (find-file file))))
 
   (add-hook 'org-mode-hook 'org-appear-mode)
@@ -500,15 +501,15 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; block with ':session' is evaluated
   (setq org-babel-prompt-command "")
 
-  (defun haris/tangle-dest ()
-    "Tangle the current file to its final destinations. If code blocks within the
-     file have the temporary staging destination as their :tangle argument, they
-     will be tangled to the appropriate place under ~/ as well."
-    (interactive)
+  (defun haris/tangle-dest (&optional prefix-arg)
+    "Tangle block(s) to their final destinations. If a code block file have the
+  temporary staging destination as their :tangle argument, they will be tangled to
+  the production destination under ~/ as well."
+    (interactive "P")
     (let ((tangle-home (haris/tangle-home)))
-      (shell-command (concat "rm -rf " tangle-home))
+      (delete-directory tangle-home t)
       (org-transclusion-add-all)
-      (org-babel-tangle)
+      (org-babel-tangle prefix-arg)
       (shell-command (concat "rsync -ru " tangle-home " ~/"))))
 
   (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle-dest)
@@ -559,7 +560,11 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (defun haris/org-babel-restclient-split-window-fix ()
     "Fixes a bug where executing a restclient code block splits the window."
     (interactive)
-    (if (string= (car (org-babel-get-src-block-info)) "restclient") (delete-window)))
+    (if (string=
+         (car (org-babel-get-src-block-info))
+         "restclient")
+        (delete-window)))
+
   (add-hook 'org-babel-after-execute-hook 'haris/org-babel-restclient-split-window-fix)
 #+end_src
 ** Bindings
@@ -582,7 +587,6 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (evil-define-key 'normal org-src-mode-map (kbd ", w")         'org-edit-src-save)
   (evil-define-key 'normal org-mode-map     (kbd ", i c")       'org-columns)
   (evil-define-key 'normal org-mode-map     (kbd ", b E")       'haris/execute-named-code-block)
-  (evil-define-key 'normal org-mode-map     (kbd "C-c t")       'haris/org-babel-tangle-single-block)
 
   (evil-define-key 'normal org-mode-map (kbd "SPC h o")     'org-info-find-node)
 #+end_src
@@ -595,15 +599,6 @@ file, so that file can be used as a minimalistic source for boostrapping.
     (save-excursion
       (call-interactively 'org-babel-goto-named-src-block)
       (org-babel-execute-src-block-maybe)))
-
-  (defun haris/org-babel-tangle-single-block()
-    (interactive)
-    (let ((current-prefix-arg '(4))
-          (dest (haris/extract-tangle-dest))
-          (final-dest (haris/extract-tangle-final-dest)))
-      (call-interactively 'org-babel-tangle)
-      (if (and dest final-dest (not (string= dest final-dest)))
-          (copy-file dest final-dest t))))
 #+end_src
 * Man
 #+begin_src elisp
