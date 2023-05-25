@@ -22,14 +22,22 @@ A library of functions for easier tangling.
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.el")
   (require 'ob-tangle)
 
+  (defun haris/prevent-annoying-messages ()
+    (require 'cl-lib)
+    (advice-add 'sh-set-shell :around
+                (lambda (orig-fun &rest args)
+                  (cl-letf (((symbol-function 'message) #'ignore))
+                    (apply orig-fun args))))
+    (setq python-indent-guess-indent-offset nil))
+
+  (haris/prevent-annoying-messages)
+
   (defun haris/tangle-deps (subpath)
-    "Prefix 'subpath' with the directory where dependency install scripts are
-     tangled"
+    "Prefix 'subpath' with the directory where dependency install scripts are tangled"
     (concat "/tmp/dependencies-" (user-login-name) "/" subpath))
 
   (defun haris/tangle-home (&optional subpath)
-    "Prefix 'subpath' with the directory that is used as staging for /home/haris
-     when tangling"
+    "Prefix 'subpath' with the directory that is used as staging for /home/haris when tangling"
     (concat "/tmp/tangle-" (user-login-name) "/" subpath))
 
   (defun haris/tangle-all (&optional to-destination)
