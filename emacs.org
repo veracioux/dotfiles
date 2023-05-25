@@ -595,13 +595,6 @@ file, so that file can be used as a minimalistic source for boostrapping.
   (define-key org-mode-map (kbd "TAB") nil t)
   (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
 
-  (defun haris/org-mode-TAB ()
-    (interactive)
-    (cond ((org-tempo-complete-tag))
-          ((org-cycle))))
-
-  (evil-define-key 'insert org-mode-map (kbd "TAB") #'haris/org-mode-TAB)
-
   (evil-define-key 'normal org-mode-map     (kbd ", S")         'org-attach-screenshot)
   (evil-define-key 'normal org-mode-map     (kbd ", TAB")       'org-next-link)
   (evil-define-key 'normal org-mode-map     (kbd ", <backtab>") 'org-previous-link)
@@ -1070,6 +1063,8 @@ Note: Some variables are configured in [[*Layers][Spacemacs layers]].
 #+begin_src elisp
   (use-package yasnippet)
 
+  (add-to-list 'yas-extra-modes 'git-commit-mode)
+
   (advice-add 'yas-tryout-snippet :after #'evil-insert-state)
 
   (define-key yas-keymap (kbd "<backtab>") 'yas-prev-field)
@@ -1107,6 +1102,8 @@ precedence of TAB-bound commands for all modes.
           (cond
            ;; If in an org table, try org-cycle
            ((when (and (fboundp 'org-at-table-p) (org-at-table-p)) (_ 'org-cycle)))
+           ;; Try to complete using org-tempo before yasnippet
+           ((org-tempo-complete-tag))
            ;; If yas-minor-mode is on, try yas-next-field, otherwise yas-expand
            ((when yas-minor-mode
               (condition-case err
@@ -1129,6 +1126,8 @@ precedence of TAB-bound commands for all modes.
       (when alert
         (alert (format "%s" last-fun)
                :title "Command bound to pressed key:"))))
+
+  (define-key evil-insert-state-map (kbd "TAB") #'haris/handle-TAB-in-insert-mode)
 #+end_src
 * Info mode
 Remove Info mode annoying keybindings.

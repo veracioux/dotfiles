@@ -264,7 +264,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       } | pinentry -g 2>&1 | sed -n "/^D/ s/^D //p" | tr -d '\n'
   fi
 #+end_src
-** =askpass-gui=                                                    :script:
+** =askpass-gui=                                                      :script:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/askpass-gui")
   TERM=dumb askpass "$@"
 #+end_src
