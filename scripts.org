@@ -2,6 +2,7 @@
 #+PROPERTY: header-args :comments headline :mkdirp yes :noweb yes :results silent
 #+PROPERTY: header-args:shell :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744)
 #+PROPERTY: header-args:bash :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744)
+#+PROPERTY: header-args:python :shebang "#!/usr/bin/env python3" :tangle-mode (identity #o744)
 
 This is where my custom scripts live. That includes shell scripts, dmenu scripts,
 and potentially programming language-specific scripts. One of the things I
@@ -37,8 +38,6 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
 #+end_src
 ** =rm=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/rm")
-  #!/usr/bin/env sh
-
   for arg in "$@"; do
       [ ! -e "$arg" ] && continue
       arg="$(realpath "$arg")"
@@ -55,9 +54,7 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
 
 ** =pass=
 This is a wrapper around GNU =pass=.
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/pass")
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/pass")
   shopt -s expand_aliases
 
   alias pass=/usr/bin/pass
@@ -78,8 +75,6 @@ Note: This depends on my custom build of dmenu with the height patch applied.
 The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+NAME: dmenu
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu")
-  #!/usr/bin/env sh
-
   alternative-command dmenu -f -i -h 25 \
       -nb '#1e1e1e' -nf '#dddddd' -sb '#99a3ff' -sf '#1e1e1e' \
       -fn 'Ubuntu Mono-12' \
@@ -87,14 +82,10 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =ipython=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/ipython")
-  #!/usr/bin/env bash
-
   /usr/bin/ipython "$@" -i -- "$PYTHONSTARTUP"
 #+end_src
 ** =gvim=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/gvim")
-  #!/usr/bin/env bash
-
   # Fake gvim which will just launch a terminal with neovim in it
 
   for arg in "$@"; do
@@ -122,20 +113,14 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =redshift=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/redshift")
-  #!/usr/bin/env sh
-
   /usr/bin/redshift -l 43.84:18.35
 #+end_src
 ** =firefox=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/firefox")
-  #!/usr/bin/env sh
-
   /usr/bin/firefox $(printarg --new-tab "$@" | uniq)
 #+end_src
 ** =myemacs=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs")
-  #!/usr/bin/env sh
-
   # Run emacsclient in the terminal, unless the -c option is given, which will
   # open the GUI.
   # - Also enables proper color support.
@@ -156,14 +141,10 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =myemacs-float=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs-float")
-  #!/usr/bin/env sh
-
   myemacs -c --frame-parameters='(quote (name . "EmacsFloat"))' "$@"
 #+end_src
 ** =notify-send=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/notify-send")
-  #!/usr/bin/env sh
-
   export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/<<eval-real-uid()>>/bus
 
   /usr/bin/notify-send "$@"
@@ -874,7 +855,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =otp=
 #+begin_src python :tangle (haris/tangle-home ".local/bin/otp")
-  #!/usr/bin/env python3
   import shlex
   import subprocess
 
@@ -1380,8 +1360,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** Unicode
 #+begin_src python :tangle (haris/tangle-home ".local/lib/dmenu/unicode")
-  #!/usr/bin/env python3
-
   # Choose a font-awesome icon from dmenu and copy it
 
   from urllib.request import urlopen
@@ -1488,8 +1466,6 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** Config
 #+begin_src python :tangle (haris/tangle-home ".local/lib/dmenu/config")
-  #!/usr/bin/env python3
-
   from subprocess import run, PIPE
   import os
   import os.path
