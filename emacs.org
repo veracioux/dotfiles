@@ -1046,36 +1046,16 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 
   (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
 #+end_src
-* TODO Completion
-I should probably have a single global binding for TAB. In this function, I
-can define the precise order of precedence.
-
-Some notes:
-
-- functions that have no other bindings except TAB should have highest precedence
-- Should remove TAB (and <tab>) bindings from all other modes
+* Completion
+Note: Some variables are configured in [[*Layers][Spacemacs layers]].
+** Company
 #+begin_src elisp
-  (use-package yasnippet)
   (use-package company)
 
+  ;; Enable company-mode in some modes
+  ;; (merely enabling global-company-mode causes issues)
   (add-hook 'sh-mode-hook #'company-mode)
-
-  (defun haris/yas-next-field-or-expand ()
-    (interactive)
-    (cond
-     ;; Give org-cycle precedence
-     ((and (fboundp 'org-at-table-p) (org-at-table-p)) (org-cycle))
-     ((condition-case err
-        (yas-next-field)
-      (error (yas-expand))))))
-
-  (defun haris/company-complete-selection-prefer-yas-expand ()
-    (interactive)
-    (cond
-     ;; Give org-cycle precedence
-     ((and (fboundp 'org-at-table-p) (org-at-table-p)) (org-cycle))
-     ((and yas-minor-mode (yas-expand)))
-     ((company-complete-selection))))
+  (add-hook 'minibuffer-mode-hook #'company-mode)
 
   (defun haris/company-toggle-tooltip ()
     (interactive)
@@ -1083,29 +1063,73 @@ Some notes:
      ((company-tooltip-visible-p) (company-cancel))
      ((company-complete))))
 
-  ;; Would prefer this binding would take precedence over everything, but it doesn't
-  ;; over company completion
-  (evil-define-key 'insert yas-minor-mode-map (kbd "TAB")
-    '(menu-item "" haris/yas-next-field-or-expand :filter yas-maybe-expand-abbrev-key-filter))
-
-  ;; company-active-map is too invasive
-  (define-key company-active-map (kbd "TAB") nil)
-  ;; Restrict company-mode TAB to insert mode, just in case
-  (define-key company-mode-map (kbd "TAB") nil)
-  ;; and also give yas-expand precedence
-  (evil-define-key 'insert company-mode-map (kbd "TAB") #'haris/company-complete-selection-prefer-yas-expand)
-
-  (define-key yas-keymap (kbd "TAB") 'yas-next-field)
-  (define-key yas-keymap (kbd "<backtab>") 'yas-prev-field)
-
-  ;; These are duplicates of TAB and can cause confusion
-  (define-key company-active-map (kbd "<tab>") nil)
-  (define-key yas-keymap (kbd "<tab>") nil)
-
   ;; Additional trigger for company
   (define-key evil-insert-state-map (kbd "C-SPC") #'haris/company-toggle-tooltip)
 #+end_src
-Note: Some additional variables are configured in [[*Layers][Spacemacs layers]].
+** Yasnippet
+#+begin_src elisp
+  (use-package yasnippet)
+
+  (advice-add 'yas-tryout-snippet :after #'evil-insert-state)
+
+  (define-key yas-keymap (kbd "<backtab>") 'yas-prev-field)
+#+end_src
+** The =TAB= key
+The TAB key is much abused. Keeping track of it in each minor mode separately is
+a nightmare. Therefore I unbind TAB in some keymaps so that it falls back to the
+TAB binding in the global keymap. This way, I can define the exact order of
+precedence of TAB-bound commands for all modes.
+#+begin_src elisp
+  ;; Remove TAB (and <tab>) bindings in some keymaps so that it falls back to
+  ;; global map.
+
+  (global-unset-key (kbd "TAB"))
+  (define-key yas-keymap (kbd "<tab>") nil)
+  (define-key yas-keymap (kbd "TAB") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  (define-key company-active-map (kbd "TAB") nil)
+  (define-key company-active-map (kbd "<tab>") nil)
+  (define-key company-mode-map (kbd "TAB") nil)
+  (evil-define-key 'insert company-mode-map (kbd "TAB") nil)
+
+  (defun haris/handle-TAB-in-insert-mode (&optional alert)
+    "Handle the TAB key exactly the way I want to."
+    (interactive)
+    (setq alert command-log-mode)
+
+    (let ((last-fun nil))
+      (defun _ (fun &rest rest)
+        "Call the function normally, and record it to the last-fun variable."
+        (setq last-fun fun)
+        (apply fun rest))
+
+      (ignore-errors
+          (cond
+           ;; If in an org table, try org-cycle
+           ((when (and (fboundp 'org-at-table-p) (org-at-table-p)) (_ 'org-cycle)))
+           ;; If yas-minor-mode is on, try yas-next-field, otherwise yas-expand
+           ((when yas-minor-mode
+              (condition-case err
+                  (or (_ 'yas-next-field) t)
+                (error
+                 (_ 'yas-expand)))))
+           ;; If company-mode is on, try completing/showing tooltip
+           ((when company-mode (_ 'company-complete-selection)))
+           ;; If org-mode is on, try org-cycle
+           ((when (eq major-mode 'org-mode)
+              (cond ((_ 'org-cycle))
+                    ;; If there's nothing to cycle, go to next link
+                    ((_ 'org-next-link)))))
+           ;; Try completion-at-point using company-capf. This is necessary because
+           ;; company-complete-selection above doesn't always work.
+           ((_ (lambda () (call-interactively #'company-capf))))
+           ;; Fallback
+           ((_ 'indent-for-tab-command))))
+
+      (when alert
+        (alert (format "%s" last-fun)
+               :title "Command bound to pressed key:"))))
+#+end_src
 * Info mode
 Remove Info mode annoying keybindings.
 #+NAME: info
