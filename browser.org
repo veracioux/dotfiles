@@ -18,6 +18,7 @@ All my browser preferences that I don't need to keep secret go here.
   user_pref("browser.startup.page", 3);
 
   user_pref("places.history.enabled", true);
+  user_pref("geo.enabled", false);
   user_pref("privacy.clearOnShutdown.history", false);
   user_pref("browser.download.useDownloadDir", false);
 
