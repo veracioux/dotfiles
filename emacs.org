@@ -211,7 +211,7 @@ command there (without any arguments).
                (setq _vterm (multi-vterm))
                (with-current-buffer _vterm
                  ;; Rename the buffer based on the command name
-                 (rename-buffer (format "*%s*" command))
+                 (rename-buffer (format "*%s*" command) t)
                  (setq run-command
                        (eval `(lambda (&optional argstring)
                                 (interactive ,(format "sCLI arguments: %s " ,command))

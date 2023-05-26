@@ -51,7 +51,6 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
   done
   /usr/bin/rm "$@"
 #+end_src
-
 ** =pass=
 This is a wrapper around GNU =pass=.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/pass")
