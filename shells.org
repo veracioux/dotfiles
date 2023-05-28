@@ -1,6 +1,6 @@
 #+TITLE: Shell Config
 #+PROPERTY: header-args :mkdirp yes :results silent :noweb yes
-#+PROPERTY: header-args:fish :tangle (haris/tangle-home ".config/fish/config.fish")
+#+PROPERTY: header-args:fish+ :tangle (haris/tangle-home ".config/fish/config.fish")
 #+PROPERTY: header-args:fish+ :shebang "#!/usr/bin/env fish"
 
 - *dash* as the system shell (because it's faster)
@@ -386,66 +386,132 @@ on the plugin list above.
   # the user doesn't follow up within 20 minutes, the background shell will exit
   # automatically.
   function o
-      set -l argv_escaped (string escape -- $argv)
-      [ -z "$__haris_tmux_linger_period" ] && set -l __haris_tmux_linger_period 20m
+      set -l __o_args $argv
+      <<o/argparse>>
+      set -l _status "$status"
+      if [ "$_status" != 0 ]
+          return "$_status"
+      end
+
+      if [ -n "$_flag_h" ]
+          echo "Run a command in the background in a tmux session so its output can be inspected on-demand."
+          echo "A GUI notification is sent when the command completes."
+          echo "After the command completes, plus a certain linger period, the tmux session is killed."
+          echo "The linger period can be adjusted with --linger-period or disabled with --persist."
+          echo
+          echo "Usage: o [OPTIONS] COMMAND..."
+          echo
+          echo "  -h, --help"        \t\t"Print this help message."
+          echo "  -p, --persist "    \t\t"Persist the tmux session until manually killed."
+          echo "  -l, --linger-period" \t"How long the tmux session should linger after the command completes."
+          echo                     \t\t\t"Same format as for the sleep command. (default: 20m)"
+          echo "  -s, --silent"      \t\t"Do not send a GUI notification when the command completes."
+          return
+      end
+
+      # The remaining args contain only the command to be run (argparse options have been extracted)
+      set -l __cmdline (string escape -- $argv)
+      # The arguments are forwarded to the helper script, so it can parse them
+      set -l __o_args (string escape -- $__o_args)
+
       tmux new -d fish --private -C "
-          set __haris_tmux_linger_period $__haris_tmux_linger_period;
-          set HARIS_BACKGROUND_TASKS_SILENT $HARIS_BACKGROUND_TASKS_SILENT;
-          set __cmdline $argv_escaped;"'
-          <<o/background-task>>
+      set HARIS_BACKGROUND_TASKS_SILENT $HARIS_BACKGROUND_TASKS_SILENT;
+      set __o_args $__o_args;
+      set __cmdline $__cmdline;"'
+      <<o/background-task>>
       '
   end
 #+end_src
+**** Testing
 Test the function by executing this code block:
 #+NAME: o/test
 #+begin_src fish :tangle no :cmdline --no-config
-  set __haris_tmux_linger_period 3s
   <<o>>
-  o sh -c 'echo Simulating long command...; sleep 3s; echo Done.; echo The terminal window should close in a few seconds'
+  o --linger-period=3s sh -c '
+      echo Simulating long command...;
+      sleep 3s; echo Done.;
+      echo The terminal window should close in a few seconds;
+      echo "The exit code (\$status) should be 1!";
+      false'
   alacritty-float -e tmux attach
+#+end_src
+**** Argparse block
+#+NAME: o/argparse
+#+begin_src fish :tangle no
+  argparse \
+    --stop-nonopt \
+    --exclusive linger-period,persist \
+    h/help \
+    p/persist \
+    l/linger-period= \
+    s/silent \
+    -- $__o_args
 #+end_src
 **** Background task and follow-up shell
 Note: This code block must not contain any apostrophes!
 #+NAME: o/background-task
 #+HEADER: :shebang "#!/usr/bin/env fish"
 #+begin_src fish :tangle no :eval no
+  # Convert o options to local variables
+  <<o/argparse>>
+  set linger_period 20m
+  if [ -n "$_flag_linger_period" ]
+      set linger_period "$_flag_linger_period"
+  end
+  set persist "$_flag_persist"
+  set silent "$HARIS_BACKGROUND_TASKS_SILENT"
+  if [ -n "$_flag_silent" ]
+      set silent "$_flag_silent"
+  end
+
   functions -e fish_greeting
+  # Run the command
   $__cmdline
 
   set __status "$status"
+  set -l tmux_session (tmux display-message -p "#S")
 
-  set __urgency
-  if [ "$__status" != 0 ]; set __urgency "--urgency=critical"; end
+  if [ -z "$silent" ] && [ -z "$(tmux list-clients -t "$tmux_session")" ]
+      # Send a notification and wait for it to close. The reason we wait for it is
+      # because if the user is AFK, then the follow-up shell would exit prematurely.
+      # This way, if the user has set up notiication persistence while AFK, we
+      # leverage that feature.
+      # If a tmux session is already attached, the notification is not displayed.
+      set -l notif_options
+      if [ "$__status" != 0 ]; set -a notif_options "--urgency=critical"; end
+      set -l notif_id_file (mktemp)
+      # If a client attaches, the notification is no longer necessary and is immediately closed
+      set -l hook (string escape run-shell "sh -c \"[ -n \"$notif_id_file\" ] && dunstify --close=\$(cat $notif_id_file)\"")
+      tmux set-hook client-attached "$hook"
 
-  # Send a notification and wait for it to close. The reason we wait for it is
-  # because if the user is AFK, then the follow-up shell would exit prematurely.
-  # This way, if the user has set up notiication persistence while AFK, we
-  # leverage that feature.
-
-  set _notification_id_file (mktemp)
-  set _hook (string escape run-shell "sh -c \"[ -n \"$_notification_id_file\" ] && dunstify --close=\$(cat $_notification_id_file)\"")
-  tmux set-hook client-attached "$_hook"
-
-  if [ -z "$HARIS_BACKGROUND_TASKS_SILENT" ]
       unbuffer \
           notify-send "Background task done" \
-              "$__cmdline exited with code $__status" \
-              --wait --print-id $__urgency \
-              2>/dev/null >"$_notification_id_file"
+          "$__cmdline exited with code $__status" \
+          --wait --print-id $notif_options \
+          2>/dev/null >"$notif_id_file"
+
+      rm -f "$notif_id_file"
   end
 
-  rm -f "$_notification_id_file"
+  if [ -z "$persist" ]
+      # Start a timeout for the shell to close if the user does not perform any
+      # follow-up commands
+      sh -c "sleep $linger_period; kill $fish_pid" &
+      jobs --last --pid | read _timeout_pid
+      disown
 
-  # Start a timeout for the shell to close if the user does not perform any
-  # follow-up commands
-  sh -c "sleep $__haris_tmux_linger_period; kill $fish_pid" &
-  jobs --last --pid | read _timeout_pid
-  disown
-
-  function __haris_on_interaction_stop_timeout --on-event fish_preexec
-      kill "$_timeout_pid"
-      functions --erase __haris_on_interaction_stop_timeout
+      function __haris_on_stop_interaction_timeout --on-event fish_preexec
+          kill "$_timeout_pid"
+          functions --erase __haris_on_stop_interaction_timeout
+      end
   end
+
+  function __haris_reproduce_status_code
+      functions --erase __haris_reproduce_status_code
+      return $__status
+  end
+
+  __haris_reproduce_status_code
 #+end_src
 **** Completions
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/o.fish")
