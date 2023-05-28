@@ -951,13 +951,13 @@ are designed to be easily integrated into dmenu scripts.
   chmod a+rw /tmp/imount_directory
 #+end_src
 ** =kbind=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/kbind")
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/kbind")
   # Temporarily bind keys
 
   pkill -f '^sxhkd\.tmp '
   gvim -c 'set ft=sxhkd' ~/.sxhkd.tmp
 
-  sxhkd.tmp -c ~/.sxhkd.tmp &
+  sxhkd.tmp -c ~/.sxhkd.tmp & disown
 #+end_src
 * Dmenu
 ** Main entrypoint (=dmenu_run=)
