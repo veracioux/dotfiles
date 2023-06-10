@@ -368,19 +368,6 @@ on the plugin list above.
           end
       end
   end
-
-  function sconf
-      set -l gitdir ~/.secret
-      set -l worktree_option --work-tree="$HOME"
-      if [ -e ".secret" ]
-          set gitdir (pwd)/.secret
-          if [ ~ != (pwd) ]
-              set -le worktree_option
-          end
-      end
-
-      git --git-dir="$gitdir" $worktree_option $argv
-  end
 #+end_src
 *** =o=
 #+NAME: o
@@ -650,8 +637,6 @@ a terminal and runs the aliased command.
 ** CLI
 #+begin_src shell :tangle (haris/tangle-home ".alias")
   alias x='startx'
-  alias conf='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-  alias sconf='git --git-dir=$HOME/.secret/ --work-tree=$HOME'
   alias vim='nvim'
   alias vi='command vim'
   alias snips='cd ~/.vim/snips'
