@@ -31,7 +31,8 @@ i3/sway session:
   (haris/tangle-dest)
   (shell-command (format "%s-msg -t command restart" wm))
   (call-process "pkill" nil 0 nil "-u" (user-login-name) "sxhkd")
-  (call-process "sxhkd" nil 0 nil)
+  (let ((default-directory "~/"))
+    (call-process "sxhkd" nil 0 nil))
 #+end_src
 * Helper scripts and local variables
 :PROPERTIES:
