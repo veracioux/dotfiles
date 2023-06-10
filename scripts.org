@@ -2,6 +2,7 @@
 #+PROPERTY: header-args :comments headline :mkdirp yes :noweb yes :results silent
 #+PROPERTY: header-args:shell :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744)
 #+PROPERTY: header-args:bash :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744)
+#+PROPERTY: header-args:fish :shebang "#!/usr/bin/env fish" :tangle-mode (identity #o744)
 #+PROPERTY: header-args:python :shebang "#!/usr/bin/env python3" :tangle-mode (identity #o744)
 
 This is where my custom scripts live. That includes shell scripts, dmenu scripts,
@@ -150,7 +151,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =sudo=
 #+NAME: sudo
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/sudo") :noweb yes
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/sudo")
   # Sudo but with a hook that sends a notification when the prompt is shown
 
   if [ -z "$SUDO_ASKPASS" ]; then
@@ -257,6 +258,44 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   # Compare the contents of two GPG encrypted files
 
   diff <(gpg --decrypt --output - "$1") <(gpg --decrypt --output - "$2") "${@:3}"
+#+end_src
+** =diffpiped=                                                      :script:
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/diffpiped")
+  # Diff two files named $1 and $2, piped through a command given as the remaining
+  # arguments.
+
+  options=()
+
+  for arg in "$@"; do
+      if [[ "$arg" =~ ^- ]]; then
+          options=("${options[@]}" "$arg")
+          shift
+      else
+          break
+      fi
+  done
+
+  file1="$1"
+  file2="$2"
+
+  shift 2
+
+  tmp1="$(mktemp)"
+  tmp2="$(mktemp)"
+
+  cat "$file1" | "$@" > "$tmp1"
+  cat "$file2" | "$@" > "$tmp2"
+
+  notify-send 'a' "$tmp1"
+  notify-send 'b' "$tmp2"
+
+  diff --color=auto "${options[@]}" "$tmp1" "$tmp2"
+
+  rm -f "$tmp1" "$tmp2"
+#+end_src
+#+NAME: diffpiped/test
+#+begin_src bash :tangle no
+  diffpiped --strip-trailing-cr <(echo -e "a\nb") <(echo -e "a\nB") sed 's/a/A/g'
 #+end_src
 ** =fcmd=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/fcmd")
@@ -367,7 +406,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   xrandr --output HDMI-1-0 "$@" --pos 1920x1080
 #+end_src
 ** =pipetest=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/pipetest") :noweb yes
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/pipetest")
   # Create three tmux panes:
   # - A SOURCE text file opened in vim
   # - A SCRIPT file opened in vim
@@ -1826,7 +1865,7 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =tangle=
 #+NAME: tangle
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle") :noweb yes
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle")
   ~/.haris/bootstrap/tangle.sh "$@"
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
