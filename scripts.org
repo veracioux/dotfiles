@@ -680,28 +680,26 @@ are designed to be easily integrated into dmenu scripts.
 ** =elisp=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/elisp")
   # Run an elisp interpreter through emacs
-  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
-  myemacs $create_frame --eval "(ielm)" "$@"
+  <<add-create-frame-option-if-term-dumb>>
+  myemacs --eval "(ielm)" "$@"
 #+end_src
 ** =eoctave=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/eoctave")
   # Run octave interpreter through emacs
-
-  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
-  myemacs $create_frame --eval "(progn (run-octave) (delete-other-windows))" "$@"
+  <<add-create-frame-option-if-term-dumb>>
+  myemacs --eval "(progn (run-octave) (delete-other-windows))" "$@"
 #+end_src
 ** =epython=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/epython")
   # Run a python interpreter through emacs
-
-  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
-  myemacs $create_frame --eval "(progn (call-interactively 'run-python) (delete-other-windows))" "$@"
+  <<add-create-frame-option-if-term-dumb>>
+  myemacs --eval "(progn (call-interactively 'run-python) (delete-other-windows))" "$@"
 #+end_src
 ** =eterm=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/eterm")
   # Run an emacs-hosted terminal via vterm
-
-  myemacs --create-frame --eval '(multi-vterm)' "$@"
+  <<add-create-frame-option-if-term-dumb>>
+  myemacs --eval '(multi-vterm)' "$@"
 #+end_src
 ** =eman=
 #+NAME: eman
@@ -730,12 +728,13 @@ are designed to be easily integrated into dmenu scripts.
   complete -c eman --wraps man
 #+end_src
 ** =erc=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/erc") :noweb yes
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/erc")
   # Open emacs and run ERC in it
 
-  create_frame="$([ "$TERM" = "dumb" ] && echo --create-frame || echo '')"
-  myemacs --socket-name="irc" $create_frame \
-          --eval "(unless erc-server-connected (call-interactively 'erc-tls))"
+  <<add-create-frame-option-if-term-dumb>>
+  myemacs --socket-name="irc" \
+          --eval "(unless erc-server-connected (call-interactively 'erc-tls))" \
+          "$@"
 #+end_src
 ** =edocker=
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
@@ -744,6 +743,11 @@ are designed to be easily integrated into dmenu scripts.
                                        (display . ,(getenv "DISPLAY"))))
       (spacemacs/switch-to-scratch-buffer)
       (run-with-timer 0.3 nil 'docker))
+#+end_src
+** =proced=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/proced")
+  <<add-create-frame-option-if-term-dumb>>
+  myemacs-float --eval '(progn (proced) (delete-other-windows))' "$@"
 #+end_src
 ** =magit=
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
@@ -1953,6 +1957,12 @@ Returns the second executable with the given name, looked up in execpath.
 #+begin_src emacs-lisp
   (user-real-uid)
 #+end_src
+** =add-create-frame-option-if-term-dumb=
+#+NAME: add-create-frame-option-if-term-dumb
+#+begin_src shell :tangle no
+  set -- "$@" $([ "$TERM" = "dumb" ] && echo --create-frame || echo '')
+#+end_src
+
 * Local variables                                                  :noexport:
 # Local Variables:
 # org-confirm-babel-evaluate: nil

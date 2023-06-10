@@ -601,7 +601,7 @@ This is a menu that allows me to launch some utility apps I commonly use, but
 with an emacs interface.
 #+NAME: emacs-apps-menu
 #+begin_src i3wm-config
-  set $mode_emacs      " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an"
+  set $mode_emacs      " Emacs Goodies | [e]lisp [p]ython [d]ocker [i]rc [g]it [o]ctave [⏎]term [m]an [P]roced"
 
   mode $mode_emacs {
   bindsym p              exec --no-startup-id epython, mode default
@@ -612,6 +612,7 @@ with an emacs interface.
   bindsym g              exec --no-startup-id magit,   mode default
   bindsym Return         exec --no-startup-id eterm,   mode default
   bindsym m              exec --no-startup-id eman,    mode default
+  bindsym Shift+p        exec --no-startup-id proced,  mode default
   bindsym Escape         mode default
   bindsym $mod+e         mode default
   }
