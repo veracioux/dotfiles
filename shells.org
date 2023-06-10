@@ -28,7 +28,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   set fish_prompt_pwd_dir_length 0
 
   # I'm setting HOME to prevent errors when running inside tuterm
-  HOME="/home/$USER" bass source ~/.bashrc        # Load bash's config
+  type --quiet bass && HOME="/home/$USER" bass source ~/.bashrc # Load bash's config
 
   set -gx MANPAGER 'viman'                      # Set default pager to vim
   set -gx MANPATH  ":$__fish_data_dir/man"      # Add fish manpages to MANPATH
@@ -66,7 +66,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
           (set_color brred) (set_color --bold brred) $last_pipestatus)
 
       # Using a timeout here prevents hang on remotely mounted filesystems
-      set -l vcs_prompt (timeout 0.2 fish --no-config -c fish_vcs_prompt)
+      set -l vcs_prompt (timeout 0.2 fish --no-config -c fish_vcs_prompt 2>/dev/null)
       if [ (echo "$vcs_prompt" | wc -c) -gt 15 ]
          set vcs_prompt ''
       end
@@ -253,14 +253,18 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 
   # z.lua
   set _ZL_CMD z
-  lua /usr/share/z.lua/z.lua --init fish | source
+  type --quiet lua &&
+  [ -f /usr/share/z.lua/z.lua ] &&
+      lua /usr/share/z.lua/z.lua --init fish | source
   set -gx _ZL_CD cd
 
   # tem
+  type --quiet tem &&
   tem fish-init
 
   # fzf bindings
-  fzf_configure_bindings
+  type --quiet fzf_configure_bindings &&
+      fzf_configure_bindings
 #+end_src
 *** Dependencies
 Fish plugins:
@@ -316,7 +320,7 @@ on the plugin list above.
   # When you ls, save the argument so you can quickly cd to that folder.
   # It's not fool-proof, but it works in most situations and it's safe.
   function ls
-      if [ -z "$EMACS_VTERM_PATH" ]
+      if [ -z "$EMACS_VTERM_PATH" ] && type --quiet lsd
           # In emacs vterm, lsd outputs additional whitespace which is annoying
           lsd --color=auto $argv
       else
@@ -529,7 +533,7 @@ Note: This code block must not contain any apostrophes!
 #+end_src
 *** =^=
 #+begin_src fish
-  function ^ -d "cd to the first directory in the hierarchy by specified name" -a name
+  function '^' -d "cd to the first directory in the hierarchy by specified name" -a name
       pushd "$PWD"
       while [ "$PWD" != "/" ]
           if [ (basename "$PWD") = "$name" ]
@@ -545,8 +549,8 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 **** Completions
-#+begin_src fish
-  complete -c ^ -a '(pwd | tr "/" "\n")' -f
+#+begin_src fish (haris/tangle-home ".config/fish/completions/^.fish")
+  complete -c '^' -a '(pwd | tr "/" "\n")' -f
 #+end_src
 ** Completions
 Function(s) that will be used by many completions.
@@ -603,7 +607,7 @@ Completions for the functions defined in [[Functions]].
 ** Private
 #+transclude: [[~/.haris/private/README.org::fish-private]]
 #+begin_src fish
-  source ~/.config/fish/private.fish
+  [ -f ~/.config/fish/private.fish ] && source ~/.config/fish/private.fish
 #+end_src
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
@@ -831,7 +835,7 @@ a terminal and runs the aliased command.
 * Temporary configs
 [[~/.config/fish/tmp.fish][Click to edit]]
 #+begin_src fish
-  source ~/.config/fish/tmp.fish
+  [ -f ~/.config/fish/tmp.fish ] && source ~/.config/fish/tmp.fish
 #+end_src
 * Dependencies
 #+begin_src shell :tangle (haris/tangle-deps "shells.sh")
