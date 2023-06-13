@@ -8,9 +8,7 @@
 (setq command-switch-alist '(("--dest" . ignore)))
 (setq dest (member "--dest" command-line-args))
 
-(setq org-confirm-babel-evaluate nil)
-
-(load-file (concat (file-name-directory load-file-name) "/tangle.el"))
+(load-file (format "%s/tangle.el" (file-name-directory load-file-name)))
 (haris/tangle-all dest)
 
 ;; vim: filetype=lisp

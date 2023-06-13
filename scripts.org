@@ -1873,10 +1873,10 @@ also tangle it to a standalone destination that I also keep under version contro
 #+begin_src elisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh")
   #!/usr/bin/env -S emacs --script
 
-  (load-file (concat (file-name-directory load-file-name) "/tangle.el"))
-  (setq org-confirm-babel-evaluate nil)
+  (load-file (format "%s/tangle.el" (file-name-directory load-file-name)))
 
-  (org-babel-tangle-file (file-truename (elt argv 0)))
+  (haris/tangle--file-non-interactively (file-truename (elt argv 0)))
+
   ; NOTE: Although this file is kept under version control, it is tangled from
   ; ~/.haris/scripts.org, so don't modify it directly
 #+end_src
@@ -1898,9 +1898,7 @@ also tangle it to a standalone destination that I also keep under version contro
   (setq command-switch-alist '(("--dest" . ignore)))
   (setq dest (member "--dest" command-line-args))
 
-  (setq org-confirm-babel-evaluate nil)
-
-  (load-file (concat (file-name-directory load-file-name) "/tangle.el"))
+  (load-file (format "%s/tangle.el" (file-name-directory load-file-name)))
   (haris/tangle-all dest)
 
   ;; vim: filetype=lisp
