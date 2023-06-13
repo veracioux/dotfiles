@@ -1,5 +1,5 @@
 #+TITLE: Web browser config
-#+PROPERTY: header-args :mkdirp yes :noweb yes
+#+PROPERTY: header-args :mkdirp yes :noweb yes :results silent
 
 I use Firefox as my main web browser, and occasionally Chromium (or Chrome on
 non-linux) for browser compatibility testing during web development. I use
@@ -27,8 +27,10 @@ All my browser preferences that I don't need to keep secret go here.
 
   user_pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 
+  // Devtools
   user_pref("devtools.chrome.enabled", true);
   user_pref("devtools.debugger.remote-enabled", true);
+  user_pref("devtools.editor.keymap", "vim");
 
   user_pref("tridactyl.unfixedamo_removed", true);
 
@@ -164,7 +166,8 @@ Tridactyl extension.
   bind ,c open about:config
   bind ,d open about:downloads
   bind ,l open about:logins
-  bind ,D open about:debugger
+  bind ,D open about:debugging
+  bind ,M open about:memory
 
   bind ,g tabopen google.com
   bind ,m composite get_current_url | mpvsafe
@@ -177,9 +180,6 @@ Tridactyl extension.
 
   unbind <C-b>
   unbind <C-f>
-
-  # Flameshot delete imgur upload
-  bind ,D js document.querySelectorAll(".button-big")[1].click();
 
   # GitHub
 
@@ -213,7 +213,7 @@ This code block is that blank page, and is tangled to the appropriate location:
 #+end_src
 
 #+NAME: username
-#+begin_src emacs-lisp
+#+begin_src elisp :tangle no
   (user-login-name)
 #+end_src
 ** Custom theme
@@ -418,3 +418,13 @@ This code block is that blank page, and is tangled to the appropriate location:
   sudo pacman -S firefox-tridactyl
   paru -S buku-git bukubrow
 #+end_src
+* Local variables
+#+NAME: load
+#+begin_src elisp
+  (setq-local script (lambda (name) (format ".config/tridactyl/scripts/%s" name)))
+#+end_src
+
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# eval: (org-sbe "load")
+# End:
