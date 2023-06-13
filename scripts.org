@@ -259,7 +259,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 
   diff <(gpg --decrypt --output - "$1") <(gpg --decrypt --output - "$2") "${@:3}"
 #+end_src
-** =diffpiped=                                                      :script:
+** =diffpiped=                                                        :script:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/diffpiped")
   # Diff two files named $1 and $2, piped through a command given as the remaining
   # arguments.
@@ -285,9 +285,6 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 
   cat "$file1" | "$@" > "$tmp1"
   cat "$file2" | "$@" > "$tmp2"
-
-  notify-send 'a' "$tmp1"
-  notify-send 'b' "$tmp2"
 
   diff --color=auto "${options[@]}" "$tmp1" "$tmp2"
 

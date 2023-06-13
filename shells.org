@@ -119,6 +119,10 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 
       set -l _status "$status"
 
+      if ! type --quiet xdotool
+          return 0
+      end
+
       # Check if terminal window is hidden
       if xdotool search --all --onlyvisible "" 2>/dev/null | ! grep -q "$WINDOWID"
           set -l exit_message
@@ -127,7 +131,11 @@ This applies only to graphical sessions, the linux TTY is unaffected.
           else
               set exit_message "exited with $_status"
           end
-          notify-send (echo "Command "(history | head -1)"" "$exit_message")
+          # Timeout is so the command doesn't hang when daemon is not
+          timeout 0.8 notify-send (echo "Command "(history | head -1)"" "$exit_message")
+          if [ "$status" = "124" ]
+              echo ERR: NOTIFICATION TIMED OUT
+          end
       end
   end
 #+end_src
