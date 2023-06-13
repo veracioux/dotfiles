@@ -802,7 +802,21 @@ slack-mode-hook hook, it never connects. Investigate
   ;; If I set vterm-shell directly, it is overriden by shell layer
   (setq shell-default-term-shell "fish")
 
-  (add-hook 'vterm-mode-hook (lambda () (read-only-mode -1)))
+  (defun haris/vterm-set-environment-windowid (&rest _)
+    (setq
+     vterm-environment
+     (list (format
+            "WINDOWID=%s"
+            (cdr (assoc 'window-id
+                        (cadr (cadr
+                               (current-frame-configuration)))))))))
+
+  ;; Ideally, I would add haris/vterm-set-environment-windowid to a vterm-before-shell-hook,
+  ;; if such a hook existed. But it doesn't, so...
+  (advice-add #'vterm                          :before #'haris/vterm-set-environment-windowid)
+  (advice-add #'multi-vterm                    :before #'haris/vterm-set-environment-windowid)
+  (advice-add #'spacemacs/shell-pop-vterm      :before #'haris/vterm-set-environment-windowid)
+  (advice-add #'spacemacs/shell-pop-multivterm :before #'haris/vterm-set-environment-windowid)
 
   (evil-define-key 'normal vterm-mode-map (kbd "A")     'evil-append-line)
   (evil-define-key 'normal vterm-mode-map (kbd "M-TAB") 'other-window)
