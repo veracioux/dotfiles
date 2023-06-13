@@ -299,6 +299,8 @@ Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
 
   (define-key evil-normal-state-map (kbd "SPC f e h") #'haris/open-emacs.org)
   (define-key evil-normal-state-map (kbd "SPC f e r") #'haris/load-user-config)
+
+  (defalias 'spacemacs/default-pop-shell 'spacemacs/shell-pop-multivterm)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<spacemacs-like-bindings>>
@@ -313,6 +315,7 @@ Some custom keybindings are defined here as well.
 #+begin_src emacs-lisp
   (setq evil-collection-setup-minibuffer t)
   (evil-collection-init 'minibuffer)
+  (evil-collection-init 'proced)
 
   (define-key evil-normal-state-map (kbd "Q")     'delete-window)
   (define-key evil-motion-state-map (kbd "Q")     'delete-window)
@@ -1076,7 +1079,9 @@ Note: Some variables are configured in [[*Layers][Spacemacs layers]].
 #+begin_src elisp
   (use-package yasnippet)
 
-  (add-to-list 'yas-extra-modes 'git-commit-mode)
+  (add-hook 'git-commit-mode-hook (lambda () (set (make-local-variable 'yas-extra-modes) '(git-commit-mode))))
+  (add-hook 'verb-mode-hook (lambda () (set (make-local-variable 'yas-extra-modes) '(verb-mode))))
+
 
   (advice-add 'yas-tryout-snippet :after #'evil-insert-state)
 
