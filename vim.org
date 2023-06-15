@@ -287,7 +287,7 @@ the setup script as well!.*
     Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
 
     " IDE
-    Plug 'ycm-core/YouCompleteMe'
+    " Plug 'ycm-core/YouCompleteMe'     " Deprecated: don't use vim much for coding these days
     Plug 'ervandew/supertab'            " Fixes problem with YCM and UltiSnips
     Plug 'sheerun/vim-polyglot'
     Plug 'preservim/tagbar'             " NOTE: requires ctags installed
@@ -384,8 +384,8 @@ the setup script as well!.*
   noremap        <M-m> :call ToggleMenubar()<CR>
 #+end_src
 * Plugin configs
-** YouCompleteMe
-#+begin_src vimrc
+** YouCompleteMe                                                   :ARCHIVE:
+#+begin_src vimrc :tangle no
   if !exists('g:ycm_semantic_triggers')
     let g:ycm_semantic_triggers = {}
   endif
