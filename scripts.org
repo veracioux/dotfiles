@@ -369,7 +369,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
           err=$?
           notify-send -u critical "Command $* exited with error $err."
       }
-  return $err
+  exit $err
 #+end_src
 ** =xpreset=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xpreset")
