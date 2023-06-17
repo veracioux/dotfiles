@@ -33,10 +33,9 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   set -gx MANPAGER 'viman'                      # Set default pager to vim
   set -gx MANPATH  ":$__fish_data_dir/man"      # Add fish manpages to MANPATH
   set -gx MANWIDTH 80
-  set -gx EDITOR 'nvim'
-  set -gx VISUAL 'gvim'
+  set -gx EDITOR 'editor'
+  set -gx VISUAL 'visual-editor'
 
-  function fish_user_key_bindings               # Start bindings
 #+end_src
 ** Behavior overrides
 *** =fish_prompt=
@@ -139,12 +138,28 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       end
   end
 #+end_src
+*** =edit_command_buffer_custom=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/edit_command_buffer_custom.fish")
+  set -l actual_editor
+  if which emacs >/dev/null
+      set actual_editor emacs
+  else
+      set actual_editor nvim
+  end
+
+  functions edit_command_buffer |
+      sed -E -e 's/^(function edit_command_buffer)/\1_custom/' \
+             -e "s/(case.* $actual_editor\b)/\1 visual-editor /" \
+      | source
+#+end_src
 ** Bindings
 #+begin_src fish
   function bind_both_modes
       bind -M default $argv
       bind -M insert $argv
   end
+
+  function fish_user_key_bindings               # Start bindings
 #+end_src
 *** Quasi-vim-like key bindings
 #+begin_src fish
@@ -194,7 +209,9 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 
   bind_both_modes \eg 'dragon (command ls | fzf --multi) >/dev/null 2>&1'
 
-  bind_both_modes \ee 'VISUAL="$EDITOR" edit_command_buffer'
+  bind_both_modes \ee 'edit_command_buffer_custom'
+
+  bind_both_modes \eE 'myemacs-float .'
 
   bind_both_modes \ea 'commandline -i "(adhoc)"'
 
@@ -230,13 +247,6 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       end
       commandline --append " --help"
       commandline -f execute
-  end
-
-
-  function __haris_cmdline_editor
-      commandline > /tmp/haris_cmdline.fish
-      "$EDITOR" /tmp/haris_cmdline.fish
-      commandline --replace (cat /tmp/haris_cmdline.fish)
   end
 #+end_src
 ** Custom colors
@@ -758,9 +768,8 @@ a terminal and runs the aliased command.
 
   # Misc
   abbr -g g     'git'
-  abbr -g v     'vim'
-  abbr -g e     'myemacs'
-  abbr -g E     'myemacs -c'
+  abbr -g e     'myemacs -c'
+  abbr -g E     'myemacs'
   abbr -g s     'sudo'
   abbr -g paru  'cmd-with-notify paru'
   abbr -g py    'python'
@@ -777,7 +786,8 @@ a terminal and runs the aliased command.
   abbr -g P     "pgrep -afu "(whoami)
   abbr -g yt    'ytfzf -t -s'
   abbr -g t     'tem'
-  abbr -g v     'vim (fzf)'
+  abbr -g v     'vim'
+  abbr -g vf    'vim (fzf)'
   abbr -g fm    'vifm'
   abbr -g fb    'facebook-cli'
   abbr -g c     'conf'

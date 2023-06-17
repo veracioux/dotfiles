@@ -120,24 +120,101 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   /usr/bin/firefox $(printarg --new-tab "$@" | uniq)
 #+end_src
 ** =myemacs=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs")
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/myemacs")
   # Run emacsclient in the terminal, unless the -c option is given, which will
   # open the GUI.
   # - Also enables proper color support.
   # - Any additional arguments you provide are passed to emacsclient
 
   export TERM='xterm-256color'
-  extra_args=''
-  if printarg "$@" | grep -q -- '-c'; then
-      extra_args='--no-wait'
-  else
-      extra_args='--tty'
-  fi
-  if ! printarg "$@" | grep -qE '^(-s|--socket-name)'; then
-      extra_args="$extra_args --socket-name emacs"
+  create_frame=""
+  socket_name=""
+  option_no_wait=""
+  option_wait=""
+  modified_options=()
+
+  print_help() {
+      emacsclient --help
+      echo
+      echo "CUSTOM OPTIONS:"
+      echo -e "--wait \t\t\tOverride --no-wait if it would otherwise be in effect"
+      echo -e "--no-tty \t\t\tUndoes the effects of --tty"
+  }
+
+  # Since this is a wrapper around emacsclient, we need to parse and pass through
+  # all options that emacsclient recognizes
+  parsed_args="$(
+      getopt --name "$BASH_SOURCE" \
+          --options "h"VHtcrF:enw:qud:s:f:a:T: \
+          --long "wait,no-tty",version,help,tty,create-frame,reuse-frame,frame-parameters:,eval,no-wait,timeout:,quiet,suppress-output,display:,parent-id:,socket-name:,server-file:,alternate-editor:,tramp: \
+          -- "$@"
+  )"
+
+  eval set -- "$parsed_args"
+
+  while :; do
+      case "$1" in
+          -h | --help)
+              print_help
+              exit ;;
+          -c | --create-frame)
+              create_frame="true"
+              modified_options+=("$1")
+              shift 1 ;;
+          -s | --socket-name)
+              modified_options+=("$1" "$2")
+              socket_name="$2"
+              shift 2 ;;
+          --no-wait)
+              option_no_wait="--no-wait"
+              shift 1 ;;
+          --wait)
+              option_no_wait=""
+              option_wait="--wait"
+              shift 1 ;;
+          -t | --tty)
+              option_tty="--tty"
+              option_no_tty=""
+              shift 1 ;;
+          --no-tty)
+              option_tty=""
+              option_no_tty="--no-tty"
+              shift 1 ;;
+          --)
+              shift 1
+              break ;;
+          ,*)
+              modified_options+=("$1")
+              shift 1 ;;
+      esac
+  done
+
+  if [ -z "$create_frame" ] && [ -z "$option_no_tty" ]; then
+      modified_options+=(--tty)
+  elif [ -n "$create_frame" ] && [ -z "$option_wait" ]; then
+      modified_options+=(--no-wait)
   fi
 
-  emacsclient --alternate-editor gvim $extra_args "$@"
+  if [ -n "$option_tty" ]; then
+      modified_options+=(--tty)
+  fi
+
+  if [ -n "$option_no_wait" ]; then
+      modified_options+=(--no-wait)
+  fi
+
+  if [ -z "$socket_name" ]; then
+      modified_options+=(--socket-name emacs)
+  fi
+
+  set -- "${modified_options[@]}" -- "$@"
+
+  exec -a "$BASH_SOURCE" emacsclient --alternate-editor gvim "$@"
+#+end_src
+*** Shell completion
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/myemacs.fish")
+  complete -c myemacs --wraps emacsclient
+  complete -c myemacs --long "wait" --description "Override --no-wait if it would otherwise be in effect"
 #+end_src
 ** =myemacs-float=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs-float")
@@ -210,6 +287,31 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   /usr/bin/xlock
 #+end_src
 * Utilities
+** =visual-editor=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/visual-editor")
+  if xprop -id "$WINDOWID" | grep -q _NET_WM_STATE_FULLSCREEN; then
+      myemacs --wait "$@"
+  elif which myemacs-float >/dev/null; then
+      myemacs-float --wait "$@" >/dev/null
+  else
+      editor "$@"
+  fi
+#+end_src
+** =editor=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/editor")
+  exists() {
+      which "$1" >/dev/null
+  }
+  if exists myemacs; then
+      myemacs "$@"
+  elif exists nvim; then
+      nvim "$@"
+  elif exists vim; then
+      vim "$@"
+  elif exists nvim; then
+      vi "$@"
+  fi
+#+end_src
 ** =abspath=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/abspath")
   pushd "$(dirname "$1")" >/dev/null
@@ -631,9 +733,18 @@ process management in emacs is shit.
   cat >"$tmpfile" <<'EOF'
     <<stringify-arg-to-eval-option>>
   EOF
+  if [ -t 0 ]; then
+      input_file="$(realpath "$1")"
+  else
+      input_file="$(mktemp)"
+      trap "$(printf "%q " rm -rf "$input_file")" ERR EXIT
+      cat >"$input_file"
+  fi
 
-  arg="$(emacs --batch --load "$tmpfile" "$(realpath "$1")" "${@:2}" 2>&1)"
-  myemacs --no-wait --eval "$arg"
+  arg="$(
+      emacs --batch --load "$tmpfile" "$input_file" "${@:2}" 2>&1
+  )"
+  myemacs --no-tty --no-wait --eval "$arg" | sed '/^<<do-not-print-token>>$/d'
 
   rm -f "$tmpfile"
 #+end_src
@@ -647,10 +758,19 @@ process management in emacs is shit.
                   (let ((argv (list ,@(cdr argv)))
                         (process-environment (list ,@process-environment))
                         (default-directory ,default-directory))
-                    (load ,file)))))
+                    (load ,file)
+                    <<do-not-print-token>>))))
     (prin1 code))
 #+end_src
 #+CALL: stringify-arg-to-eval-option[:var argv='("a" "b")]()
+Emacsclient prints the result of evaluation of =--eval=. The only non-hacky way I
+know to disable this is to give it the =--suppress-output= option. But this would also
+suppress desirable output like calls to =(message)=. So I put this token as the
+last statement, and remove it from the output by piping to =sed=.
+#+NAME: do-not-print-token
+#+begin_src text
+  "1617875f9593bd741b9637ad26aabb9f42ff3df769564f7881d7603a80ea0ae2"
+#+end_src
 ** =o=
 Wrapper command around the equivalent [[file:shells.org::*=o=][fish function]].
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/o")
@@ -775,10 +895,10 @@ are designed to be easily integrated into dmenu scripts.
 ** =edocker=
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/edocker")
-    (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                       (display . ,(getenv "DISPLAY"))))
-      (spacemacs/switch-to-scratch-buffer)
-      (run-with-timer 0.3 nil 'docker))
+  (with-selected-frame (make-frame `((name . "EmacsFloat")
+                                     (display . ,(getenv "DISPLAY"))))
+    (spacemacs/switch-to-scratch-buffer)
+    (run-with-timer 0.3 nil 'docker))
 #+end_src
 ** =proced=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/proced")
