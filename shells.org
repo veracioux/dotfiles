@@ -67,14 +67,19 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       # Using a timeout here prevents hang on remotely mounted filesystems
       set -l vcs_prompt (timeout 0.2 fish --no-config -c fish_vcs_prompt 2>/dev/null)
       if [ (echo "$vcs_prompt" | wc -c) -gt 15 ]
-         set vcs_prompt ''
+          set vcs_prompt ''
       end
 
-      echo -n -s  (set_color --bold brblue)   "$USER" ' '                  \
+      set -l host
+      if [ -n "$SSH_CONNECTION" ]
+          set host "$normal"(set_color white)"[$hostname]"
+      end
+
+      echo -n -s  (set_color --bold brblue)   "$USER$host "                      \
                   (set_color magenta)         (prompt_pwd)        $normal  \
                   (set_color brmagenta)       "$vcs_prompt"                \
                   (set_color brmagenta)       $prompt_status               \
-                  (set_color yellow)          ' ' $suffix ' '
+                  (set_color yellow)          " $suffix "
   end
 #+end_src
 **** =fish_mode_prompt=
