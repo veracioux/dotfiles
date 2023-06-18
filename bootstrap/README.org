@@ -5,10 +5,12 @@ literate configs, because they are needed to tangle the literate configs in the
 first place.
 
 The [[./Dockerfile][Dockerfile]] defines an image that can be run to generate all the configs as a
-tar.gz archive.
+tar.gz archive. It must use the root of the dotfiles repository as the build
+context, i.e. from [[../]] relative to this directory!
 
 #+begin_src shell
-  docker build -t docker.veracioux.me/dotfiles-generator .
+  cd ..
+  docker build -t docker.veracioux.me/dotfiles-generator -f bootstrap/Dockerfile .
 #+end_src
 
 #+begin_src shell
