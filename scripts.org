@@ -687,8 +687,6 @@ them as code blocks here for better readability.
 #+begin_src shell :tangle (haris/tangle-deps "auto-browser.sh")
   sudo pacman -S xdotool xorg-xprop
 #+end_src
-** =minemacs=
-The bare minimum of emacs that is required to tangle all the dotfiles.
 ** =alternative-command=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/alternative-command")
   cmd="$(which -a "$1" | uniq | sed -n 2p)"
@@ -1118,6 +1116,33 @@ are designed to be easily integrated into dmenu scripts.
   gvim -c 'set ft=sxhkd' ~/.sxhkd.tmp
 
   sxhkd.tmp -c ~/.sxhkd.tmp & disown
+#+end_src
+** =xpeek=
+Create a Xephyr session for the current user that tries to mimic a regular
+=startx= session as closely as possible.
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/xpeek")
+  # Option variables
+  host_display="$DISPLAY"
+  display=1"$(id -u "$USER")"
+
+  Xephyr :"$display" -once -resizeable \
+      -screen "$(xdpyinfo | grep dimensions | grep -P '\d+x\d+' --only-matching | head -1)" \
+      "$@" &
+  sleep 0.5s
+  windowid="$(xdotool getactivewindow)"
+  echo "WINDOW ID: $windowid"
+
+  export DISPLAY=:"$display"
+  i3 &
+  sxhkd &
+  dunst &
+
+  DISPLAY="$host_display" xev -id "$windowid" -event structure |
+      while read line; do
+          if grep "^ConfigureNotify event" <<<"$line"; then
+              xrandr
+          fi
+      done
 #+end_src
 * Dmenu
 ** Main entrypoint (=dmenu_run=)
