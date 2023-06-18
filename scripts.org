@@ -807,6 +807,7 @@ are designed to be easily integrated into dmenu scripts.
           fish-private)   echo ~/.config/fish/private.fish ;;
           fish-tmp)       echo ~/.config/fish/tmp.fish ;;
           vifm)           echo ~/.haris/terminal.org ;;
+          git)            echo ~/.haris/vcs.org ;;
           gh)             echo ~/.haris/vcs.org ;;
           hg)             echo ~/.haris/vcs.org ;;
           picom)          echo ~/.haris/wm.org ;;
@@ -2061,8 +2062,8 @@ also tangle it to a standalone destination that I also keep under version contro
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/handle-low-bat")
   # Suspend when battery low
 
-  if acpi | grep -q '\s[0-9]%' && acpi | grep -q 'Discharging'; then
-      ~/.haris-bin/notify-send 'Low battery' 'Suspending in 5s'
+  if acpi | grep -qP '\s[0-9]%' && acpi | grep -q 'Discharging'; then
+      ~/.local/bin/notify-send 'Low battery' 'Suspending in 5s'
       sleep 5s
       sudo systemctl suspend -i
   fi

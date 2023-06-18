@@ -776,7 +776,7 @@ a terminal and runs the aliased command.
   abbr -g e     'myemacs -c'
   abbr -g E     'myemacs'
   abbr -g s     'sudo'
-  abbr -g paru  'cmd-with-notify paru'
+  abbr -g paru  'paru'
   abbr -g py    'python'
   abbr -g ipy   'ipython'
   abbr -g copy  'xsel -b'
