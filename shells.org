@@ -698,7 +698,7 @@ a terminal and runs the aliased command.
 
   function dragon; dragon-drag-and-drop $argv & disown; end
   function vrg --wraps rg; vim (rg -l $argv); end
-  function erg --wraps rg; myemacs -c (rg -l $argv); end
+  function vfd --wraps fd; vim (fd $argv); end
 #+end_src
 *** Abbreviations
 #+begin_src fish
@@ -795,7 +795,6 @@ a terminal and runs the aliased command.
   abbr -g vf    'vim (fzf)'
   abbr -g fm    'vifm'
   abbr -g fb    'facebook-cli'
-  abbr -g c     'conf'
   abbr -g fl    'flameshot'
   abbr -g tb    'nc termbin.com 9999'
   abbr -g asc   'asciinema'
