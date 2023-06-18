@@ -624,10 +624,10 @@ Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (haris/tangle-home ".bashrc")
   PS1='\[\e[1;36m\]\u\[\e[1;31m\]@\[\e[1;34m\]\h \[\e[1;32m\]\W \[\e[1;31m\]\$ \[\e[0;32m\]\[\e[0m\]'
 
-  source ~/.alias
-  source ~/.alias-tmp
-  source ~/.alias-gui
-  source ~/.alias-gui-tmp
+  [ -f ~/.alias ]         && source ~/.alias
+  [ -f ~/.alias-tmp ]     && source ~/.alias-tmp
+  [ -f ~/.alias-gui ]     && source ~/.alias-gui
+  [ -f ~/.alias-gui-tmp ] && source ~/.alias-gui-tmp
 
   # Shell options
   shopt -s extglob

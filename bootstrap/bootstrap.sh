@@ -14,7 +14,7 @@ check_missing_then_install() {
         Arch)
             install_cmd=(sudo pacman -S);;
         Ubuntu)
-            install_cmd=(sudo apt install);;
+            install_cmd=(sudo apt -y install);;
     esac
     for name in "$@"; do
         if [ ! -x "$(command -v "$name")" ]; then
