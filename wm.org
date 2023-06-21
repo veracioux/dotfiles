@@ -906,7 +906,8 @@ Menu of utilities that allow me to talk to my computer.
   bar {
   font pango:Source Code Pro, Icons bold 9.3
   position top
-  modifier none
+  mode hide
+  modifier $mod
   workspace_buttons yes
   strip_workspace_numbers yes
 
