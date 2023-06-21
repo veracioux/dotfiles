@@ -162,7 +162,6 @@ Shared between i3 and sway:
 #+begin_src i3wm-config
   focus_follows_mouse no
   popup_during_fullscreen leave_fullscreen
-  workspace_auto_back_and_forth yes
   for_window [instance="Float" class="Alacritty"] floating enable
 #+end_src
 * X config
@@ -868,6 +867,8 @@ Menu of utilities that allow me to talk to my computer.
   set $ws8 "8:vm"
   set $ws9 "9:wrk1"
   set $ws10 "10:wrk2"
+
+  workspace_auto_back_and_forth no
 
   # Switch to workspace
   bindsym $mod+1            workspace $ws1
