@@ -1,5 +1,8 @@
 #+TITLE: Window Manager Config
-#+PROPERTY: header-args :tangle (haris/tangle-home ".config/i3/config") :mkdirp yes :noweb yes :results silent
+#+PROPERTY: header-args :mkdirp yes :noweb yes :results silent
+#+PROPERTY: header-args:i3wm-config+ :tangle (haris/tangle-home ".config/i3/config")
+#+PROPERTY: header-args:shell+ :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744)
+#+PROPERTY: header-args:bash+ :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744)
 #+begin_src i3wm-config :exports none :mkdirp yes
   # -*- mode: emacs-lisp-mode; -*- vim: filetype=i3 shiftwidth=2
 #+end_src
@@ -41,21 +44,19 @@ i3/sway session:
 
 These scripts are used by the other sections:
 #+NAME: mic-volume-up
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-up") :shebang "#!/usr/bin/env sh"
+#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-up")
   pactl set-source-volume "$(pactl get-default-source)" +5%
 #+end_src
 #+NAME: mic-volume-down
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-down") :shebang "#!/usr/bin/env sh"
+#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-down")
   pactl set-source-volume "$(pactl get-default-source)" -5%
 #+end_src
 #+NAME: mic-mute-toggle
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-mute-toggle") :shebang "#!/usr/bin/env sh"
+#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-mute-toggle")
   pactl set-source-mute "$(pactl get-default-source)" toggle
 #+end_src
 #+NAME: mic-test
 #+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-test")
-  #!/usr/bin/env sh
-
   default_source="$(pactl get-default-source)"
   default_sink="$(pactl get-default-sink)"
   mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
@@ -73,8 +74,6 @@ These scripts are used by the other sections:
 #+end_src
 #+NAME: speaker-test
 #+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/speaker-test")
-  #!/usr/bin/env sh
-
   default_sink="$(pactl get-default-sink)"
   sink_muted="$(pactl get-sink-mute "$default_sink" | grep 'Mute: yes')"
 
@@ -578,8 +577,6 @@ To modify the bluetooth device ID of the headphones, edit
 
 #+NAME: bluetoothctl-wrapper
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/haris/bluetoothctl-wrapper") :tangle-mode (eval #o744)
-  #!/usr/bin/env sh
-
   id_file=~/.local/lib/haris/bt-headphones-id
 
   if [ ! -f "$id_file" ]; then
@@ -653,9 +650,7 @@ directly translated to English, without opening the menu.
   bindsym $mod+Shift+t exec --no-startup-id ~/.local/lib/haris/trans-launch
 #+end_src
 *** The command
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/haris/trans-launch") :tangle-mode (eval #o744)
-  #!/usr/bin/env bash
-
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/haris/trans-launch") :tangle-mode (eval #o744)
   # In order to get the time when the selection happened I use a timestamp
   # reported by xclip and to get the current time I use a timestamp reported by
   # xsel. I have no idea what these timestamps are relative to, but I have
@@ -730,7 +725,6 @@ Menu of utilities that allow me to talk to my computer.
 *** Scripts
 :PROPERTIES:
 :header-args+: :tangle-mode (eval #o744)
-:header-args:bash+: :shebang "#!/usr/bin/env bash"
 :END:
 **** Dictate
 #+NAME: dictate
@@ -1354,7 +1348,6 @@ I use picom as my compositor with the i3 window manager.
   sudo pacman -S sway
   paru -S swhkd-git
 #+end_src
-
 * Local variables                                                  :noexport:
 # Local variables:
 # org-confirm-babel-evaluate: nil
