@@ -231,16 +231,19 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sudo")
   # Sudo but with a hook that sends a notification when the prompt is shown
 
-  if [ -z "$SUDO_ASKPASS" ]; then
+  # TODO: Not robust enough. What if the wrapped command itself accepts a --stdin flag?
+
+  if [ -z "$SUDO_ASKPASS" ] && [[ ! "$*" =~ --stdin ]] && [[ ! "$*" =~ -S ]]; then
       export SUDO_ASKPASS="$(mktemp)"
       chmod u+x "$SUDO_ASKPASS"
       cat > "$SUDO_ASKPASS" <<'EOF'
   <<sudo-askpass>>
   EOF
       trap "rm -f $SUDO_ASKPASS" EXIT
+      alternative-command sudo --askpass "$@"
+  else
+      alternative-command sudo "$@"
   fi
-
-  alternative-command sudo --askpass "$@"
 #+end_src
 #+NAME: sudo-askpass
 #+begin_src shell :tangle no
