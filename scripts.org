@@ -1917,8 +1917,8 @@ Create a Xephyr session for the current user that tries to mimic a regular
   notify-send "OTP" "Saved to clipboard"
 #+end_src
 ** Quickmenu
-#+transclude: [[~/.haris/temporary.org::dmenu-quickmenu]]
-# Leave this line empty - otherwise transclusion might hoist the next section up
+The quickmenu script is optional and must be provided separately at
+[[~/.local/lib/dmenu/quickmenu]].
 ** Dependencies
 #+begin_src bash :tangle (haris/tangle-deps "dmenu.sh")
   # Root menu (dmenu_run)

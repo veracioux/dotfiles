@@ -614,8 +614,9 @@ Completions for the functions defined in [[Functions]].
 #+begin_src shell :tangle (haris/tangle-home ".config/fish/completions/otp.fish")
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
-** Private
-#+transclude: [[~/.haris/private/README.org::fish-private]]
+** Private config
+Private fish config is optional and must be provided separately as
+[[~/.config/fish/private.fish]].
 #+begin_src fish
   [ -f ~/.config/fish/private.fish ] && source ~/.config/fish/private.fish
 #+end_src
