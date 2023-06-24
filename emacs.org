@@ -98,6 +98,10 @@ the type of the purpose of the current emacs daemon (by reading the
   (setq frame-title-format "%b"
         dotspacemacs-frame-title-format nil)
 
+  ;; Enable clipboard in the terminal
+  (use-package xclip)
+  (xclip-mode)
+
   ;; Handle URLs as files
   (url-handler-mode)
 
@@ -1342,7 +1346,8 @@ Spacemacs would delete them every time on startup.
      currency-convert
      i3wm-config-mode
      react
-     focus-autosave-mode))
+     focus-autosave-mode
+     xclip))
 #+end_src
 ** Upgrading
 When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][spacemacs/ediff-dotfile-and-template]] to merge any upstream changes to the dotfile.
