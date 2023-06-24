@@ -1068,7 +1068,7 @@ are designed to be easily integrated into dmenu scripts.
 ** =imount=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/imount")
   # List of all blocks
-  listing="$(lsblk --list -o NAME,LABEL)"
+  listing="$(lsblk --list -o PATH,LABEL)"
 
   # ... with header removed
   items="$(echo "$listing" | tail -n +2 | sed 's/.*/"&"/' | nl --number-width=1)"
@@ -1097,7 +1097,7 @@ are designed to be easily integrated into dmenu scripts.
   fi
 
   # Get path to selected device
-  device=/dev/"$(echo "$items" | sed -n ${id}p | sed 's_.*"\(\S*\)\s.*_\1_')"
+  device="$(echo "$items" | sed -n ${id}p | sed 's_.*"\(\S*\)\s.*_\1_')"
 
   read -n 1 -p\
        "$device will be mounted at $mount_dir. Continue? (requires sudo) [y/n]: " \
