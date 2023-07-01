@@ -1963,7 +1963,7 @@ The quickmenu script is optional and must be provided separately at
   sudo journalctl --vacuum-size=250M
 #+end_src
 ** =createhome=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/createhome")
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/createhome")
   # Top level home directory
   dirs=(
       src
@@ -1982,9 +1982,8 @@ The quickmenu script is optional and must be provided separately at
       ssd
       usb
       usb-guest
-      usbs
-      usbd
-      usbp
+      usbb1
+      usbb2
       vm
   )
 
