@@ -1186,6 +1186,39 @@ Remove Info mode annoying keybindings.
 #+begin_src elisp
   (setq ispell-program-name "aspell")
 #+end_src
+** Accent
+#+begin_src elisp
+  (use-package accent)
+
+  (setq accent-diacritics
+        '((a (á à â ä æ ã å ā))
+          (c (č ć ç))
+          (e (é ě è ê ë ē ė ę))
+          (i (í î ï ī į ì))
+          (l (ł))
+          (n (ň ñ ń))
+          (o (ô ö ò ó œ ø ō õ))
+          (r (ř))
+          (s (š ß ś))
+          (u (ů ú û ü ù ū))
+          (y (ý ÿ))
+          (z (ž ź ż))
+          ;; Capital
+          (A (Á À Â Ä Æ Ã Å Ā))
+          (C (Č Ć Ç))
+          (E (É Ě È Ê Ë Ē Ė Ę))
+          (I (Í Î Ï Ī Į Ì))
+          (L (Ł))
+          (N (Ň Ñ Ń))
+          (O (Ô Ö Ò Ó Œ Ø Ō Õ))
+          (R (Ř))
+          (S (Š Ś))
+          (U (Ů Ú Û Ü Ù Ū))
+          (Y (Ý Ÿ))
+          (Z (Ž Ź Ż))))
+
+  (define-key evil-insert-state-map (kbd "M-RET") #'accent-menu)
+#+end_src
 ** Reddit
 *** md4rd
 #+begin_src emacs-lisp
@@ -1364,7 +1397,8 @@ Spacemacs would delete them every time on startup.
      i3wm-config-mode
      react
      focus-autosave-mode
-     xclip))
+     xclip
+     accent))
 #+end_src
 ** Upgrading
 When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][spacemacs/ediff-dotfile-and-template]] to merge any upstream changes to the dotfile.
