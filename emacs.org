@@ -116,8 +116,9 @@ the type of the purpose of the current emacs daemon (by reading the
             (apply orig-fun args))
         (apply orig-fun args))))
 
+  ;; Whitelist local variables and evals in some files I trust
   (advice-add #'find-file-noselect :around #'haris/advice/whitelist-local-variables-in-trusted-files)
-  (advice-add #'revert-buffer :around #'haris/advice/whitelist-local-variables-in-trusted-files)
+  (advice-add #'revert-buffer      :around #'haris/advice/whitelist-local-variables-in-trusted-files)
 
   ;; Handle URLs as files
   (url-handler-mode)
@@ -182,6 +183,14 @@ the type of the purpose of the current emacs daemon (by reading the
 ** Functions
 #+begin_src emacs-lisp
   (defun haris/stage () (interactive) (mkdir "/tmp/stage" t) (dired "/tmp/stage"))
+
+  (defun haris/force-kill-window (&optional window)
+    "Kill a window, and the frame as well if it's the last one."
+    (interactive)
+    (let ((frame (window-frame window)))
+      (if (eq (length (window-list frame)) 1)
+          (delete-frame frame)
+        (quit-window window))))
 #+end_src
 ** Avy
 *** Try to make evil-easymotion work bidirectionally
@@ -551,8 +560,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (setq org-babel-prompt-command "")
 
   (defun haris/tangle-dest (&optional prefix-arg)
-    "Tangle block(s) to their final destinations. If a code block file have the
-  temporary staging destination as their :tangle argument, they will be tangled to
+    "Tangle block(s) to their final destinations. If a code block has the
+  temporary staging destination as their :tangle argument, it will be tangled to
   the production destination under ~/ as well."
     (interactive "P")
     (let ((tangle-home (haris/tangle-home)))
@@ -621,11 +630,12 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (evil-define-key 'normal org-mode-map     (kbd ", S")         'org-attach-screenshot)
   (evil-define-key 'normal org-mode-map     (kbd ", TAB")       'org-next-link)
   (evil-define-key 'normal org-mode-map     (kbd ", <backtab>") 'org-previous-link)
-  (evil-define-key 'normal org-src-mode-map (kbd ", w")         'org-edit-src-save)
   (evil-define-key 'normal org-mode-map     (kbd ", i c")       'org-columns)
   (evil-define-key 'normal org-mode-map     (kbd ", b E")       'haris/execute-named-code-block)
 
-  (evil-define-key 'normal org-mode-map (kbd "SPC h o")     'org-info-find-node)
+  (evil-define-key 'normal org-mode-map (kbd "SPC h o")         'org-info-find-node)
+
+  (define-key spacemacs-org-src-mode-map (kbd "w")            'org-edit-src-save)
 #+end_src
 *** Helper functions
 #+begin_src elisp
