@@ -394,11 +394,15 @@ Some custom keybindings are defined here as well.
   (spacemacs/set-leader-keys "oc" haris/command-log-prefix-map)
   (define-key haris/command-log-prefix-map (kbd "l") #'haris/command-log)
 
+  ;; Misc
+  (spacemacs/set-leader-keys "ot" #'gts-do-translate)
+
   ;; Friendly descriptions
   (which-key-add-key-based-replacements
     "SPC o b" "Buffer manipulation"
     "SPC o c" "Command log"
-    "SPC o c l" "Local command log")
+    "SPC o c l" "Local command log"
+    "SPC o t" "Translate")
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
   <<custom-global-map>>
@@ -1314,6 +1318,35 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 ** Alert
 #+begin_src emacs-lisp
   (setq alert-default-style 'libnotify)
+#+end_src
+** Go Translate
+#+begin_src elisp
+  (setq gts-translate-list '(("en" "cs") ("cs" "en") ("en" "bs") ("en" "de")))
+
+  (setq gts-default-translator
+        (gts-translator
+         :picker (gts-prompt-picker)
+         :engines `(,(gts-google-engine))
+         :render (gts-buffer-render)))
+
+  (add-hook 'gts-after-buffer-render-hook
+            (defun haris/disable-evil-in-go-translate (&rest _)
+              (select-window (get-buffer-window nil t) (current-buffer))
+              (define-key gts-buffer-local-map              (kbd "SPC SPC") #'counsel-M-x)
+              (define-key gts-buffer-local-map              (kbd "TAB")     #'turn-on-evil-mode)
+              (evil-define-key 'normal gts-buffer-local-map (kbd "TAB")     #'turn-off-evil-mode)
+              (evil-define-key 'normal gts-buffer-local-map (kbd "q")       #'haris/force-kill-window)
+              (use-local-map gts-buffer-local-map)))
+
+  (defun gts-prompt-picker-prev-path ()
+    (interactive)
+    (gts-prompt-picker-next-path t))
+
+
+  (evil-define-key 'insert gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
+  (evil-define-key 'normal gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
+  (evil-define-key 'insert gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
+  (evil-define-key 'normal gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
 #+end_src
 * Spacemacs
 The code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file
