@@ -902,8 +902,7 @@ are designed to be easily integrated into dmenu scripts.
 
       (add-hook 'gts-after-buffer-render-hook
                 (lambda ()
-                  (delete-other-windows (get-buffer-window nil t))
-                  (alert (format "%s" (current-buffer))))
+                  (delete-other-windows (get-buffer-window nil t)))
                 100)
       (gts-do-translate)
       (setq gts-after-buffer-render-hook -gts-after-buffer-render-hook)))
