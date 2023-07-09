@@ -886,6 +886,63 @@ are designed to be easily integrated into dmenu scripts.
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/eman.fish")
   complete -c eman --wraps man
 #+end_src
+** =etranslate=
+#+NAME: etranslate
+#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
+#+begin_src elisp :tangle (haris/tangle-home ".local/bin/etranslate")
+  (with-selected-frame (make-frame `((name . "EmacsFloat")
+                                     (display . ,(getenv "DISPLAY"))))
+    (spacemacs/switch-to-scratch-buffer)
+    (let ((-gts-after-buffer-render-hook gts-after-buffer-render-hook))
+      (run-with-timer
+       0.4
+       nil
+       (lambda ()
+         (insert (shell-command-to-string "~/.local/lib/haris/etranslate-helper 2>/dev/null"))))
+
+      (add-hook 'gts-after-buffer-render-hook
+                (lambda ()
+                  (delete-other-windows (get-buffer-window nil t))
+                  (alert (format "%s" (current-buffer))))
+                100)
+      (gts-do-translate)
+      (setq gts-after-buffer-render-hook -gts-after-buffer-render-hook)))
+#+end_src
+*** Helper script
+This script prints the contents
+#+NAME: etranslate/get-selection
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/haris/etranslate-helper")
+  # In order to get the time when the selection happened I use a timestamp
+  # reported by xclip and to get the current time I use a timestamp reported by
+  # xsel. I have no idea what these timestamps are relative to, but I have
+  # empirically determined that this works.
+
+  set -e
+
+  ts_current="$(
+      timeout 0.5 \
+          xsel --output -vvv 2>&1 >/dev/null \
+              | grep '^xsel: Timestamp:' \
+              | awk '{print $3}'
+  )"
+  ts_sel="$(timeout 0.5 xclip -target TIMESTAMP -out 2>/dev/null)"
+
+  # Uncomment for debugging:
+  # echo "current timestamp: $ts_current, selection timestamp: $ts_sel" >&2
+
+  elapsed_time_millis="$(expr "$ts_current" - "$ts_sel" 2>/dev/null)"
+
+  status="$?"
+  # Some programs (alacritty) don't handle the primary clipboard correctly,
+  # so ts_sel might not contain a valid timestamp
+  if [ "$status" != 0 ]; then
+      exit "$status"
+  fi
+
+  if [ "$elapsed_time_millis" -lt "10000" ]; then
+      xsel --primary --output
+  fi
+#+end_src
 ** =erc=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/erc")
   # Open emacs and run ERC in it
