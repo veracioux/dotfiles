@@ -1321,13 +1321,9 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 #+end_src
 ** Go Translate
 #+begin_src elisp
-  (setq gts-translate-list '(("en" "cs") ("cs" "en") ("en" "bs") ("en" "de")))
+  (use-package go-translate)
 
-  (setq gts-default-translator
-        (gts-translator
-         :picker (gts-prompt-picker)
-         :engines `(,(gts-google-engine))
-         :render (gts-buffer-render)))
+  (setq gts-translate-list '(("en" "cs") ("cs" "en") ("en" "bs") ("en" "de")))
 
   (add-hook 'gts-after-buffer-render-hook
             (defun haris/disable-evil-in-go-translate (&rest _)
@@ -1342,11 +1338,17 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
     (interactive)
     (gts-prompt-picker-next-path t))
 
-
   (evil-define-key 'insert gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
   (evil-define-key 'normal gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
   (evil-define-key 'insert gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
   (evil-define-key 'normal gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
+
+  (eval-after-load "gts"
+    (setq gts-default-translator
+          (gts-translator
+           :picker (gts-prompt-picker)
+           :engines `(,(gts-google-engine))
+           :render (gts-buffer-render))))
 #+end_src
 * Spacemacs
 The code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file

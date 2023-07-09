@@ -383,7 +383,7 @@ External bindings are served by sxhkd.
   mod4 + v
     gvim
   mod4 + shift + e
-    myemacs -c
+    myemacs -c --eval '(scratch-buffer)'
   mod4 + shift + g
       dmenu_run gpg
   mod4 + ctrl + s

@@ -222,9 +222,10 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =notify-send=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/notify-send")
-  export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/<<eval-real-uid()>>/bus
+  export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/<<eval-real-uid()>>/bus"
 
-  /usr/bin/notify-send "$@"
+  # If notify-send can't communicate, it blocks. That's the reason for the timeout
+  timeout 1s alternative-command notify-send "$@"
 #+end_src
 ** =sudo=
 #+NAME: sudo
@@ -2067,7 +2068,7 @@ also tangle it to a standalone destination that I also keep under version contro
   if acpi | grep -qP '\s[0-9]%' && acpi | grep -q 'Discharging'; then
       ~/.local/bin/notify-send 'Low battery' 'Suspending in 5s'
       sleep 5s
-      sudo systemctl suspend -i
+      systemctl suspend -i
   fi
 #+end_src
 ** =cronupd=
