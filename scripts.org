@@ -1971,7 +1971,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
 
   [ -z "$choice" ] && exit 1
 
-  otp "$choice" | xsel -b
+  otp "$choice" | xsel -b -t 30000
   notify-send "OTP" "Saved to clipboard"
 #+end_src
 ** Quickmenu
