@@ -1,9 +1,9 @@
 #+TITLE: Scripts
 #+PROPERTY: header-args :comments headline :mkdirp yes :noweb yes :results silent
-#+PROPERTY: header-args:shell :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744)
-#+PROPERTY: header-args:bash :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744)
-#+PROPERTY: header-args:fish :shebang "#!/usr/bin/env fish" :tangle-mode (identity #o744)
-#+PROPERTY: header-args:python :shebang "#!/usr/bin/env python3" :tangle-mode (identity #o744)
+#+PROPERTY: header-args:shell :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744) :results output
+#+PROPERTY: header-args:bash :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744) :results output
+#+PROPERTY: header-args:fish :shebang "#!/usr/bin/env fish" :tangle-mode (identity #o744) :results output
+#+PROPERTY: header-args:python :shebang "#!/usr/bin/env python3" :tangle-mode (identity #o744) :results output
 
 This is where my custom scripts live. That includes shell scripts, dmenu scripts,
 and potentially programming language-specific scripts. One of the things I
