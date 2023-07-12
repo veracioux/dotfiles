@@ -35,7 +35,6 @@ i3/sway session:
   (shell-command (format "%s-msg -t command restart" wm))
   (call-process "pkill" nil 0 nil "-u" (user-login-name) "sxhkd")
   (let ((default-directory "~/"))
-    (call-process "sxhkd" nil 0 nil)
     (if (locate-file "sxhkd.private" exec-path)
         (call-process "sxhkd.private" nil 0 nil)))
 #+end_src
@@ -199,7 +198,7 @@ Here are the configs you can choose from:
     XAUTHORITY                                  # Fixes dbus problems with i3
 
   export TERM=dumb
-  sxhkd &                                       # Load default bindings
+  # NOTE: main sxhkd process is started by i3
   sxhkd.private -c ~/.sxhkd.private &           # Load private bindings
 
   export DESKTOP_SESSION=i3
@@ -251,6 +250,7 @@ configuration reload procedure:
   exec_always --no-startup-id "autotiling"
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
+  exec_always --no-startup-id sxhkd
 #+end_src
 ** sway start-up
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
