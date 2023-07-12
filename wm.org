@@ -33,6 +33,11 @@ i3/sway session:
 #+begin_src emacs-lisp :tangle no :results none :var wm="i3"
   (haris/tangle-dest)
   (shell-command (format "%s-msg -t command restart" wm))
+  (call-process "pkill" nil 0 nil "-u" (user-login-name) "sxhkd")
+  (let ((default-directory "~/"))
+    (call-process "sxhkd" nil 0 nil)
+    (if (locate-file "sxhkd.private" exec-path)
+        (call-process "sxhkd.private" nil 0 nil)))
 #+end_src
 * Helper scripts and local variables
 :PROPERTIES:
@@ -194,6 +199,8 @@ Here are the configs you can choose from:
     XAUTHORITY                                  # Fixes dbus problems with i3
 
   export TERM=dumb
+  sxhkd &                                       # Load default bindings
+  sxhkd.private -c ~/.sxhkd.private &           # Load private bindings
 
   export DESKTOP_SESSION=i3
   exec i3                                       # Window manager
@@ -239,10 +246,6 @@ to the laptop I currently use. Please change to suit your needs.
 Some things are tightly tied to i3 and should be launched as part of its
 configuration reload procedure:
 #+begin_src i3wm-config
-  exec_always --no-startup-id pkill sxhkd
-  exec_always --no-startup-id sxhkd
-  exec_always --no-startup-id sxhkd.private
-
   exec_always --no-startup-id \
   /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
   exec_always --no-startup-id "autotiling"
@@ -387,8 +390,6 @@ External bindings are served by sxhkd.
       dmenu_run gpg
   mod4 + ctrl + s
       dmenu_run services
-  mod4 + shift + t
-      etranslate
 
   # Volume and brightness
   XF86AudioRaiseVolume
@@ -411,6 +412,14 @@ External bindings are served by sxhkd.
       echo | xsel -b
 
   # vim: ft=sxhkd
+#+end_src
+
+NOTE: This is a workaround because for some reason the sxhkd launched from
+=.xinitrc= cannot run =etranslate= properly. (The command is run, but no frame is
+displayed). When I add =exec sxhkd= instead of launching it from =.xinitrc=, then
+dmenu doesn't work.
+#+begin_src i3wm-config
+  bindsym $mod+Shift+t exec etranslate
 #+end_src
 ** Applications menu
 #+begin_src i3wm-config
