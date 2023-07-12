@@ -33,10 +33,6 @@ i3/sway session:
 #+begin_src emacs-lisp :tangle no :results none :var wm="i3"
   (haris/tangle-dest)
   (shell-command (format "%s-msg -t command restart" wm))
-  (call-process "pkill" nil 0 nil "-u" (user-login-name) "sxhkd")
-  (let ((default-directory "~/"))
-    (if (locate-file "sxhkd.private" exec-path)
-        (call-process "sxhkd.private" nil 0 nil)))
 #+end_src
 * Helper scripts and local variables
 :PROPERTIES:
@@ -198,8 +194,6 @@ Here are the configs you can choose from:
     XAUTHORITY                                  # Fixes dbus problems with i3
 
   export TERM=dumb
-  # NOTE: main sxhkd process is started by i3
-  sxhkd.private -c ~/.sxhkd.private &           # Load private bindings
 
   export DESKTOP_SESSION=i3
   exec i3                                       # Window manager
@@ -245,12 +239,15 @@ to the laptop I currently use. Please change to suit your needs.
 Some things are tightly tied to i3 and should be launched as part of its
 configuration reload procedure:
 #+begin_src i3wm-config
+  exec_always --no-startup-id pkill sxhkd
+  exec_always --no-startup-id sxhkd
+  exec_always --no-startup-id sxhkd.private
+
   exec_always --no-startup-id \
   /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
   exec_always --no-startup-id "autotiling"
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
-  exec_always --no-startup-id sxhkd
 #+end_src
 ** sway start-up
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
