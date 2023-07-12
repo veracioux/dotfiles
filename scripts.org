@@ -895,9 +895,11 @@ are designed to be easily integrated into dmenu scripts.
     (spacemacs/switch-to-scratch-buffer)
     (let ((-gts-after-buffer-render-hook gts-after-buffer-render-hook))
       (run-with-timer
-       0.4
+       0.2
        nil
        (lambda ()
+         ;; This is the only thing I've tried that doesn't report the buffer as read-only
+         (call-interactively #'evil-delete-whole-line)
          (insert (shell-command-to-string "~/.local/lib/haris/etranslate-helper 2>/dev/null"))))
 
       (add-hook 'gts-after-buffer-render-hook
