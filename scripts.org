@@ -1178,7 +1178,7 @@ This script prints the contents
   pkill -f '^sxhkd\.tmp '
   gvim -c 'set ft=sxhkd' ~/.sxhkd.tmp
 
-  sxhkd.tmp -c ~/.sxhkd.tmp & disown
+  o sxhkd.tmp
 #+end_src
 ** =xpeek=
 Create a Xephyr session for the current user that tries to mimic a regular
