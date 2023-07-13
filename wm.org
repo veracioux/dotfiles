@@ -845,7 +845,7 @@ Menu of utilities that allow me to talk to my computer.
 #+begin_src i3wm-config
   bar {
   font pango:Source Code Pro, Icons bold 9.3
-  position top
+  position bottom
   mode hide
   modifier $mod
   workspace_buttons yes

@@ -75,7 +75,7 @@ Note: This depends on my custom build of dmenu with the height patch applied.
 The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+NAME: dmenu
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu")
-  alternative-command dmenu -f -i -h 25 \
+  alternative-command dmenu -b -f -i -h 25 \
       -nb '#1e1e1e' -nf '#dddddd' -sb '#99a3ff' -sf '#1e1e1e' \
       -fn 'Ubuntu Mono-12' \
       "$@"
