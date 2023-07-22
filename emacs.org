@@ -795,6 +795,10 @@ slack-mode-hook hook, it never connects. Investigate
                  'magit-fetch "o"
                  '(1 "O" "another, to local" haris/magit-fetch-to-local))))
 #+end_src
+** Bindings
+#+begin_src elisp
+  (evil-define-key 'normal magit-section-mode-map (kbd "g h") #'magit-section-up)
+#+end_src
 ** TODO GitHub                                                  :deprecated:
 #+begin_src emacs-lisp
   (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
