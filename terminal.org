@@ -13,7 +13,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   shell:
     program: fish
   scrolling:
-    history: 100000
+    history: 100000  # Unfortunately, this is a hard limit in alacritty
   selection:
     save_to_clipboard: true
   hints:

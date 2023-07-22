@@ -778,6 +778,14 @@ Wrapper command around the equivalent [[file:shells.org::*=o=][fish function]].
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/o")
   fish -C "o $(printf "%q " "$@")"
 #+end_src
+** =get-os-type=
+Get the OS type.
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/get-os-type")
+  cat /etc/lsb-release 2>/dev/null | grep -q 'Ubuntu'     && echo 'ubuntu' && exit
+  cat /etc/os-release  2>/dev/null | grep -q 'Arch Linux' && echo 'arch'   && exit
+  echo 'Unsupported OS' >&2
+  exit 1
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
