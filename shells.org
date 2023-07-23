@@ -716,25 +716,33 @@ a terminal and runs the aliased command.
   abbr -g pas   'pass'
   abbr -g gs    'git status'
 
-    # Pacman commands
-  if command --quiet pacman
-      abbr -g p     'pacman'
-      abbr -g pq    'pacman -Q'
-      abbr -g pqq   'pacman -Qq'
-      abbr -g pqi   'pacman -Qi'
-      abbr -g pql   'pacman -Ql'
-      abbr -g pqm   'pacman -Qm'
-      abbr -g pqe   'pacman -Qe'
-      abbr -g pqo   'pacman -Qo'
-      abbr -g pqs   'pacman -Qs'
-      abbr -g psi   'pacman -Si'
-      abbr -g pss   'pacman -Ss'
-      abbr -g pqdtq 'pacman -Qdtq'
-      abbr -g sp    'sudo pacman'
-      abbr -g sps   'sudo pacman -S'
-      abbr -g spr   'sudo pacman -R'
-      abbr -g sprq  'sudo pacman -R (pacman -Qdtq)'
+  function _if_pacman_else
+      if command --quiet pacman
+          echo "$argv[1]"
+      else
+          echo "$argv[2]"
+      end
   end
+
+  # Pacman commands
+  abbr -g p     (_if_pacman_else 'pacman'         'apt')
+  abbr -g pq    (_if_pacman_else 'pacman -Q'      'apt list --installed')
+  abbr -g pqq   (_if_pacman_else 'pacman -Qq'     'apt list --installed')
+  abbr -g pqi   (_if_pacman_else 'pacman -Qi'     'dpkg --status')
+  abbr -g pql   (_if_pacman_else 'pacman -Ql'     'dpkg --listfiles')
+  abbr -g pqm   (_if_pacman_else 'pacman -Qm')
+  abbr -g pqe   (_if_pacman_else 'pacman -Qe')
+  abbr -g pqo   (_if_pacman_else 'pacman -Qo'     'apt-file search --regexp')
+  abbr -g pqs   (_if_pacman_else 'pacman -Qs')
+  abbr -g psi   (_if_pacman_else 'pacman -Si'     'apt-cache show')
+  abbr -g pss   (_if_pacman_else 'pacman -Ss'     'apt search')
+  abbr -g pqdtq (_if_pacman_else 'pacman -Qdtq')
+  abbr -g sp    (_if_pacman_else 'sudo pacman'    'sudo apt')
+  abbr -g sps   (_if_pacman_else 'sudo pacman -S' 'sudo apt install')
+  abbr -g spr   (_if_pacman_else 'sudo pacman -R' 'sudo apt remove')
+  abbr -g sprq  (_if_pacman_else 'sudo pacman -R (pacman -Qdtq)' 'sudo apt autoremove')
+
+  functions --erase _if_pacman_else
 
   # Systemd
   abbr -g ctl       'sudo systemctl'

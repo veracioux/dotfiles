@@ -1245,7 +1245,7 @@ I use picom as my compositor with the i3 window manager.
        "95:class_g = 'Gvim'",
        "100:class_g = 'firefox'",
        "94:class_g = 'emacs'",
-       "94:class_g = 'Emacs'",
+       "94:class_g = 'Emacs'"
        ];
 
   blur:
