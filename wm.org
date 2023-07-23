@@ -784,11 +784,11 @@ Menu of utilities that allow me to talk to my computer.
   set $mode_screenshot " Screenshot | [g]ui [s]creen [f]ull [c]onfig [d]aemon"
 
   mode $mode_screenshot {
-  bindsym g       exec flameshot gui, mode default
-  bindsym s       exec flameshot screen, mode default
-  bindsym f       exec flameshot full, mode default
+  bindsym g       exec sleep 0.1 && flameshot gui,    mode default
+  bindsym s       exec sleep 0.1 && flameshot screen, mode default
+  bindsym f       exec sleep 0.1 && flameshot full,   mode default
   bindsym c       exec flameshot config, mode default
-  bindsym d       exec sh -c 'pgrep flameshot && pkill flameshot || flameshot & disown'
+  bindsym d       exec sh -c 'pkill -f "^flameshot$" || flameshot & disown'
   bindsym Escape  mode default
   }
 

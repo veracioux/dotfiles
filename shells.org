@@ -669,7 +669,6 @@ a terminal and runs the aliased command.
   alias vi='command vim'
   alias snips='cd ~/.vim/snips'
   alias vidir='VISUAL=nvim command vidir'
-  alias wkpd='wikicurses'
   alias cppman='PAGER=viman command cppman'
   alias aurvote='ssh aur@aur.archlinux.org vote'
   alias ...='cd ../..'
@@ -679,9 +678,6 @@ a terminal and runs the aliased command.
   alias stage='mkdir -p /tmp/stage-"$USER"; cd /tmp/stage-"$USER"'
   alias bin='cd ~/.local/bin'
   alias usb='cd ~/mnt/usb'
-
-  export me='veracioux.herokuapp.com'
-  export api="$me/api"
 #+end_src
 ** GUI
 #+begin_src shell :tangle (haris/tangle-home ".alias-gui")
