@@ -188,15 +188,11 @@ There are three =.xinitrc= configuration presets, that I switch between using
 Here are the configs you can choose from:
 #+NAME: xinitrc-i3
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc-i3")
-  ~/.xinitrc.common
+  . ~/.xinitrc.common
 
   dunst &                                       # Notification daemon
   picom &                                       # Compositor
   autotiling &                                  # Autotiling for i3
-  dbus-update-activation-environment --systemd
-    DBUS_SESSION_BUS_ADDRESS \
-    DISPLAY \
-    XAUTHORITY                                  # Fixes dbus problems with i3
 
   export TERM=dumb
   sxhkd &                                       # Load default bindings
@@ -207,7 +203,7 @@ Here are the configs you can choose from:
 #+end_src
 #+NAME: xinitrc-gnome
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc-gnome")
-  ~/.xinitrc.common
+  . ~/.xinitrc.common
 
   export DESKTOP_SESSION_TYPE=x11
   export GDK_BACKEND=x11
@@ -215,14 +211,14 @@ Here are the configs you can choose from:
 #+end_src
 #+NAME: xinitrc-plasma
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc-plasma")
-  ~/.xinitrc.common
+  . ~/.xinitrc.common
 
   export DESKTOP_SESSION=plasma
   exec dbus-launch startplasma-x11
 #+end_src
 #+NAME: xinitrc-xfce4
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc-xfce4")
-  ~/.xinitrc.common
+  . ~/.xinitrc.common
 
   startxfce4
 #+end_src
@@ -230,6 +226,10 @@ The following is shared by all presets. It also contains configuration specific
 to the laptop I currently use. Please change to suit your needs.
 #+NAME: xinitrc-common
 #+begin_src shell :tangle (haris/tangle-home ".xinitrc.common")
+  export DBUS_SESSION_BUS_ADDRESS=unix:path="$XDG_RUNTIME_DIR"/bus
+
+  dbus-update-activation-environment --systemd --all  # Fixes dbus problems with i3
+
   <<dell-g15-xinitrc>>
   xset r rate 200 60                          # Increase key press rate
   redshift &                                  # Blue light filter
@@ -275,7 +275,6 @@ change it according to your preference:
   xmodmap -e "keycode 10 = 1 exclam asciitilde asciitilde asciitilde"
   xmodmap -e "keycode 16 = 7 slash grave grave grave"
   xmodmap -e "keycode 12 = 3 numbersign asciicircum asciicircum asciicircum"
-
 
   touchpad_id=$( xinput list | grep -i touchpad | awk -F'id=' '{print $2 }' | awk '{print $1}' )
   touch_option=$( xinput list-props $touchpad_id | grep -i 'Tapping Enabled' | head -1 | awk -F"[()]" '{print $2}' )

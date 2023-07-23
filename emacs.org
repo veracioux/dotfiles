@@ -62,8 +62,9 @@ unnecessary code.
     [Service]
     Type=forking
     ExecStart=/usr/bin/emacs --daemon="emacs"
-    ExecStop=/usr/bin/emacsclient --socket-name="emacs" --eval "(kill-emacs)"
     Restart=on-failure
+    TimeoutStartSec=600
+    TimeoutStopSec=30
 
     [Install]
     WantedBy=default.target
@@ -737,8 +738,9 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   [Service]
   Type=forking
   ExecStart=/usr/bin/emacs --daemon="irc"
-  ExecStop=/usr/bin/emacsclient --socket-name="irc" --eval "(kill-emacs)"
   Restart=on-failure
+  TimeoutStartSec=600
+  TimeoutStopSec=30
 
   [Install]
   WantedBy=default.target

@@ -235,25 +235,25 @@
 ** CLion
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/clion.desktop")
   <<desktop-base>>
-  Exec=/usr/bin/clion
+  Exec=clion
   Name=CLion
 #+end_src
 ** WebStorm
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/webstorm.desktop")
   <<desktop-base>>
-  Exec=/usr/bin/webstorm
+  Exec=webstorm
   Name=WebStorm
 #+end_src
 ** PhpStorm
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/phpstorm.desktop")
   <<desktop-base>>
-  Exec=/usr/bin/phpstorm
+  Exec=phpstorm
   Name=PhpStorm
 #+end_src
 ** IDEA
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/idea.desktop")
   <<desktop-base>>
-  Exec=/usr/bin/intellij-idea-ultimate-edition
+  Exec=intellij-idea-ultimate-edition
   Name=IDEA
 #+end_src
 ** Emacs
