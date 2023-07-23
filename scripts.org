@@ -2174,6 +2174,27 @@ can conveniently stop/restart each by name.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sxhkd.tmp")
   exec -a sxhkd.tmp sxhkd -c ~/.sxhkd.tmp "$@"
 #+end_src
+* Adapters
+My main setup is Arch Linux. Sometimes I also use other setups like Ubuntu,
+which sometimes have differently named packages and/or executables. I wrap the
+executables here so they are available under the same executable names as on
+Arch Linux.
+
+By default, the adapters are archived. In order to enable them, simply unarchive
+them if the current PC setup is the one they are intended for.
+** Ubuntu                                                          :ARCHIVE:
+*** =docker-compose=                                                 :script:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/docker-compose")
+  docker compose "$@"
+#+end_src
+*** =fd=                                                             :script:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/fd")
+  fdfind "$@"
+#+end_src
+*** =passmenu=                                                       :script:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/passmenu")
+  /usr/share/doc/pass/examples/dmenu/passmenu "$@"
+#+end_src
 * Helper code
 These scripts are used as snippets or noweb references within this org file.
 ** =find-alt-cmd(name)=
