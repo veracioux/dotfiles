@@ -650,9 +650,9 @@ Menu of utilities that allow me to talk to my computer.
   set $mode_talk       " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill"
 
   mode $mode_talk {
-  bindsym d       exec ~/.config/i3/scripts/dictate.sh, mode default
-  bindsym s       exec ~/.config/i3/scripts/chatgpt.sh --speak, mode default
-  bindsym c       exec ~/.config/i3/scripts/chatgpt.sh, mode default
+  bindsym d       exec o ~/.config/i3/scripts/dictate.sh, mode default
+  bindsym s       exec o ~/.config/i3/scripts/chatgpt.sh --speak, mode default
+  bindsym c       exec o ~/.config/i3/scripts/chatgpt.sh, mode default
   bindsym b       exec auto-browser -P haris "https://chat.openai.com/chat", \
                   mode default
   bindsym k       exec pkill audsp, exec pkill minigpt, mode default
