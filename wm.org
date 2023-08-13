@@ -495,7 +495,7 @@ dmenu doesn't work.
 ** Window management menu
 #+NAME: wm-menu
 #+begin_src i3wm-config
-  set $mode_wm         " WM [h]oriz [v]ert [.]split [s]tacking [t]abbed pi[c]om [a]utotiling [x]randr workspace-to-monitor[1]/[2]"
+  set $mode_wm         " WM [h]oriz [v]ert [.]split [s]tacking [t]abbed stic[k]y pi[c]om [a]utotiling [x]randr ws-to-monitor[1]/[2]"
 
   mode $mode_wm {
   bindsym h               split h
@@ -503,6 +503,7 @@ dmenu doesn't work.
   bindsym period          layout toggle split
   bindsym s               layout stacking
   bindsym t               layout tabbed
+  bindsym k               sticky toggle
   bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
   bindsym a               exec --no-startup-id \
   "pgrep autotiling && pkill autotiling || autotiling"
