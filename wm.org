@@ -1009,6 +1009,7 @@ Menu of utilities that allow me to talk to my computer.
   interval        = 1
   }
 
+  order += "read_file timeismoney"
   order += "volume master"
   order += "wireless _first_"
   order += "ethernet _first_"
@@ -1021,6 +1022,13 @@ Menu of utilities that allow me to talk to my computer.
   order += "cpu_temperature 3"
   order += "tztime localdate"
   order += "tztime localtime"
+
+  read_file timeismoney {
+  path=~/.local/share/haris/timeismoney.txt
+  format = "<span color='#f298c3'>%content</span>"
+  format_bad = "can't read timeismoney.txt"
+  separator = true
+  }
 
   volume master {
   format         = "  %volume "
