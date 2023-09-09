@@ -1,5 +1,5 @@
 #+TITLE: VCS config
-#+PROPERTY: header-args :mkdirp yes
+#+SETUPFILE: .setup.org
 
 My config for version control systems I use (overwhelmingly git + GitHub).
 

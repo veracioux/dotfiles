@@ -1,4 +1,4 @@
-#+PROPERTY: header-args :results silent :mkdirp yes
+#+SETUPFILE: ../.setup.org
 
 This directory contains the code and scripts that must be separate from the
 literate configs, because they are needed to tangle the literate configs in the

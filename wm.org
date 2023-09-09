@@ -1,8 +1,6 @@
 #+TITLE: Window Manager Config
-#+PROPERTY: header-args :mkdirp yes :noweb yes :results silent
+#+SETUPFILE: .setup.org
 #+PROPERTY: header-args:i3wm-config+ :tangle (haris/tangle-home ".config/i3/config")
-#+PROPERTY: header-args:shell+ :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744)
-#+PROPERTY: header-args:bash+ :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744)
 #+begin_src i3wm-config :exports none :mkdirp yes
   # -*- mode: emacs-lisp-mode; -*- vim: filetype=i3 shiftwidth=2
 #+end_src

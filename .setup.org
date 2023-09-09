@@ -1,0 +1,7 @@
+#+PROPERTY: header-args+ :mkdirp yes :noweb yes :results silent
+#+PROPERTY: header-args:shell+ :shebang "#!/usr/bin/env sh" :tangle-mode (identity #o744) :results output
+#+PROPERTY: header-args:bash+ :shebang "#!/usr/bin/env bash" :tangle-mode (identity #o744) :results output
+#+PROPERTY: header-args:fish+ :shebang "#!/usr/bin/env fish" :tangle-mode (identity #o744) :results output
+#+PROPERTY: header-args:python+ :shebang "#!/usr/bin/env python3" :tangle-mode (identity #o744) :results output
+This file includes the basic Org properties common to most of my literate configurations
+and wiki files.

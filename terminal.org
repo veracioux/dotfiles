@@ -1,5 +1,5 @@
 #+TITLE: Terminal configs
-#+PROPERTY: header-args :mkdirp yes :results silent :noweb yes
+#+SETUPFILE: .setup.org
 
 A collection of configs for my terminal(s) and terminal apps.
 

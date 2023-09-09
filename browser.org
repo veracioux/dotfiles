@@ -1,5 +1,5 @@
 #+TITLE: Web browser config
-#+PROPERTY: header-args :mkdirp yes :noweb yes :results silent
+#+SETUPFILE: .setup.org
 
 I use Firefox as my main web browser, and occasionally Chromium (or Chrome on
 non-linux) for browser compatibility testing during web development. I use

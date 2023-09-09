@@ -1,5 +1,5 @@
 #+TITLE: Miscellaneous configs
-#+PROPERTY: header-args :mkdirp yes :noweb yes :results silent
+#+SETUPFILE: .setup.org
 
 * Docker
 #+begin_src json :tangle (haris/tangle-home ".docker/config.json")

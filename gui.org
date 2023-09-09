@@ -1,5 +1,5 @@
 #+TITLE: GUI app configs
-#+PROPERTY: header-args :mkdirp yes :results silent :noweb yes
+#+SETUPFILE: .setup.org
 
 * Zathura
 #+begin_src shell :tangle (haris/tangle-home ".config/zathura/zathurarc")

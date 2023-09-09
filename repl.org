@@ -1,4 +1,5 @@
 #+TITLE: REPL configs
+#+SETUPFILE: .setup.org
 
 Configs for various REPL-style programs I use.
 

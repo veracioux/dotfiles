@@ -1,7 +1,6 @@
 #+TITLE: Shell Config
-#+PROPERTY: header-args :mkdirp yes :results silent :noweb yes
+#+SETUPFILE: .setup.org
 #+PROPERTY: header-args:fish+ :tangle (haris/tangle-home ".config/fish/config.fish")
-#+PROPERTY: header-args:fish+ :shebang "#!/usr/bin/env fish"
 
 - *dash* as the system shell (because it's faster)
 - *fish* as my interactive shell

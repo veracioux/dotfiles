@@ -1,5 +1,6 @@
 #+TITLE: Emacs Config
-#+PROPERTY: header-args :tangle (haris/tangle-home ".emacs.d/haris/default.el") :mkdirp yes :noweb yes :results silent
+#+SETUPFILE: .setup.org
+#+PROPERTY: header-args+ :tangle (haris/tangle-home ".emacs.d/haris/default.el")
 #+begin_src emacs-lisp :exports none
   ;; -*- mode: emacs-lisp; -*- vim: ft=lisp sw=2
 #+end_src

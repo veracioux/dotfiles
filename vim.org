@@ -1,5 +1,6 @@
 #+TITLE: Vim Config
-#+PROPERTY: header-args :tangle (haris/tangle-home ".vimrc") :mkdirp yes :results silent
+#+SETUPFILE: .setup.org
+#+PROPERTY: header-args+ :tangle (haris/tangle-home ".vimrc")
 
 I actually use neovim, but I have it aliased to =vim= in my shell config. For the
 graphical version, I don't use gvim but instead I have created a [[file:scripts.org::*=gvim=][wrapper]] called
