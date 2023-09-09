@@ -1819,7 +1819,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
       [ -z "$choice" ] && exit
       # grub-reboot should be allowed passwordless in sudo (or doas)
       sudo grub-reboot "$(echo "$choice" | cut -c 1)"
-      sudo reboot
+      reboot || sudo reboot
   fi
 #+end_src
 ** Services
