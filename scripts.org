@@ -1485,7 +1485,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
   if [ "$choice" = " Edit..." ]; then
       cd "$(dirname "$0")"; gvim "$0"
   else
-      myemacs -c $(echo "$lookup" | grep "$choice/TODO.org")
+      myemacs-float "$(echo "$lookup" | grep "/$choice/TODO.org")"
   fi
 #+end_src
 ** Mail
