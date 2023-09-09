@@ -98,6 +98,7 @@ the type of the purpose of the current emacs daemon (by reading the
   (setq uniquify-buffer-name-style 'forward)
   (setq frame-title-format "%b"
         dotspacemacs-frame-title-format nil)
+  (add-to-list 'image-types 'svg)
 
   ;; Enable clipboard in the terminal
   (use-package xclip)
