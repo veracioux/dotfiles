@@ -537,7 +537,7 @@ dmenu doesn't work.
   set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos con[v]ersations [a]ll"
 
   mode $mode_org {
-  bindsym t               exec --no-startup-id "myemacs-float ~/data/personal/todo.org", mode default
+  bindsym t               exec --no-startup-id "myemacs-float ~/wiki/todo.org", mode default
   bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org", mode default
   bindsym j               exec --no-startup-id "myemacs-float ~/wiki/journal.org", mode default
   bindsym n               exec --no-startup-id "myemacs-float ~/wiki/notes.org", mode default
@@ -763,7 +763,6 @@ Menu of utilities that allow me to talk to my computer.
           if [ -n "$prompt" ]; then
               echo "## User"
               echo "$prompt"
-              echo
           fi
           # Insert response
           if [ -n "$response" ]; then
