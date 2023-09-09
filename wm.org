@@ -392,11 +392,13 @@ External bindings are served by sxhkd.
 
   # Volume and brightness
   XF86AudioRaiseVolume
-      amixer set Master 5%+
+      pactl set-sink-volume "$(pactl get-default-sink)" +5%
   XF86AudioLowerVolume
-      amixer set Master 5%-
+      pactl set-sink-volume "$(pactl get-default-sink)" -5%
   XF86AudioMute
-      amixer set Master toggle
+      pactl set-sink-mute   "$(pactl get-default-sink)" toggle
+  XF86AudioMicMute
+      pactl set-source-mute "$(pactl get-default-source)" toggle
   XF86MonBrightnessUp
       brightnessctl set 5%+
   XF86MonBrightnessDown
