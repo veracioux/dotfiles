@@ -786,6 +786,10 @@ Get the OS type.
   echo 'Unsupported OS' >&2
   exit 1
 #+end_src
+** =urlencode=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/urlencode")
+  python -c 'import urllib.parse as p; print(p.quote(input()))'
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
@@ -1815,10 +1819,11 @@ Create a Xephyr session for the current user that tries to mimic a regular
       }
 
       entries="$(print_entries)"
-      choice="$(echo "$entries" | dmenu -l $(echo "$entries" | wc -l))"
+      choice="$(echo "$entries" | dmenu -l $(echo "$entries" | wc -l) | egrep --only-matching '^[0-9]+')"
       [ -z "$choice" ] && exit
-      # grub-reboot should be allowed passwordless in sudo (or doas)
-      sudo grub-reboot "$(echo "$choice" | cut -c 1)"
+
+      # For convenience, grub-reboot should be allowed passwordless in sudoers.
+      sudo grub-reboot "$choice"
       reboot || sudo reboot
   fi
 #+end_src
@@ -2132,7 +2137,7 @@ also tangle it to a standalone destination that I also keep under version contro
   # Suspend when battery low
 
   if acpi | grep -qP '\s[0-9]%' && acpi | grep -q 'Discharging'; then
-      ~/.local/bin/notify-send 'Low battery' 'Suspending in 5s'
+      timeout 0.4 ~/.local/bin/notify-send 'Low battery' 'Suspending in 5s'
       sleep 5s
       systemctl suspend -i
   fi
@@ -2141,6 +2146,7 @@ also tangle it to a standalone destination that I also keep under version contro
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cronupd")
   # TODO change to ~/.crontab
   cat ~/.haris/private/crontab | crontab -
+  crontab -l
 #+end_src
 ** =fix-wifi=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/fix-wifi")
@@ -2183,17 +2189,22 @@ Arch Linux.
 By default, the adapters are archived. In order to enable them, simply unarchive
 them if the current PC setup is the one they are intended for.
 ** Ubuntu                                                          :ARCHIVE:
-*** =docker-compose=                                                 :script:
+*** =docker-compose=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/docker-compose")
   docker compose "$@"
 #+end_src
-*** =fd=                                                             :script:
+*** =fd=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/fd")
   fdfind "$@"
 #+end_src
-*** =passmenu=                                                       :script:
+*** =passmenu=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/passmenu")
   /usr/share/doc/pass/examples/dmenu/passmenu "$@"
+#+end_src
+*** =ipython=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/ipython")
+  # Some platforms don't provide ipython as a symlink/wrapper to ipython3
+  ipython3 "$@"
 #+end_src
 * Helper code
 These scripts are used as snippets or noweb references within this org file.
@@ -2232,7 +2243,6 @@ Returns the second executable with the given name, looked up in execpath.
 #+begin_src shell :tangle no
   set -- "$@" $([ "$TERM" = "dumb" ] && echo --create-frame || echo '')
 #+end_src
-
 * Local variables                                                  :noexport:
 # Local Variables:
 # org-confirm-babel-evaluate: nil
