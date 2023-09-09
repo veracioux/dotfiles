@@ -549,14 +549,14 @@ literal configs use temporary "staging" destinations. So, whenever I run
 =/tmp/dependencies-<username>= (varies by code block). Then, if I want to apply
 those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src emacs-lisp
-  (use-package ob-async :defer t)
+  ;; (use-package ob-async :defer t)
 
   ;; There are a few custom functions I define for tangling that are in a separate
   ;; file, so that file can be used as a minimalistic source for boostrapping.
   (load-file "~/.haris/bootstrap/tangle.el")
 
   (add-to-list 'org-babel-load-languages '(restclient . t))
-  (add-to-list 'org-babel-load-languages '(async      . t))
+  ;; (add-to-list 'org-babel-load-languages '(async      . t))
   (add-to-list 'org-babel-load-languages '(verb       . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
 
