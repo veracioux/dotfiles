@@ -510,7 +510,7 @@ Some custom keybindings are defined here as well.
 ** Agenda
 #+begin_src emacs-lisp
   (setq org-agenda-files (append '("~/wiki/todo.org"
-                                   "~/data/personal/wiki/")
+                                   "~/wiki/")
                                  (file-expand-wildcards "~/proj/*/*.org")
                                  (file-expand-wildcards "~/proj/drytoe/*/*.org")))
 #+end_src

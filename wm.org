@@ -556,7 +556,7 @@ dmenu doesn't work.
 #+HEADER: :tangle (haris/tangle-home ".config/i3/scripts/open-conversations")
 #+begin_src elisp :shebang "#!/usr/bin/env myemacs-load" :eval no
   (with-selected-frame (make-frame '((name . "EmacsFloat")))
-    (find-file "~/data/personal/wiki/conversations.org"))
+    (find-file "~/wiki/conversations.org"))
 #+end_src
 #+NAME: open-conversations
 #+begin_src bash :tangle no
@@ -739,7 +739,7 @@ Menu of utilities that allow me to talk to my computer.
   restore_mute_state() {
       if [ -n "$mic_muted" ]; then pactl set-source-mute "$default_source" 1; fi
   }
-  dest_file=~/data/personal/wiki/conversations.org
+  dest_file=~/wiki/conversations.org
   <<func:convert_to_org>>
 #+end_src
 #+NAME: func:convert_to_org
@@ -766,6 +766,7 @@ Menu of utilities that allow me to talk to my computer.
           fi
           # Insert response
           if [ -n "$response" ]; then
+              echo
               echo "## Computer"
               echo "$response"
           fi
