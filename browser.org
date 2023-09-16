@@ -178,6 +178,18 @@ Tridactyl extension.
 
   bind \ji fillcmdline goto
 
+  # Gmail authuser change
+  bind ,0 js location.href = location.href + "&authuser=0"
+  bind ,1 js location.href = location.href + "&authuser=1"
+  bind ,2 js location.href = location.href + "&authuser=2"
+  bind ,3 js location.href = location.href + "&authuser=3"
+  bind ,4 js location.href = location.href + "&authuser=4"
+  bind ,5 js location.href = location.href + "&authuser=5"
+  bind ,6 js location.href = location.href + "&authuser=6"
+  bind ,7 js location.href = location.href + "&authuser=7"
+  bind ,8 js location.href = location.href + "&authuser=8"
+  bind ,9 js location.href = location.href + "&authuser=9"
+
   unbind <C-b>
   unbind <C-f>
 
