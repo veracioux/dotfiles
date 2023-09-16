@@ -649,19 +649,25 @@ A menu for managing notifications.
 ** Talk menu
 Menu of utilities that allow me to talk to my computer.
 #+begin_src i3wm-config
-  set $mode_talk       " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill"
+  set $mode_talk       " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill [r]epeat"
 
   mode $mode_talk {
-  bindsym d       exec o ~/.config/i3/scripts/dictate.sh, mode default
-  bindsym s       exec o ~/.config/i3/scripts/chatgpt.sh --speak, mode default
-  bindsym c       exec o ~/.config/i3/scripts/chatgpt.sh, mode default
+  bindsym d       exec <<o>> ~/.config/i3/scripts/dictate.sh, mode default
+  bindsym s       exec <<o>> ~/.config/i3/scripts/chatgpt.sh --speak, mode default
+  bindsym c       exec <<o>> ~/.config/i3/scripts/chatgpt.sh, mode default
   bindsym b       exec auto-browser -P haris "https://chat.openai.com/chat", \
                   mode default
   bindsym k       exec pkill audsp, exec pkill minigpt, mode default
+  bindsym r       exec <<o>> ~/.config/i3/scripts/gpt-repeat-action.sh
   bindsym Escape  mode default
   }
 
   bindsym $mod+Shift+c mode $mode_talk
+#+end_src
+*** Helper alias
+#+NAME: o
+#+begin_src text
+  env HARIS_BACKGROUND_TASKS_SILENT=true o
 #+end_src
 *** Scripts
 :PROPERTIES:
@@ -670,27 +676,20 @@ Menu of utilities that allow me to talk to my computer.
 **** Dictate
 #+NAME: dictate
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/dictate.sh")
-  <<prelude>>
   on_error() {
+      close_notification
       notify-send "Dictation" "Dictation failed!" --urgency critical
       restore_mute_state
   }
 
-  set -e
-  export MINIGPT_API_KEY="$(pass show @openai/api-secret-key)"
-
-  # Unmute the microphone
-  if [ -n "$mic_muted" ]; then
-      pactl set-source-mute "$default_source" 0
-      sleep 2s  # Wait for it to unmute
-  fi
+  <<prelude-all>>
 
   id="$(notify-send "Dictation" "Started" --print-id)"
 
   text="$(minigpt textify --copy)"
   convert_to_org "$text" >>"$dest_file"
 
-  dunstify --close="$id"
+  close_notification
 
   notify-send "Dictation" "Dictation copied to clipboard"
   restore_mute_state
@@ -698,30 +697,37 @@ Menu of utilities that allow me to talk to my computer.
 **** ChatGPT
 #+NAME: chatgpt
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/chatgpt.sh")
-  <<prelude>>
   on_error() {
+      close_notification
       notify-send "ChatGPT" "Processing failed!" --urgency critical
-      restore_mute_state
+      if declare -F restore_mute_state >/dev/null; then
+          restore_mute_state
+      fi
   }
 
-  set -e
+  if [ -z "$HARIS_GPT_PROMPT" ]; then
+      <<prelude-all>>
+      id="$(notify-send "ChatGPT" "Speak your mind" --print-id)"
 
-  # Unmute the microphone
-  if [ -n "$mic_muted" ]; then
-      pactl set-source-mute "$default_source" 0
-      sleep 2s  # Wait for it to unmute
+      text="$(minigpt textify)"
+
+      id="$(notify-send "ChatGPT" "$(echo -e "Prompt recorded:\n $text")" --print-id)"
+      restore_mute_state
+  else
+      <<prelude-basic>>
+
+      text="$HARIS_GPT_PROMPT"
+      id="$(notify-send "ChatGPT" "$(echo -e "Prompt:\n $text")" --print-id)"
   fi
 
-  export MINIGPT_API_KEY="$(pass show @openai/api-secret-key)"
-
-  id="$(notify-send "ChatGPT" "Speak your mind" --print-id)"
-
-  text="$(minigpt textify)"
-
-  restore_mute_state
-  notify-send "ChatGPT" "$(echo -e "Prompt recorded:\n $text")"
-
   response="$(echo "$text" | minigpt chat --copy)"
+
+  echo "-------"
+  echo "Prompt:"
+  echo "$text" | tee ~/.local/share/haris/gpt-last-prompt.txt
+  echo "-------"
+
+  printf "%q " "${BASH_SOURCE[0]}" "$@" > ~/.local/share/haris/gpt-last-cmd.txt
 
   convert_to_org "$text" "$response" >>"$dest_file"
 
@@ -729,20 +735,49 @@ Menu of utilities that allow me to talk to my computer.
 
   if [ "$1" = "--speak" ]; then
       echo "$response" | festival --tts
-      dunstify --close="$id"
+      close_notification
   fi
 #+end_src
+**** Repeat last action
+#+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/gpt-repeat-action.sh")
+  export HARIS_GPT_PROMPT="$(cat ~/.local/share/haris/gpt-last-prompt.txt)"
+  bash -c "$(cat ~/.local/share/haris/gpt-last-cmd.txt)"
+#+end_src
 **** Shared
-#+NAME: prelude
-#+begin_src bash :tangle no
-  default_source="$(pactl get-default-source)"
-  mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
+:PROPERTIES:
+:header-args+: :tangle no
+:END:
+#+NAME: prelude-basic
+#+begin_src bash
+  set -e
   trap on_error ERR
+  export MINIGPT_API_KEY="$(pass show @openai/api-secret-key)"
+  dest_file=~/wiki/conversations.org
+  close_notification() {
+      if [ -n "$id" ]; then
+          dunstify --close="$id"
+      fi
+  }
+  <<func:convert_to_org>>
+#+end_src
+#+NAME: prelude-microphone
+#+begin_src bash
+  default_source="$(pactl get-default-source)"
+  mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes' || true)"
   restore_mute_state() {
       if [ -n "$mic_muted" ]; then pactl set-source-mute "$default_source" 1; fi
   }
-  dest_file=~/wiki/conversations.org
-  <<func:convert_to_org>>
+
+  # Unmute the microphone
+  if [ -n "$mic_muted" ]; then
+      pactl set-source-mute "$default_source" 0
+      sleep 2s  # Wait for it to unmute
+  fi
+#+end_src
+#+NAME: prelude-all
+#+begin_src bash
+  <<prelude-basic>>
+  <<prelude-microphone>>
 #+end_src
 #+NAME: func:convert_to_org
 #+begin_src bash :tangle no
