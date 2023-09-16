@@ -1295,6 +1295,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
       echo "Python"           # Launch python interpreter in emacs
       echo "GPG"              # GPG addresses
       echo "OTP"              # Generate OTP for selected service
+      echo "Books"            # Pick a book to read
       echo "IRC"              # Open emacs client for IRC
       echo "Quickmenu"        # Menu to quickly revisit recent activity
       echo "$aliases"
@@ -1356,6 +1357,8 @@ Create a Xephyr session for the current user that tries to mimic a regular
           run_script gpg ;;
       "OTP")
           run_script otp ;;
+      "Books")
+          run_script books ;;
       "IRC")
           myemacs --socket-name="irc" -c ;;
       "Quickmenu")
@@ -1984,6 +1987,16 @@ Create a Xephyr session for the current user that tries to mimic a regular
 
   otp "$choice" | xsel -b -t 30000
   notify-send "OTP" "Saved to clipboard"
+#+end_src
+** Books
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/books")
+  cd ~/data/literature
+
+  choice="$(fd --type file '' | dmenu -l 10 -p 'Book:')"
+
+  [ -z "$choice" ] && exit
+
+  xdg-open "$choice"
 #+end_src
 ** Quickmenu
 The quickmenu script is optional and must be provided separately at

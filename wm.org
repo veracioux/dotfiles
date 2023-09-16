@@ -365,6 +365,8 @@ External bindings are served by sxhkd.
      dmenu_run otp
   mod4 + q
      dmenu_run system
+  mod4 + ctrl + b
+     dmenu_run books
   mod4 + ctrl + q
      dmenu_run quickmenu
 
