@@ -632,17 +632,18 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; Make org-cycle work only in evil normal state, so it doesn't interfere with
   ;; completion etc.
   (define-key org-mode-map (kbd "TAB") nil t)
-  (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
+  (evil-define-key 'normal org-mode-map (kbd "TAB")         'org-cycle)
 
-  (evil-define-key 'normal org-mode-map     (kbd ", S")         'org-attach-screenshot)
-  (evil-define-key 'normal org-mode-map     (kbd ", TAB")       'org-next-link)
-  (evil-define-key 'normal org-mode-map     (kbd ", <backtab>") 'org-previous-link)
-  (evil-define-key 'normal org-mode-map     (kbd ", i c")       'org-columns)
-  (evil-define-key 'normal org-mode-map     (kbd ", b E")       'haris/execute-named-code-block)
+  (evil-define-key 'normal org-mode-map (kbd ", S")         'org-attach-screenshot)
+  (evil-define-key 'normal org-mode-map (kbd ", TAB")       'org-next-link)
+  (evil-define-key 'normal org-mode-map (kbd ", <backtab>") 'org-previous-link)
+  (evil-define-key 'normal org-mode-map (kbd ", i c")       'org-columns)
+  (evil-define-key 'normal org-mode-map (kbd ", b E")       'haris/execute-named-code-block)
+  (evil-define-key 'normal org-mode-map (kbd ", R")         'org-mode-restart)
 
-  (evil-define-key 'normal org-mode-map (kbd "SPC h o")         'org-info-find-node)
+  (evil-define-key 'normal org-mode-map (kbd "SPC h o")     'org-info-find-node)
 
-  (define-key spacemacs-org-src-mode-map (kbd "w")            'org-edit-src-save)
+  (define-key spacemacs-org-src-mode-map (kbd "w")          'org-edit-src-save)
 #+end_src
 *** Helper functions
 #+begin_src elisp
