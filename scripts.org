@@ -1997,6 +1997,18 @@ Create a Xephyr session for the current user that tries to mimic a regular
   [ -z "$choice" ] && exit
 
   xdg-open "$choice"
+  sts="$?"
+
+  sleep 2s
+  trap 'kill "$pid"' EXIT
+  # trap 'printarg kill "$pid"' ERR
+  # Ensure that this script stays running as long as the program, so `o` doesn't
+  # time out
+  while :; do
+      pid="$(pgrep -a '' | grep --fixed-strings "$choice" | cut -f1 -d' ' | head -1)"
+      if [ -z "$pid" ]; then break; fi
+      sleep 5s
+  done
 #+end_src
 ** Quickmenu
 The quickmenu script is optional and must be provided separately at
