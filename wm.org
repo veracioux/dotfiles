@@ -812,9 +812,11 @@ Menu of utilities that allow me to talk to my computer.
   }
 #+end_src
 *** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "talk-menu.sh")
-  sudo pacman -S festival
-  pip install minigpt
+#+begin_src text :tangle (haris/tangle-deps "talk-menu.pacman")
+  festival pandoc
+#+end_src
+#+begin_src text :tangle (haris/tangle-deps "talk-menu.pip")
+  minigpt
 #+end_src
 ** Screenshot menu
 #+begin_src i3wm-config

@@ -45,7 +45,7 @@ still need to [[*Installing dependencies][install dependencies]] to ensure you h
 dotfiles are meant to configure.
 
 If you would like to do things in a more supervised manner, follow the
-[[file:bootstrap/README.org][bootstrap]] instructions. (*TODO*: instructions still incomplete)
+[[file:bootstrap/README.org][bootstrap]] instructions.
 
 Once you have set everything up, any changes you make to the org-mode dotfiles
 will need to be applied to the live configs by calling =haris/tangle-dest=. There
@@ -54,23 +54,48 @@ merely calling =org-babel-tangle= will just tangle the files to a temporary
 location at =/tmp/tangle-$USER= (useful for inspecting changes before applying
 them to your home directory).
 * Installing dependencies
-Most of my org-mode dotfiles have a *Setup* and/or *Dependencies* section with bash
-scripts that will install all the dependencies for the configs defined in the
-file.
+Most of my org-mode dotfiles have various *Dependencies* sections with code blocks
+tangled to =/tmp/dependencies-$USER/...=, grouped by package manager that is
+needed to install them. Those files contain a space/newline separated list of
+package names, and the script *(WIP)* that installs the dependencies will parse
+them as separate command-line arguments.
 
-*NOTE:* The dependency scripts were made with *Arch Linux* in mind, so they use
-=pacman= as the package manager and =paru= as an AUR helper.
-*TODO:* I will probably gradually make these scripts compatible with Ubuntu as well.
-*TODO:* The scripts should not be run directly, but instead using a frontend script that I
-will create in the future.
+Here is a list of file extensions that can be used for dependency specifications
+tangled to =/tmp/dependencies-$USER/=, including how each will *(soon)* be processed
+by dependency installation scripts:
+
+- =.pacman= :: Official Arch Linux packages, which will be installed with =sudo
+  pacman -S=
+- =.aur= :: AUR packages, which will be installed with =paru -S=
+- =.ubuntu= :: APT packages that should be installed on Ubuntu 22.04, using =sudo
+  apt install=. I might subdivide this for into multiple Ubuntu versions.
+- =.pip= :: Python 3 packages, installed using =sudo pip install=.
+- =.cpan= :: CPAN packages, installed using =sudo cpan=.
+- =.pip-user= :: Python 3 packages, installed using =pip install= for the current
+  user only.
+- Any other extension or none :: Custom dependency installation script. It will
+  be executed directly.
+
+This list might be extended in the future, but I will try my best to keep it up
+to date as a centralized overview of all the subdirectories I use.
+
+*NOTE:* I made most of the dependency lists while using *Arch Linux*, so you should
+expect the best completeness when using =pacman= as the package manager and =paru=
+as an AUR helper.
+
+*NOTE:* I have recently started seriously using a Ubuntu setup as well, making
+changes to my configs whenever I noticed that something didn't work. Some things
+were caused by differing packages among distributions, and I solved them by
+installing the missing dependencies, but I haven't always been meticulous in
+updating my dotfiles correspondingly.
 
 ** TODO System setup script
 :PROPERTIES:
 :header-args+: :tangle (haris/tangle-deps "global-dependencies.sh") :tangle-mode (identity #o744)
 :END:
 This is a shell script for installing general system dependencies that I created
-some time ago. It is quite incomplete, but can be useful as a reference when
-initializing a new setup from scratch.
+some time ago. It is quite incomplete, but can be useful to save some work when
+initializing a new setup meant to use my dotfiles, from scratch.
 #+begin_src shell
   #!/usr/bin/env bash
 
@@ -121,7 +146,6 @@ initializing a new setup from scratch.
   pacman -Sy
 
   official grub efibootmgr
-
 
   # Swapfile
 

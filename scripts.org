@@ -685,8 +685,8 @@ them as code blocks here for better readability.
   i3-msg exec "$browser $where $args"
 #+end_src
 *** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "auto-browser.sh")
-  sudo pacman -S xdotool xorg-xprop
+#+begin_src text :tangle (haris/tangle-deps "auto-browser.pacman")
+  xdotool xorg-xprop
 #+end_src
 ** =alternative-command=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/alternative-command")
@@ -1009,8 +1009,8 @@ This script prints the contents
   fi
 #+end_src
 *** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "qr.sh")
-  sudo pacman -S zbar qrencode
+#+begin_src text :tangle (haris/tangle-deps "qr.pacman")
+  zbar qrencode
 #+end_src
 ** =rb=
 # TODO: linux-only
@@ -1130,8 +1130,8 @@ This script prints the contents
   otp()
 #+end_src
 *** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "otp.sh")
-  sudo pip install dryparse
+#+begin_src text :tangle (haris/tangle-deps "otp.pip-user")
+  dryparse
 #+end_src
 ** =imount=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/imount")
@@ -2002,12 +2002,15 @@ Create a Xephyr session for the current user that tries to mimic a regular
 The quickmenu script is optional and must be provided separately at
 [[~/.local/lib/dmenu/quickmenu]].
 ** Dependencies
-#+begin_src bash :tangle (haris/tangle-deps "dmenu.sh")
+#+begin_src text :tangle (haris/tangle-deps "dmenu.pacman")
   # Root menu (dmenu_run)
-  sudo pacman -S clipmenu
-  # Open
-  paru -S buku
-  sudo pacman -S xdotool xorg-xprop
+  clipmenu
+  # Open menu
+  xdotool xorg-xprop
+#+end_src
+#+begin_src text :tangle (haris/tangle-deps "dmenu.aur")
+  # Open menu
+  buku
 #+end_src
 * System maintenance
 ** =pacman-update-mirrorlist=

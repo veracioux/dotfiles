@@ -838,10 +838,11 @@ slack-mode-hook hook, it never connects. Investigate
 #+end_src
 * EAF
 ** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "emacs-eaf.sh")
-  sudo pacman -S git nodejs npm python-pyqt5 python-pyqt5-sip \
-       python-pyqtwebengine wmctrl python-pymupdf
-  paru -S python-epc
+#+begin_src shell :tangle (haris/tangle-deps "emacs/eaf.pacman")
+  git nodejs npm python-pyqt5 python-pyqt5-sip python-pyqtwebengine wmctrl python-pymupdf
+#+end_src
+#+begin_src shell :tangle (haris/tangle-deps "emacs/eaf.aur")
+  python-epc
 #+end_src
 * Vterm
 #+begin_src emacs-lisp
@@ -1058,8 +1059,8 @@ YAML indentation is just broken. This disables it completely.
   (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
 #+end_src
 *** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "/emacs_c-c++.sh")
-  sudo pip install cmake-language-server
+#+begin_src text :tangle (haris/tangle-deps "emacs/c-c++.pip")
+  cmake-language-server
 #+end_src
 ** Python
 Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
@@ -1086,11 +1087,11 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)
 #+end_src
 *** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "emacs-python.sh")
-  sudo pacman -S python-lsp-server flake8 python-typing_extensions \
-       python-lsp-black python-pylint
-  sudo pip install pyls-isort pyls-mypy pyls-memestra \
-       autoflake importmagic epc ptvsd
+#+begin_src shell :tangle (haris/tangle-deps "emacs/python.pacman")
+  python-lsp-server flake8 python-typing_extensions python-lsp-black python-pylint
+#+end_src
+#+begin_src shell :tangle (haris/tangle-deps "emacs/python.pip")
+  pyls-isort pyls-mypy pyls-memestra autoflake importmagic epc ptvsd
 #+end_src
 ** RST
 #+begin_src emacs-lisp
@@ -1294,10 +1295,10 @@ Database viewer in Emacs.
                 'edbi:dbview-show-tabledef-command)))
 #+end_src
 *** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "edbi.sh")
-  sudo cpan RPC::EPC::Service DBI
+#+begin_src shell :tangle (haris/tangle-deps "emacs/edbi.cpan")
+  RPC::EPC::Service DBI
   # For postgres support
-  sudo cpan DBD::Pg
+  DBD::Pg
 #+end_src
 ** Maxima
 I used this mode like 2-3 times, but I'm keeping it in case I have to use it again.

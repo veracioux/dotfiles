@@ -577,19 +577,17 @@ the setup script as well!.*
 #+end_src
 
 * Setup
-:PROPERTIES:
-:header-args+: :tangle (haris/tangle-deps "vim.sh") :tangle-mode (identity #o744) :shebang "#!/usr/bin/env bash"
-:END:
 ** Dependencies
-#+begin_src shell
-  sudo pacman -S gvim neovim fzf
-  # Dependencies for YouCompleteMe
-  sudo pacman -S go nodejs npm jdk-openjdk
-
+#+begin_src bash :tangle (haris/tangle-deps "vim.sh")
   # Install vim-plug
   mkdir -p ~/.vim/autoload
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+#+end_src
+#+begin_src text :tangle (haris/tangle-deps "vim.pacman")
+  gvim neovim fzf
+  # Dependencies for YouCompleteMe
+  go nodejs npm jdk-openjdk
 #+end_src
 ** Additional setup
 We must purge all the directories from [[~/.config/nvim]] and replace them with

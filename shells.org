@@ -291,6 +291,15 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       fzf_configure_bindings
 #+end_src
 *** Dependencies
+System packages:
+#+begin_src text :tangle (haris/tangle-deps "fish/plugins.aur")
+  fisher
+#+end_src
+#+begin_src text :tangle (haris/tangle-deps "fish/plugins.pacman")
+  fish
+  # Dependencies for fzf.fish
+  fd bat
+#+end_src
 Fish plugins:
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/fish_plugins")
   edc/bass
@@ -303,11 +312,9 @@ Fish plugins:
 #+end_src
 This code block installs all system dependencies and all plugins in fish based
 on the plugin list above.
-#+begin_src shell :tangle (haris/tangle-deps "fish.sh")
-  paru -S fish fisher
+#+begin_src shell :tangle (haris/tangle-deps "fish/plugins.sh")
   touch ~/.config/fish/{private,tmp}.fish
   fish -c "fisher update"
-  sudo pacman -S fd bat # Dependencies for fzf.fish
 #+end_src
 ** Functions
 #+begin_src fish
@@ -857,6 +864,6 @@ a terminal and runs the aliased command.
   [ -f ~/.config/fish/tmp.fish ] && source ~/.config/fish/tmp.fish
 #+end_src
 * Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "shells.sh")
-  sudo pacman -S dash fish
+#+begin_src text :tangle (haris/tangle-deps "shells.pacman")
+  dash fish
 #+end_src
