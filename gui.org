@@ -174,8 +174,8 @@ Some settings in GTK 3.0 don't work if we quote their values.
 
   Ctrl+l ab-loop
 
-  h seek -1
-  l seek +1
+  h seek -0.5 exact
+  l seek +0.5 exact
 #+end_src
 * VirtualBox
 #+begin_src xml :tangle (haris/tangle-home ".config/VirtualBox/VirtualBox.xml")
