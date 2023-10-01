@@ -10,7 +10,8 @@
 (setq this-script-dir (file-name-directory load-file-name))
 
 (load-file (format "%s/tangle.el" this-script-dir))
-(haris/tangle-all dest :dotfiles-dir (format "%s/.." this-script-dir))
+(haris/tangle-all dest :dotfiles-dir (expand-file-name
+                                      (format "%s/.." this-script-dir)))
 
 ;; vim: filetype=lisp
 ;; -*- mode: emacs-lisp -*-
