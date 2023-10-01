@@ -49,6 +49,13 @@ fi
 
 cd ~/.haris
 
+# For some reason the '#+SETUPFILE' directive is ignored, so I have to manually
+# replace them with the contents of ~/.haris/.setup.org.
+sed '/#+SETUPFILE: .*\.setup\.org$/{
+s_#+SETUPFILE: .*\.setup\.org$__g
+r .setup.org
+}' -i *.org */*.org
+
 # These are used by the tangle script to determine destinations
 export USER="$user" HOME="$home"
 emacs --script bootstrap/tangle-all.sh

@@ -8,9 +8,10 @@ RUN adduser -D user
 COPY bootstrap/entrypoint.sh /tmp/entrypoint.sh
 RUN chown user:user /tmp/entrypoint.sh
 
-USER user
 WORKDIR /home/user
 COPY . .haris
+RUN chown -R user .
+USER user
 
 ENTRYPOINT ["/tmp/entrypoint.sh"]
 
