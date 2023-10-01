@@ -7,9 +7,10 @@
 
 (setq command-switch-alist '(("--dest" . ignore)))
 (setq dest (member "--dest" command-line-args))
+(setq this-script-dir (file-name-directory load-file-name))
 
-(load-file (format "%s/tangle.el" (file-name-directory load-file-name)))
-(haris/tangle-all dest)
+(load-file (format "%s/tangle.el" this-script-dir))
+(haris/tangle-all dest :dotfiles-dir (format "%s/.." this-script-dir))
 
 ;; vim: filetype=lisp
 ;; -*- mode: emacs-lisp -*-

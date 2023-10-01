@@ -65,17 +65,18 @@ A library of functions for easier tangling.
         (org-babel-tangle)
         (kill-buffer buffer))))
 
-  (defun haris/tangle-all (&optional to-destination)
+  (defun haris/tangle-all (&optional to-destination &key dotfiles-dir)
     "Tangle all my dotfiles.
 
   By default the files are tangled into a temporary location that can be obtained
   using (haris/tangle-home).
 
   Optional argument TO-DESTINATION can be used to tangle the files directly to the
-  home directory."
+  home directory. Keyword argument DOTFILES-DIR can be used to specify an
+  alternative dotfiles directory to '~/.haris'."
     (interactive)
     (when to-destination (delete-directory (haris/tangle-home) t))
-    (let ((org-dotfiles-root (concat (file-name-directory load-file-name) "/..")))
+    (let ((org-dotfiles-root (or dotfiles-dir "~/.haris")))
       (dolist (file (append (directory-files-recursively org-dotfiles-root "\\.org$")))
         (message "Tangling file: %s" file)
         (haris/tangle--file-non-interactively file)))
