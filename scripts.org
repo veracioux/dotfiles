@@ -2150,6 +2150,28 @@ also tangle it to a standalone destination that I also keep under version contro
   ;; NOTE: Although this file is kept under version control, it is tangled from
   ;; ~/.haris/scripts.org, so don't modify it directly
 #+end_src
+** =website-healthcheck=
+Usage: website-healthcheck [--ignore-success]
+
+Options:
+  --notify-success  Show a notification even if the website status is 'alive'
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/website-healthcheck")
+  notify_success="$([ "$1" = "--notify-success" ] && echo true)"
+
+  prod_status="$(curl -L https://veracioux.me/status)"
+  if [ "$?" != 0 ] || [ "$prod_status" != "alive" ]; then
+      ~/.local/bin/notify-send --urgency=critical 'ERROR' 'Production website error'
+  elif [ -n "$notify_success" ]; then
+      ~/.local/bin/notify-send 'Production website' 'Status: alive'
+  fi
+
+  stg_status="$(curl -L https://stg.veracioux.me/status)"
+  if [ "$?" != 0 ] || [ "$stg_status" != "alive" ]; then
+      ~/.local/bin/notify-send --urgency-critical 'ERROR' 'Staging website error'
+  elif [ -n "$notify_success" ]; then
+      ~/.local/bin/notify-send 'Staging website' 'Status: alive'
+  fi
+#+end_src
 * Miscellaneous
 ** =term=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/term")
