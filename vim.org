@@ -575,8 +575,10 @@ the setup script as well!.*
   let g:vcoolor_map='<M-c>'
   let g:vcoolor_disable_mappings = 1
 #+end_src
-
 * Setup
+:PROPERTIES:
+:header-args+: :tangle no
+:END:
 ** Dependencies
 #+begin_src bash :tangle (haris/tangle-deps "vim.sh")
   # Install vim-plug
