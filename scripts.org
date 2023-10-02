@@ -2194,7 +2194,7 @@ Options:
 ** =cronupd=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cronupd")
   # TODO change to ~/.crontab
-  cat ~/.haris/private/crontab | crontab -
+  cat ~/.crontab | crontab -
   crontab -l
 #+end_src
 ** =fix-wifi=
