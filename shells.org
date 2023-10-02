@@ -819,6 +819,8 @@ a terminal and runs the aliased command.
   abbr -g hk    'heroku'
   abbr -g mhc   'man http-codes'
   abbr -g rgh   'rg --hidden'
+  abbr -g px    'ping x'
+  abbr -g ii    'curl ipinfo.io'
   if [ -n "$DISPLAY" ]
       abbr -g man   'eman'
   end
