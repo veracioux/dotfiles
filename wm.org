@@ -734,7 +734,12 @@ Menu of utilities that allow me to talk to my computer.
   notify-send "ChatGPT" "Response copied to clipboard!"
 
   if [ "$1" = "--speak" ]; then
-      echo "$response" | festival --tts
+      set +e
+      echo "$response" | gtts-cli -f- | mpv --speed=1.2 -
+      if [ "$?" != 0 ]; then
+          set -e
+          echo "$response" | festival --tts
+      fi
       close_notification
   fi
 #+end_src
@@ -813,10 +818,10 @@ Menu of utilities that allow me to talk to my computer.
 #+end_src
 *** Dependencies
 #+begin_src text :tangle (haris/tangle-deps "talk-menu.pacman")
-  festival pandoc
+  festival pandoc mpv
 #+end_src
 #+begin_src text :tangle (haris/tangle-deps "talk-menu.pip")
-  minigpt
+  minigpt gtts
 #+end_src
 ** Screenshot menu
 #+begin_src i3wm-config
