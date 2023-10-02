@@ -450,8 +450,6 @@ Some custom keybindings are defined here as well.
 #+begin_src emacs-lisp
   (evil-collection-init 'ivy)
   (setq ivy-initial-inputs-alist ())
-
-  (define-key ivy-minibuffer-map (kbd "TAB") #'ivy-insert-current)
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<ivy>>
@@ -1191,6 +1189,9 @@ precedence of TAB-bound commands for all modes.
                :title "Command bound to pressed key:"))))
 
   (define-key evil-insert-state-map (kbd "TAB") #'haris/handle-TAB-in-insert-mode)
+
+  (evil-define-key 'insert ivy-minibuffer-map (kbd "<backtab>")
+    (lambda () (interactive) (ivy-insert-current)))
 #+end_src
 * Info mode
 Remove Info mode annoying keybindings.
@@ -1467,6 +1468,11 @@ I use this variable to check if the config loaded correctly.
 #+NAME: config-loaded-fine
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
   (setq haris/config-loaded-fine (current-time-string))
+#+end_src
+** Private config
+The private config is loaded from [[~/.emacs.d/haris/private][~/.emacs.d/haris/private.el]].
+#+begin_src elisp
+  (load-file "~/.emacs.d/haris/private.el")
 #+end_src
 ** Local variables                                                :noexport:
 # Local Variables:
