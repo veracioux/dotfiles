@@ -1415,7 +1415,8 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      (auto-completion
       :variables
       auto-completion-enable-snippets-in-popup t
-      auto-completion-enable-sort-by-usage     t)))
+      auto-completion-enable-sort-by-usage     t)
+     openai))
 #+end_src
 ** Additional packages
 Packages installed with =use-package= should be added here as well. Otherwise
@@ -1463,6 +1464,17 @@ Spacemacs would delete them every time on startup.
 ** Upgrading
 When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][spacemacs/ediff-dotfile-and-template]] to merge any upstream changes to the dotfile.
 * Appendix
+** Keys
+#+begin_src elisp
+  (condition-case err
+      (setq openai-key
+            (replace-regexp-in-string
+             "\n$" ""
+             (with-temp-buffer
+               (insert-file-contents "~/.local/share/haris/openai-api-key.txt")
+               (buffer-string))))
+    (error (message "WARNING: %s" err)))
+#+end_src
 ** Config check
 I use this variable to check if the config loaded correctly.
 #+NAME: config-loaded-fine
