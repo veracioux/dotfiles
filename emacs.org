@@ -877,8 +877,13 @@ slack-mode-hook hook, it never connects. Investigate
   (advice-add #'spacemacs/shell-pop-vterm      :before #'haris/vterm-set-environment-windowid)
   (advice-add #'spacemacs/shell-pop-multivterm :before #'haris/vterm-set-environment-windowid)
 
-  (evil-define-key 'normal vterm-mode-map (kbd "A")     'evil-append-line)
-  (evil-define-key 'normal vterm-mode-map (kbd "M-TAB") 'other-window)
+  (defalias 'haris/vterm-toggle-freeze 'vterm-copy-mode
+    "Freeze/unfreeze the output of the current vterm buffer")
+
+  (evil-define-key 'normal vterm-mode-map      (kbd "A")     'evil-append-line)
+  (evil-define-key 'normal vterm-mode-map      (kbd "M-TAB") 'other-window)
+  (evil-define-key 'normal vterm-mode-map      (kbd ",f")    'haris/vterm-toggle-freeze)
+  (evil-define-key 'normal vterm-copy-mode-map (kbd ",f")    'haris/vterm-toggle-freeze)
 #+end_src
 ** TODO WTF?
 This doesn't work consistently.
