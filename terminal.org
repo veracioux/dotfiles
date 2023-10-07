@@ -102,13 +102,19 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 ** Key bindings
 #+begin_src yaml
   key_bindings:
-    - { key: U,     mods: Alt,      action: ScrollPageUp,     mode: ~AppCursor }
-    - { key: D,     mods: Alt,      action: ScrollPageDown,   mode: ~AppCursor }
-    - { key: J,     mods: Alt,      action: ScrollLineDown,   mode: ~AppCursor }
-    - { key: K,     mods: Alt,      action: ScrollLineUp,     mode: ~AppCursor }
-    - { key: H,     mods: Alt,      chars: "\x1b[D"                            }
-    - { key: L,     mods: Alt,      chars: "\x1b[C"                            }
-    - { key: T,     mods: Alt,      action: SpawnNewInstance, mode: ~AppCursor }
+    - { key: U,     mods: Alt,        action: ScrollPageUp,     mode: ~AppCursor }
+    - { key: D,     mods: Alt,        action: ScrollPageDown,   mode: ~AppCursor }
+    - { key: J,     mods: Alt,        action: ScrollLineDown,   mode: ~AppCursor }
+    - { key: K,     mods: Alt,        action: ScrollLineUp,     mode: ~AppCursor }
+    - { key: H,     mods: Alt,        chars: "\x1b[D"                            }
+    - { key: L,     mods: Alt,        chars: "\x1b[C"                            }
+    - { key: T,     mods: Alt,        action: SpawnNewInstance, mode: ~AppCursor }
+    - key: G
+      mods: Alt|Shift
+      command:
+        program: sh
+        args: [ "-c", "tmux new -d magit" ]
+      mode: ~AppCursor
 
     # These allow me to use Ctrl + N/P to navigate the command history in shells
     # where I can't make custom bindings (e.g. in docker containers)
