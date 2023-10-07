@@ -695,7 +695,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 #+end_src
 ** Daemon
 This server runs in the background and listens for price changes and notifies me accordingly.
-#+begin_src conf :tangle (haris/tangle-home ".config/systemd/user/cointop.service")
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/cointop.service")
   [Unit]
   Description=Cointop daemon
 

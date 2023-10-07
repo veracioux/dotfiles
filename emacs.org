@@ -39,7 +39,7 @@ unnecessary code.
 - =irc= :: Used as an IRC chat client
   - Configuration file :: =~/.emacs.d/haris/irc.el=
 
-  #+begin_src conf :tangle no
+  #+begin_src systemd :tangle no
     <<irc.service>>
   #+end_src
 
@@ -50,12 +50,12 @@ unnecessary code.
   editing and applications that don't warrant a standalone daemon.
   - Configuration file :: =~/.emacs.d/default.el=
 
-  #+begin_src conf :tangle no
+  #+begin_src systemd :tangle no
     <<emacs.service>>
   #+end_src
 
   #+NAME: emacs.service
-  #+begin_src conf :tangle (haris/tangle-home ".config/systemd/user/emacs.service") :exports none
+  #+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/emacs.service") :exports none
     [Unit]
     Description=Emacs text editor
     Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
@@ -744,7 +744,7 @@ The normal =<<...>>= syntax for noweb references breaks shell blocks. So I allow
 #+end_src
 ** Systemd service
 #+NAME: irc.service
-#+begin_src conf :tangle (haris/tangle-home ".config/systemd/user/irc.service")
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/irc.service")
   [Unit]
   Description=Emacs daemon for IRC chat
   Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
