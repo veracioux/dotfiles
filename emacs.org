@@ -237,7 +237,8 @@ command there (without any arguments).
              ;; Docstring
              ,(format "Interactive command corresponding to the custom local shell script '%s'" command)
              (interactive "P")
-             (let ((command ,command)
+             (let ((default-directory "~")
+                   (command ,command)
                    (_vterm nil)
                    (run-command nil))
                ;; Run multi-vterm
