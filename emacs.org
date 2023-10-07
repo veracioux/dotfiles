@@ -507,10 +507,11 @@ Some custom keybindings are defined here as well.
 #+end_src
 ** Agenda
 #+begin_src emacs-lisp
-  (setq org-agenda-files (append '("~/wiki/todo.org"
-                                   "~/wiki/")
-                                 (file-expand-wildcards "~/proj/*/*.org")
-                                 (file-expand-wildcards "~/proj/drytoe/*/*.org")))
+  (setq org-agenda-files (append
+                          (remove "~/wiki/index.org"
+                                  (file-expand-wildcards "~/wiki/*"))
+                          (file-expand-wildcards "~/proj/*/*.org")
+                          (file-expand-wildcards "~/proj/drytoe/*/*.org")))
 #+end_src
 ** TODO Syntax extensions
 Doesn't get loaded correctly.
