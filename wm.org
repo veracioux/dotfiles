@@ -556,8 +556,9 @@ dmenu doesn't work.
 #+end_src
 *** Open conversations file
 #+HEADER: :tangle (haris/tangle-home ".config/i3/scripts/open-conversations")
-#+begin_src elisp :shebang "#!/usr/bin/env myemacs-load" :eval no
-  (with-selected-frame (make-frame '((name . "EmacsFloat")))
+#+begin_src elisp :shebang "#!/usr/bin/env myemacs-load"
+  (with-selected-frame (make-frame `((name . "EmacsFloat")
+                                     (display . ,(getenv "DISPLAY"))))
     (find-file "~/wiki/conversations.org"))
 #+end_src
 #+NAME: open-conversations
@@ -585,8 +586,7 @@ dmenu doesn't work.
   bindsym F9 mode $mode_audio
 #+end_src
 
-To modify the bluetooth device ID of the headphones, edit
-[[~/.local/lib/haris/bt-headphones-id][this file]].
+To modify the bluetooth device ID of the headphones, edit [[~/.local/lib/haris/bt-headphones-id][this file]].
 
 #+NAME: bluetoothctl-wrapper
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/haris/bluetoothctl-wrapper") :tangle-mode (eval #o744)
@@ -657,7 +657,7 @@ Menu of utilities that allow me to talk to my computer.
   bindsym c       exec <<o>> ~/.config/i3/scripts/chatgpt.sh, mode default
   bindsym b       exec auto-browser -P haris "https://chat.openai.com/chat", \
                   mode default
-  bindsym k       exec pkill audsp, exec pkill minigpt, mode default
+  bindsym k       exec pkill -9 -f 'gpt-i3', mode default
   bindsym r       exec <<o>> ~/.config/i3/scripts/gpt-repeat-action.sh
   bindsym Escape  mode default
   }
@@ -705,7 +705,7 @@ Menu of utilities that allow me to talk to my computer.
       fi
   }
 
-  if [ -z "$HARIS_GPT_PROMPT" ]; then
+  if [ -z "$HARIS_GPT_STORED_PROMPT" ]; then
       «prelude-all»
       id="$(notify-send "ChatGPT" "Speak your mind" --print-id)"
 
@@ -716,7 +716,7 @@ Menu of utilities that allow me to talk to my computer.
   else
       «prelude-basic»
 
-      text="$HARIS_GPT_PROMPT"
+      text="$HARIS_GPT_STORED_PROMPT"
       id="$(notify-send "ChatGPT" "$(echo -e "Prompt:\n $text")" --print-id)"
   fi
 
@@ -735,17 +735,20 @@ Menu of utilities that allow me to talk to my computer.
 
   if [ "$1" = "--speak" ]; then
       set +e
-      echo "$response" | gtts-cli -f- | mpv --speed=1.2 -
-      if [ "$?" != 0 ]; then
+      echo "$response" \
+          | gtts-cli -f- \
+          | bash -c 'exec -a mpv-gpt-i3 mpv --speed=1.2 -'
+      sts="$?"
+      if [ "$sts" != 0 ] && [ "$(kill -l "$sts")" != "KILL" ]; then
           set -e
-          echo "$response" | festival --tts
+          echo "$response" | bash -c 'exec -a festival-gpt-i3 festival --tts'
       fi
       close_notification
   fi
 #+end_src
 **** Repeat last action
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/gpt-repeat-action.sh")
-  export HARIS_GPT_PROMPT="$(cat ~/.local/share/haris/gpt-last-prompt.txt)"
+  export HARIS_GPT_STORED_PROMPT="$(cat ~/.local/share/haris/gpt-last-prompt.txt)"
   bash -c "$(cat ~/.local/share/haris/gpt-last-cmd.txt)"
 #+end_src
 **** Shared
