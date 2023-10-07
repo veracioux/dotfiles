@@ -603,7 +603,7 @@ To modify the bluetooth device ID of the headphones, edit [[~/.local/lib/haris/b
       exit 1
   fi
 
-  output="$(bluetoothctl "$1" "$(cat "$id_file")")"
+  output="$(bluetoothctl "$1" "$(cat "$id_file" | head -1)")"
 
   notify-send 'Status' "$output"
 #+end_src
