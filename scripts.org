@@ -787,6 +787,31 @@ Get the OS type.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/urlencode")
   python -c 'import urllib.parse as p; print(p.quote(input()))'
 #+end_src
+** =fifo=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/fifo")
+  mkfifo /tmp/fifo 2>/dev/null
+
+  session_exists() {
+      tmux has-session -t fifo 2>/dev/null
+  }
+
+  create_session() {
+      tmux new -s fifo "$@" tail --follow=name /tmp/fifo
+  }
+
+  if [ -t 0 ]; then
+      if session_exists; then
+          tmux attach -t fifo
+      else
+          create_session
+      fi
+  else
+      if ! session_exists; then
+          create_session -d
+      fi
+      cat > /tmp/fifo
+  fi
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
