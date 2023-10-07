@@ -138,6 +138,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 #+begin_src shell :tangle (haris/tangle-home ".tmux.conf")
   set -g status off
   set -g default-command /usr/bin/fish
+  set -g mouse on
 
   # Change prefix key
   unbind-key C-b
