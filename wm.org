@@ -228,7 +228,7 @@ to the laptop I currently use. Please change to suit your needs.
 
   dbus-update-activation-environment --systemd --all  # Fixes dbus problems with i3
 
-  <<dell-g15-xinitrc>>
+  «dell-g15-xinitrc»
   xset r rate 200 60                          # Increase key press rate
   redshift &                                  # Blue light filter
   xset s 1000                                 # Set lock timeout
@@ -682,7 +682,7 @@ Menu of utilities that allow me to talk to my computer.
       restore_mute_state
   }
 
-  <<prelude-all>>
+  «prelude-all»
 
   id="$(notify-send "Dictation" "Started" --print-id)"
 
@@ -706,7 +706,7 @@ Menu of utilities that allow me to talk to my computer.
   }
 
   if [ -z "$HARIS_GPT_PROMPT" ]; then
-      <<prelude-all>>
+      «prelude-all»
       id="$(notify-send "ChatGPT" "Speak your mind" --print-id)"
 
       text="$(minigpt textify)"
@@ -714,7 +714,7 @@ Menu of utilities that allow me to talk to my computer.
       id="$(notify-send "ChatGPT" "$(echo -e "Prompt recorded:\n $text")" --print-id)"
       restore_mute_state
   else
-      <<prelude-basic>>
+      «prelude-basic»
 
       text="$HARIS_GPT_PROMPT"
       id="$(notify-send "ChatGPT" "$(echo -e "Prompt:\n $text")" --print-id)"
@@ -763,7 +763,7 @@ Menu of utilities that allow me to talk to my computer.
           dunstify --close="$id"
       fi
   }
-  <<func:convert_to_org>>
+  «func:convert_to_org»
 #+end_src
 #+NAME: prelude-microphone
 #+begin_src bash
