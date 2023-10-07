@@ -787,6 +787,10 @@ Get the OS type.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/urlencode")
   python -c 'import urllib.parse as p; print(p.quote(input()))'
 #+end_src
+** =urldecode=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/urldecode")
+  python -c 'import urllib.parse as p; print(p.unquote(input()))'
+#+end_src
 ** =fifo=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/fifo")
   mkfifo /tmp/fifo 2>/dev/null
