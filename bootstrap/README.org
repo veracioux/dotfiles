@@ -24,7 +24,6 @@ Run with =--help= to see detailed usage.
 :header-args:elisp+: :tangle (haris/tangle-home ".haris/bootstrap/tangle.el")
 :END:
 A library of functions for easier tangling.
-#+NAME: org-babel
 #+begin_src elisp
   (require 'ob-tangle)
 
@@ -34,7 +33,7 @@ A library of functions for easier tangling.
      (shell      . t)
      (python     . t)))
 #+end_src
-#+NAME: tangle.el
+Custom functions and tweaks:
 #+begin_src elisp
   (defun haris/prevent-annoying-messages ()
     (require 'cl-lib)
@@ -82,6 +81,17 @@ A library of functions for easier tangling.
         (haris/tangle--file-non-interactively file)))
     (when to-destination
       (shell-command (concat "rsync -rvu " (haris/tangle-home) " ~/"))))
+#+end_src
+The normal =<<...>>= syntax for noweb references breaks shell blocks. So I allow
+=«...»= as an alternative syntax to prevent that.
+#+begin_src elisp
+  (defun org-babel-noweb-wrap (&optional regexp)
+    (rx-to-string
+     `(and (or "<<" "«")
+           (group
+            (not (or " " "\t" "\n"))
+            (? (*? any) (not (or " " "\t" "\n"))))
+           (or ">>" "»"))))
 #+end_src
 * Potential improvements
 - When I move all versioned dotfiles into =~/.haris=, I can remove the need to
