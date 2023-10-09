@@ -660,7 +660,7 @@ Menu of utilities that allow me to talk to my computer.
   bindsym c       exec <<o>> ~/.config/i3/scripts/chatgpt.sh, mode default
   bindsym b       exec auto-browser -P haris "https://chat.openai.com/chat", \
                   mode default
-  bindsym k       exec pkill -9 -f 'gpt-i3', mode default
+  bindsym k       exec ~/.config/i3/scripts/kill-gpt.sh, mode default
   bindsym r       exec <<o>> ~/.config/i3/scripts/gpt-repeat-action.sh
   bindsym Escape  mode default
   }
@@ -677,7 +677,7 @@ Menu of utilities that allow me to talk to my computer.
 :header-args+: :tangle-mode (eval #o744)
 :END:
 **** Dictate
-#+NAME: dictate
+#+NAME: dictate.sh
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/dictate.sh")
   on_error() {
       close_notification
@@ -698,7 +698,7 @@ Menu of utilities that allow me to talk to my computer.
   restore_mute_state
 #+end_src
 **** ChatGPT
-#+NAME: chatgpt
+#+NAME: chatgpt.sh
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/chatgpt.sh")
   on_error() {
       close_notification
@@ -737,20 +737,20 @@ Menu of utilities that allow me to talk to my computer.
   notify-send "ChatGPT" "Response copied to clipboard!"
 
   if [ "$1" = "--speak" ]; then
-      set +e
       refined_response="$(
           {
               echo "In the following text, remove all quotes and other symbols to make it suitable for low quality text-to-speech software:"
               echo "$response"
           } | minigpt chat
       )"
-      echo "$response" \
+      set +e
+      echo "$refined_response" \
           | gtts-cli -f- \
-          | bash -c 'exec -a mpv-gpt-i3 mpv --speed=1.2 -'
+          | mpv --speed=1.2 -
       sts="$?"
       if [ "$sts" != 0 ] && [ "$(kill -l "$sts")" != "KILL" ]; then
           set -e
-          echo "$response" | bash -c 'exec -a festival-gpt-i3 festival --tts'
+          echo "$refined_response" | bash -c festival festival --tts
       fi
       close_notification
   fi
@@ -775,6 +775,10 @@ Menu of utilities that allow me to talk to my computer.
           dunstify --close="$id"
       fi
   }
+  on_term() {
+      notify-send "GPT" "Successfully stopped"
+  }
+  echo "$$" > ~/.local/share/haris/gpt-pid.txt
   «func:convert_to_org»
 #+end_src
 #+NAME: prelude-microphone
@@ -827,6 +831,12 @@ Menu of utilities that allow me to talk to my computer.
       } | pandoc --from markdown --to org |
           grep -vE '^(:PROPERTIES:|:CUSTOM_ID:|:END:)'
   }
+#+end_src
+#+NAME: kill-gpt.sh
+#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/kill-gpt.sh")
+  file=~/.local/share/haris/gpt-pid.txt
+  pkill -P $(cat "$file")
+  echo > "$file"
 #+end_src
 *** Dependencies
 #+begin_src text :tangle (haris/tangle-deps "talk-menu.pacman")
