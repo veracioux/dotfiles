@@ -769,7 +769,9 @@ Menu of utilities that allow me to talk to my computer.
 #+begin_src bash
   set -e
   trap on_error ERR
-  export MINIGPT_API_KEY="$(pass show @openai/api-secret-key)"
+  if [ ! -e ~/.local/share/haris/minigpt-no-api-key-needed ]; then
+      export MINIGPT_API_KEY="$(pass show @openai/api-secret-key)"
+  fi
   dest_file=~/wiki/conversations.org
   close_notification() {
       if [ -n "$id" ]; then
