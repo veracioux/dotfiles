@@ -816,6 +816,20 @@ Get the OS type.
       cat > /tmp/fifo
   fi
 #+end_src
+** =clipboard-or-stdin=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/clipboard-or-stdin")
+  if [ -t 0 ]; then
+      xsel -b -o
+  else
+      cat
+  fi
+#+end_src
+** =narrate=                                                          :script:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/narrate")
+  set -e
+
+  clipboard-or-stdin
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
