@@ -206,7 +206,22 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 
   set -- "${modified_options[@]}" -- "$@"
 
-  exec -a "$BASH_SOURCE" emacsclient --alternate-editor gvim "$@"
+  exec -a "$BASH_SOURCE" emacsclient \
+       --alternate-editor ~/.local/lib/haris/emacs-alternate-editor \
+       "$@"
+#+end_src
+*** Helper program
+#+begin_src bash :tangle (haris/tangle-home ".local/lib/haris/emacs-alternate-editor")
+  is_running() {
+      emacsclient --no-wait --socket-name emacs --eval '(ignore)' >/dev/null 2>&1
+  }
+
+  id="$(notify-send --print-id "Emacs" "Starting daemon...")"
+  systemctl restart --user emacs
+  until is_running; do
+      sleep 2s
+  done
+  notify-send --print-id --replace-id="$id" "Emacs" "Daemon ready"
 #+end_src
 *** Shell completion
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/myemacs.fish")
