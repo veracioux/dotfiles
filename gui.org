@@ -41,6 +41,27 @@
   map b toggle_statusbar
   map <M-f> exec "zathura %"
 #+end_src
+* Sioyek
+#+begin_src conf :tangle (haris/tangle-home ".config/sioyek/keys_user.config")
+  move_left l
+  move_right h
+
+  next_page J
+  previous_page K
+
+  prev_state <C-o>
+  next_state <C-i>
+
+  add_highlight H
+
+  fit_to_page_width w
+  fit_to_page_height =
+
+  open_document_embedded o
+  open_document <C-M-o>
+
+  toggle_statusbar b
+#+end_src
 * GTK
 ** Settings
 *** 2.0
