@@ -275,6 +275,12 @@ Some settings in GTK 3.0 don't work if we quote their values.
   Exec=myemacs -c
   Name=Emacs
 #+end_src
+** VS Code
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/code.desktop")
+  <<desktop-base>>
+  Exec=code
+  Name=Code
+#+end_src
 * Helpers
 #+NAME: eval-user-name
 #+begin_src emacs-lisp :cache yes
