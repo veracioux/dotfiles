@@ -1871,9 +1871,9 @@ Create a Xephyr session for the current user that tries to mimic a regular
       [ "$choice" = " Yes, shutdown" ] && shutdown now
 
   elif [ "$choice" = "Suspend" ]; then
-
-      systemctl suspend -i
-
+      o xlock
+      sleep 1
+      pgrep '^xlock' >/dev/null && systemctl suspend -i
   elif [ "$choice" = "Reboot..." ]; then
       print_entries() {
           # Extract only lines with menu entries from grub
