@@ -676,6 +676,10 @@ Menu of utilities that allow me to talk to my computer.
 :PROPERTIES:
 :header-args+: :tangle-mode (eval #o744)
 :END:
+If you are using a custom wrapper for =minigpt= (it has to be called =minigpt= as
+well) that automatically resolves the API key, you can create a marker file at
+[[~/.local/share/haris/minigpt-no-api-key-needed]]. The existence of this file will
+prevent the scripts from prompting the user for a password for =pass=.
 **** Dictate
 #+NAME: dictate.sh
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/dictate.sh")
