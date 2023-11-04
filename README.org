@@ -212,9 +212,14 @@ initializing a new setup meant to use my dotfiles, from scratch.
 #+end_src
 * Default applications
 :PROPERTIES:
-:header-args+:  :tangle (haris/tangle-home ".config/mimeapps.list")
+:header-args:conf+: :tangle (haris/tangle-home ".config/mimeapps.list")
 :END:
-This is a mapping of mime types to default applications that I use:
+Here you can find a mapping of mime types to default applications that I use,
+and some added mime type associations. To apply the changes, run:
+#+begin_src shell
+  update-desktop-database ~/.local/share/applications
+#+end_src
+** Default applications
 #+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
   [Default Applications]
   text/plain=emacs.desktop;gvim.desktop;
@@ -246,7 +251,7 @@ This is a mapping of mime types to default applications that I use:
   video/webm=mpv.desktop;
   x-directory/normal=nemo.desktop;
   x-directory/gnome-default-handler=nemo.desktop;
-  application/pdf=org.pwmt.zathura-pdf-mupdf.desktop;
+  application/pdf=sioyek.desktop;org.pwmt.zathura-pdf-mupdf.desktop;
   application/octet-stream=emacs.desktop;gvim.desktop;
   application/x-gnome-saved-search=nemo.desktop;
   application/x-dxf=librecad.desktop;
