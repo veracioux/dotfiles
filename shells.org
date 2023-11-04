@@ -821,6 +821,7 @@ a terminal and runs the aliased command.
   abbr -g rgh   'rg --hidden'
   abbr -g px    'ping x'
   abbr -g ii    'curl ipinfo.io'
+  abbr -g bt    'bluetoothctl'
   if [ -n "$DISPLAY" ]
       abbr -g man   'eman'
   end
