@@ -211,23 +211,11 @@ initializing a new setup meant to use my dotfiles, from scratch.
   /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 #+end_src
 * Default applications
+:PROPERTIES:
+:header-args+:  :tangle (haris/tangle-home ".config/mimeapps.list")
+:END:
 This is a mapping of mime types to default applications that I use:
 #+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
-  [Added Associations]
-  text/plain=gvim.desktop;
-  text/markdown=emacs.desktop;
-  image/svg+xml=inkscape.desktop;org.inkscape.Inkscape.desktop;
-  image/vnd.dwg=inkscape.desktop;
-  image/vnd.dxf=inkscape.desktop;org.inkscape.Inkscape.desktop;
-  image/jpeg=vimiv.desktop;sxiv.desktop;
-  image/png=vimiv.desktop;sxiv.desktop;
-  image/tiff=vimiv.desktop;sxiv.desktop;
-  application/pdf=zathura.desktop;
-  application/x-bibtex=emacs.desktop;gvim.desktop;
-  application/msword=libreoffice-writer.desktop;org.pwmt.zathura.desktop;
-  application/octet-stream=emacs.desktop;gvim.desktop;
-  x-scheme-handler/tg=userapp-Telegram Desktop-Y1VJF1.desktop;
-
   [Default Applications]
   text/plain=emacs.desktop;gvim.desktop;
   text/x-org=emacs.desktop;
@@ -240,7 +228,7 @@ This is a mapping of mime types to default applications that I use:
   text/x-c=emacs.desktop;gvim.desktop;
   text/x-chdr=emacs.desktop;gvim.desktop;
   text/x-csrc=emacs.desktop;gvim.desktop;
-  text/x-c++=emacs.desktop;gvim.desktop;
+  text/x-c++=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
   text/x-c++hdr=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
   text/x-c++src=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
   text/x-arduino=arduino-arduinoide.desktop;
@@ -258,7 +246,7 @@ This is a mapping of mime types to default applications that I use:
   video/webm=mpv.desktop;
   x-directory/normal=nemo.desktop;
   x-directory/gnome-default-handler=nemo.desktop;
-  application/pdf=org.pwmt.zathura.desktop;
+  application/pdf=org.pwmt.zathura-pdf-mupdf.desktop;
   application/octet-stream=emacs.desktop;gvim.desktop;
   application/x-gnome-saved-search=nemo.desktop;
   application/x-dxf=librecad.desktop;
@@ -266,8 +254,16 @@ This is a mapping of mime types to default applications that I use:
   x-scheme-handler/https=firefox.desktop;
   x-scheme-handler/file=nemo.desktop;
   x-scheme-handler/viber=viber.desktop;
-  x-scheme-handler/tg=userapp-Telegram Desktop-Y1VJF1.desktop;
+  x-scheme-handler/tg=org.telegram.desktop.desktop;
   x-scheme-handler/msteams=teams.desktop;
+#+end_src
+** Added associations
+#+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
+  [Added Associations]
+  image/vnd.dwg=inkscape.desktop;org.inkscape.Inkscape.desktop;
+  image/vnd.dxf=inkscape.desktop;org.inkscape.Inkscape.desktop;
+  application/x-bibtex=gvim.desktop;
+  application/octet-stream=gvim.desktop;
 #+end_src
 * TODO Common keybindings
 * Global variables

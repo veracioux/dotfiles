@@ -274,6 +274,7 @@ Some settings in GTK 3.0 don't work if we quote their values.
   <<desktop-base>>
   Exec=myemacs -c
   Name=Emacs
+  MimeType=text/plain;text/markdown;text/org;application/x-bibtex;application/x-octet-stream;
 #+end_src
 ** VS Code
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/code.desktop")
