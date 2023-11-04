@@ -1323,10 +1323,14 @@ Create a Xephyr session for the current user that tries to mimic a regular
       cache_file=~/.cache/.desktop-apps.txt
       age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
       # Refresh the cache only if the file is older than a specified age (seconds)
-      [ ! -f "$cache_file" -o  $age -gt 36000 ] || ! grep -q '^.'    \
-              && pull_desktop_apps                        \
-                  || cat "$cache_file"
-      find ~/.local/bin -executable -type f -printf '%f\n'
+      {
+          if [ ! -f "$cache_file" -o  $age -gt 36000 ] || ! grep -q '^.'; then
+              pull_desktop_apps
+          else
+              cat "$cache_file"
+          fi
+          find ~/.local/bin -executable -type f -printf '%f\n'
+      } | sort | uniq
   }
   get_aliases() {
       extract_aliases ~/.alias ~/.alias-tmp
