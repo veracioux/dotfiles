@@ -270,6 +270,12 @@ Some settings in GTK 3.0 don't work if we quote their values.
   Exec=intellij-idea-ultimate-edition
   Name=IDEA
 #+end_src
+** PyCharm
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/pycharm.desktop")
+  <<desktop-base>>
+  Exec=pycharm
+  Name=PyCharm
+#+end_src
 ** Emacs
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/emacs.desktop")
   <<desktop-base>>

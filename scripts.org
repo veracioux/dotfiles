@@ -2331,6 +2331,10 @@ them if the current PC setup is the one they are intended for.
   # Some platforms don't provide ipython as a symlink/wrapper to ipython3
   ipython3 "$@"
 #+end_src
+*** =pycharm=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/pycharm")
+  pycharm-professional
+#+end_src
 * Helper code
 These scripts are used as snippets or noweb references within this org file.
 ** =find-alt-cmd(name)=
