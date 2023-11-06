@@ -159,12 +159,16 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       | source
 #+end_src
 ** Bindings
-#+begin_src fish
+:PROPERTIES:
+:header-args:fish+: :tangle (haris/tangle-home ".config/fish/functions/fish_user_key_bindings.fish")
+:END:
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/bind_both_modes.fish")
   function bind_both_modes
       bind -M default $argv
       bind -M insert $argv
   end
-
+#+end_src
+#+begin_src fish
   function fish_user_key_bindings               # Start bindings
 #+end_src
 *** Quasi-vim-like key bindings
@@ -227,7 +231,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions
-#+begin_src fish
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_run_in_bash.fish")
   function __haris_run_in_bash
       set -l cmd (commandline -b)
       echo
@@ -235,17 +239,20 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       commandline -f repaint
       commandline -r ''
   end
-
+#+end_src
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_prepend_cmdline.fish")
   function __haris_prepend_cmdline
       commandline --cursor 0
       commandline --insert "$argv "
       commandline --function end-of-line
   end
-
+#+end_src
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_show_man.fish")
   function __haris_show_man
       eman (commandline --current-process --tokenize | grep -v '^sudo$' | head -1)
   end
-
+#+end_src
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_print_help_or_toggle.fish")
   function __haris_print_help_or_toggle
       if [ (commandline -o | tail -1) = "--help" ]
           commandline -r (commandline | string replace -r -- '\s*--help$' '')
@@ -277,18 +284,20 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 
   # z.lua
   set _ZL_CMD z
-  type --quiet lua &&
-  [ -f /usr/share/z.lua/z.lua ] &&
+  if type --quiet lua && [ -f /usr/share/z.lua/z.lua ]
       lua /usr/share/z.lua/z.lua --init fish | source
+  end
   set -gx _ZL_CD cd
 
   # tem
-  type --quiet tem &&
-  tem fish-init
+  if type --quiet tem
+      tem fish-init
+  end
 
   # fzf bindings
-  type --quiet fzf_configure_bindings &&
+  if type --quiet fzf_configure_bindings
       fzf_configure_bindings
+  end
 #+end_src
 *** Dependencies
 System packages:
@@ -317,13 +326,18 @@ on the plugin list above.
   fish -c "fisher update"
 #+end_src
 ** Functions
-#+begin_src fish
+*** =ndir=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/ndir.fish")
   # Create a new dir and cd
   function ndir;  mkdir -p "$argv"; cd "$argv"; end
-
+#+end_src
+*** =1=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/1.fish")
   # Print first argument
   function 1; echo $argv[1]; end
-
+#+end_src
+*** =a=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/a.fish")
   # Run z through fzf
   function a
       z -l $argv | read -z choices
@@ -332,22 +346,32 @@ on the plugin list above.
 
       cd (echo "$dest" | sed -E -e '/^$/d' -e 's/^\S+\s+//')
   end
-
+#+end_src
+*** =open=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/open.fish")
   # Open a GUI app and disown
   function open; for file in $argv; o xdg-open "$file"; end; end
-
+#+end_src
+*** =imount=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/imount.fish")
   # Wrapper around imount script so I can cd to the mount directory
   function imount
       command imount $argv
       cd (cat /tmp/imount_directory)
   end
-
+#+end_src
+*** =vh=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/vh.fish")
   # Vim help
   function vh; vim -c ":h $argv | only"; end
-
+#+end_src
+*** =copypath=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/copypath.fish")
   # Save the path of the argument to the clipboard
   function copypath; realpath $argv | xsel -b; end
-
+#+end_src
+*** =ls=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/ls.fish")
   # When you ls, save the argument so you can quickly cd to that folder.
   # It's not fool-proof, but it works in most situations and it's safe.
   function ls
@@ -359,32 +383,36 @@ on the plugin list above.
       end
       set -g __last_ls_arg "$argv"
   end
-
+#+end_src
+*** =cdls=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/cdls.fish")
   # cd the last directory you have ls-ed
   function cdls
       [ -n "$__last_ls_arg" ] && cd "$__last_ls_arg"
   end
+#+end_src
+*** =vils=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/vils.fish")
   # vim the last file you have ls-ed
   function vils
       [ -n "$__last_ls_arg" ] && vim "$__last_ls_arg"
   end
-
+#+end_src
+*** =chbg=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/chbg.fish")
   function chbg
       set path /usr/share/backgrounds/"$argv[1]"
       feh --bg-fill "$path"
       rm ~/.wallpaper
       ln -s "$path" ~/.wallpaper
   end
-
-  function cdcf;   set -l file (cf "$argv");   test -f "$file" && cd (dirname        "$file"); end
-  function catcf;  set -l file (cf "$argv");   test -f "$file" && cat                "$file" ; end
-  function vicf;   set -l file (cf "$argv");   test -e "$file" && vim                "$file" ; end
-  function ecf;    set -l file (cf "$argv");   test -e "$file" && myemacs-float "$file" ; end
-
-  function cdcmd;  set -l file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
-  function catcmd; set -l file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
-  function ecmd;   set -l file (fcmd "$argv"); test -f "$file" && myemacs     "$file" ; end
-  function rmcmd;  set -l file (fcmd "$argv"); rm "$file";                              end
+#+end_src
+**** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/chbg.fish")
+  complete --command chbg --no-files --arguments="(pushd /usr/share/backgrounds/; command ls -1; popd)"
+#+end_src
+*** =vicmd=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/vicmd.fish")
   function vicmd
       set -l file (fcmd "$argv");
       if [ -f "$file" ]
@@ -550,7 +578,7 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 *** =^=
-#+begin_src fish
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/^.fish")
   function '^' -d "cd to the first directory in the hierarchy by specified name" -a name
       pushd "$PWD"
       while [ "$PWD" != "/" ]
@@ -570,10 +598,22 @@ Note: This code block must not contain any apostrophes!
 #+begin_src fish (haris/tangle-home ".config/fish/completions/^.fish")
   complete -c '^' -a '(pwd | tr "/" "\n")' -f
 #+end_src
+*** Miscellaneous others
+#+begin_src fish
+  function cdcf;   set -l file (cf "$argv");   test -f "$file" && cd (dirname        "$file"); end
+  function catcf;  set -l file (cf "$argv");   test -f "$file" && cat                "$file" ; end
+  function vicf;   set -l file (cf "$argv");   test -e "$file" && vim                "$file" ; end
+  function ecf;    set -l file (cf "$argv");   test -e "$file" && myemacs-float "$file" ; end
+
+  function cdcmd;  set -l file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
+  function catcmd; set -l file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
+  function ecmd;   set -l file (fcmd "$argv"); test -f "$file" && myemacs     "$file" ; end
+  function rmcmd;  set -l file (fcmd "$argv"); rm "$file";                              end
+#+end_src
 ** Completions
 Function(s) that will be used by many completions.
 Completions for the functions defined in [[Functions]].
-#+begin_src fish
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/no_positional_args.fish")
   # Return success if the command line contains no positional arguments
   function no_positional_args
       set -l -- args    (commandline -po)         # cmdline broken up into list
@@ -595,12 +635,29 @@ Completions for the functions defined in [[Functions]].
       string match -r -- '\s--\s' "$cmdline" && return 1
       return 0
   end
-
-  complete --command chbg --no-files --arguments="(pushd /usr/share/backgrounds/; command ls -1; popd)"
-  complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
+#+end_src
+*** =snip=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/snip.fish")
   complete -c snip -f -a \
       "(pushd ~/.vim/snips; command ls | sed 's_\(.*\)\.snippets_\1_g'; popd)"
-
+#+end_src
+*** =adhoc=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/adhoc.fish")
+  complete -c adhoc -f \
+      -a "(complete -C'adsfadadflasdjflasdflnasdflasdu /tmp/adhoc-files/' | string replace /tmp/adhoc-files/ \"\")"
+#+end_src
+*** =pass=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/pass.fish")
+  source /usr/share/fish/vendor_completions.d/pass.fish
+  complete -c pass -a 'add' -n "no_positional_args"
+  complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
+#+end_src
+*** =otp=
+#+begin_src shell :tangle (haris/tangle-home ".config/fish/completions/otp.fish")
+    complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
+#+end_src
+*** Miscellaneous others
+#+begin_src fish
   # *cf and *cmd style commands
   for cmd in {,cd,vi,cat,e}cf
       complete --command $cmd --no-files -a '(lscf)'
@@ -609,18 +666,6 @@ Completions for the functions defined in [[Functions]].
       complete -c $cmd -f \
           -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
   end
-#+end_src
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/adhoc.fish")
-  complete -c adhoc -f \
-      -a "(complete -C'adsfadadflasdjflasdflnasdflasdu /tmp/adhoc-files/' | string replace /tmp/adhoc-files/ \"\")"
-#+end_src
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/pass.fish")
-  source /usr/share/fish/vendor_completions.d/pass.fish
-  complete -c pass -a 'add' -n "no_positional_args"
-  complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
-#+end_src
-#+begin_src shell :tangle (haris/tangle-home ".config/fish/completions/otp.fish")
-    complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
 ** Private config
 Private fish config is optional and must be provided separately as
@@ -702,8 +747,10 @@ a terminal and runs the aliased command.
 #+begin_src fish
   alias src_fish  'source ~/.config/fish/config.fish'
   alias term      'term & disown'
-  alias alpine    'docker run -it --rm --name alpine alpine'
-  alias debian    'docker run -it --name debian debian:bookworm-slim'
+  if command --quiet docker
+      alias alpine    'docker run -it --rm --name alpine alpine'
+      alias debian    'docker run -it --name debian debian:bookworm-slim'
+  end
 
   function dragon; dragon-drag-and-drop $argv & disown; end
   function vrg --wraps rg; vim (rg -l $argv); end
