@@ -894,10 +894,10 @@ a terminal and runs the aliased command.
 
   export MAKEFLAGS='-j6'
   export GPG_TTY=$(tty)
-  [ "$(uname)" = "Linux" ] && export QT_QPA_PLATFORMTHEME=gtk2
   export PYTHONSTARTUP=~/.startup.py
   export RUSTC_WRAPPER=sccache
   export MOZ_USE_XINPUT2=1
+  [ "$(get-os-type)" = "arch" ] && export QT_QPA_PLATFORMTHEME=gtk2
 
   mkdir -p /tmp/stage-"$USER"
 
