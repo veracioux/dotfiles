@@ -53,6 +53,7 @@
   next_state <C-i>
 
   add_highlight H
+  add_bookmark a
 
   fit_to_page_width w
   fit_to_page_height =
