@@ -489,6 +489,10 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       }
   exit $err
 #+end_src
+*** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/cmd-with-notify.fish")
+  complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
+#+end_src
 ** =xpreset=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xpreset")
   [ "$#" != 1 ] && exit 1
