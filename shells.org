@@ -687,7 +687,6 @@ Note: =~/.bashrc= is sourced by fish as well.
   shopt -s extglob
   shopt -s autocd
   shopt -s globstar
-  unset HISTFILE
 
   {
   bind '"\C-p":previous-history'
@@ -891,14 +890,14 @@ a terminal and runs the aliased command.
 #+end_src
 * .profile
 #+begin_src shell :tangle (haris/tangle-home ".profile")
+  export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator
+
   export MAKEFLAGS='-j6'
   export GPG_TTY=$(tty)
   [ "$(uname)" = "Linux" ] && export QT_QPA_PLATFORMTHEME=gtk2
   export PYTHONSTARTUP=~/.startup.py
   export RUSTC_WRAPPER=sccache
   export MOZ_USE_XINPUT2=1
-
-  export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator
 
   mkdir -p /tmp/stage-"$USER"
 
