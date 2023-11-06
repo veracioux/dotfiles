@@ -1290,6 +1290,7 @@ This is a very elegant reader for reddit that uses org-mode.
 Fix for empty image list (not sure if the fix works):
 #+begin_src emacs-lisp
   (use-package transient :defer t)
+  (use-package docker-compose-mode :defer t)
 #+end_src
 ** Bluetooth
 #+begin_src emacs-lisp
@@ -1466,6 +1467,7 @@ Spacemacs would delete them every time on startup.
      fish-mode
      currency-convert
      i3wm-config-mode
+     docker-compose-mode
      react
      focus-autosave-mode
      xclip
