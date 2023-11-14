@@ -445,6 +445,8 @@ Some custom keybindings are defined here as well.
 #+begin_src emacs-lisp
   (use-package evil-quickscope)
   (global-evil-quickscope-always-mode)
+
+  (setq evil-lookup-func (lambda () (call-interactively #'man)))
 #+end_src
 * Ivy
 #+NAME: ivy
