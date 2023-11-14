@@ -1257,9 +1257,10 @@ This script prints the contents
   # Temporarily bind keys
 
   pkill -f '^sxhkd\.tmp '
-  gvim -c 'set ft=sxhkd' ~/.sxhkd.tmp
+  myemacs-float --wait -c ~/.tmp.sxhkdrc
 
-  o sxhkd.tmp
+  notify-send "kbind" "Applying config"
+  o --silent sxhkd.tmp
 #+end_src
 ** =xpeek=
 Create a Xephyr session for the current user that tries to mimic a regular
@@ -2299,11 +2300,11 @@ keep each in a separate config file. And, for each I run a separate process so I
 can conveniently stop/restart each by name.
 *** =sxhkd.private=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sxhkd.private")
-  exec -a sxhkd.private sxhkd -c ~/.sxhkd.private "$@"
+  exec -a sxhkd.private sxhkd -c ~/.private.sxhkdrc "$@"
 #+end_src
 *** =sxhkd.tmp=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sxhkd.tmp")
-  exec -a sxhkd.tmp sxhkd -c ~/.sxhkd.tmp "$@"
+  exec -a sxhkd.tmp sxhkd -c ~/.tmp.sxhkdrc "$@"
 #+end_src
 * Adapters
 My main setup is Arch Linux. Sometimes I also use other setups like Ubuntu,

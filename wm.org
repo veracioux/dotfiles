@@ -197,7 +197,7 @@ Here are the configs you can choose from:
 
   export TERM=dumb
   sxhkd &                                       # Load default bindings
-  sxhkd.private -c ~/.sxhkd.private &           # Load private bindings
+  sxhkd.private &                               # Load private bindings
 
   export DESKTOP_SESSION=i3
   exec i3                                       # Window manager
