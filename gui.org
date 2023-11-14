@@ -59,7 +59,7 @@
   fit_to_page_height =
 
   open_document_embedded o
-  open_document <C-M-o>
+  open_document <C-A-o>
 
   toggle_statusbar b
 #+end_src
