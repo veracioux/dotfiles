@@ -17,7 +17,7 @@ I find it superior compared to keeping the config files directly because:
   and reading/writing it this way feels more natural.
 - I can group related configuration from multiple programs in a single file, and
   then export (/tangle/ is the technical term) them where they need to go. See for
-  example: [[file:~/.haris/shells.org][.haris/shells.org]].
+  example: [[file:shells.org][shells.org]].
 - For each application, I can use the same org file to keep its configuration
   and a script that installs all of its dependencies.
 - I can use the breadth of =org-mode= features to more easily navigate my configs.
