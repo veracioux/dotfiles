@@ -311,10 +311,12 @@ command there (without any arguments).
 *** Launching other programs at current context
 Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
 #+begin_src emacs-lisp
-  (global-set-key
-   (kbd "M-e")
-   (lambda () (interactive)
-     (start-process "" nil "emacs" "-c" (buffer-file-name (window-buffer)))))
+  (global-set-key (kbd "M-e")
+                  (defun haris/open-buffer-in-new-frame ()
+                    (interactive)
+                    (let ((buf (current-buffer)))
+                      (select-frame (make-frame '((window-system . x))))
+                      (switch-to-buffer buf))))
   (global-set-key
    (kbd "M-v")
    (lambda () (interactive)
