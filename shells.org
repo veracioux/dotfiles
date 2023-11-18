@@ -595,7 +595,7 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 **** Completions
-#+begin_src fish (haris/tangle-home ".config/fish/completions/^.fish")
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/^.fish")
   complete -c '^' -a '(pwd | tr "/" "\n")' -f
 #+end_src
 *** Miscellaneous others
@@ -609,6 +609,16 @@ Note: This code block must not contain any apostrophes!
   function catcmd; set -l file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
   function ecmd;   set -l file (fcmd "$argv"); test -f "$file" && myemacs     "$file" ; end
   function rmcmd;  set -l file (fcmd "$argv"); rm "$file";                              end
+#+end_src
+**** =eman=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/eman.fish")
+  function eman
+      if [ -n "$DISPLAY" ] && emacsclient -s emacs --eval nil >/dev/null 2>&1
+          command eman $argv
+      else
+          man $argv
+      end
+  end
 #+end_src
 ** Completions
 Function(s) that will be used by many completions.
@@ -868,9 +878,7 @@ a terminal and runs the aliased command.
   abbr -g px    'ping x'
   abbr -g ii    'curl ipinfo.io'
   abbr -g bt    'bluetoothctl'
-  if [ -n "$DISPLAY" ]
-      abbr -g man   'eman'
-  end
+  abbr -g man   'eman'
 
   # Pass
   abbr -g pn 'pass insert'
