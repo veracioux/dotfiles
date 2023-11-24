@@ -832,7 +832,7 @@ Get the OS type.
       if ! session_exists; then
           create_session -d
       fi
-      cat > /tmp/fifo
+      tee /tmp/fifo
   fi
 #+end_src
 ** =clipboard-or-stdin=
