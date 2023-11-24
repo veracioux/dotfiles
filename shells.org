@@ -474,7 +474,7 @@ on the plugin list above.
       <<o/background-task>>
       '
 
-      tmux new -d env (env) fish --private -C "source $tempfile"
+      tmux new -s "$__cmdline" -d env "$(env)" fish --private -C "source $tempfile"
   end
 #+end_src
 **** Testing
@@ -896,6 +896,7 @@ a terminal and runs the aliased command.
 
   # Tmux
   abbr -g x   'tmux'
+  abbr -g X   'tmux attach -t (tmux list-sessions -F "#{session_created} #{session_name}" | sort | tac | grep -Po "(?<= ).*" | fzf -s)'
 #+end_src
 *** Variables
 #+begin_src fish

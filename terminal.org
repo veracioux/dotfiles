@@ -151,6 +151,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   set -g status off
   set -g default-command /usr/bin/fish
   set -g mouse on
+  set -g escape-time 50  # millis
 
   # Change prefix key
   unbind-key C-b
