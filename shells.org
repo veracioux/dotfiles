@@ -134,8 +134,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
           else
               set exit_message "exited with $_status"
           end
-          # Timeout is so the command doesn't hang when daemon is not
-          timeout 0.8 notify-send (echo "Command "(history | tac | tail -n +1 | tail -n +"$__haris_history_count" | head -1)"" "$exit_message")
+          # Timeout is so the command doesn't hang when daemon is not running
+          timeout 0.8 notify-send (echo "Command "(history | tac | tail -n +1 | tail -n +"$__haris_history_count" 2>/dev/null | head -1)"" "$exit_message")
           if [ "$status" = "124" ]
               echo ERR: NOTIFICATION TIMED OUT
           end
@@ -464,12 +464,17 @@ on the plugin list above.
       # The arguments are forwarded to the helper script, so it can parse them
       set -l __o_args (string escape -- $__o_args)
 
-      tmux new -d fish --private -C "
+      set -l tempfile (mktemp)
+
+      echo >"$tempfile" "
+      rm -f '$tempfile'
       set HARIS_BACKGROUND_TASKS_SILENT $HARIS_BACKGROUND_TASKS_SILENT;
       set __o_args $__o_args;
       set __cmdline $__cmdline;"'
       <<o/background-task>>
       '
+
+      tmux new -d env (env) fish --private -C "source $tempfile"
   end
 #+end_src
 **** Testing
@@ -477,7 +482,7 @@ Test the function by executing this code block:
 #+NAME: o/test
 #+begin_src fish :tangle no :cmdline --no-config
   <<o>>
-  o --linger-period=3s sh -c '
+  o --linger-period=8s fish -C '
       echo Simulating long command...;
       sleep 3s; echo Done.;
       echo The terminal window should close in a few seconds;
@@ -531,7 +536,7 @@ Note: This code block must not contain any apostrophes!
       if [ "$__status" != 0 ]; set -a notif_options "--urgency=critical"; end
       set -l notif_id_file (mktemp)
       # If a client attaches, the notification is no longer necessary and is immediately closed
-      set -l hook (string escape run-shell "sh -c \"[ -n \"$notif_id_file\" ] && dunstify --close=\$(cat $notif_id_file)\"")
+      set -l hook (string escape run-shell "sh -c \"[ -n \"$notif_id_file\" ] && dunstify --close=\$(cat $notif_id_file)\" || true")
       tmux set-hook client-attached "$hook"
 
       unbuffer \
