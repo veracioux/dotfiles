@@ -1303,6 +1303,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
   # Otherwise open a generic dmenu where the user will choose what dmenu script
   # or other program to run
 
+
   export TERM=dumb
 
   run_script() {
@@ -1315,14 +1316,9 @@ Create a Xephyr session for the current user that tries to mimic a regular
 
   pull_desktop_apps() {
       # Print out desktop apps by reading *.desktop files and also cache them
-      sed -n -e '/^Exec=/p' \
-          /usr/share/applications/*.desktop \
-          ~/.local/share/applications/*.desktop \
-          | sed 's/Exec=\(.*\)/\1/' \
-          | while read line; do
-                basename $line
-            done \
-            | sort | uniq | tee "$cache_file"
+      sh <<'EOF'
+  «pull_desktop_apps»
+  EOF
   }
   get_desktop_apps() {
       cache_file=~/.cache/.desktop-apps.txt
@@ -1334,14 +1330,14 @@ Create a Xephyr session for the current user that tries to mimic a regular
           else
               cat "$cache_file"
           fi
-          find ~/.local/bin -executable -type f -printf '%f\n'
+          find ~/.local/bin -executable -type f -printf '%f\n' | sed 's/^/ /'
       } | sort | uniq
   }
   get_aliases() {
-      extract_aliases ~/.alias ~/.alias-tmp
+      extract_aliases ~/.alias ~/.alias-tmp | sed 's/^/ /'
   }
   get_gui_aliases() {
-      extract_aliases ~/.alias-gui ~/.alias-gui-tmp
+      extract_aliases ~/.alias-gui ~/.alias-gui-tmp | sed 's/^/ /'
   }
 
   aliases="$(get_aliases)"
@@ -1351,29 +1347,27 @@ Create a Xephyr session for the current user that tries to mimic a regular
   # ┃ dmenu entries ┃
   # ┗━━━━━━━━━━━━━━━┛
   get_commands() {
-      echo "Open"             # Open an URL or bookmark
-      echo "Search"           # Web search
-      echo "Clipboard"        # Clipboard using clipmenu
-      echo "Snippets"         # Text snippets
-      echo "TODO"             # Open TODO file of a project
-      echo "Mail"             # View mail in browser
-      echo "Windows"          # Choose windows
-      echo "Pacman"           # Package management
-      echo "Color"            # Pick a color
-      echo "Unicode"          # Pick an icon
-      echo "Kill Process"     # Kill process
-      echo "Fix Wifi"         # Fix Wi-Fi drop issue on some networks
-      echo "Config"           # Open documentation selection
-      echo "System"           # System actions
-      echo "Services"         # Control systemd services
-      echo "Update cache"     # Update desktop app cache
+      echo " Open"           # Open an URL or bookmark
+      echo " Clipboard"      # Clipboard using clipmenu
+      echo " Snippets"       # Text snippets
+      echo " TODO"           # Open TODO file of a project
+      echo " Windows"        # Choose windows
+      echo " Pacman"         # Package management
+      echo " Color"          # Pick a color
+      echo " Unicode"        # Pick an icon
+      echo " Kill Process"   # Kill process
+      echo " Fix Wifi"      # Fix Wi-Fi drop issue on some networks
+      echo " Config"        # Open documentation selection
+      echo " System"        # System actions
+      echo " Services"       # Control systemd services
+      echo " Update cache"   # Update desktop app cache
       echo "Tem"              # Launch tem development environment
       echo "Octave"           # Launch octave in emacs
-      echo "Python"           # Launch python interpreter in emacs
-      echo "GPG"              # GPG addresses
-      echo "OTP"              # Generate OTP for selected service
-      echo "Books"            # Pick a book to read
-      echo "IRC"              # Open emacs client for IRC
+      echo " Python"         # Launch python interpreter in emacs
+      echo " GPG"           # GPG addresses
+      echo " OTP"            # Generate OTP for selected service
+      echo " Books"         # Pick a book to read
+      echo " IRC"           # Open emacs client for IRC
       echo "Quickmenu"        # Menu to quickly revisit recent activity
       echo "$aliases"
       echo "$gui_aliases"
@@ -1386,57 +1380,52 @@ Create a Xephyr session for the current user that tries to mimic a regular
   if [ -n "$1" ]; then
       choice="$1"
   else
-      choice="$(get_commands | dmenu)"
+      choice="$(get_commands | dmenu | perl -pe 's/^[[:^ascii:]] //g')"
   fi
   case "$choice" in
       "")
           exit ;;
-      "Open")
+      " Open" | "Open")
           run_script open ;;
-      "Search")
-          choice="$(echo -n '' | dmenu -p 'Search:')" && firefox -P haris "$choice"
-          ;;
-      "Clipboard")
+      " Clipboard" | "Clipboard")
           clipmenu ;;
-      "Snippets")
+      " Snippets" | "Snippets")
           run_script snips ;;
-      "TODO")
+      " TODO" | "TODO")
           run_script todo ;;
-      "Mail")
-          run_script mail ;;
-      "Windows")
+      " Windows" | "Windows")
           ~/.local/lib/i3/i3-container-commander.py ;;
-      "Pacman")
+      " Pacman" | "Pacman")
           run_script pacman ;;
-      "Color")
+      " Color" | "Color")
           run_script color ;;
-      "Unicode")
+      " Unicode" | "Unicode")
           run_script unicode ;;
-      "Kill Process")
+      " Kill Process" | "KillProcess")
           run_script pkill ;;
-      "Fix Wifi")
+      " Fix Wifi" | " FixWifi")
           fix-wifi ;;
-      "Config")
+      " Config" | "Config")
           run_script config ;;
-      "System")
+      " System" | "System")
           run_script system ;;
-      "Services")
+      " Services" | "Services")
           run_script services ;;
-      "Update cache")
+      " Update cache" | " Updatecache")
           rm ~/.cache/.desktop-apps.txt ;;
       "Tem")
           alacritty -e fish -C 'pj tem; clear' ;;
       "Octave")
           eoctave -c ;;
-      "Python")
+      " Python" | "Python")
           epython -c ;;
-      "GPG")
+      " GPG" | "GPG")
           run_script gpg ;;
-      "OTP")
+      " OTP" | "OTP")
           run_script otp ;;
-      "Books")
+      " Books" | "Books")
           run_script books ;;
-      "IRC")
+      " IRC" | "IRC")
           myemacs --socket-name="irc" -c ;;
       "Quickmenu")
           run_script quickmenu ;;
@@ -1460,6 +1449,22 @@ Create a Xephyr session for the current user that tries to mimic a regular
           fish -C "o $choice"
           ;;
   esac
+#+end_src
+
+This code block separated so that it can be run in =sh= instead of =bash= and thus
+possibly benefit from a performance boost, in case =sh= happens to point to a more
+lightweight shell.
+#+NAME: pull_desktop_apps
+#+begin_src shell
+  sed -n -e '/^Exec=/p' \
+      /usr/share/applications/*.desktop \
+      ~/.local/share/applications/*.desktop \
+      | sed 's/Exec=\(.*\)/\1/' \
+      | while read line; do
+      echo -n ' '  # Represents a GUI app
+      basename "$(sh -c "eval set -- $line; echo \$1")"
+  done \
+      | sort | uniq | tee "$cache_file"
 #+end_src
 ** Open
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/open")
@@ -1498,8 +1503,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
 #+end_src
 ** Snippets
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/snips")
-  # TODO add snippets from tem
-
   edit=" Edit..."
   edit_snips=" Edit snips..."
   add=" Add..."
@@ -1567,22 +1570,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
       cd "$(dirname "$0")"; gvim "$0"
   else
       myemacs-float "$(echo "$lookup" | grep "/$choice/TODO.org")"
-  fi
-#+end_src
-** Mail
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/mail")
-  edit=" Edit..."
-
-  entries="$(echo "$edit"; cd ~/mail && command ls)"
-
-  choice="$(echo "$entries" | dmenu -p mail -l $(echo "$entries" | wc -l))"
-
-  [ -z "$choice" ] && exit
-
-  if [ "$choice" = "$edit" ]; then
-      gvim "$0"
-  elif [ "${choice//*@/}" = 'gmail.com' ] || [ "${choice//*@/}" = 'etf.unsa.ba' ]; then
-      auto-browser -P haris "mail.google.com/mail/?authuser=$choice"
   fi
 #+end_src
 ** Pacman
