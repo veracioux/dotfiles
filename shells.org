@@ -474,7 +474,9 @@ on the plugin list above.
       <<o/background-task>>
       '
 
-      tmux new -s "$__cmdline" -d env "$(env)" fish --private -C "source $tempfile"
+      tmux new -d \
+          -s "$__cmdline [parent is $fish_pid]" \
+          env "$(env)" fish --private -C "source $tempfile"
   end
 #+end_src
 **** Testing
