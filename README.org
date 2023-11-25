@@ -222,53 +222,53 @@ and some added mime type associations. To apply the changes, run:
 ** Default applications
 #+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
   [Default Applications]
-  text/plain=emacs.desktop;gvim.desktop;
-  text/x-org=emacs.desktop;
-  text/html=firefox.desktop;
-  text/xml=emacs.desktop;gvim.desktop;firefox.desktop;
-  text/x-shellscript=emacs.desktop;gvim.desktop;
-  text/x-script.python=emacs.desktop;gvim.desktop;
-  text/x-tex=emacs.desktop;gvim.desktop;
-  text/x-bibtex=emacs.desktop;gvim.desktop;
-  text/x-c=emacs.desktop;gvim.desktop;
-  text/x-chdr=emacs.desktop;gvim.desktop;
-  text/x-csrc=emacs.desktop;gvim.desktop;
-  text/x-c++=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
-  text/x-c++hdr=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
-  text/x-c++src=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
-  text/x-arduino=arduino-arduinoide.desktop;
-  text/doc=libreoffice-writer.desktop;
-  image/vnd.dwg=inkscape.desktop;
-  image/vnd.dxf=org.inkscape.Inkscape.desktop;
+  application/octet-stream=emacs.desktop;gvim.desktop;
+  application/pdf=sioyek.desktop;org.pwmt.zathura-pdf-mupdf.desktop;
+  application/x-dxf=librecad.desktop;
+  application/x-gnome-saved-search=nemo.desktop;
   image/jpeg=vimiv.desktop;sxiv.desktop;
   image/png=vimiv.desktop;sxiv.desktop;
-  image/tiff=vimiv.desktop;sxiv.desktop;
-  image/webp=vimiv.desktop;sxiv.desktop;
   image/svg+xml=vimiv.desktop;sxiv.desktop;
+  image/tiff=vimiv.desktop;sxiv.desktop;
+  image/vnd.dwg=inkscape.desktop;
+  image/vnd.dxf=org.inkscape.Inkscape.desktop;
+  image/webp=vimiv.desktop;sxiv.desktop;
+  text/doc=libreoffice-writer.desktop;
+  text/html=firefox.desktop;
+  text/plain=emacs.desktop;gvim.desktop;
+  text/x-arduino=arduino-arduinoide.desktop;
+  text/x-bibtex=emacs.desktop;gvim.desktop;
+  text/x-c=emacs.desktop;gvim.desktop;
+  text/x-c++=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
+  text/x-chdr=emacs.desktop;gvim.desktop;
+  text/x-c++hdr=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
+  text/x-csrc=emacs.desktop;gvim.desktop;
+  text/x-c++src=emacs.desktop;gvim.desktop;org.qt-project.qtcreator.desktop;
+  text/xml=emacs.desktop;gvim.desktop;firefox.desktop;
+  text/x-org=emacs.desktop;
+  text/x-script.python=emacs.desktop;gvim.desktop;
+  text/x-shellscript=emacs.desktop;gvim.desktop;
+  text/x-tex=emacs.desktop;gvim.desktop;
   video/mp4=mpv.desktop;
-  video/x-matroska=mpv.desktop;
   video/mpeg=mpv.desktop;
   video/webm=mpv.desktop;
-  x-directory/normal=nemo.desktop;
+  video/x-matroska=mpv.desktop;
   x-directory/gnome-default-handler=nemo.desktop;
-  application/pdf=sioyek.desktop;org.pwmt.zathura-pdf-mupdf.desktop;
-  application/octet-stream=emacs.desktop;gvim.desktop;
-  application/x-gnome-saved-search=nemo.desktop;
-  application/x-dxf=librecad.desktop;
+  x-directory/normal=nemo.desktop;
+  x-scheme-handler/file=nemo.desktop;
   x-scheme-handler/http=firefox.desktop;
   x-scheme-handler/https=firefox.desktop;
-  x-scheme-handler/file=nemo.desktop;
-  x-scheme-handler/viber=viber.desktop;
-  x-scheme-handler/tg=org.telegram.desktop.desktop;
   x-scheme-handler/msteams=teams.desktop;
+  x-scheme-handler/tg=org.telegram.desktop.desktop;
+  x-scheme-handler/viber=viber.desktop;
 #+end_src
 ** Added associations
 #+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
   [Added Associations]
+  application/octet-stream=gvim.desktop;
+  application/x-bibtex=gvim.desktop;
   image/vnd.dwg=inkscape.desktop;org.inkscape.Inkscape.desktop;
   image/vnd.dxf=inkscape.desktop;org.inkscape.Inkscape.desktop;
-  application/x-bibtex=gvim.desktop;
-  application/octet-stream=gvim.desktop;
 #+end_src
 * TODO Common keybindings
 * Global variables
