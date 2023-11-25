@@ -226,6 +226,7 @@ and some added mime type associations. To apply the changes, run:
   application/pdf=sioyek.desktop;org.pwmt.zathura-pdf-mupdf.desktop;
   application/x-dxf=librecad.desktop;
   application/x-gnome-saved-search=nemo.desktop;
+  inode/directory=alacritty-open.desktop;
   image/jpeg=vimiv.desktop;sxiv.desktop;
   image/png=vimiv.desktop;sxiv.desktop;
   image/svg+xml=vimiv.desktop;sxiv.desktop;
