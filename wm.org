@@ -353,41 +353,41 @@ External bindings are served by sxhkd.
 #+begin_src sxhkdrc :tangle (haris/tangle-home ".config/sxhkd/sxhkdrc")
   # Lock screen
   mod4 + ctrl + l
-     xlock
+      o --silent xlock
 
   # Dmenu stuff
   mod4 + ISO_Level3_Shift
-    dmenu_run
+      o --silent dmenu_run
   mod4 + c
-     dmenu_run config
+      o --silent dmenu_run config
   mod4 + o
-     dmenu_run open
+      o --silent dmenu_run open
   mod4 + shift + p
-     passmenu -l 10
+      o --silent dmenu_run passmenu -l 10
   mod4 + ctrl + p
-     dmenu_run otp
+      o --silent dmenu_run otp
   mod4 + q
-     dmenu_run system
+      o --silent dmenu_run system
   mod4 + ctrl + b
-     dmenu_run books
+      o --silent dmenu_run books
   mod4 + ctrl + q
-     dmenu_run quickmenu
+      o --silent dmenu_run quickmenu
 
   # Applications
   mod4 + Return
-    alacritty
+      alacritty
   mod4 + shift + Return
-    alacritty --class Alacritty,Float
+      alacritty --class Alacritty,Float
   mod4 + ctrl + Return
-     eterm
+      eterm
   mod4 + shift + f
-    firefox -P haris
+      firefox -P haris
   mod4 + shift + v
-    alacritty --class Alacritty,Float -e fish -C vifm
+      alacritty --class Alacritty,Float -e fish -C vifm
   mod4 + v
-    gvim
+      myemacs-float -c --eval '(scratch-buffer)'
   mod4 + shift + e
-    myemacs -c --eval '(scratch-buffer)'
+      myemacs -c --eval '(scratch-buffer)'
   mod4 + shift + g
       dmenu_run gpg
   mod4 + ctrl + s

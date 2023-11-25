@@ -1307,7 +1307,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
   export TERM=dumb
 
   run_script() {
-      o ~/.local/lib/dmenu/"$1"
+      o --silent ~/.local/lib/dmenu/"$1"
   }
 
   extract_aliases() {
@@ -1334,10 +1334,10 @@ Create a Xephyr session for the current user that tries to mimic a regular
       } | sort | uniq
   }
   get_aliases() {
-      extract_aliases ~/.alias ~/.alias-tmp | sed 's/^/ /'
+      extract_aliases ~/.alias ~/.alias-tmp
   }
   get_gui_aliases() {
-      extract_aliases ~/.alias-gui ~/.alias-gui-tmp | sed 's/^/ /'
+      extract_aliases ~/.alias-gui ~/.alias-gui-tmp
   }
 
   aliases="$(get_aliases)"
@@ -1369,8 +1369,8 @@ Create a Xephyr session for the current user that tries to mimic a regular
       echo " Books"         # Pick a book to read
       echo " IRC"           # Open emacs client for IRC
       echo "Quickmenu"        # Menu to quickly revisit recent activity
-      echo "$aliases"
-      echo "$gui_aliases"
+      echo "$aliases" | sed 's/^/ /'
+      echo "$gui_aliases" | sed 's/^/ /'
       get_desktop_apps        # Programs extracted from *.desktop files
   }
 
@@ -1380,73 +1380,78 @@ Create a Xephyr session for the current user that tries to mimic a regular
   if [ -n "$1" ]; then
       choice="$1"
   else
-      choice="$(get_commands | dmenu | perl -pe 's/^[[:^ascii:]] //g')"
+      choice="$(get_commands | dmenu)"
+      # If it starts with a non-ascii character (as in get-commands), remove it and the space following it
+      if grep -P "[^\x00-\x7F]" <<<"$choice"; then
+          choice="$(cut -f2 -d' ' <<<"$choice")"
+      fi
   fi
+  echo "$choice" | xxd | fifo
   case "$choice" in
       "")
           exit ;;
-      " Open" | "Open")
+      "Open")
           run_script open ;;
-      " Clipboard" | "Clipboard")
+      "Clipboard")
           clipmenu ;;
-      " Snippets" | "Snippets")
+      "Snippets")
           run_script snips ;;
-      " TODO" | "TODO")
+      "TODO")
           run_script todo ;;
-      " Windows" | "Windows")
+      "Windows")
           ~/.local/lib/i3/i3-container-commander.py ;;
-      " Pacman" | "Pacman")
+      "Pacman")
           run_script pacman ;;
-      " Color" | "Color")
+      "Color")
           run_script color ;;
-      " Unicode" | "Unicode")
+      "Unicode")
           run_script unicode ;;
-      " Kill Process" | "KillProcess")
+      "Kill Process")
           run_script pkill ;;
-      " Fix Wifi" | " FixWifi")
+      "Fix Wifi")
           fix-wifi ;;
-      " Config" | "Config")
+      "Config")
           run_script config ;;
-      " System" | "System")
+      "System")
           run_script system ;;
-      " Services" | "Services")
+      "Services")
           run_script services ;;
-      " Update cache" | " Updatecache")
+      "Update cache")
           rm ~/.cache/.desktop-apps.txt ;;
       "Tem")
           alacritty -e fish -C 'pj tem; clear' ;;
       "Octave")
           eoctave -c ;;
-      " Python" | "Python")
+      "Python")
           epython -c ;;
-      " GPG" | "GPG")
+      "GPG")
           run_script gpg ;;
-      " OTP" | "OTP")
+      "OTP")
           run_script otp ;;
-      " Books" | "Books")
+      "Books")
           run_script books ;;
-      " IRC" | "IRC")
+      "IRC")
           myemacs --socket-name="irc" -c ;;
       "Quickmenu")
           run_script quickmenu ;;
       # The rest: aliases and regular commands
       ,*)
           # If the command is an aliased GUI program, just run it
-          for al in $gui_aliases; do
-              if [ "$choice" = "$al" ]; then
-                  fish -C "$choice"    # Fish is the only shell that works here
+          for alias in $gui_aliases; do
+              if [ "$choice" = "$alias" ]; then
+                  o --silent "$choice"
                   exit
               fi
           done
           # If the command is an aliased CLI program, open it in fish
-          for al in $aliases; do
-              if [ "$choice" = "$al" ]; then
-                  guirun alacritty --class Alacritty,Float -e fish -C "$choice"
+          for alias in $aliases; do
+              if [ "$choice" = "$alias" ]; then
+                  guirun alacritty --class Alacritty,Float -e fish -C "o --silent $choice; tmux attach"
                   exit
               fi
           done
           # Fallback, if the entry matches none of the above, just run the command
-          fish -C "o $choice"
+          fish -c "o $choice"
           ;;
   esac
 #+end_src
@@ -2266,9 +2271,16 @@ Options:
   sudo rfkill block wifi && sudo rfkill unblock wifi
 #+end_src
 ** =guirun=
+Open a GUI window in the correct workspace.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/guirun")
-  # Open a GUI window in the correct workspace
-  i3-msg exec "$(printf "%q " "$@")"
+  # This roundabout way is because i3-msg exec can't handle commas in arguments
+
+  script="$(mktemp)"
+  chmod u+x "$script"
+  printf "%q " "$@" > "$script"
+
+  i3-msg exec "$script"
+  rm -f "$script"
 #+end_src
 ** =snip=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/snip")
