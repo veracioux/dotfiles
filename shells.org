@@ -445,6 +445,7 @@ on the plugin list above.
 
       if [ -n "$_flag_h" ]
           echo "Run a command in the background in a tmux session so its output can be inspected on-demand."
+          echo
           echo "A GUI notification is sent when the command completes."
           echo "After the command completes, plus a certain linger period, the tmux session is killed."
           echo "The linger period can be adjusted with --linger-period or disabled with --persist."
@@ -452,10 +453,11 @@ on the plugin list above.
           echo "Usage: o [OPTIONS] COMMAND..."
           echo
           echo "  -h, --help"        \t\t"Print this help message."
-          echo "  -p, --persist "    \t\t"Persist the tmux session until manually killed."
+          echo "  -p, --persist"       \t"Persist the tmux session until manually killed."
           echo "  -l, --linger-period" \t"How long the tmux session should linger after the command completes."
           echo                     \t\t\t"Same format as for the sleep command. (default: 20m)"
           echo "  -s, --silent"      \t\t"Do not send a GUI notification when the command completes."
+          echo "  -a, --attach"      \t\t"Immediately attach to the created tmux session"
           return
       end
 
@@ -474,9 +476,15 @@ on the plugin list above.
       <<o/background-task>>
       '
 
+      set -l tmux_session "$(echo "$__cmdline" | head -c20) [$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 5)]"
+
       tmux new -d \
-          -s "$(echo "$__cmdline" | head -c20) [$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 5)]" \
+          -s "$tmux_session" \
           env "$(env)" fish --private -C "source $tempfile"
+
+      if [ -n "$_flag_attach" ]
+          tmux attach -t "$tmux_session"
+      end
   end
 #+end_src
 **** Testing
@@ -502,6 +510,7 @@ Test the function by executing this code block:
     p/persist \
     l/linger-period= \
     s/silent \
+    a/attach \
     -- $__o_args
 #+end_src
 **** Background task and follow-up shell
