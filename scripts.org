@@ -1334,7 +1334,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
       age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
       # Refresh the cache only if the file is older than a specified age (seconds)
       {
-          if [ ! -f "$cache_file" -o  $age -gt 36000 ] || ! grep -q '^.'; then
+          if [ ! -f "$cache_file" -o  $age -gt 36000 ]; then
               pull_desktop_apps
           else
               cat "$cache_file"
