@@ -615,6 +615,19 @@ Note: This code block must not contain any apostrophes!
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/^.fish")
   complete -c '^' -a '(pwd | tr "/" "\n")' -f
 #+end_src
+*** =forever=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/forever.fish")
+  function forever
+      while :
+          $argv
+          sleep 2s
+      end
+  end
+#+end_src
+**** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/forever.fish")
+  complete -c forever -a '(complete -C "")'
+#+end_src
 *** Miscellaneous others
 #+begin_src fish
   function cdcf;   set -l file (cf "$argv");   test -f "$file" && cd (dirname        "$file"); end
