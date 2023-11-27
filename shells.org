@@ -108,13 +108,14 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   end
 
 #+end_src
-*** =fish_right_prompt=
+*** Notification when background job exits
 Sends a graphical notification when a command running in a non-visible
 context finishes. This applies to commands that are:
 - running in a terminal emulator that is minimized or in a different workspace
 - running without a terminal that can be accessed, e.g. launched via dmenu
 
 This applies only to graphical sessions, the linux TTY is unaffected.
+**** =fish_right_prompt=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_right_prompt.fish")
   function fish_right_prompt
       [ -n "$HARIS_BACKGROUND_TASKS_SILENT" ] && return
