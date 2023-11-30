@@ -799,16 +799,33 @@ a terminal and runs the aliased command.
   function vfd --wraps fd; vim (fd $argv); end
 #+end_src
 *** Abbreviations
+**** Helper functions
+***** =conditional_abbr=
 #+begin_src fish
-  # Safety precautions
+  # An abbreviation of a command name only, with no CLI arguments
+  function conditional_abbr
+      set -l command (echo $argv[-1] | cut -f1 -d' ')
+      if command --quiet "$command"
+          abbr -g $argv
+      end
+  end
+#+end_src
+**** Safety precautions
+#+begin_src fish
   abbr -g rm 'rm -i'
   abbr -g mv 'mv -i'
-
-  # Error correction
-  abbr -g claer 'clear'
-  abbr -g pas   'pass'
-  abbr -g gs    'git status'
-
+#+end_src
+**** Typo correction
+#+begin_src fish
+  conditional_abbr -g claer 'clear'
+  conditional_abbr -g pas   'pass'
+  conditional_abbr -g gs    'git status'
+#+end_src
+**** Pacman commands
+I also sometimes use Ubuntu, but since I'm so used to pacman, I use the same
+abbreviations for equivalent apt operations.
+***** Guard
+#+begin_src fish
   function _if_pacman_else
       if command --quiet pacman
           echo "$argv[1]"
@@ -816,8 +833,12 @@ a terminal and runs the aliased command.
           echo "$argv[2]"
       end
   end
-
-  # Pacman commands
+#+end_src
+#+begin_src fish
+  if command --quiet pacman || which --quiet apt
+#+end_src
+***** Abbreviations
+#+begin_src fish
   abbr -g p     (_if_pacman_else 'pacman'         'apt')
   abbr -g pq    (_if_pacman_else 'pacman -Q'      'apt list --installed')
   abbr -g pqq   (_if_pacman_else 'pacman -Qq'     'apt list --installed')
@@ -834,10 +855,19 @@ a terminal and runs the aliased command.
   abbr -g sps   (_if_pacman_else 'sudo pacman -S' 'sudo apt install')
   abbr -g spr   (_if_pacman_else 'sudo pacman -R' 'sudo apt remove')
   abbr -g sprq  (_if_pacman_else 'sudo pacman -R (pacman -Qdtq)' 'sudo apt autoremove')
-
+#+end_src
+***** End guard
+#+begin_src fish
+  end
   functions --erase _if_pacman_else
-
-  # Systemd
+#+end_src
+**** Systemd
+***** Guard
+#+begin_src fish
+  if command --quiet systemctl
+#+end_src
+***** Abbreviations
+#+begin_src fish
   abbr -g ctl       'sudo systemctl'
   abbr -g start     'sudo systemctl start'
   abbr -g stop      'sudo systemctl stop'
@@ -849,7 +879,9 @@ a terminal and runs the aliased command.
   abbr -g res       'sudo systemctl restart'
   abbr -g sus       'systemctl suspend'
   abbr -g j         'journalctl -f -u'
-  #   --user versions
+#+end_src
+****** --user versions
+#+begin_src fish
   abbr -g ctlu      'systemctl --user'
   abbr -g startu    'systemctl start --user'
   abbr -g stopu     'systemctl stop --user'
@@ -860,71 +892,86 @@ a terminal and runs the aliased command.
   abbr -g relu      'systemctl reload --user'
   abbr -g resu      'systemctl restart  --user'
   abbr -g ju        'journalctl --user -f -u'
-
-  # Docker
-  abbr -g d    'docker'
-  abbr -g db   'docker build'
-  abbr -g dr   'docker run'
-  abbr -g drit 'docker run -it'
-  abbr -g deit 'docker exec -it'
-  abbr -g drm  'docker rm -f'
-  abbr -g dcl  'docker container list'
-  abbr -g dc   'docker-compose'
-  abbr -g dcub 'docker-compose up --build'
-  abbr -g dce  'docker-compose exec'
-  abbr -g dcd  'docker-compose down'
-
-  # VirtualBox
-  abbr -g vb   'vboxmanage'
-
-  # Misc
-  abbr -g g     'git'
-  abbr -g e     'myemacs -c'
-  abbr -g E     'myemacs'
-  abbr -g s     'sudo'
-  abbr -g paru  'paru'
-  abbr -g py    'python'
-  abbr -g ipy   'ipython'
-  abbr -g copy  'xsel -b'
-  abbr -g paste 'xsel -b -o'
-  abbr -g oct   'octave'
-  abbr -g octb  'OCTAVE_BASIC=true command octave'
-  abbr -g va    'vagrant'
-  abbr -g u     'fusermount -u'
-  abbr -g um    'sudo umount'
-  abbr -g cmd   'command'
-  abbr -g w     'watch -n0.1'
-  abbr -g P     "pgrep -afu "(whoami)
-  abbr -g yt    'ytfzf -t -s'
-  abbr -g t     'tem'
-  abbr -g v     'vim'
-  abbr -g vf    'vim (fzf)'
-  abbr -g fm    'vifm'
-  abbr -g fb    'facebook-cli'
-  abbr -g fl    'flameshot'
-  abbr -g tb    'nc termbin.com 9999'
-  abbr -g asc   'asciinema'
-  abbr -g priv  'fish --private'
-  abbr -g hk    'heroku'
-  abbr -g mhc   'man http-codes'
-  abbr -g rgh   'rg --hidden'
-  abbr -g px    'ping x'
-  abbr -g ii    'curl ipinfo.io'
-  abbr -g bt    'bluetoothctl'
-  abbr -g man   'eman'
-
+#+end_src
+***** End guard
+#+begin_src fish
+  end
+#+end_src
+**** Docker
+#+begin_src fish
+  conditional_abbr -g d    'docker'
+  conditional_abbr -g db   'docker build'
+  conditional_abbr -g dr   'docker run'
+  conditional_abbr -g drit 'docker run -it'
+  conditional_abbr -g deit 'docker exec -it'
+  conditional_abbr -g drm  'docker rm -f'
+  conditional_abbr -g dcl  'docker container list'
+  conditional_abbr -g dc   'docker-compose'
+  conditional_abbr -g dcub 'docker-compose up --build'
+  conditional_abbr -g dce  'docker-compose exec'
+  conditional_abbr -g dcd  'docker-compose down'
+#+end_src
+**** Pass
+#+begin_src fish
   # Pass
-  abbr -g pn 'pass insert'
-  abbr -g pg 'pass generate --clip'
-  abbr -g pe 'pass edit'
-  abbr -g pc 'pass show --clip'
-
-  # Google cloud
-  abbr -g gce 'gcloud compute'
-
+  conditional_abbr -g pn 'pass insert'
+  conditional_abbr -g pg 'pass generate --clip'
+  conditional_abbr -g pe 'pass edit'
+  conditional_abbr -g pc 'pass show --clip'
+#+end_src
+**** Miscellaneous
+#+begin_src fish
+  conditional_abbr -g g     'git'
+  conditional_abbr -g e     'myemacs -c'
+  conditional_abbr -g E     'myemacs'
+  conditional_abbr -g s     'sudo'
+  conditional_abbr -g py    'python'
+  conditional_abbr -g ipy   'ipython'
+  conditional_abbr -g copy  'xsel -b'
+  conditional_abbr -g paste 'xsel -b -o'
+  conditional_abbr -g oct   'octave'
+  conditional_abbr -g octb  'OCTAVE_BASIC=true command octave'
+  conditional_abbr -g va    'vagrant'
+  conditional_abbr -g u     'fusermount -u'
+  conditional_abbr -g um    'sudo umount'
+  conditional_abbr -g cmd   'command'
+  conditional_abbr -g w     'watch -n0.1'
+  conditional_abbr -g P     "pgrep -afu "(whoami)
+  conditional_abbr -g yt    'ytfzf -t -s'
+  conditional_abbr -g t     'tem'
+  conditional_abbr -g v     'vim'
+  conditional_abbr -g vf    'vim (fzf)'
+  conditional_abbr -g fm    'vifm'
+  conditional_abbr -g fb    'facebook-cli'
+  conditional_abbr -g fl    'flameshot'
+  conditional_abbr -g tb    'nc termbin.com 9999'
+  conditional_abbr -g asc   'asciinema'
+  conditional_abbr -g hk    'heroku'
+  conditional_abbr -g mhc   'man http-codes'
+  conditional_abbr -g rgh   'rg --hidden'
+  conditional_abbr -g px    'ping x'
+  conditional_abbr -g ii    'curl ipinfo.io'
+  conditional_abbr -g bt    'bluetoothctl'
+  conditional_abbr -g man   'eman'
+#+end_src
+**** Google cloud
+#+begin_src fish
+  conditional_abbr -g gce 'gcloud compute'
+#+end_src
+**** Tmux
+#+begin_src fish
   # Tmux
-  abbr -g x   'tmux'
-  abbr -g X   'tmux attach -t (tmux list-sessions -F "#{session_created} #{session_name}" | sort | tac | grep -Po "(?<= ).*" | fzf -s)'
+  conditional_abbr -g x   'tmux'
+  conditional_abbr -g X   'tmux attach -t (tmux list-sessions -F "#{session_created} #{session_name}" | sort | tac | grep -Po "(?<= ).*" | fzf -s)'
+#+end_src
+**** VirtualBox
+#+begin_src fish
+  # VirtualBox
+  conditional_abbr -g vb   'vboxmanage'
+#+end_src
+**** Discard helper function
+#+begin_src fish
+  functions --erase conditional_abbr
 #+end_src
 *** Variables
 #+begin_src fish
