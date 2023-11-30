@@ -906,10 +906,20 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g deit 'docker exec -it'
   conditional_abbr -g drm  'docker rm -f'
   conditional_abbr -g dcl  'docker container list'
-  conditional_abbr -g dc   'docker-compose'
-  conditional_abbr -g dcub 'docker-compose up --build'
-  conditional_abbr -g dce  'docker-compose exec'
-  conditional_abbr -g dcd  'docker-compose down'
+#+end_src
+***** Compose
+#+begin_src fish
+  conditional_abbr -g D    'docker-compose'
+  conditional_abbr -g Du   'docker-compose up'
+  conditional_abbr -g Dub  'docker-compose up --build'
+  conditional_abbr -g Dr   'docker-compose run'
+  conditional_abbr -g Drit 'docker-compose run -it'
+  conditional_abbr -g Deit 'docker-compose exec -it'
+  conditional_abbr -g Drm  'docker-compose rm -f'
+  conditional_abbr -g Dd   'docker-compose down'
+  conditional_abbr -g DD   'docker-compose down'
+  conditional_abbr -g Dl   'docker-compose logs -f'
+  conditional_abbr -g Dl   'docker-compose logs -f'
 #+end_src
 **** Pass
 #+begin_src fish
