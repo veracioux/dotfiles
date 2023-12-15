@@ -28,8 +28,6 @@ the setup script as well!.*
   filetype plugin indent on        " required
   syntax enable
 
-  source ~/.vimrc.tmp
-
   set noautoread
   set exrc
   set showcmd
@@ -574,6 +572,15 @@ the setup script as well!.*
 #+begin_src vimrc
   let g:vcoolor_map='<M-c>'
   let g:vcoolor_disable_mappings = 1
+#+end_src
+* Local configs
+#+begin_src vimrc
+  if filereadable(expand("~/.vimrc.private"))
+  source ~/.vimrc.private
+  endif
+  if filereadable(expand("~/.vimrc.tmp"))
+  source ~/.vimrc.tmp
+  endif
 #+end_src
 * Setup
 :PROPERTIES:
