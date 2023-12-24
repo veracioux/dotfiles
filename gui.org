@@ -295,6 +295,11 @@ Some settings in GTK 3.0 don't work if we quote their values.
   Exec=alacritty --working-directory %U
   MimeType=inode/directory
 #+end_src
+** Peek
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/peek.desktop")
+  <<desktop-base>>
+  Exec=peek
+#+end_src
 * Helpers
 #+NAME: eval-user-name
 #+begin_src emacs-lisp :cache yes
