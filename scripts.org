@@ -1104,23 +1104,6 @@ This script prints the contents
       fi
   fi
 #+end_src
-** =viman=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/viman")
-  # Wrapper script for vim which:
-  #   1. By default opens vim with a configuration for displaying man pages,
-  #       without loading unnecessary plugins
-  #   2. If the --floating option is provided, opens a popup window
-
-  [ "$1" = '--floating' ] && {
-      shift
-      cat > /dev/shm/viman
-      alacritty --class Alacritty,Float -e fish \
-                -C "cat /dev/shm/viman | nvim --cmd 'let g:haris_man = \"true\"' +Man! $*"
-      rm -f /dev/shm/viman
-  } || {
-      nvim --cmd 'let g:haris_man = "true"' +Man! "$@"
-  }
-#+end_src
 ** =vimdiff=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vimdiff")
   # Like regular vimdiff, but in nvim

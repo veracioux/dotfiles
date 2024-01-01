@@ -29,7 +29,6 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   # I'm setting HOME to prevent errors when running inside tuterm
   type --quiet bass && HOME="/home/$USER" bass source ~/.bashrc # Load bash's config
 
-  set -gx MANPAGER 'viman'                      # Set default pager to vim
   set -gx MANPATH  ":$__fish_data_dir/man"      # Add fish manpages to MANPATH
   set -gx MANWIDTH 80
   set -gx EDITOR 'editor'
