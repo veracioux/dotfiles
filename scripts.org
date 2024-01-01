@@ -2249,6 +2249,23 @@ Options:
       ~/.local/bin/notify-send 'Staging website' 'Status: alive'
   fi
 #+end_src
+** =vpn-toggle=                                                     :script:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/vpn-toggle")
+  restart_if_running() {
+      if systemctl is-active --quiet "$1"; then
+          sudo systemctl restart "$1"
+      fi
+  }
+
+  if systemctl is-active --quiet protonvpn; then
+    sudo systemctl stop protonvpn
+  else
+    sudo systemctl start protonvpn
+  fi
+
+  restart_if_running stubby
+  restart_if_running dnsmasq
+#+end_src
 * Miscellaneous
 ** =term=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/term")

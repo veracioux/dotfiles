@@ -435,10 +435,7 @@ dmenu doesn't work.
   bindsym e       exec element-desktop, mode default
   bindsym v       exec viber, mode default
   bindsym u       exec dmenu_run Unicode, mode default
-  bindsym Shift+v exec sh -c 'systemctl is-active protonvpn \
-  && sudo systemctl stop protonvpn \
-  || sudo systemctl start protonvpn', \
-  mode default
+  bindsym Shift+v exec vpn-toggle, mode default
 
   bindsym Escape mode default
   }
