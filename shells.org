@@ -989,6 +989,8 @@ abbreviations for equivalent apt operations.
 * .profile
 #+begin_src shell :tangle (haris/tangle-home ".profile")
   export PATH=~/.local/bin:$PATH:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator
+  mkdir -p ~/.go
+  export GOPATH="$HOME"/.go
 
   export MAKEFLAGS='-j6'
   export GPG_TTY=$(tty)
