@@ -85,6 +85,8 @@ the type of the purpose of the current emacs daemon (by reading the
 #+end_src
 * General
 ** Package bootstrapping
+I normally use =use-package= for installing packages (with =melpa= as the default source).
+I use =straight= to clone some packages that are not available on =melpa=.
 #+NAME: package-init
 #+begin_src elisp
   (defvar bootstrap-version)
@@ -105,9 +107,11 @@ the type of the purpose of the current emacs daemon (by reading the
 
   (setq straight-vc-git-default-clone-depth 1)
 
-  (straight-use-package '(use-package :source melpa))
-  (setq use-package-always-ensure t)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
+  (require 'use-package)
+  ;; (setq use-package-defaults (assq-delete-all ':straight use-package-defaults))
+  (setq use-package-always-ensure t)
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<package-init>>
@@ -118,7 +122,10 @@ the type of the purpose of the current emacs daemon (by reading the
   (use-package multi-vterm :defer t)
   (use-package command-log-mode)
   (straight-use-package
-   '(explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode"))
+   '(explain-pause-mode
+     :type git
+     :host github
+     :repo "lastquestion/explain-pause-mode"))
 #+end_src
 *** Language modes
 #+begin_src elisp
@@ -751,7 +758,11 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 #+end_src
 *** Fish
 #+begin_src elisp
-  (straight-use-package '(company-fish :type git :host github :repo "CeleritasCelery/company-fish"))
+  (straight-use-package
+   '(company-fish
+     :type git
+     :host github
+     :repo "CeleritasCelery/company-fish"))
 #+end_src
 ** RST
 #+begin_src elisp
@@ -1451,7 +1462,7 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
 ** Company
 #+begin_src elisp
   (use-package company)
-  (straight-use-package '(company-statistics :source melpa))
+  (use-package company-statistics)
 
   (global-company-mode)
   (setq tab-always-indent t)
@@ -1799,7 +1810,7 @@ Remove Info mode annoying keybindings.
 #+end_src
 ** Daemons
 #+begin_src elisp
-  (straight-use-package '(daemons :source melpa))
+  (use-package daemons)
 
   (evil-collection-init 'daemons)
 
@@ -1807,7 +1818,7 @@ Remove Info mode annoying keybindings.
 #+end_src
 ** Nginx
 #+begin_src elisp
-  (straight-use-package '(company-nginx :source melpa))
+  (use-package company-nginx)
 #+end_src
 * Spacemacs
 #+begin_src elisp
