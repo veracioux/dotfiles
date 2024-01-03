@@ -170,6 +170,10 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 
   set -g default-terminal "screen-256color"
 #+end_src
+* Screen
+#+begin_src conf :tangle (haris/tangle-home ".screenrc")
+  bindkey ^X quit
+#+end_src
 * Cheat
 #+begin_src yaml :tangle (haris/tangle-home ".config/cheat/conf.yml")
   colorize: true
