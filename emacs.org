@@ -1,6 +1,7 @@
 #+TITLE: Emacs Config
 #+SETUPFILE: .setup.org
-#+PROPERTY: header-args+ :tangle (haris/tangle-home ".emacs.d/haris/default.el")
+#+PROPERTY: header-args:elisp+ :tangle (haris/tangle-home ".emacs.d/haris/default.el")
+#+PROPERTY: header-args:emacs-lisp+ :tangle (haris/tangle-home ".emacs.d/haris/default.el")
 #+begin_src emacs-lisp :exports none
   ;; -*- mode: emacs-lisp; -*- vim: ft=lisp sw=2
 #+end_src
@@ -747,7 +748,7 @@ Fix for empty image list (not sure if the fix works):
 #+end_src
 ** TODO Email
 :PROPERTIES:
-:header-args: :tangle no
+:header-args:emacs-lisp+: :tangle no
 :END:
 I use mu4e as my email client.
 #+begin_src emacs-lisp
@@ -815,9 +816,6 @@ I use mu4e as my email client.
   (add-hook 'message-setup-hook 'flyspell-mode)
 #+end_src
 *** TODO Notifications
-:PROPERTIES:
-:header-args: :tangle no
-:END:
 #+begin_src emacs-lisp
   (use-package mu4e-alert :defer t)
   (setq mu4e-enable-notifications t)
