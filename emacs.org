@@ -206,6 +206,26 @@ the type of the purpose of the current emacs daemon (by reading the
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<global-settings>>
 #+end_src
+*** Buffer cleanup
+#+begin_src emacs-lisp
+  (setq clean-buffer-list-delay-general 1
+        clean-buffer-list-delay-special 1800
+        clean-buffer-list-kill-regexps
+        '("^\\*Man "
+          "^\\*helpful "
+          "^magit: "
+          "^magit-\\(log\\|diff\\)"
+          "\\*which-key\\*"
+          "^\\*straight-process\\*"
+          "^haris-pipe-"))
+#+end_src
+This enables periodic cleanup:
+#+begin_src emacs-lisp
+  (when (boundp 'haris/timer/clean-buffer-list)
+    (cancel-timer haris/timer/clean-buffer-list)
+    (makunbound 'haris/timer/clean-buffer-list))
+  (setq haris/timer/clean-buffer-list (run-with-timer 1800 1800 #'clean-buffer-list))
+#+end_src
 ** Functions
 #+begin_src emacs-lisp
   (defun haris/stage () (interactive) (mkdir "/tmp/stage" t) (dired "/tmp/stage"))
