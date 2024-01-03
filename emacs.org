@@ -739,6 +739,10 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
         js-indent-level 4
         js2-basic-offset 4)
 #+end_src
+** Java
+#+begin_src elisp
+  (use-package lsp-java)
+#+end_src
 ** Web
 #+begin_src elisp
   (setq web-mode-markup-indent-offset 2
