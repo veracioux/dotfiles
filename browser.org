@@ -172,6 +172,10 @@ Tridactyl extension.
   bind ,m composite get_current_url | mpvsafe
   bind <C-.> tabdetach
 
+  # Yank the current URL but with the hostname replaced with the resolved IP
+  command replace_hostname_with_arg js -p Promise.resolve(new URL(location.href)).then(url => {url.hostname = JS_ARG.split('\n')[0]; return url.toString()})
+  bind yi composite js new URL(location.href).hostname | composite !s dig +short | replace_hostname_with_arg | clipboard yank
+
   bind ;D js debugger;
   bind ;? hint -W exclaim_quiet notify-send
 
