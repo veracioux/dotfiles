@@ -258,70 +258,84 @@ interactive commands. Each command is mapped to a function named
 run, it opens a vterm buffer named based on the command name, and runs the
 command there (without any arguments).
 #+begin_src elisp
-  (defun haris/load-commands-from-local-shell-scripts ()
-    "Load all local shell script commands as interactive Elisp commands."
+  (funcall
+   (defun haris/load-commands-from-local-shell-scripts ()
+     "Load all local shell script commands as interactive Elisp commands."
+     (interactive)
+     (with-temp-buffer
+       (org-mode)
+       (setq-local org-use-tag-inheritance nil)
+       (insert-file-contents "~/.haris/scripts.org")
+
+       ;; Extract all applicable script commands
+       (setq-local
+        _commands
+        (org-map-entries
+         (lambda () (let ((title (nth 4 (org-heading-components))))
+                      (string-replace "=" "" title)))
+         "script" nil))
+
+       ;; Create an interactive function definition for each command
+       (mapcar
+        (lambda (command)
+          (eval
+           `(defun ,(intern (format "haris/script/%s" command))
+                ;; Arglist
+                (prefix-arg)
+              ;; Docstring
+              ,(format
+                "Interactive command corresponding to the custom local shell script '%s'"
+                command)
+              (interactive "P")
+              (let ((default-directory "~")
+                    (command ,command)
+                    (_vterm nil)
+                    (run-command nil))
+                ;; Run multi-vterm
+                (setq _vterm (multi-vterm))
+                (with-current-buffer _vterm
+                  ;; Rename the buffer based on the command name
+                  (rename-buffer (format "*haris/script/%s*" command) t)
+                  (setq
+                   run-command
+                   (eval `(lambda (&optional argstring)
+                            (interactive ,(format "sCLI arguments: %s " ,command))
+                            "Run the command inside the open vterm buffer"
+                            (comint-send-string
+                             (get-buffer-process ,_vterm)
+                             (format "%s %s\n" ,command (or argstring ""))))))
+                  ;; Run the command
+                  (if prefix-arg
+                      ;; With prefix arg - prompt for CLI arguments before running
+                      (call-interactively run-command)
+                    ;; No prefix arg - run without CLI arguments
+                    (run-with-timer 0.6 nil (eval `(lambda () (funcall ,run-command))))))))))
+        _commands))))
+
+  (defun haris/remove-hook ()
+    "Find the surrounding add-hook form and revert its effects."
     (interactive)
-    (with-temp-buffer
-      (org-mode)
-      (setq-local org-use-tag-inheritance nil)
-      (insert-file-contents "~/.haris/scripts.org")
-
-      ;; Extract all applicable script commands
-      (setq-local
-       _commands
-       (org-map-entries
-        (lambda () (let ((title (nth 4 (org-heading-components))))
-                     (string-replace "=" "" title)))
-        "script" nil))
-
-      ;; Create an interactive function definition for each command
-      (mapcar
-       (lambda (command)
-         (eval
-          `(defun ,(intern (format "haris/script/%s" command))
-               ;; Arglist
-               (prefix-arg)
-             ;; Docstring
-             ,(format "Interactive command corresponding to the custom local shell script '%s'" command)
-             (interactive "P")
-             (let ((default-directory "~")
-                   (command ,command)
-                   (_vterm nil)
-                   (run-command nil))
-               ;; Run multi-vterm
-               (setq _vterm (multi-vterm))
-               (with-current-buffer _vterm
-                 ;; Rename the buffer based on the command name
-                 (rename-buffer (format "*haris/script/%s*" command) t)
-                 (setq run-command
-                       (eval `(lambda (&optional argstring)
-                                (interactive ,(format "sCLI arguments: %s " ,command))
-                                "Run the command inside the open vterm buffer"
-                                (comint-send-string
-                                 (get-buffer-process ,_vterm)
-                                 (format "%s %s\n" ,command (or argstring ""))))))
-                 ;; Run the command
-                 (if prefix-arg
-                     ;; With prefix arg - prompt for CLI arguments before running
-                     (call-interactively run-command)
-                   ;; No prefix arg - run without CLI arguments
-                   (run-with-timer 0.6 nil (eval `(lambda () (funcall ,run-command))))))))))
-       _commands)))
-
-  (haris/load-commands-from-local-shell-scripts)
+    (let* ((sexp (save-excursion
+                   (search-backward
+                    (if (eq (symbol-at-point) 'add-hook)
+                        "("
+                      "(add-hook"))
+                   (sexp-at-point))))
+      (setcar sexp 'remove-hook)
+      (message "%s" sexp)
+      (eval
+       ;; Remove DEPTH argument, if any
+       (cl-remove-if #'numberp sexp))))
 #+end_src
 ** Bindings
 #+begin_src emacs-lisp
-  ;; M-TAB in insert mode inserts a tab and converts it to a space
-  (defun haris/insert-tab-as-spaces () (interactive)
-         (insert "\t")
-         (untabify
-          (line-beginning-position)
-          (line-end-position)))
-
   (defun haris/popup-eshell () (interactive)
          (let ((shell-default-shell 'eshell))
            (spacemacs/default-pop-shell)) )
+
+  (defun haris/insert-tab ()
+    (interactive)
+    (insert-tab))
 
   (defun haris/describe-symbol-at-point ()
     (interactive)
