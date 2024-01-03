@@ -197,10 +197,12 @@ the type of the purpose of the current emacs daemon (by reading the
   ;; Init and set theme
   (setq custom-theme-directory "~/.emacs.d/private/themes")
   (add-hook 'after-make-frame-functions
-            (lambda (frame)
-              (select-frame frame)
-              (load-theme 'dracula t)))
-  (load-theme 'dracula t)
+            (defun haris/load-theme-delayed (frame)
+              ;; Without this the theme only loads after a second frame is created
+              (run-with-timer 0 nil
+                              (lambda ()
+                                (load-theme 'dracula t)))
+              (remove-hook 'after-make-frame-functions #'haris/load-theme-delayed)))
 
   ;; Ways to spawn shells from within Emacs
   (setq shell-default-shell 'shell)
