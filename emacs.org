@@ -1738,6 +1738,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      pass
      sql
      nginx
+     systemd
      ;; eaf
      ;; emms
      debug
