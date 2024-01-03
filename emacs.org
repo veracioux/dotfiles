@@ -976,12 +976,15 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 #+end_src
 * Minibuffer
 #+begin_src elisp
-  (add-hook 'minibuffer-mode-hook #'yas-minor-mode-on)
-  (add-hook 'minibuffer-mode-hook
-            (defun haris/company--setup-in-minibuffer ()
+  (add-hook 'minibuffer-setup-hook #'haris/yas-minor-mode-on 90)
+  (add-hook 'minibuffer-setup-hook
+            (defun haris//company-setup-in-minibuffer ()
               (when (member this-command '(eval-expression))
-                (company-mode)
-                (setq-local company-backends company-backends-emacs-lisp-mode))))
+                (yas-activate-extra-mode 'emacs-lisp-mode)
+                ; (ref:company-backends-emacs-lisp-mode/usage)
+                (setq-local company-backends company-backends-emacs-lisp-mode)
+                (company-mode)))
+            90)
 
   (advice-add
    #'eval-expression
