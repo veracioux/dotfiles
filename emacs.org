@@ -122,12 +122,14 @@ the type of the purpose of the current emacs daemon (by reading the
 *** Language modes
 #+begin_src emacs-lisp
   (use-package json-mode :defer t)
+  (use-package counsel-jq :defer t)
   (use-package fish-mode :defer t)
   (use-package vimrc-mode :defer t)
   (use-package sxhkdrc-mode :defer t)
   (use-package i3wm-config-mode :defer t)
   (use-package git-modes :defer t)
   (use-package systemd :defer t)
+  (use-package ssh-config-mode :defer t)
 #+end_src
 ** Global settings
 #+NAME: global-settings
@@ -151,6 +153,7 @@ the type of the purpose of the current emacs daemon (by reading the
   (setq frame-title-format "%b"
         dotspacemacs-frame-title-format nil)
   (add-to-list 'image-types 'svg)
+  (setq dired-kill-when-opening-new-dired-buffer t)
   ;; Enable clipboard in the terminal
   (use-package xclip)
   (xclip-mode)
@@ -214,7 +217,7 @@ the type of the purpose of the current emacs daemon (by reading the
         '("^\\*Man "
           "^\\*helpful "
           "^magit: "
-          "^magit-\\(log\\|diff\\)"
+          "^magit-\\(log\\|diff\\|stash\\|revision\\)"
           "\\*which-key\\*"
           "^\\*straight-process\\*"
           "^haris-pipe-"))
@@ -345,7 +348,7 @@ command there (without any arguments).
       (when was-in-minibuffer (switch-to-buffer original-buffer))))
 
   ;; M-TAB in insert mode inserts a tab emulated by spaces
-  (define-key evil-insert-state-map (kbd "M-TAB") 'haris/insert-tab-as-spaces)
+  (define-key evil-insert-state-map (kbd "M-TAB") #'insert-tab)
   ;; "SPC +" will pop up eshell
   (spacemacs/set-leader-keys "+" 'haris/popup-eshell)
 
@@ -365,6 +368,8 @@ command there (without any arguments).
     'haris/describe-symbol-at-point)
   (evil-define-key 'normal read--expression-map (kbd "C-q")
     'haris/describe-symbol-at-point)
+
+  (evil-define-key 'normal helpful-mode-map (kbd "TAB") #'forward-button)
 #+end_src
 #+begin_src emacs-lisp
   (spacemacs/declare-prefix "o" "custom")
@@ -453,6 +458,7 @@ Some custom keybindings are defined here as well.
   (setq haris/buffer-prefix-map (make-sparse-keymap))
   (spacemacs/set-leader-keys "ob" haris/buffer-prefix-map)
   (define-key haris/buffer-prefix-map (kbd "r") #'rename-buffer)
+  (define-key haris/buffer-prefix-map (kbd "R") #'revert-buffer)
   (define-key haris/buffer-prefix-map (kbd "c") #'clone-buffer)
   (define-key haris/buffer-prefix-map (kbd "i") #'ibuffer)
 
@@ -521,9 +527,8 @@ YAML indentation is just broken. This disables it completely.
 *** YAML Pro Mode
 #+begin_src elisp
   (eval-after-load "yaml"
-    (lambda ()
-      (use-package yaml-pro)
-      (use-package counsel-jq)))
+    (defun haris//after-load/yaml ()
+      (use-package yaml-pro)))
 
   (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook))
         (hook))
@@ -1751,7 +1756,10 @@ Spacemacs would delete them every time on startup.
      react
      focus-autosave-mode
      xclip
-     accent))
+     accent
+     sqlite3
+     company-shell
+     company-statistics))
 #+end_src
 ** Upgrading
 When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][spacemacs/ediff-dotfile-and-template]] to merge any upstream changes to the dotfile.
