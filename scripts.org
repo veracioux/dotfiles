@@ -302,6 +302,12 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   pkill gpg-agent 2>/dev/null
   /usr/bin/xlock
 #+end_src
+** =vscode=                                                         :script:
+The name =code= is a bit too generic. I need something more specific in order to
+get better search matches.
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/vscode")
+  code "$@"
+#+end_src
 * Utilities
 ** =visual-editor=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/visual-editor")
