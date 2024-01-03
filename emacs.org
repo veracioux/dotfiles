@@ -1694,7 +1694,10 @@ Remove Info mode annoying keybindings.
   (setq alert-default-style 'libnotify)
 #+end_src
 * Spacemacs
-The code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file
+#+begin_src elisp
+  (setq dotspacemacs-ask-for-lazy-installation nil)
+#+end_src
+The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file
 is in turn loaded from [[~/.spacemacs]]. code block]].
 ** Layers
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".spacemacs-init.el")
