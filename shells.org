@@ -26,8 +26,13 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   # Disable path shortening
   set fish_prompt_pwd_dir_length 0
 
-  # I'm setting HOME to prevent errors when running inside tuterm
-  type --quiet bass && HOME="/home/$USER" bass source ~/.bashrc # Load bash's config
+  if type --quiet bass
+      # I'm setting HOME to prevent errors when running inside tuterm
+      HOME="/home/$USER" bass source ~/.bashrc # Load bash's config
+      if status is-login
+          bass source ~/.profile
+      end
+  end
 
   set -gx MANPATH  ":$__fish_data_dir/man"      # Add fish manpages to MANPATH
   set -gx MANWIDTH 80
@@ -1066,11 +1071,11 @@ abbreviations for equivalent apt operations.
 
   mkdir -p /tmp/stage-"$USER"
 
-  [ -f ~/.alias ]           && . ~/.alias
-  [ -f ~/.alias-tmp ]       && . ~/.alias-tmp
-  [ -f ~/.alias-gui ]       && . ~/.alias-gui
-  [ -f ~/.alias-gui-tmp ]   && . ~/.alias-gui-tmp
-  [ -f ~/.profile-private ] && . ~/.profile-private
+  [ -f ~/.alias ]           && . ~/.alias           || true
+  [ -f ~/.alias-tmp ]       && . ~/.alias-tmp       || true
+  [ -f ~/.alias-gui ]       && . ~/.alias-gui       || true
+  [ -f ~/.alias-gui-tmp ]   && . ~/.alias-gui-tmp   || true
+  [ -f ~/.profile-private ] && . ~/.profile-private || true
 #+end_src
 * Temporary configs
 [[~/.config/fish/tmp.fish][Click to edit]]
