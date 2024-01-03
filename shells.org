@@ -218,13 +218,16 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   bind_both_modes \eb __haris_run_in_bash
 
   # Prepend o in front of current command
-  bind_both_modes \eo '__haris_prepend_cmdline o'
+  bind_both_modes \eo '__haris_cmdline_prepend o'
 
   # Prepend man in front of current command
   bind_both_modes \em '__haris_show_man'
 
   # Append --help to the end of the command line and submit
-  bind_both_modes \eH '__haris_print_help_or_toggle'
+  bind_both_modes \eH '__haris_cmdline_append_or_toggle --help'
+
+  # Append --version to the end of the command line and submit
+  bind_both_modes \eV '__haris_cmdline_append_or_toggle --version'
 
   bind_both_modes \et term
 
@@ -251,8 +254,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       commandline -r ''
   end
 #+end_src
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_prepend_cmdline.fish")
-  function __haris_prepend_cmdline
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_cmdline_prepend.fish")
+  function __haris_cmdline_prepend
       commandline --cursor 0
       commandline --insert "$argv "
       commandline --function end-of-line
@@ -263,13 +266,13 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       eman (commandline --current-process --tokenize | grep -v '^sudo$' | head -1)
   end
 #+end_src
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_print_help_or_toggle.fish")
-  function __haris_print_help_or_toggle
-      if [ (commandline -o | tail -1) = "--help" ]
-          commandline -r (commandline | string replace -r -- '\s*--help$' '')
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_cmdline_append_or_toggle.fish")
+  function __haris_cmdline_append_or_toggle -a text
+      if [ (commandline -o | tail -1) = "$text" ]
+          commandline -r (commandline | string replace -r -- "\s+$text\s*\$" '')
           return
       end
-      commandline --append " --help"
+      commandline --append " $text"
       commandline -f execute
   end
 #+end_src
