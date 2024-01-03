@@ -1613,7 +1613,6 @@ lightweight shell.
   edit=" Edit..."
   lookup="$(
     ls ~/proj/*/TODO.org \
-       ~/eo/TODO.org \
        ~/proj/drytoe/*/TODO.org \
        ~/data/personal/todos/*/TODO.org
   )"
