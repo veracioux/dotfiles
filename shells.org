@@ -812,8 +812,9 @@ a terminal and runs the aliased command.
 *** Abbreviations
 **** Helper functions
 ***** =conditional_abbr=
+Create an abbreviation of a callable (command, function or builting), optionally
+with arguments, but only if the callable actually exists.
 #+begin_src fish
-  # An abbreviation of a command name only, with no CLI arguments
   function conditional_abbr
       set -l command (echo $argv[-1] | cut -f1 -d' ')
       if type --quiet "$command"
@@ -923,8 +924,10 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g drm    'docker rm -f'
 
   conditional_abbr -g di     'docker image'
+  conditional_abbr -g dil    'docker image ls'
   conditional_abbr -g dip    'docker image prune'
   conditional_abbr -g dii    'docker image inspect'
+  conditional_abbr -g dir    'docker image rm'
 
   conditional_abbr -g dc     'docker container'
   conditional_abbr -g dcl    'docker container ls'
@@ -968,7 +971,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g DR     'docker-compose restart'
 
   conditional_abbr -g Deit   'docker-compose exec -it'
-  conditional_abbr -g Drm    'docker-compose rm -f'
+  conditional_abbr -g Drm    'docker-compose rm -sf'
   conditional_abbr -g Dd     'docker-compose down'
   conditional_abbr -g DD     'docker-compose down'
   conditional_abbr -g Dl     'docker-compose logs -f'
@@ -981,6 +984,12 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g pg 'pass generate --clip'
   conditional_abbr -g pe 'pass edit'
   conditional_abbr -g pc 'pass show --clip'
+#+end_src
+**** Watch
+#+begin_src fish
+  conditional_abbr -g w0 'watch -n0.1'
+  conditional_abbr -g w1 'watch -n1'
+  conditional_abbr -g w2 'watch -n2'
 #+end_src
 **** Miscellaneous
 #+begin_src fish
@@ -998,7 +1007,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g u     'fusermount -u'
   conditional_abbr -g um    'sudo umount'
   conditional_abbr -g cmd   'command'
-  conditional_abbr -g w     'watch -n0.1'
+  conditional_abbr -g w     'which'
   conditional_abbr -g P     "pgrep -af"
   conditional_abbr -g Pu     "pgrep -afu "(whoami)
   conditional_abbr -g yt    'ytfzf -t -s'
