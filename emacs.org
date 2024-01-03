@@ -978,15 +978,24 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 #+end_src
 * Minibuffer
 #+begin_src elisp
-  (add-hook 'minibuffer-setup-hook #'haris/yas-minor-mode-on 90)
+  (define-minor-mode haris/eval-expression-mode
+    "Custom mode that allows me to define minibuffer behavior specific to eval-expression")
+
   (add-hook 'minibuffer-setup-hook
-            (defun haris//company-setup-in-minibuffer ()
+            (defun haris//minibuffer-detect-eval-expression-and-enable-mode ()
               (when (member this-command '(eval-expression))
-                (yas-activate-extra-mode 'emacs-lisp-mode)
-                ; (ref:company-backends-emacs-lisp-mode/usage)
-                (setq-local company-backends company-backends-emacs-lisp-mode)
-                (company-mode)))
-            90)
+                (haris/eval-expression-mode 1))))
+#+end_src
+** eval-expression
+#+begin_src elisp
+  (add-hook 'haris/eval-expression-mode-hook
+            (defun haris//eval-expression-completion-enable ()
+              "Enable auto-completion in eval-expression (custom) mode"
+              (haris/yas-minor-mode-on)
+              (yas-activate-extra-mode 'emacs-lisp-mode)
+                                          ; (ref:company-backends-emacs-lisp-mode/usage)
+              (setq-local company-backends company-backends-emacs-lisp-mode)
+              (company-mode)))
 
   (advice-add
    #'eval-expression
@@ -1016,6 +1025,9 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 
      (apply func args)))
 #+end_src
+*** Bindings
+Note: I override the =<escape>= binding for =company-active-map= for this mode
+specifically. I did that [[(company-active-map-escape-override)][here]], because I don't know a better way to do it.
 ** Ivy
 #+NAME: ivy
 #+begin_src elisp
@@ -1546,8 +1558,23 @@ identify where exactly it is initialized by spacemacs, so I set it explicitly he
               #'company-posframe-quickhelp-toggle)
   ;; Additional trigger for company
   (define-key evil-insert-state-map (kbd "C-SPC") #'haris/company-toggle-tooltip)
-
-  (define-key company-active-map (kbd "<escape>") #'haris/company-toggle-tooltip)
+#+end_src
+The following overrides the escape key for =company-active-map= in eval-expression
+buffers. I know of no other way to make this binding take precedence over the
+other maps, so I define it here.
+#+begin_src elisp
+                                          ; (ref:company-active-map-escape-override)
+  (define-key
+   company-active-map
+   (kbd "<escape>")
+   (defun haris/company-active-mode-escape-override ()
+     "Override the <escape> key to close the company menu instead of
+  exiting to normal mode in eval-expression minibuffers. This prevents
+  accidental closing of the minibuffer."
+     (interactive)
+     (if haris/eval-expression-mode
+         (haris/company-toggle-tooltip)
+       (evil-force-normal-state))))
 #+end_src
 ** Yasnippet
 #+begin_src elisp
