@@ -721,12 +721,6 @@ Completions for the functions defined in [[Functions]].
           -a '(command ls -1 $PATH 2>/dev/null | grep -v "/")'
   end
 #+end_src
-** Private config
-Private fish config is optional and must be provided separately as
-[[~/.config/fish/private.fish]].
-#+begin_src fish
-  [ -f ~/.config/fish/private.fish ] && source ~/.config/fish/private.fish
-#+end_src
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (haris/tangle-home ".bashrc")
@@ -1077,10 +1071,19 @@ abbreviations for equivalent apt operations.
   [ -f ~/.alias-gui-tmp ]   && . ~/.alias-gui-tmp   || true
   [ -f ~/.profile-private ] && . ~/.profile-private || true
 #+end_src
-* Temporary configs
+* Temporary and private configs
+These are optional and must be provided separately.
+[[~/.config/fish/private.fish][Click to edit]].
+#+begin_src fish
+  if [ -f ~/.config/fish/private.fish ]
+      source ~/.config/fish/private.fish
+  end
+#+end_src
 [[~/.config/fish/tmp.fish][Click to edit]]
 #+begin_src fish
-  [ -f ~/.config/fish/tmp.fish ] && source ~/.config/fish/tmp.fish
+  if [ -f ~/.config/fish/tmp.fish ]
+      source ~/.config/fish/tmp.fish
+  end
 #+end_src
 * Dependencies
 #+begin_src text :tangle (haris/tangle-deps "shells.pacman")
