@@ -1070,7 +1070,7 @@ abbreviations for equivalent apt operations.
   [ "$(get-os-type)" = "arch" ] && export QT_QPA_PLATFORMTHEME=gtk2
 
   # Better pager for psql command
-  if which pspg >/dev/null; then
+  if which pspg &>/dev/null; then
       # '-s 5' chooses the mutt theme
       export PSQL_PAGER='pspg -s 5'
   fi
