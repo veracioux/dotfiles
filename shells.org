@@ -635,7 +635,7 @@ Note: This code block must not contain any apostrophes!
 #+end_src
 **** Completions
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/forever.fish")
-  complete -c forever -a '(complete -C "")'
+  complete -c forever --wraps command --wraps builtin
 #+end_src
 *** Miscellaneous others
 #+begin_src fish
@@ -815,7 +815,7 @@ a terminal and runs the aliased command.
   # An abbreviation of a command name only, with no CLI arguments
   function conditional_abbr
       set -l command (echo $argv[-1] | cut -f1 -d' ')
-      if command --quiet "$command"
+      if type --quiet "$command"
           abbr -g $argv
       end
   end
@@ -845,7 +845,7 @@ abbreviations for equivalent apt operations.
   end
 #+end_src
 #+begin_src fish
-  if command --quiet pacman || which --quiet apt
+  if command --quiet pacman || command --quiet apt
 #+end_src
 ***** Abbreviations
 #+begin_src fish
