@@ -78,6 +78,12 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
                   (set_color brmagenta)       "$vcs_prompt"                \
                   (set_color brmagenta)       $prompt_status               \
                   (set_color yellow)          " $suffix "
+
+      # These are needed because some apps (docker-compose) don't clean up properly
+      # Exit AppMode
+      echo -ne "\e[?1l"
+      # Show the cursor again
+      echo -e "\e[?25h"
   end
 #+end_src
 **** =fish_mode_prompt=
