@@ -1504,6 +1504,13 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
           (company-files :with company-yasnippet)
           (company-dabbrev :with company-yasnippet)))
   (haris/init-company-for-mode 'org-mode)
+
+  (setq haris/company-backends-nginx-mode
+        '((company-emoji :with company-yasnippet)
+          (company-nginx company-semantic company-dabbrev-code company-gtags company-etags company-keywords :with company-yasnippet)
+          (company-files :with company-yasnippet)
+          (company-dabbrev :with company-yasnippet)))
+  (haris/init-company-for-mode 'nginx-mode)
 #+end_src
 This variable is initialized too late, and we require it [[(company-backends-emacs-lisp-mode/usage)][here]]. I wasn't able to
 identify where exactly it is initialized by spacemacs, so I set it explicitly here.
@@ -1700,6 +1707,10 @@ Remove Info mode annoying keybindings.
   (evil-collection-init 'daemons)
 
   (evil-define-key 'normal daemons-mode-map (kbd "u") #'daemons-systemd-toggle-user)
+#+end_src
+** Nginx
+#+begin_src elisp
+  (straight-use-package '(company-nginx :source melpa))
 #+end_src
 * Spacemacs
 #+begin_src elisp
