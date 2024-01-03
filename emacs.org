@@ -212,6 +212,74 @@ the type of the purpose of the current emacs daemon (by reading the
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<global-settings>>
 #+end_src
+*** Custom miscellaneous backup file patterns
+:PROPERTIES:
+:header-args:elisp+: :tangle no
+:END:
+I change the following in order to prevent Emacs from complaining about
+filenames being too long. The main culprit is Java, with its horrendously deep
+directory structures.
+#+begin_src elisp
+  (make-directory "~/.emacs.d/.cache/auto-save/dist" t)
+  (make-directory "~/.emacs.d/.cache/auto-save/site" t)
+
+  (dolist (item auto-save-file-name-transforms)
+    (let ((uniquify (nthcdr 2 item)))
+      (if uniquify (setcar uniquify 'md5))))
+
+  (defalias 'haris//undo-tree-make-history-save-file-name/default
+    (symbol-function
+     (if (fboundp 'haris//undo-tree-make-history-save-file-name/default)
+         'haris//undo-tree-make-history-save-file-name/default
+       'undo-tree-make-history-save-file-name))
+    "The original implementation of the undo-tree-make-history-save-file-name
+  function, so I can call it in my custom override.")
+
+  (defun undo-tree-make-history-save-file-name (file)
+    "Create the undo history file name for FILE. This overrides the default
+  implementation, by making the basename of the file a hashed version of the
+  original path. The benefit of this is that it prevents a 'filename too long
+  error'."
+    (let ((original (haris//undo-tree-make-history-save-file-name/default file)))
+      (concat (file-name-directory original)
+              (md5 (file-name-nondirectory file))
+              ".~undo-history~")))
+#+end_src
+Call these to test the patterns:
+#+begin_src elisp
+  (make-auto-save-file-name)
+#+end_src
+#+begin_src elisp
+  (undo-tree-make-history-save-file-name (buffer-file-name))
+#+end_src
+
+I change this in order to prevent non-emacs tools from picking up the files, and
+misbehaving due to their existence.
+#+begin_src elisp
+  (make-directory "~/.emacs.d/.cache/lock-file/dist" t)
+  (make-directory "~/.emacs.d/.cache/lock-file/site" t)
+
+  ;; Set lock-file-name-transforms to auto-save-file-name-transforms,
+  ;; but replace "auto-save" with "lock-file" in each replacement pattern.
+  (setq lock-file-name-transforms
+        (remove nil
+         (mapcar
+         (lambda (item)
+           (let ((item-copy (copy-tree item)))
+             (if (string-match "auto-save" "lock-file")
+              (setcar (cdr item-copy)
+                     (string-replace "auto-save" "lock-file" (cadr item-copy))))
+             item-copy))
+         auto-save-file-name-transforms)))
+
+  (dolist (item lock-file-name-transforms)
+    (let ((uniquify (nth 2 item)))
+      (if uniquify (setcar uniquify 'sha512))))
+#+end_src
+You can test the transforms by calling this:
+#+begin_src elisp
+  (make-lock-file-name (buffer-file-name))
+#+end_src
 *** Buffer cleanup
 #+begin_src elisp
   (setq clean-buffer-list-delay-general 1
