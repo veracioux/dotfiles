@@ -201,7 +201,7 @@ the type of the purpose of the current emacs daemon (by reading the
   (define-key evil-normal-state-map (kbd "M-w") 'avy-goto-word-0)
   (define-key evil-normal-state-map (kbd "M-f") 'avy-goto-char)
 #+end_src
-** Interactive commands                                               :blah:
+** Interactive commands
 These are commands that I primarily intend to use interactively and directly,
 without binding them to any keys.
 *** Commands from local shell scripts
@@ -535,14 +535,19 @@ Takes too long to load.
   (setq org-structure-template-alist
         (cl-remove-duplicates
          (append (default-value 'org-structure-template-alist)
-                 '(("el"   . "src elisp")
-                   ("sh"   . "src shell")
-                   ("py"   . "src python")
-                   ("dep"  . "src shell :tangle (haris/tangle-deps \"TODO\")")
-                   ("sht"  . "src shell :tangle (haris/tangle-home \"TODO\")")
-                   ("elt"  . "src elisp :tangle (haris/tangle-home \"TODO\")")
-                   ("st"   . "src :tangle (haris/tangle-home \"TODO\")")
-                   ("rest" . "src restclient")))
+                 '(("el"        . "src elisp")
+                   ("sh"        . "src shell")
+                   ("py"        . "src python")
+                   ("bash"      . "src bash")
+                   ("fish"      . "src fish")
+                   ("fishfun"   . "src fish :tangle (haris/tangle-deps \".config/fish/functions/TODO\")")
+                   ("fishcomp"  . "src fish :tangle (haris/tangle-deps \".config/fish/completions/TODO\")")
+                   ("dep"       . "src shell :tangle (haris/tangle-deps \"TODO\")")
+                   ("sht"       . "src shell :tangle (haris/tangle-home \"TODO\")")
+                   ("elt"       . "src elisp :tangle (haris/tangle-home \"TODO\")")
+                   ("sh"        . "src elisp :tangle (haris/tangle-home \"TODO\")")
+                   ("st"        . "src :tangle (haris/tangle-home \"TODO\")")
+                   ("rest"      . "src restclient")))
          :test (lambda (a b) (string= (car a) (car b)))))
 #+end_src
 ** Babel
