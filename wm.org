@@ -353,25 +353,25 @@ External bindings are served by sxhkd.
 #+begin_src sxhkdrc :tangle (haris/tangle-home ".config/sxhkd/sxhkdrc")
   # Lock screen
   mod4 + ctrl + l
-      o --silent xlock
+      xlock
 
   # Dmenu stuff
   mod4 + ISO_Level3_Shift
-      o --silent dmenu_run
+      dmenu_run
   mod4 + c
-      o --silent dmenu_run config
+      dmenu_run config
   mod4 + o
-      o --silent dmenu_run open
+      dmenu_run open
   mod4 + shift + p
-      o --silent dmenu_run passmenu -l 10
+      passmenu -l 10
   mod4 + ctrl + p
-      o --silent dmenu_run otp
+      dmenu_run otp
   mod4 + q
-      o --silent dmenu_run system
+      dmenu_run system
   mod4 + ctrl + b
-      o --silent dmenu_run books
+      dmenu_run books
   mod4 + ctrl + q
-      o --silent dmenu_run quickmenu
+      dmenu_run quickmenu
 
   # Applications
   mod4 + Return
