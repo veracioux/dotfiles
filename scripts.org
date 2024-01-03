@@ -126,8 +126,6 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   export TERM='xterm-256color'
   create_frame=""
   socket_name=""
-  option_no_wait=""
-  option_wait=""
   modified_options=()
 
   print_help() {
@@ -135,7 +133,20 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       echo
       echo "CUSTOM OPTIONS:"
       echo -e "--wait \t\t\tOverride --no-wait if it would otherwise be in effect"
-      echo -e "--no-tty \t\t\tUndoes the effects of --tty"
+      echo -e "--no-tty \t\tUndoes the effects of --tty"
+  }
+
+  declare -A custom_options_map
+
+  # Get custom option named $1 (success code = on, error code = off)
+  # If $2 is given, then the option named $1 is set to the truth
+  # value of $2 (empty is false, non-empty is true)
+  custom_option() {
+      if [ "$#" = 2 ]; then
+          custom_options_map["$1"]="$2"
+      else
+          [ -n "${custom_options_map["$1"]}" ]
+      fi
   }
 
   # Since this is a wrapper around emacsclient, we need to parse and pass through
@@ -163,19 +174,16 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
               socket_name="$2"
               shift 2 ;;
           --no-wait)
-              option_no_wait="--no-wait"
+              custom_option wait ""
               shift 1 ;;
           --wait)
-              option_no_wait=""
-              option_wait="--wait"
+              custom_option wait "true"
               shift 1 ;;
           -t | --tty)
-              option_tty="--tty"
-              option_no_tty=""
+              custom_option tty "true"
               shift 1 ;;
           --no-tty)
-              option_tty=""
-              option_no_tty="--no-tty"
+              custom_option tty ""
               shift 1 ;;
           --)
               shift 1
@@ -186,17 +194,24 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       esac
   done
 
-  if [ -z "$create_frame" ] && [ -z "$option_no_tty" ]; then
-      modified_options+=(--tty)
-  elif [ -n "$create_frame" ] && [ -z "$option_wait" ]; then
-      modified_options+=(--no-wait)
+  if [ ! -t 0 ]; then
+      custom_option wait ""
   fi
 
-  if [ -n "$option_tty" ]; then
+  # Set reasonable default values for --tty option and --no-wait option
+  # based on --create-frame.
+  if [ ! -v custom_options_map["tty"] ]; then
+      custom_option tty "$([ -z "$create_frame" ] && echo true)"
+  fi
+  if [ ! -v custom_options_map["wait"] ]; then
+      custom_option wait "$([ -z "$create_frame" ] && echo true)"
+  fi
+
+  if custom_option tty; then
       modified_options+=(--tty)
   fi
 
-  if [ -n "$option_no_wait" ]; then
+  if ! custom_option wait; then
       modified_options+=(--no-wait)
   fi
 
@@ -204,11 +219,27 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       modified_options+=(--socket-name emacs)
   fi
 
+  emacsclient() {
+      exec -a "$BASH_SOURCE" command emacsclient "$@"
+  }
+
   set -- "${modified_options[@]}" -- "$@"
+
+  if [ ! -t 0 ]; then
+      file="$(mktemp /tmp/haris-pipe-XXXXXXXX)"
+      tee "$file" <&0 >/dev/null &
+      bg_pid="$!"
+      set -- "$@" "$file"
+      trap "kill $bg_pid &>/dev/null" EXIT INT ERR
+  fi
 
   exec -a "$BASH_SOURCE" emacsclient \
        --alternate-editor ~/.local/lib/haris/emacs-alternate-editor \
        "$@"
+
+  if [ -n "$bg_pid" ]; then
+      wait "$bg_pid"
+  fi
 #+end_src
 *** Helper program
 #+begin_src bash :tangle (haris/tangle-home ".local/lib/haris/emacs-alternate-editor")
