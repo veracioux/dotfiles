@@ -319,6 +319,7 @@ System packages:
 #+end_src
 Fish plugins:
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/fish_plugins")
+  jorgebucaran/fisher
   edc/bass
   oh-my-fish/plugin-pj
   PatrickF1/fzf.fish
@@ -326,6 +327,7 @@ Fish plugins:
   evanlucas/fish-kubectl-completions
   # Fixes some vterm issues
   pymander/vfish
+  brgmnn/fish-docker-compose
 #+end_src
 This code block installs all system dependencies and all plugins in fish based
 on the plugin list above.
@@ -764,8 +766,9 @@ a terminal and runs the aliased command.
 ** CLI
 #+begin_src shell :tangle (haris/tangle-home ".alias")
   alias x='startx'
-  alias vim='nvim'
-  alias vi='command vim'
+  if which nvim >/dev/null; then
+      alias vim='nvim'
+  fi
   alias snips='cd ~/.vim/snips'
   alias vidir='VISUAL=nvim command vidir'
   alias cppman='PAGER=viman command cppman'
