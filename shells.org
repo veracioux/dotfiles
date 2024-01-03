@@ -904,27 +904,69 @@ abbreviations for equivalent apt operations.
 #+end_src
 **** Docker
 #+begin_src fish
-  conditional_abbr -g d    'docker'
-  conditional_abbr -g db   'docker build'
-  conditional_abbr -g dr   'docker run'
-  conditional_abbr -g drit 'docker run -it'
-  conditional_abbr -g deit 'docker exec -it'
-  conditional_abbr -g drm  'docker rm -f'
-  conditional_abbr -g dcl  'docker container list'
+  conditional_abbr -g d      'docker'
+  conditional_abbr -g db     'docker build'
+  conditional_abbr -g dbn    'docker build --no-cache'
+
+  conditional_abbr -g dr     'docker run'
+  conditional_abbr -g drit   'docker run -it'
+  conditional_abbr -g drite  'docker run -it --entrypoint'
+
+  conditional_abbr -g deit   'docker exec -it'
+
+  conditional_abbr -g drm    'docker rm -f'
+
+  conditional_abbr -g di     'docker image'
+  conditional_abbr -g dip    'docker image prune'
+  conditional_abbr -g dii    'docker image inspect'
+
+  conditional_abbr -g dc     'docker container'
+  conditional_abbr -g dcl    'docker container ls'
+  conditional_abbr -g dcp    'docker container prune'
+  conditional_abbr -g dci    'docker container inspect'
+
+  conditional_abbr -g dv     'docker volume'
+  conditional_abbr -g dvl    'docker volume ls'
+  conditional_abbr -g dvi    'docker volume inspect'
+  conditional_abbr -g dvp    'docker volume prune'
+
+  conditional_abbr -g ds     'docker system'
+  conditional_abbr -g dsp    'docker system prune'
+  conditional_abbr -g dsd    'docker system df -v'
+
+  conditional_abbr -g dm     'docker manifest'
+  conditional_abbr -g dmi    'docker manifest inspect'
+
+  conditional_abbr -g dhh    'docker history'
 #+end_src
 ***** Compose
 #+begin_src fish
-  conditional_abbr -g D    'docker-compose'
-  conditional_abbr -g Du   'docker-compose up'
-  conditional_abbr -g Dub  'docker-compose up --build'
-  conditional_abbr -g Dr   'docker-compose run'
-  conditional_abbr -g Drit 'docker-compose run -it'
-  conditional_abbr -g Deit 'docker-compose exec -it'
-  conditional_abbr -g Drm  'docker-compose rm -f'
-  conditional_abbr -g Dd   'docker-compose down'
-  conditional_abbr -g DD   'docker-compose down'
-  conditional_abbr -g Dl   'docker-compose logs -f'
-  conditional_abbr -g Dl   'docker-compose logs -f'
+  conditional_abbr -g D      'docker-compose'
+
+  conditional_abbr -g Db     'docker-compose build'
+
+  conditional_abbr -g Du     'docker-compose up'
+  conditional_abbr -g Dud    'docker-compose up -d'
+  conditional_abbr -g Dub    'docker-compose up --build'
+
+  conditional_abbr -g Dr     'docker-compose run'
+  conditional_abbr -g Drit   'docker-compose run -it'
+  conditional_abbr -g Dritd  'docker-compose run -it -d'
+  conditional_abbr -g Dritb  'docker-compose run -it --build'
+  conditional_abbr -g Dritn  'docker-compose run -it --no-deps'
+  conditional_abbr -g Dritbn 'docker-compose run -it --build --no-deps'
+  conditional_abbr -g Drite  'docker-compose run -it --entrypoint'
+
+  conditional_abbr -g Ds     'docker-compose start'
+  conditional_abbr -g DS     'docker-compose stop'
+  conditional_abbr -g DR     'docker-compose restart'
+
+  conditional_abbr -g Deit   'docker-compose exec -it'
+  conditional_abbr -g Drm    'docker-compose rm -f'
+  conditional_abbr -g Dd     'docker-compose down'
+  conditional_abbr -g DD     'docker-compose down'
+  conditional_abbr -g Dl     'docker-compose logs -f'
+  conditional_abbr -g Dc     'docker-compose config'
 #+end_src
 **** Pass
 #+begin_src fish
@@ -951,7 +993,8 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g um    'sudo umount'
   conditional_abbr -g cmd   'command'
   conditional_abbr -g w     'watch -n0.1'
-  conditional_abbr -g P     "pgrep -afu "(whoami)
+  conditional_abbr -g P     "pgrep -af"
+  conditional_abbr -g Pu     "pgrep -afu "(whoami)
   conditional_abbr -g yt    'ytfzf -t -s'
   conditional_abbr -g t     'tem'
   conditional_abbr -g v     'vim'
@@ -968,6 +1011,9 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g ii    'curl ipinfo.io'
   conditional_abbr -g bt    'bluetoothctl'
   conditional_abbr -g man   'eman'
+  conditional_abbr -g R     'reset'
+  conditional_abbr -g pa    'printarg'
+  conditional_abbr -g hosts 'sudo vim /etc/hosts'
 #+end_src
 **** Google cloud
 #+begin_src fish
