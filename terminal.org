@@ -121,6 +121,10 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
         program: "sh"
         args: [ "-c", "passmenu -l 10 && xdotool key Ctrl+Shift+V Return"]
       mode: ~AppCursor
+    # Since I use F9 for WM bindings, I need a way to pass F9 to terminal apps
+    - key: F9
+      mods: Alt
+      chars: "\e[20~"
 
     # These allow me to use Ctrl + N/P to navigate the command history in shells
     # where I can't make custom bindings (e.g. in docker containers)

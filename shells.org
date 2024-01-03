@@ -1056,6 +1056,12 @@ abbreviations for equivalent apt operations.
   export MOZ_USE_XINPUT2=1
   [ "$(get-os-type)" = "arch" ] && export QT_QPA_PLATFORMTHEME=gtk2
 
+  # Better pager for psql command
+  if which pspg >/dev/null; then
+      # '-s 5' chooses the mutt theme
+      export PSQL_PAGER='pspg -s 5'
+  fi
+
   mkdir -p /tmp/stage-"$USER"
 
   [ -f ~/.alias ]           && . ~/.alias
