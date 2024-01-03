@@ -22,7 +22,6 @@ start up. That's why I have set up a systemd service that runs an emacs daemon
 on system startup. When I want to launch emacs to perform a task, I run [[file:~/.haris/scripts.org::*=myemacs=][myemacs]]
 (a custom command that wraps [[man:emacsclient][emacsclient]]), which attaches to the daemon, without
 the need to load the cruft each time.
-
 ** Daemons
 For some of those use cases I mentioned above, I want to run a standalone emacs
 daemon, specialized for that use case. One reason is that emacs is
@@ -83,13 +82,65 @@ the type of the purpose of the current emacs daemon (by reading the
                     "~/.emacs.d/haris/irc.el")
                    ("~/.emacs.d/haris/default.el")))
 #+end_src
-* General settings
-#+NAME: basic-settings
+* General
+** Package bootstrapping
+#+NAME: package-init
 #+begin_src emacs-lisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name
+          "straight/repos/straight.el/bootstrap.el"
+          (or (bound-and-true-p straight-base-dir)
+              user-emacs-directory)))
+        (bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+
+  (setq straight-vc-git-default-clone-depth 1)
+
+  (straight-use-package '(use-package :source melpa))
+  (setq use-package-always-ensure t)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+#+end_src
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<package-init>>
+#+end_src
+** Global packages
+#+begin_src emacs-lisp
+  (use-package focus-autosave-mode :defer t)
+  (use-package multi-vterm :defer t)
+  (use-package command-log-mode)
+  (straight-use-package
+   '(explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode"))
+#+end_src
+*** Language modes
+#+begin_src emacs-lisp
+  (use-package json-mode :defer t)
+  (use-package fish-mode :defer t)
+  (use-package vimrc-mode :defer t)
+  (use-package sxhkdrc-mode :defer t)
+  (use-package i3wm-config-mode :defer t)
+  (use-package git-modes :defer t)
+  (use-package systemd :defer t)
+#+end_src
+** Global settings
+#+NAME: global-settings
+#+begin_src emacs-lisp
+  ;; Performance improvements
+  (setq native-comp-async-report-warnings-errors nil)
+  (setq gc-cons-threshold (* 50 1024 1024))
+
   (setq fill-column 80)
   (spacemacs/toggle-visual-line-navigation-globally-on)
   (global-auto-revert-mode t)
-  (setq default-tab-width 4)
+  (set-language-environment "UTF-8")
+  (setq-default tab-width 4)
   (setq browse-url-generic-program (executable-find "firefox"))
   (setq image-auto-resize 'fit-width)
   (setq image-auto-resize-on-window-resize t)
@@ -100,7 +151,6 @@ the type of the purpose of the current emacs daemon (by reading the
   (setq frame-title-format "%b"
         dotspacemacs-frame-title-format nil)
   (add-to-list 'image-types 'svg)
-
   ;; Enable clipboard in the terminal
   (use-package xclip)
   (xclip-mode)
@@ -154,34 +204,7 @@ the type of the purpose of the current emacs daemon (by reading the
         terminal-here-mac-terminal-command   '("alacritty"))
 #+end_src
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
-  <<basic-settings>>
-#+end_src
-** Package bootstrapping
-#+NAME: package-init
-#+begin_src emacs-lisp
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-  (setq use-package-always-ensure t)
-
-  (require 'use-package)
-#+end_src
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
-  <<package-init>>
-#+end_src
-** Global packages
-#+begin_src emacs-lisp
-  (use-package focus-autosave-mode :defer t)
-  (use-package multi-vterm :defer t)
-  (use-package command-log-mode)
-#+end_src
-*** Language modes
-#+begin_src emacs-lisp
-  (use-package json-mode :defer t)
-  (use-package fish-mode :defer t)
-  (use-package vimrc-mode :defer t)
-  (use-package sxhkdrc-mode :defer t)
-  (use-package i3wm-config-mode :defer t)
-  (use-package git-modes :defer t)
-  (use-package systemd :defer t)
+  <<global-settings>>
 #+end_src
 ** Functions
 #+begin_src emacs-lisp
