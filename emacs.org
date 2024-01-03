@@ -1717,6 +1717,9 @@ precedence of TAB-bound commands for all modes.
                :title "Command bound to pressed key:"))))
 
   (define-key evil-insert-state-map (kbd "TAB") #'haris/handle-TAB-in-insert-mode)
+  ;; Add ivy-partial-or-done to ivy-minibuffer-map in insert mode so as to not be
+  ;; overridden by the above.
+  (evil-define-key 'insert ivy-minibuffer-map (kbd "TAB") #'ivy-partial-or-done)
 #+end_src
 * Info mode
 Remove Info mode annoying keybindings.
