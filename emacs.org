@@ -1324,37 +1324,36 @@ precedence of TAB-bound commands for all modes.
     (let ((last-fun nil))
       (defun _ (fun &rest rest)
         "Call the function normally, and record it to the last-fun variable."
-        (setq last-fun fun)
+        (setq last-fun (append (list fun) rest))
         (apply fun rest))
 
-      (ignore-errors
-        (cond
-         ;; If in an org table, try org-cycle
-         ((when (and (fboundp 'org-at-table-p) (org-at-table-p)) (or (_ 'org-cycle) t)))
-         ;; Try to complete using org-tempo before yasnippet
-         ((org-tempo-complete-tag))
-         ;; If yas-minor-mode is on, try yas-next-field, otherwise yas-expand
-         ((when yas-minor-mode
-            (condition-case err
-                (or (_ 'yas-next-field) t)
-              (error
-               (_ 'yas-expand)))))
-         ;; If company-mode is on, try completing/showing tooltip
-         ((when company-mode (_ 'company-complete-selection)))
-         ;; If org-mode is on, try org-cycle
-         ((when (eq major-mode 'org-mode)
-            (cond ((_ 'org-cycle))
-                  ;; If there's nothing to cycle, go to next link
-                  ((_ 'org-next-link)))))
-         ;; Try completion-at-point using company-capf. This is necessary because
-         ;; company-complete-selection above doesn't always work.
-         ((_ (lambda () (call-interactively #'company-capf))))
-         ;; Fallback
-         ((_ 'indent-for-tab-command))))
+      (cond
+       ;; If in an org table, try org-cycle
+       ((when (and (fboundp 'org-at-table-p) (org-at-table-p)) (or (_ 'org-cycle) t)))
+       ;; Try to complete using org-tempo before yasnippet
+       ((org-tempo-complete-tag))
+       ((when yas-minor-mode (ignore-errors (or (_ 'yas-next-field) t))))
+       ;; Company/yasnippet completion
+       ((when (> (length (company-grab-symbol)) 0)
+          (cond
+           ;; If yas-minor-mode is on, try yas-next-field, otherwise yas-expand
+           ((when yas-minor-mode (_ 'yas-expand)))
+           ;; If company-mode is on, try completing/showing tooltip
+           ((when company-mode (_ 'company-complete-selection))))))
+       ;; If org-mode is on, try org-cycle
+       ((when (eq major-mode 'org-mode)
+          (cond ((_ 'org-cycle))
+                ;; If there's nothing to cycle, go to next link
+                ((_ 'org-next-link)))))
+       ;; Try completion-at-point using company-capf. This is necessary because
+       ;; company-complete-selection above doesn't always work.
+       ((ignore-errors (_ 'call-interactively #'company-capf)))
+       ;; Fallback
+       ((_ 'indent-for-tab-command)))
 
-      (when alert
-        (alert (format "%s" last-fun)
-               :title "Command bound to pressed key:"))))
+    (when alert
+      (alert (format "%s" last-fun)
+             :title "Command bound to pressed key:"))))
 
   (define-key evil-insert-state-map (kbd "TAB") #'haris/handle-TAB-in-insert-mode)
 
