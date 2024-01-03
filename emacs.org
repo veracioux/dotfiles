@@ -976,7 +976,44 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
   (setq imaxima-use-maxima-mode-flag t)
   (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 #+end_src
-* Ivy
+* Minibuffer
+#+begin_src elisp
+  (add-hook 'minibuffer-mode-hook #'yas-minor-mode-on)
+  (add-hook 'minibuffer-mode-hook
+            (defun haris/company--setup-in-minibuffer ()
+              (when (member this-command '(eval-expression))
+                (company-mode)
+                (setq-local company-backends company-backends-emacs-lisp-mode))))
+
+  (advice-add
+   #'eval-expression
+   :around
+   (defun haris/eval-expression/around (func &rest args)
+     "Overrides eval-expression to use active region is its initial input"
+     (interactive
+      (cons
+       (let ((minibuffer-setup-hook minibuffer-setup-hook))
+         ;; If a region was selected, open the read--expression minibuffer in normal mode
+         (if (use-region-p)
+             (add-hook
+              'minibuffer-setup-hook
+              (defun haris//eval-expression-normal-state ()
+                ;; Only do it for the eval-expression minibuffer, otherwise
+                ;; stacked minibuffers will misbehave
+                (if (eq this-command 'eval-expression)
+                    (evil-force-normal-state)))
+              99))
+
+         (read--expression
+          "Eval: "
+          (when (use-region-p)
+            (buffer-substring (region-beginning) (region-end)))))
+
+       (eval-expression-get-print-arguments current-prefix-arg)))
+
+     (apply func args)))
+#+end_src
+** Ivy
 #+NAME: ivy
 #+begin_src emacs-lisp
   (evil-collection-init 'ivy)
