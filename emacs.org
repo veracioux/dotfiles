@@ -884,6 +884,7 @@ slack-mode-hook hook, it never connects. Investigate
   (setq vterm-exit-functions 'delete-frame)
   ;; If I set vterm-shell directly, it is overriden by shell layer
   (setq shell-default-term-shell "fish")
+  (setq vterm-min-window-width 99999)
 
   (defun haris/vterm-set-environment-windowid (&rest _)
     (setq
@@ -904,6 +905,7 @@ slack-mode-hook hook, it never connects. Investigate
   (defalias 'haris/vterm-toggle-freeze 'vterm-copy-mode
     "Freeze/unfreeze the output of the current vterm buffer")
 
+  (evil-define-key 'normal vterm-mode-map      (kbd "0")     'evil-collection-vterm-first-non-blank)
   (evil-define-key 'normal vterm-mode-map      (kbd "A")     'evil-append-line)
   (evil-define-key 'normal vterm-mode-map      (kbd "M-TAB") 'other-window)
   (evil-define-key 'normal vterm-mode-map      (kbd ",f")    'haris/vterm-toggle-freeze)
