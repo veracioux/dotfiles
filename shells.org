@@ -301,8 +301,10 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   end
 
   # fzf bindings
-  if type --quiet fzf_configure_bindings
+  if functions | grep --quiet fzf_configure_bindings
       fzf_configure_bindings
+  else if [ -e ~/.config/fish/conf.d/fzf.fish ]
+      source ~/.config/fish/conf.d/fzf.fish
   end
 #+end_src
 *** Dependencies
