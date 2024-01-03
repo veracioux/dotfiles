@@ -1457,6 +1457,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      ;; mu4e
      pass
      sql
+     nginx
      ;; eaf
      ;; emms
      debug
