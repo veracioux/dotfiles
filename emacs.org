@@ -446,7 +446,7 @@ Some custom keybindings are defined here as well.
 ** Vim-like configuration
 #+begin_src emacs-lisp
   (use-package evil-quickscope)
-  (global-evil-quickscope-always-mode)
+  (global-evil-quickscope-mode)
 
   (setq evil-lookup-func (lambda () (call-interactively #'man)))
 #+end_src
