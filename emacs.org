@@ -1693,6 +1693,14 @@ Remove Info mode annoying keybindings.
 #+begin_src emacs-lisp
   (setq alert-default-style 'libnotify)
 #+end_src
+** Daemons
+#+begin_src elisp
+  (straight-use-package '(daemons :source melpa))
+
+  (evil-collection-init 'daemons)
+
+  (evil-define-key 'normal daemons-mode-map (kbd "u") #'daemons-systemd-toggle-user)
+#+end_src
 * Spacemacs
 #+begin_src elisp
   (setq dotspacemacs-ask-for-lazy-installation nil)
