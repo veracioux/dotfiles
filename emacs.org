@@ -473,6 +473,452 @@ Some custom keybindings are defined here as well.
 
   (setq evil-lookup-func (lambda () (call-interactively #'man)))
 #+end_src
+* Programming languages
+** YAML
+YAML indentation is just broken. This disables it completely.
+#+begin_src emacs-lisp
+  (defun yaml-indent-line ())
+  (setq yaml-indent-offset 2)
+#+end_src
+*** YAML Pro Mode
+#+begin_src elisp
+  (eval-after-load "yaml"
+    (lambda ()
+      (use-package yaml-pro)
+      (use-package counsel-jq)))
+
+  (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook))
+        (hook))
+    (dolist (hook hooks)
+      (add-hook hook 'eldoc-mode)
+      (add-hook hook 'yaml-pro-ts-mode)
+      (add-hook hook (lambda ()
+                       (setq-local counsel-jq-command "yq")))))
+#+end_src
+*** Keybindings
+#+begin_src elisp
+  (eval-after-load "yaml"
+    (lambda ()
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-n") 'yaml-pro-ts-next-subtree)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g j") 'yaml-pro-ts-next-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-n") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-p") 'yaml-pro-ts-prev-subtree)
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g k") 'yaml-pro-ts-prev-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-p") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g h") 'yaml-pro-ts-up-level)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-u") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", '") 'yaml-pro-edit-ts-scalar)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c '") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", <") 'yaml-pro-ts-unindent-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c <") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", >") 'yaml-pro-ts-indent-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c >") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", v") 'yaml-pro-ts-mark-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c @") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-j") 'yaml-pro-ts-move-subtree-down)
+      (define-key yaml-pro-ts-mode-map (kbd "s-<down>") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-k") 'yaml-pro-ts-move-subtree-up)
+      (define-key yaml-pro-ts-mode-map (kbd "s-<up>") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", d") 'yaml-pro-kill-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-w") nil)
+
+      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", p") 'yaml-pro-ts-paste-subtree)
+      (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-y") nil)))
+#+end_src
+** JSON
+#+begin_src elisp
+  (defun haris/json/set-indent-level () (setq-local js-indent-level 2))
+
+  (add-hook 'json-mode-hook 'haris/json/set-indent-level)
+#+end_src
+** LSP
+#+begin_src emacs-lisp
+  ;;(add-to-list 'projectile-project-root-files-functions 'custom/lsp-default-dir)(setq lsp-auto-guess-root t)
+  (setq projectile-require-project-root t)
+  ;; (add-hook 'lsp-mode-hook (lambda () (cd (file-name-directory buffer-file-name))))
+
+  ;; Diagnostic mode doesn't work well with flycheck
+  (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
+
+  (setq lsp-enable-on-type-formatting nil)
+#+end_src
+** DAP
+#+begin_src emacs-lisp
+  (setq dap-auto-show-output nil)
+#+end_src
+** TODO C/C++
+#+begin_src emacs-lisp
+  (setq c-default-style "bsd"
+        c-basic-offset 4)
+
+  (add-hook 'c-mode-hook    (lambda () (setq tab-width 4)))
+  (add-hook 'c++-mode-hook  (lambda () (setq tab-width 4)))
+#+end_src
+*** CMake
+#+begin_src emacs-lisp
+  (defun haris/cmake-info () (interactive)
+         (info-display-manual "cmake")
+         (Info-top-node))
+  (defun haris/cmake-help () (interactive)
+         (split-window-right-and-focus)
+         (let ((symbol (cmake-symbol-at-point)))
+           (haris/cmake-info)
+           (Info-menu symbol)))
+
+  (evil-define-key 'normal cmake-mode-map (kbd ",hc") 'haris/cmake-info)
+  (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
+#+end_src
+*** Dependencies
+#+begin_src text :tangle (haris/tangle-deps "emacs/c-c++.pip")
+  cmake-language-server
+#+end_src
+** Python
+Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
+
+  (setq python-shell-interpreter "ipython")
+  ;; python-shell-interpreter-args "-i")
+
+  (setq lsp-pylsp-plugins-pylint-enabled t
+        lsp-pylsp-plugins-flake8-enabled nil
+        lsp-pyls-plugins-flake8-enabled  nil
+        lsp-diagnostics--flycheck-enabled t)
+
+  ;; (add-hook 'python-mode-hook 'lsp)
+  (add-hook 'lsp-mode-hook (lambda ()
+                             (setq default-directory (lsp-workspace-root))))
+
+  ;; elpy
+  (setq elpy-modules nil)
+#+end_src
+*** Bindings
+#+begin_src emacs-lisp
+  (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)
+#+end_src
+*** Dependencies
+#+begin_src shell :tangle (haris/tangle-deps "emacs/python.pacman")
+  python-lsp-server flake8 python-typing_extensions python-lsp-black python-pylint
+#+end_src
+#+begin_src shell :tangle (haris/tangle-deps "emacs/python.pip")
+  pyls-isort pyls-mypy pyls-memestra autoflake importmagic epc ptvsd
+#+end_src
+** JavaScript
+#+begin_src elisp
+  (setq javascript-indent-level 4
+        js-indent-level 4
+        js2-basic-offset 4)
+#+end_src
+** Web
+#+begin_src elisp
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        css-indent-offset 2)
+#+end_src
+** RST
+#+begin_src emacs-lisp
+  (defun haris/rst-heading () (interactive)
+         (evil-execute-macro 1 "\"yyyp^v$"))
+
+  (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
+#+end_src
+* Apps
+** Man
+#+begin_src elisp
+  (setq Man-notify-method 'bully)
+#+end_src
+*** Bindings
+#+begin_src emacs-lisp
+  (evil-collection-init 'man)
+
+  (defun haris/man-search () (interactive)
+         (swiper "^[[:space:]]+"))
+
+  (add-hook 'Man-mode-hook (lambda ()
+                             (define-key Man-mode-map (kbd "SPC s ^") 'haris/man-search)))
+#+end_src
+** Docker
+Fix for empty image list (not sure if the fix works):
+#+begin_src emacs-lisp
+  (use-package transient :defer t)
+  (use-package docker-compose-mode :defer t)
+#+end_src
+** Go Translate
+#+begin_src elisp
+  (use-package go-translate)
+
+  (setq gts-translate-list '(("en" "cs") ("cs" "en") ("en" "bs") ("en" "de")))
+
+  (add-hook 'gts-after-buffer-render-hook
+            (defun haris/disable-evil-in-go-translate (&rest _)
+              (select-window (get-buffer-window nil t) (current-buffer))
+              (define-key gts-buffer-local-map              (kbd "SPC SPC") #'counsel-M-x)
+              (define-key gts-buffer-local-map              (kbd "TAB")     #'turn-on-evil-mode)
+              (evil-define-key 'normal gts-buffer-local-map (kbd "TAB")     #'turn-off-evil-mode)
+              (evil-define-key 'normal gts-buffer-local-map (kbd "q")       #'haris/force-kill-window)
+              (use-local-map gts-buffer-local-map)))
+
+  (defun gts-prompt-picker-prev-path ()
+    (interactive)
+    (gts-prompt-picker-next-path t))
+
+  (evil-define-key 'insert gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
+  (evil-define-key 'normal gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
+  (evil-define-key 'insert gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
+  (evil-define-key 'normal gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
+
+  (eval-after-load "gts"
+    (setq gts-default-translator
+          (gts-translator
+           :picker (gts-prompt-picker)
+           :engines `(,(gts-google-engine))
+           :render (gts-buffer-render))))
+#+end_src
+** Bluetooth
+#+begin_src emacs-lisp
+  (use-package bluetooth :defer t)
+#+end_src
+** TODO Email
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+I use mu4e as my email client.
+#+begin_src emacs-lisp
+  ;; This is set to 't' to avoid mail syncing issues when using mbsync
+  (setq mu4e-change-filenames-when-moving t)
+
+  ;; Refresh mail using isync every M minutes
+  (setq mu4e-update-interval (let ((M 4)) (* M 60)))
+  (setq mu4e-get-mail-command "mbsync -a")
+  (setq mu4e-enable-async-operations t)
+
+  ;; Configure contexts
+  (setq mu4e-contexts
+        `(
+          ,(make-mu4e-context
+            :name "p-hgusic.pub@gmail.com"
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "hgusic.pub@gmail.com")))
+            :enter-func (lambda () (message "Entering context: hgusic.pub@gmail.com"))
+            :vars '((user-mail-address . "hgusic.pub@gmail.com")
+                    (user-full-name . "Haris Gusic")
+                    (mu4e-drafts-folder .     "/gmail/hgusic.pub/[Gmail]/Drafts")
+                    (mu4e-sent-folder   .     "/gmail/hgusic.pub/[Gmail]/Sent Mail")
+                    (mu4e-refile-folder .     "/gmail/hgusic.pub/[Gmail]/All Mail")
+                    (mu4e-trash-folder  .     "/gmail/hgusic.pub/[Gmail]/Trash")
+                    (
+                     mu4e-maildir-shortcuts
+                     . (("/gmail/hgusic.pub/Inbox"             . ?i)
+                        ("/gmail/hgusic.pub/[Gmail]/Sent Mail" . ?s)
+                        ("/gmail/hgusic.pub/[Gmail]/Trash"     . ?t)
+                        ("/gmail/hgusic.pub/[Gmail]/Drafts"    . ?d)
+                        ("/gmail/hgusic.pub/[Gmail]/All Mail" . ?a)))))
+
+          ,(make-mu4e-context
+            :name "d-harisgusic.dev@gmail.com"
+            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "harisgusic.dev@gmail.com")))
+            :enter-func (lambda () (message "Entering context: harisgusic.dev@gmail.com"))
+            :vars '((user-mail-address . "harisgusic.dev@gmail.com")
+                    (user-full-name . "Haris Gusic")
+                    (mu4e-drafts-folder .     "/gmail/harisgusic.dev/[Gmail]/Drafts")
+                    (mu4e-sent-folder   .     "/gmail/harisgusic.dev/[Gmail]/Sent Mail")
+                    (mu4e-refile-folder .     "/gmail/harisgusic.dev/[Gmail]/All Mail")
+                    (mu4e-trash-folder  .     "/gmail/harisgusic.dev/[Gmail]/Trash")
+                    (
+                     mu4e-maildir-shortcuts
+                     . (("/gmail/harisgusic.dev/Inbox"             . ?i)
+                        ("/gmail/harisgusic.dev/[Gmail]/Sent Mail" . ?s)
+                        ("/gmail/harisgusic.dev/[Gmail]/Trash"     . ?t)
+                        ("/gmail/harisgusic.dev/[Gmail]/Drafts"    . ?d)
+                        ("/gmail/harisgusic.dev/[Gmail]/All Mail" . ?a)))))
+          ))
+
+  (setq mu4e-context-policy         'ask
+        mu4e-compose-context-policy 'ask)
+
+  (setq mu4e-org-support t)
+  ;; Enable org mode when composing messages
+  (setq mu4e-org-compose-support t)
+#+end_src
+*** Sending messages
+#+begin_src emacs-lisp
+  ;; Show completion for From and To headers
+  (setq mail-user-agent 'mu4e-user-agent)
+  (setq message-mail-alias-type 'ecomplete)
+
+  (add-hook 'message-setup-hook 'flyspell-mode)
+#+end_src
+*** TODO Notifications
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+#+begin_src emacs-lisp
+  (use-package mu4e-alert :defer t)
+  (setq mu4e-enable-notifications t)
+  (mu4e-alert-set-default-style 'libnotify)
+#+end_src
+** TODO Slack
+slack-register-team automatically connects to slack. If I add it to the
+slack-mode-hook hook, it never connects. Investigate
+#+begin_src emacs-lisp
+  ;; (add-hook
+  ;;  'slack-mode-hook
+  ;;  (lambda ()
+  ;;    ;; Add slack teams here
+  ;;    (slack-register-team
+  ;;     :name "efektivnialtruismus"
+  ;;     :token (auth-source-pick-first-password
+  ;;             :host "efektivnialtruismus.slack.com"
+  ;;             :user "hgusic.pub@gmail.com")
+  ;;     :cookie (auth-source-pick-first-password
+  ;;              :host "efektivnialtruismus.slack.com"
+  ;;              :user "hgusic.pub@gmail.com^cookie")
+  ;;     :subscribed-channels '((main-announcements
+  ;;                             main-community-events
+  ;;                             main-opportunities
+  ;;                             main-random
+  ;;                             project-eahouse)))))
+#+end_src
+** ERC
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+  (use-package erc)
+  (setq erc-server "irc.libera.chat"
+        erc-nick "veracioux"
+        erc-user-full-name "Haris Gušić"
+        erc-track-shorten-start 8
+        erc-autojoin-channels-alist '(("irc.libera.chat" "#archlinux" "#Jobs" "#fossjobs"))
+        erc-kill-buffer-on-part t
+        erc-auto-query 'bury)
+
+  (add-hook 'erc-join-hook (lambda () (evil-normal-state)))
+
+  ;; For some reason erc-modules is undefined
+  (add-to-list 'erc-modules 'notifications)
+  (delete 'readonly erc-modules)
+  (erc-services-mode 1)
+  (erc-update-modules)
+
+  (erc-notify-mode t)
+  (erc-notifications-mode t)
+#+end_src
+*** Keybindings
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+  (defun haris/erc-quit-channel () (interactive)
+         (erc-part-from-channel ""))
+  (defun haris/euirc () (interactive)
+         (erc :server "irc.euirc.net" :port 6667 :nick "veracioux"))
+  (defun haris/erc-list-channels () (interactive)
+         (erc-with-server-buffer
+          (erc-kill-input)
+          (insert "/list")
+          (erc-send-current-line)))
+
+  (define-key               erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
+  (evil-define-key  'normal erc-mode-map    (kbd ",b")  'erc-switch-to-buffer)
+  (evil-define-key  'normal erc-mode-map    (kbd ",j")  'erc-join-channel)
+  (evil-define-key  'normal erc-mode-map    (kbd ",q")  'haris/erc-quit-channel)
+  (evil-define-key  'normal erc-mode-map    (kbd ",l")  'haris/erc-list-channels)
+
+  (evil-define-key  'motion erc-list-menu-mode-map  (kbd "RET")   nil)
+  (evil-define-key  'normal erc-list-menu-mode-map  (kbd "RET")   nil)
+  ;; TODO shadowed by evil binding, don't know how to fix
+  ;; (evil-define-key  'normal erc-list-menu-mode-map  (kbd ",j")   'erc-list-join)
+#+end_src
+*** Theme tweak
+#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+  (setq erc-track-faces-priority-list
+        '(erc-error-face
+          erc-notice-face
+          (erc-nick-default-face erc-current-nick-face)
+          erc-current-nick-face erc-keyword-face
+          (erc-nick-default-face erc-pal-face)
+          erc-pal-face erc-nick-msg-face erc-direct-msg-face
+          (erc-button erc-default-face)
+          (erc-nick-default-face erc-dangerous-host-face)
+          erc-dangerous-host-face erc-nick-default-face
+          (erc-nick-default-face erc-default-face)
+          erc-default-face erc-action-face
+          (erc-nick-default-face erc-fool-face)
+          erc-fool-face erc-input-face erc-prompt-face))
+#+end_src
+*** Systemd service
+#+NAME: irc.service
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/irc.service")
+  [Unit]
+  Description=Emacs daemon for IRC chat
+  Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+
+  [Service]
+  Type=forking
+  ExecStart=/usr/bin/emacs --daemon="irc"
+  Restart=on-failure
+  TimeoutStartSec=600
+  TimeoutStopSec=30
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+** EDBI
+Database viewer in Emacs.
+#+begin_src elisp
+  (use-package edbi
+    :defer t
+    :config (progn
+              (define-key edbi:dbview-keymap (kbd "SPC") nil)
+              (define-key edbi:dbview-keymap (kbd "RET")
+                'edbi:dbview-show-tabledef-command)))
+#+end_src
+*** Dependencies
+#+begin_src shell :tangle (haris/tangle-deps "emacs/edbi.cpan")
+  RPC::EPC::Service DBI
+  # For postgres support
+  DBD::Pg
+#+end_src
+** Octave
+#+begin_src emacs-lisp
+  (defun octave-write-and-source () (interactive)
+         (write-file (buffer-file-name))
+         (octave-source-file (buffer-file-name)))
+
+  (evil-define-key 'normal octave-mode-map
+    (kbd ",ss") 'octave-write-and-source)
+  (evil-define-key 'normal inferior-octave-mode-map
+    (kbd ",hh") 'octave-help)
+#+end_src
+** Reddit
+*** md4rd
+#+begin_src emacs-lisp
+  (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines)
+  (setq md4rd-subs-active '(linuxquestions+linux+opensource plc))
+#+end_src
+*** reddigg
+This is a very elegant reader for reddit that uses org-mode.
+#+begin_src emacs-lisp
+  (defun reddit-view-linux () (interactive)
+         (reddigg-view-sub "linux+linuxquestions+opensource"))
+  (defun reddit-view-elec () (interactive)
+         (reddigg-view-sub "plc+ElectricalEngineering+embedded"))
+#+end_src
+** Maxima
+I used this mode like 2-3 times, but I'm keeping it in case I have to use it again.
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
+  (autoload 'maxima-mode "maxima" "Maxima mode" t)
+  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
+  (autoload 'maxima "maxima" "Maxima interaction" t)
+  (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
+  (setq imaxima-use-maxima-mode-flag t)
+  (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
+#+end_src
 * Ivy
 #+NAME: ivy
 #+begin_src emacs-lisp
@@ -709,121 +1155,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
      ;; file as the code block that is being edited in the current org-src buffer.
      (haris/tangle-dest '(16))))
 #+end_src
-* Man
-#+begin_src elisp
-  (setq Man-notify-method 'bully)
-#+end_src
-** Bindings
-#+begin_src emacs-lisp
-  (evil-collection-init 'man)
-
-  (defun haris/man-search () (interactive)
-         (swiper "^[[:space:]]+"))
-
-  (add-hook 'Man-mode-hook (lambda ()
-                             (define-key Man-mode-map (kbd "SPC s ^") 'haris/man-search)))
-#+end_src
-* ERC
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
-  (use-package erc)
-  (setq erc-server "irc.libera.chat"
-        erc-nick "veracioux"
-        erc-user-full-name "Haris Gušić"
-        erc-track-shorten-start 8
-        erc-autojoin-channels-alist '(("irc.libera.chat" "#archlinux" "#Jobs" "#fossjobs"))
-        erc-kill-buffer-on-part t
-        erc-auto-query 'bury)
-
-  (add-hook 'erc-join-hook (lambda () (evil-normal-state)))
-
-  ;; For some reason erc-modules is undefined
-  (add-to-list 'erc-modules 'notifications)
-  (delete 'readonly erc-modules)
-  (erc-services-mode 1)
-  (erc-update-modules)
-
-  (erc-notify-mode t)
-  (erc-notifications-mode t)
-#+end_src
-** Keybindings
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
-  (defun haris/erc-quit-channel () (interactive)
-         (erc-part-from-channel ""))
-  (defun haris/euirc () (interactive)
-         (erc :server "irc.euirc.net" :port 6667 :nick "veracioux"))
-  (defun haris/erc-list-channels () (interactive)
-         (erc-with-server-buffer
-          (erc-kill-input)
-          (insert "/list")
-          (erc-send-current-line)))
-
-  (define-key               erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
-  (evil-define-key  'normal erc-mode-map    (kbd ",b")  'erc-switch-to-buffer)
-  (evil-define-key  'normal erc-mode-map    (kbd ",j")  'erc-join-channel)
-  (evil-define-key  'normal erc-mode-map    (kbd ",q")  'haris/erc-quit-channel)
-  (evil-define-key  'normal erc-mode-map    (kbd ",l")  'haris/erc-list-channels)
-
-  (evil-define-key  'motion erc-list-menu-mode-map  (kbd "RET")   nil)
-  (evil-define-key  'normal erc-list-menu-mode-map  (kbd "RET")   nil)
-  ;; TODO shadowed by evil binding, don't know how to fix
-  ;; (evil-define-key  'normal erc-list-menu-mode-map  (kbd ",j")   'erc-list-join)
-#+end_src
-** Theme tweak
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
-  (setq erc-track-faces-priority-list
-        '(erc-error-face
-          erc-notice-face
-          (erc-nick-default-face erc-current-nick-face)
-          erc-current-nick-face erc-keyword-face
-          (erc-nick-default-face erc-pal-face)
-          erc-pal-face erc-nick-msg-face erc-direct-msg-face
-          (erc-button erc-default-face)
-          (erc-nick-default-face erc-dangerous-host-face)
-          erc-dangerous-host-face erc-nick-default-face
-          (erc-nick-default-face erc-default-face)
-          erc-default-face erc-action-face
-          (erc-nick-default-face erc-fool-face)
-          erc-fool-face erc-input-face erc-prompt-face))
-#+end_src
-** Systemd service
-#+NAME: irc.service
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/irc.service")
-  [Unit]
-  Description=Emacs daemon for IRC chat
-  Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
-
-  [Service]
-  Type=forking
-  ExecStart=/usr/bin/emacs --daemon="irc"
-  Restart=on-failure
-  TimeoutStartSec=600
-  TimeoutStopSec=30
-
-  [Install]
-  WantedBy=default.target
-#+end_src
-* TODO Slack
-slack-register-team automatically connects to slack. If I add it to the
-slack-mode-hook hook, it never connects. Investigate
-#+begin_src emacs-lisp
-  ;; (add-hook
-  ;;  'slack-mode-hook
-  ;;  (lambda ()
-  ;;    ;; Add slack teams here
-  ;;    (slack-register-team
-  ;;     :name "efektivnialtruismus"
-  ;;     :token (auth-source-pick-first-password
-  ;;             :host "efektivnialtruismus.slack.com"
-  ;;             :user "hgusic.pub@gmail.com")
-  ;;     :cookie (auth-source-pick-first-password
-  ;;              :host "efektivnialtruismus.slack.com"
-  ;;              :user "hgusic.pub@gmail.com^cookie")
-  ;;     :subscribed-channels '((main-announcements
-  ;;                             main-community-events
-  ;;                             main-opportunities
-  ;;                             main-random
-  ;;                             project-eahouse)))))
-#+end_src
 * Git
 #+begin_src emacs-lisp
   (use-package git-gutter :defer t)
@@ -870,17 +1201,6 @@ slack-mode-hook hook, it never connects. Investigate
 ** TODO GitHub                                                  :deprecated:
 #+begin_src emacs-lisp
   (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
-#+end_src
-* Octave mode
-#+begin_src emacs-lisp
-  (defun octave-write-and-source () (interactive)
-         (write-file (buffer-file-name))
-         (octave-source-file (buffer-file-name)))
-
-  (evil-define-key 'normal octave-mode-map
-    (kbd ",ss") 'octave-write-and-source)
-  (evil-define-key 'normal inferior-octave-mode-map
-    (kbd ",hh") 'octave-help)
 #+end_src
 * Comint
 #+NAME: comint
@@ -945,230 +1265,6 @@ This doesn't work consistently.
   ;; (define-key vterm-mode-map (kbd "C-l") 'vterm-clear-scrollback)
   ;; (define-key vterm-mode-map (kbd "C-l") 'erase-buffer)
   ;; (define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
-#+end_src
-* TODO Email
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-I use mu4e as my email client.
-#+begin_src emacs-lisp
-  ;; This is set to 't' to avoid mail syncing issues when using mbsync
-  (setq mu4e-change-filenames-when-moving t)
-
-  ;; Refresh mail using isync every M minutes
-  (setq mu4e-update-interval (let ((M 4)) (* M 60)))
-  (setq mu4e-get-mail-command "mbsync -a")
-  (setq mu4e-enable-async-operations t)
-
-  ;; Configure contexts
-  (setq mu4e-contexts
-        `(
-          ,(make-mu4e-context
-            :name "p-hgusic.pub@gmail.com"
-            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "hgusic.pub@gmail.com")))
-            :enter-func (lambda () (message "Entering context: hgusic.pub@gmail.com"))
-            :vars '((user-mail-address . "hgusic.pub@gmail.com")
-                    (user-full-name . "Haris Gusic")
-                    (mu4e-drafts-folder .     "/gmail/hgusic.pub/[Gmail]/Drafts")
-                    (mu4e-sent-folder   .     "/gmail/hgusic.pub/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder .     "/gmail/hgusic.pub/[Gmail]/All Mail")
-                    (mu4e-trash-folder  .     "/gmail/hgusic.pub/[Gmail]/Trash")
-                    (
-                     mu4e-maildir-shortcuts
-                     . (("/gmail/hgusic.pub/Inbox"             . ?i)
-                        ("/gmail/hgusic.pub/[Gmail]/Sent Mail" . ?s)
-                        ("/gmail/hgusic.pub/[Gmail]/Trash"     . ?t)
-                        ("/gmail/hgusic.pub/[Gmail]/Drafts"    . ?d)
-                        ("/gmail/hgusic.pub/[Gmail]/All Mail" . ?a)))))
-
-          ,(make-mu4e-context
-            :name "d-harisgusic.dev@gmail.com"
-            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "harisgusic.dev@gmail.com")))
-            :enter-func (lambda () (message "Entering context: harisgusic.dev@gmail.com"))
-            :vars '((user-mail-address . "harisgusic.dev@gmail.com")
-                    (user-full-name . "Haris Gusic")
-                    (mu4e-drafts-folder .     "/gmail/harisgusic.dev/[Gmail]/Drafts")
-                    (mu4e-sent-folder   .     "/gmail/harisgusic.dev/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder .     "/gmail/harisgusic.dev/[Gmail]/All Mail")
-                    (mu4e-trash-folder  .     "/gmail/harisgusic.dev/[Gmail]/Trash")
-                    (
-                     mu4e-maildir-shortcuts
-                     . (("/gmail/harisgusic.dev/Inbox"             . ?i)
-                        ("/gmail/harisgusic.dev/[Gmail]/Sent Mail" . ?s)
-                        ("/gmail/harisgusic.dev/[Gmail]/Trash"     . ?t)
-                        ("/gmail/harisgusic.dev/[Gmail]/Drafts"    . ?d)
-                        ("/gmail/harisgusic.dev/[Gmail]/All Mail" . ?a)))))
-          ))
-
-  (setq mu4e-context-policy         'ask
-        mu4e-compose-context-policy 'ask)
-
-  (setq mu4e-org-support t)
-  ;; Enable org mode when composing messages
-  (setq mu4e-org-compose-support t)
-#+end_src
-** Sending messages
-#+begin_src emacs-lisp
-  ;; Show completion for From and To headers
-  (setq mail-user-agent 'mu4e-user-agent)
-  (setq message-mail-alias-type 'ecomplete)
-
-  (add-hook 'message-setup-hook 'flyspell-mode)
-#+end_src
-** TODO Notifications
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-#+begin_src emacs-lisp
-  (use-package mu4e-alert :defer t)
-  (setq mu4e-enable-notifications t)
-  (mu4e-alert-set-default-style 'libnotify)
-#+end_src
-* Programming languages
-** YAML
-YAML indentation is just broken. This disables it completely.
-#+begin_src emacs-lisp
-  (defun yaml-indent-line ())
-  (setq yaml-indent-offset 2)
-#+end_src
-*** YAML Pro Mode
-#+begin_src elisp
-  (eval-after-load "yaml"
-    (lambda ()
-      (use-package yaml-pro)
-      (use-package counsel-jq)))
-
-  (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook))
-        (hook))
-    (dolist (hook hooks)
-      (add-hook hook 'eldoc-mode)
-      (add-hook hook 'yaml-pro-ts-mode)
-      (add-hook hook (lambda ()
-                       (setq-local counsel-jq-command "yq")))))
-#+end_src
-*** Keybindings
-#+begin_src elisp
-  (eval-after-load "yaml"
-    (lambda ()
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-n") 'yaml-pro-ts-next-subtree)
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g j") 'yaml-pro-ts-next-subtree)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c C-n") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-p") 'yaml-pro-ts-prev-subtree)
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g k") 'yaml-pro-ts-prev-subtree)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c C-p") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g h") 'yaml-pro-ts-up-level)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c C-u") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", '") 'yaml-pro-edit-ts-scalar)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c '") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", <") 'yaml-pro-ts-unindent-subtree)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c <") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", >") 'yaml-pro-ts-indent-subtree)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c >") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", v") 'yaml-pro-ts-mark-subtree)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c @") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-j") 'yaml-pro-ts-move-subtree-down)
-      (define-key yaml-pro-ts-mode-map (kbd "s-<down>") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-k") 'yaml-pro-ts-move-subtree-up)
-      (define-key yaml-pro-ts-mode-map (kbd "s-<up>") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", d") 'yaml-pro-kill-subtree)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-w") nil)
-
-      (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", p") 'yaml-pro-ts-paste-subtree)
-      (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-y") nil)))
-#+end_src
-** JSON
-#+begin_src elisp
-  (defun haris/json/set-indent-level () (setq-local js-indent-level 2))
-
-  (add-hook 'json-mode-hook 'haris/json/set-indent-level)
-#+end_src
-** LSP
-#+begin_src emacs-lisp
-  ;;(add-to-list 'projectile-project-root-files-functions 'custom/lsp-default-dir)(setq lsp-auto-guess-root t)
-  (setq projectile-require-project-root t)
-  ;; (add-hook 'lsp-mode-hook (lambda () (cd (file-name-directory buffer-file-name))))
-
-  ;; Diagnostic mode doesn't work well with flycheck
-  (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
-
-  (setq lsp-enable-on-type-formatting nil)
-#+end_src
-** DAP
-#+begin_src emacs-lisp
-  (setq dap-auto-show-output nil)
-#+end_src
-** TODO C/C++
-#+begin_src emacs-lisp
-  (setq c-default-style "bsd"
-        c-basic-offset 4)
-
-  (add-hook 'c-mode-hook    (lambda () (setq tab-width 4)))
-  (add-hook 'c++-mode-hook  (lambda () (setq tab-width 4)))
-#+end_src
-*** CMake
-#+begin_src emacs-lisp
-  (defun haris/cmake-info () (interactive)
-         (info-display-manual "cmake")
-         (Info-top-node))
-  (defun haris/cmake-help () (interactive)
-         (split-window-right-and-focus)
-         (let ((symbol (cmake-symbol-at-point)))
-           (haris/cmake-info)
-           (Info-menu symbol)))
-
-  (evil-define-key 'normal cmake-mode-map (kbd ",hc") 'haris/cmake-info)
-  (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
-#+end_src
-*** Dependencies
-#+begin_src text :tangle (haris/tangle-deps "emacs/c-c++.pip")
-  cmake-language-server
-#+end_src
-** Python
-Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
-#+begin_src emacs-lisp
-  (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
-
-  (setq python-shell-interpreter "ipython")
-  ;; python-shell-interpreter-args "-i")
-
-  (setq lsp-pylsp-plugins-pylint-enabled t
-        lsp-pylsp-plugins-flake8-enabled nil
-        lsp-pyls-plugins-flake8-enabled  nil
-        lsp-diagnostics--flycheck-enabled t)
-
-  ;; (add-hook 'python-mode-hook 'lsp)
-  (add-hook 'lsp-mode-hook (lambda ()
-                             (setq default-directory (lsp-workspace-root))))
-
-  ;; elpy
-  (setq elpy-modules nil)
-#+end_src
-*** Bindings
-#+begin_src emacs-lisp
-  (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)
-#+end_src
-*** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "emacs/python.pacman")
-  python-lsp-server flake8 python-typing_extensions python-lsp-black python-pylint
-#+end_src
-#+begin_src shell :tangle (haris/tangle-deps "emacs/python.pip")
-  pyls-isort pyls-mypy pyls-memestra autoflake importmagic epc ptvsd
-#+end_src
-** RST
-#+begin_src emacs-lisp
-  (defun haris/rst-heading () (interactive)
-         (evil-execute-macro 1 "\"yyyp^v$"))
-
-  (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
 #+end_src
 * Completion
 Note: Some variables are configured in [[*Layers][Spacemacs layers]].
@@ -1323,20 +1419,6 @@ Remove Info mode annoying keybindings.
 
   (define-key evil-insert-state-map (kbd "M-RET") #'accent-menu)
 #+end_src
-** Reddit
-*** md4rd
-#+begin_src emacs-lisp
-  (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines)
-  (setq md4rd-subs-active '(linuxquestions+linux+opensource plc))
-#+end_src
-*** reddigg
-This is a very elegant reader for reddit that uses org-mode.
-#+begin_src emacs-lisp
-  (defun reddit-view-linux () (interactive)
-         (reddigg-view-sub "linux+linuxquestions+opensource"))
-  (defun reddit-view-elec () (interactive)
-         (reddigg-view-sub "plc+ElectricalEngineering+embedded"))
-#+end_src
 ** Ibuffer
 #+begin_src emacs-lisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
   (evil-collection-init 'ibuffer)
@@ -1350,43 +1432,6 @@ This is a very elegant reader for reddit that uses org-mode.
     :init (lambda () (setq
                       currency-convert-exchangeratesapi-key
                       (string-trim (shell-command-to-string "pass show @apilayer/api-key")))))
-#+end_src
-** Docker
-Fix for empty image list (not sure if the fix works):
-#+begin_src emacs-lisp
-  (use-package transient :defer t)
-  (use-package docker-compose-mode :defer t)
-#+end_src
-** Bluetooth
-#+begin_src emacs-lisp
-  (use-package bluetooth :defer t)
-#+end_src
-** EDBI
-Database viewer in Emacs.
-#+begin_src elisp
-  (use-package edbi
-    :defer t
-    :config (progn
-              (define-key edbi:dbview-keymap (kbd "SPC") nil)
-              (define-key edbi:dbview-keymap (kbd "RET")
-                'edbi:dbview-show-tabledef-command)))
-#+end_src
-*** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "emacs/edbi.cpan")
-  RPC::EPC::Service DBI
-  # For postgres support
-  DBD::Pg
-#+end_src
-** Maxima
-I used this mode like 2-3 times, but I'm keeping it in case I have to use it again.
-#+begin_src emacs-lisp
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
-  (autoload 'maxima-mode "maxima" "Maxima mode" t)
-  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
-  (autoload 'maxima "maxima" "Maxima interaction" t)
-  (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
-  (setq imaxima-use-maxima-mode-flag t)
-  (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 #+end_src
 ** Command log mode
 #+begin_src elisp
@@ -1409,37 +1454,6 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 ** Alert
 #+begin_src emacs-lisp
   (setq alert-default-style 'libnotify)
-#+end_src
-** Go Translate
-#+begin_src elisp
-  (use-package go-translate)
-
-  (setq gts-translate-list '(("en" "cs") ("cs" "en") ("en" "bs") ("en" "de")))
-
-  (add-hook 'gts-after-buffer-render-hook
-            (defun haris/disable-evil-in-go-translate (&rest _)
-              (select-window (get-buffer-window nil t) (current-buffer))
-              (define-key gts-buffer-local-map              (kbd "SPC SPC") #'counsel-M-x)
-              (define-key gts-buffer-local-map              (kbd "TAB")     #'turn-on-evil-mode)
-              (evil-define-key 'normal gts-buffer-local-map (kbd "TAB")     #'turn-off-evil-mode)
-              (evil-define-key 'normal gts-buffer-local-map (kbd "q")       #'haris/force-kill-window)
-              (use-local-map gts-buffer-local-map)))
-
-  (defun gts-prompt-picker-prev-path ()
-    (interactive)
-    (gts-prompt-picker-next-path t))
-
-  (evil-define-key 'insert gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
-  (evil-define-key 'normal gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
-  (evil-define-key 'insert gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
-  (evil-define-key 'normal gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
-
-  (eval-after-load "gts"
-    (setq gts-default-translator
-          (gts-translator
-           :picker (gts-prompt-picker)
-           :engines `(,(gts-google-engine))
-           :render (gts-buffer-render))))
 #+end_src
 * Spacemacs
 The code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file
