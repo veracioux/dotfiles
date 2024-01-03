@@ -765,7 +765,9 @@ from ~~/.alias~ available in ~dmenu_run~. When I enter them in dmenu, it launche
 a terminal and runs the aliased command.
 ** CLI
 #+begin_src shell :tangle (haris/tangle-home ".alias")
-  alias x='startx'
+  if which startx >/dev/null; then
+      alias x='startx'
+  fi
   if which nvim >/dev/null; then
       alias vim='nvim'
   fi
