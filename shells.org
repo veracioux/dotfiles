@@ -914,71 +914,85 @@ abbreviations for equivalent apt operations.
 #+end_src
 **** Docker
 #+begin_src fish
-  conditional_abbr -g d      'docker'
-  conditional_abbr -g db     'docker build'
-  conditional_abbr -g dbn    'docker build --no-cache'
+  if command --quiet docker
+      set -g __haris_docker docker
+  else if command --quiet podman
+      set -g __haris_docker podman
+  end
 
-  conditional_abbr -g dr     'docker run'
-  conditional_abbr -g drit   'docker run -it'
-  conditional_abbr -g drite  'docker run -it --entrypoint'
+  if [ -n "$__haris_docker" ]
+#+end_src
+#+begin_src fish
+  conditional_abbr -g d      "$__haris_docker"
+  conditional_abbr -g db     "$__haris_docker build"
+  conditional_abbr -g dbn    "$__haris_docker build --no-cache"
 
-  conditional_abbr -g deit   'docker exec -it'
+  conditional_abbr -g dr     "$__haris_docker run"
+  conditional_abbr -g drit   "$__haris_docker run -it"
+  conditional_abbr -g drite  "$__haris_docker run -it --entrypoint"
 
-  conditional_abbr -g drm    'docker rm -f'
+  conditional_abbr -g deit   "$__haris_docker exec -it"
 
-  conditional_abbr -g di     'docker image'
-  conditional_abbr -g dil    'docker image ls'
-  conditional_abbr -g dip    'docker image prune'
-  conditional_abbr -g dii    'docker image inspect'
-  conditional_abbr -g dir    'docker image rm'
+  conditional_abbr -g drm    "$__haris_docker rm -f"
 
-  conditional_abbr -g dc     'docker container'
-  conditional_abbr -g dcl    'docker container ls'
-  conditional_abbr -g dcp    'docker container prune'
-  conditional_abbr -g dci    'docker container inspect'
+  conditional_abbr -g di     "$__haris_docker image"
+  conditional_abbr -g dil    "$__haris_docker image ls"
+  conditional_abbr -g dip    "$__haris_docker image prune"
+  conditional_abbr -g dii    "$__haris_docker image inspect"
+  conditional_abbr -g dir    "$__haris_docker image rm"
 
-  conditional_abbr -g dv     'docker volume'
-  conditional_abbr -g dvl    'docker volume ls'
-  conditional_abbr -g dvi    'docker volume inspect'
-  conditional_abbr -g dvp    'docker volume prune'
+  conditional_abbr -g dc     "$__haris_docker container"
+  conditional_abbr -g dcl    "$__haris_docker container ls"
+  conditional_abbr -g dcp    "$__haris_docker container prune"
+  conditional_abbr -g dci    "$__haris_docker container inspect"
 
-  conditional_abbr -g ds     'docker system'
-  conditional_abbr -g dsp    'docker system prune'
-  conditional_abbr -g dsd    'docker system df -v'
+  conditional_abbr -g dv     "$__haris_docker volume"
+  conditional_abbr -g dvl    "$__haris_docker volume ls"
+  conditional_abbr -g dvi    "$__haris_docker volume inspect"
+  conditional_abbr -g dvp    "$__haris_docker volume prune"
 
-  conditional_abbr -g dm     'docker manifest'
-  conditional_abbr -g dmi    'docker manifest inspect'
+  conditional_abbr -g ds     "$__haris_docker system"
+  conditional_abbr -g dsp    "$__haris_docker system prune"
+  conditional_abbr -g dsd    "$__haris_docker system df -v"
 
-  conditional_abbr -g dhh    'docker history'
+  conditional_abbr -g dm     "$__haris_docker manifest"
+  conditional_abbr -g dmi    "$__haris_docker manifest inspect"
+
+  conditional_abbr -g dhh    "$__haris_docker history"
+#+end_src
+#+begin_src fish
+  end
 #+end_src
 ***** Compose
 #+begin_src fish
-  conditional_abbr -g D      'docker-compose'
-
-  conditional_abbr -g Db     'docker-compose build'
-
-  conditional_abbr -g Du     'docker-compose up'
-  conditional_abbr -g Dud    'docker-compose up -d'
-  conditional_abbr -g Dub    'docker-compose up --build'
-
-  conditional_abbr -g Dr     'docker-compose run'
-  conditional_abbr -g Drit   'docker-compose run -it'
-  conditional_abbr -g Dritd  'docker-compose run -it -d'
-  conditional_abbr -g Dritb  'docker-compose run -it --build'
-  conditional_abbr -g Dritn  'docker-compose run -it --no-deps'
-  conditional_abbr -g Dritbn 'docker-compose run -it --build --no-deps'
-  conditional_abbr -g Drite  'docker-compose run -it --entrypoint'
-
-  conditional_abbr -g Ds     'docker-compose start'
-  conditional_abbr -g DS     'docker-compose stop'
-  conditional_abbr -g DR     'docker-compose restart'
-
-  conditional_abbr -g Deit   'docker-compose exec -it'
-  conditional_abbr -g Drm    'docker-compose rm -sf'
-  conditional_abbr -g Dd     'docker-compose down'
-  conditional_abbr -g DD     'docker-compose down'
-  conditional_abbr -g Dl     'docker-compose logs -f'
-  conditional_abbr -g Dc     'docker-compose config'
+  if [ "$__haris_docker" = "docker" ]
+      conditional_abbr -g D      'docker-compose'
+    
+      conditional_abbr -g Db     'docker-compose build'
+    
+      conditional_abbr -g Du     'docker-compose up'
+      conditional_abbr -g Dud    'docker-compose up -d'
+      conditional_abbr -g Dub    'docker-compose up --build'
+    
+      conditional_abbr -g Dr     'docker-compose run'
+      conditional_abbr -g Drit   'docker-compose run -it'
+      conditional_abbr -g Dritd  'docker-compose run -it -d'
+      conditional_abbr -g Dritb  'docker-compose run -it --build'
+      conditional_abbr -g Dritn  'docker-compose run -it --no-deps'
+      conditional_abbr -g Dritbn 'docker-compose run -it --build --no-deps'
+      conditional_abbr -g Drite  'docker-compose run -it --entrypoint'
+    
+      conditional_abbr -g Ds     'docker-compose start'
+      conditional_abbr -g DS     'docker-compose stop'
+      conditional_abbr -g DR     'docker-compose restart'
+    
+      conditional_abbr -g Deit   'docker-compose exec -it'
+      conditional_abbr -g Drm    'docker-compose rm -sf'
+      conditional_abbr -g Dd     'docker-compose down'
+      conditional_abbr -g DD     'docker-compose down'
+      conditional_abbr -g Dl     'docker-compose logs -f'
+      conditional_abbr -g Dc     'docker-compose config'
+  end
 #+end_src
 **** Pass
 #+begin_src fish
