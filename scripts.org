@@ -855,6 +855,23 @@ Get the OS type.
   # accept it.
   comm -23 <(seq 49152 65535 | sort) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
 #+end_src
+** =docker-ls-context=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/docker-ls-context")
+  tag="$(date +%s%3N | sha256sum | head -c 32)"
+  docker image build --tag "$tag" --no-cache -f - "$@" <<'EOF'
+  «docker-ls-context/dockerfile»
+  EOF
+
+  docker run --rm "$tag"
+  docker rmi "$tag"
+#+end_src
+#+NAME: docker-ls-context/dockerfile
+#+begin_src dockerfile
+  FROM busybox
+  WORKDIR /workdir
+  COPY . .
+  CMD find .
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
