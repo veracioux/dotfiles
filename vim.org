@@ -61,6 +61,8 @@ the setup script as well!.*
   let g:sh_fold_enabled = 3
   let g:is_bash = 1
 
+  colorscheme customtheme
+
   if !exists('g:haris_man') | match RedundantSpaces /\s\+$/ | endif
 
   " Special buffers and syntax highlighting
@@ -86,9 +88,6 @@ the setup script as well!.*
   augroup END
 #+end_src
 * Theme
-#+begin_src vimrc
-  colorscheme customtheme
-#+end_src
 #+begin_src vimrc :tangle (haris/tangle-home ".vim/colors/customtheme.vim")
   " Remove all existing highlighting and set the defaults.
   hi clear
@@ -263,53 +262,55 @@ the setup script as well!.*
 #+end_src
 * Plugin setup
 #+begin_src vimrc
-  call plug#begin('~/.vim/plugged')
+  if !empty(glob('~/.vim/autoload/plug.vim'))
+    call plug#begin('~/.vim/plugged')
 
-  if !exists('g:haris_man')
-    Plug 'tpope/vim-abolish'
-    Plug 'preservim/nerdcommenter'
-    Plug 'sirver/ultisnips'
-    Plug 'honza/vim-snippets'
-    Plug 'Rykka/InstantRst', { 'for': 'rst' }
-    Plug 'Rykka/riv.vim', { 'for': 'rst' }
-    Plug 'tpope/vim-surround'
-    Plug 'alx741/vinfo', { 'on': ['Vinfo'] }
-    Plug 'KabbAmine/vCoolor.vim', { 'on': ['VCoolor'] }
-    Plug 'ap/vim-css-color'
+    if !exists('g:haris_man')
+      Plug 'tpope/vim-abolish'
+      Plug 'preservim/nerdcommenter'
+      Plug 'sirver/ultisnips'
+      Plug 'honza/vim-snippets'
+      Plug 'Rykka/InstantRst', { 'for': 'rst' }
+      Plug 'Rykka/riv.vim', { 'for': 'rst' }
+      Plug 'tpope/vim-surround'
+      Plug 'alx741/vinfo', { 'on': ['Vinfo'] }
+      Plug 'KabbAmine/vCoolor.vim', { 'on': ['VCoolor'] }
+      Plug 'ap/vim-css-color'
 
-    " Syntax highlighting
-    Plug 'dag/vim-fish', { 'for': 'fish' }
-    Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
-    Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
-    Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
-    Plug 'itspriddle/vim-shellcheck'
-    Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
+      " Syntax highlighting
+      Plug 'dag/vim-fish', { 'for': 'fish' }
+      Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
+      Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
+      Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
+      Plug 'itspriddle/vim-shellcheck'
+      Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
 
-    " IDE
-    " Plug 'ycm-core/YouCompleteMe'     " Deprecated: don't use vim much for coding these days
-    Plug 'ervandew/supertab'            " Fixes problem with YCM and UltiSnips
-    Plug 'sheerun/vim-polyglot'
-    Plug 'preservim/tagbar'             " NOTE: requires ctags installed
-    Plug 'dyng/ctrlsf.vim'                " NOTE: requires ack installed
-    Plug 'derekwyatt/vim-fswitch'
-    Plug 'derekwyatt/vim-protodef'
-    Plug 'junegunn/fzf.vim'
-    Plug 'junegunn/vim-easy-align'
-    " Python
-    Plug 'fs111/pydoc.vim'
+      " IDE
+      " Plug 'ycm-core/YouCompleteMe'     " Deprecated: don't use vim much for coding these days
+      Plug 'ervandew/supertab'            " Fixes problem with YCM and UltiSnips
+      Plug 'sheerun/vim-polyglot'
+      Plug 'preservim/tagbar'             " NOTE: requires ctags installed
+      Plug 'dyng/ctrlsf.vim'                " NOTE: requires ack installed
+      Plug 'derekwyatt/vim-fswitch'
+      Plug 'derekwyatt/vim-protodef'
+      Plug 'junegunn/fzf.vim'
+      Plug 'junegunn/vim-easy-align'
+      " Python
+      Plug 'fs111/pydoc.vim'
 
-    Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+      Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 
-    " Misc
-    if has('nvim')
-      Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+      " Misc
+      if has('nvim')
+        Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+      endif
     endif
-  endif
-  " Always loaded
-  Plug 'vim-utils/vim-man', { 'for': 'man'}
-  Plug 'easymotion/vim-easymotion'
+    " Always loaded
+    Plug 'vim-utils/vim-man', { 'for': 'man'}
+    Plug 'easymotion/vim-easymotion'
 
-  call plug#end()
+    call plug#end()
+  endif
 #+end_src
 * Custom key mappings
 #+begin_src vimrc
