@@ -1,6 +1,6 @@
 # Dockerfile for generating config files from the literate dotfiles
 
-FROM alpine
+FROM alpine:3.14
 
 RUN apk add --no-cache emacs
 RUN adduser -D user
