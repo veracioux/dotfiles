@@ -588,12 +588,14 @@ Some custom keybindings are defined here as well.
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<bindings-miscellaneous>>
 #+end_src
-** Vim-like configuration
+** Evil
 #+begin_src elisp
   (use-package evil-quickscope)
   (global-evil-quickscope-mode)
 
   (setq evil-lookup-func (lambda () (call-interactively #'man)))
+
+  (add-hook 'evil-insert-state-exit-hook #'company-cancel)
 #+end_src
 * Programming languages
 ** YAML
@@ -1479,6 +1481,7 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
   ;; This should ideally be 0, but a non-zero value might help with performance
   (setq company-idle-delay 0.05)
   (setq company-posframe-quickhelp-delay nil)
+  (setq company-show-quick-access 'left)
 
   (add-hook 'company-mode-hook #'company-statistics-mode)
   (setq company-statistics-file (concat spacemacs-cache-directory
@@ -1671,10 +1674,14 @@ other maps, so I define it here.
 
   (advice-add 'yas-tryout-snippet :after #'evil-insert-state)
 
-  (define-key yas-keymap (kbd "<backtab>") 'yas-prev-field)
+  ;; Remove default bindings for next/prev field
+  (define-key yas-keymap (kbd "<tab>") nil)
+  (define-key yas-keymap (kbd "TAB") nil)
+  (define-key yas-keymap (kbd "<backtab>") nil)
+  (define-key yas-keymap (kbd "S-<tab>") nil)
 
-  (add-hook 'yas-before-expand-snippet-hook #'haris/company-disable-idle-popup)
-  (add-hook 'yas-after-exit-snippet-hook #'haris/company-enable-idle-popup)
+  (define-key yas-keymap (kbd "M-n") #'yas-next-field)
+  (define-key yas-keymap (kbd "M-p") #'yas-prev-field)
 #+end_src
 ** The =TAB= key
 The TAB key is much abused. Keeping track of it in each minor mode separately is
@@ -1682,12 +1689,6 @@ a nightmare. Therefore I unbind TAB in some keymaps so that it falls back to the
 TAB binding in the global keymap. This way, I can define the exact order of
 precedence of TAB-bound commands for all modes.
 #+begin_src elisp
-  ;; Remove TAB (and <tab>) bindings in some keymaps so that it falls back to
-  ;; global map.
-
-  (define-key yas-keymap (kbd "<tab>") #'yas-next-field)
-  (define-key yas-keymap (kbd "TAB") #'yas-next-field)
-
   (defun haris/handle-TAB-in-insert-mode (&optional alert)
     "Handle the TAB key exactly the way I want to."
     (interactive)
