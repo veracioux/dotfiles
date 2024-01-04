@@ -1080,19 +1080,22 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 #+end_src
 * Minibuffer
 #+begin_src elisp
-  (define-minor-mode haris/eval-expression-mode
-    "Custom mode that allows me to define minibuffer behavior specific to eval-expression")
+  (define-minor-mode haris/minibuffer-elisp-mode
+    "Custom mode that allows me to use emacs-lisp-mode features in minibuffers
+  that evaluate elisp code.")
 
   (add-hook 'minibuffer-setup-hook
-            (defun haris//minibuffer-detect-eval-expression-and-enable-mode ()
-              (when (member this-command '(eval-expression))
-                (haris/eval-expression-mode 1))))
+            (defun haris//minibuffer-maybe-enable-elisp-mode ()
+              (when (member this-command
+                            '(eval-expression
+                              edebug-eval-expression))
+                (haris/minibuffer-elisp-mode 1))))
 #+end_src
-** eval-expression
+** Elisp evaluation
 #+begin_src elisp
-  (add-hook 'haris/eval-expression-mode-hook
-            (defun haris//eval-expression-completion-enable ()
-              "Enable auto-completion in eval-expression (custom) mode"
+  (add-hook 'haris/minibuffer-elisp-mode-hook
+            (defun haris//initialize-minibuffer-elisp-mode ()
+              "Initialize custom haris/minibuffer-elisp-mode"
               (haris/yas-minor-mode-on)
               (yas-activate-extra-mode 'emacs-lisp-mode)
                                           ; (ref:company-backends-emacs-lisp-mode/usage)
@@ -1127,7 +1130,7 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 
      (apply func args)))
 #+end_src
-*** Bindings
+** Bindings
 Note: I override the =<escape>= binding for =company-active-map= for this mode
 specifically. I did that [[(company-active-map-escape-override)][here]], because I don't know a better way to do it.
 ** Ivy
@@ -1671,11 +1674,11 @@ other maps, so I define it here.
    company-active-map
    (kbd "<escape>")
    (defun haris/company-active-mode-escape-override ()
-     "Override the <escape> key to close the company menu instead of
-  exiting to normal mode in eval-expression minibuffers. This prevents
-  accidental closing of the minibuffer."
+     "Override the <escape> key to close the company menu instead of exiting
+  to normal mode in minibuffers. This prevents accidental closing of the
+  minibuffer."
      (interactive)
-     (if haris/eval-expression-mode
+     (if (eq major-mode 'minibuffer-mode)
          (haris/company-toggle-tooltip)
        (evil-force-normal-state))))
 #+end_src
