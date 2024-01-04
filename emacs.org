@@ -832,6 +832,7 @@ Fix for empty image list (not sure if the fix works):
 ** Bluetooth
 #+begin_src elisp
   (use-package bluetooth :defer t)
+  (evil-collection-init 'bluetooth)
 #+end_src
 ** TODO Email
 :PROPERTIES:

@@ -1107,6 +1107,10 @@ This script prints the contents
     (spacemacs/switch-to-scratch-buffer)
     (run-with-timer 0.3 nil 'docker))
 #+end_src
+** =ebluetooth=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/ebluetooth")
+  myemacs-float -c --eval '(bluetooth-list-devices)'
+#+end_src
 ** =proced=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/proced")
   <<add-create-frame-option-if-term-dumb>>
