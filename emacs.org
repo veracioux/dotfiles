@@ -523,8 +523,24 @@ Some custom keybindings are defined here as well.
 *** Ielm
 #+NAME: ielm
 #+begin_src elisp
+  (setq ielm-dynamic-return nil)
+
   ;; Use RET to execute command even in normal mode
-  (evil-define-key 'normal ielm-map (kbd "RET") 'ielm-return)
+  (evil-define-key 'normal ielm-map (kbd "RET") #'ielm-send-input)
+
+  ;; Make RET in insert mode insert newline at point, unless the
+  ;; point is at the end of the line, in which case send input.
+  (defun haris/ielm-insert-mode-return ()
+    "Insert newline at point"
+    (interactive)
+    (if (= (point)
+       (save-excursion
+         (end-of-visual-line)
+         (point)))
+        (ielm-send-input)
+      (ielm-return)))
+
+  (evil-define-key 'insert ielm-map (kbd "RET") #'haris/ielm-insert-mode-return)
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<ielm>>
