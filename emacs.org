@@ -1356,6 +1356,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (defun haris/org-src-tangle ()
     "Tangle the target code block while inside the org-src buffer"
     (interactive)
+    (org-edit-src-save)
     (org-src-do-at-code-block
      ;; Prefix arg '(16) makes it tangle only the code blocks related to the same
      ;; file as the code block that is being edited in the current org-src buffer.
@@ -1364,6 +1365,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (defun haris/org-src-tangle-dest ()
     "Tangle the target code block while inside the org-src buffer"
     (interactive)
+    (org-edit-src-save)
     (org-src-do-at-code-block
      ;; Prefix arg '(16) makes it tangle only the code blocks related to the same
      ;; file as the code block that is being edited in the current org-src buffer.
