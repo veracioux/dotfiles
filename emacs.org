@@ -148,7 +148,6 @@ I use =straight= to clone some packages that are not available on =melpa=.
 
   (setq fill-column 80)
   (spacemacs/toggle-visual-line-navigation-globally-on)
-  (global-auto-revert-mode t)
   (set-language-environment "UTF-8")
   (setq-default tab-width 4)
   (setq browse-url-generic-program (executable-find "firefox"))
@@ -283,6 +282,21 @@ misbehaving due to their existence.
 You can test the transforms by calling this:
 #+begin_src elisp :tangle no
   (make-lock-file-name (buffer-file-name))
+#+end_src
+*** Auto-revert mode
+#+begin_src elisp
+  (global-auto-revert-mode t)
+  (setq auto-revert-verbose t
+        auto-revert-use-notify t
+        auto-revert-avoid-polling t
+        ;; When reverting buffers whose files have been changed by emacs, it
+        ;; seems that the interval from this variable is used, even though
+        ;; polling was disabled above.
+        ;; An example where this can be observed is when an org-mode code block
+        ;; is tangled and the target file is open in another buffer.
+        auto-revert-interval 0.2)
+
+
 #+end_src
 *** Buffer cleanup
 #+begin_src elisp
@@ -574,9 +588,6 @@ Some custom keybindings are defined here as well.
 *** Miscellaneous
 #+NAME: bindings-miscellaneous
 #+begin_src elisp
-  ;; Use RET to execute command even in normal mode
-  (evil-define-key 'normal ielm-map (kbd "RET") 'ielm-return)
-
   ;; Use M-y or M-n to answer a minibuffer prompt
   (defun haris/insert-into-minibuffer-and-exit (text)
     (interactive)
