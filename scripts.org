@@ -22,7 +22,7 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
       alternative-command git "$@"
   }
 
-  git_root="$(git root)"
+  git_root="$(git root 2>/dev/null)"
   if [ "$git_root" = ~ ]; then
       if [ "$PWD" = ~ ] || [[ "${PWD#~/}" =~ ^\. ]]; then
           git "$@"
@@ -1376,7 +1376,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
   }
 
   extract_aliases() {
-      grep -v '^\s*#' "$@" | sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_"
+      grep -v '^\s*#' "$@" 2>/dev/null | sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_"
   }
 
   pull_desktop_apps() {
