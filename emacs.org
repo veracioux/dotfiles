@@ -220,9 +220,6 @@ I use =straight= to clone some packages that are not available on =melpa=.
   <<global-settings>>
 #+end_src
 *** Custom miscellaneous backup file patterns
-:PROPERTIES:
-:header-args:elisp+: :tangle no
-:END:
 I change the following in order to prevent Emacs from complaining about
 filenames being too long. The main culprit is Java, with its horrendously deep
 directory structures.
@@ -253,10 +250,10 @@ directory structures.
               ".~undo-history~")))
 #+end_src
 Call these to test the patterns:
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (make-auto-save-file-name)
 #+end_src
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (undo-tree-make-history-save-file-name (buffer-file-name))
 #+end_src
 
@@ -280,11 +277,11 @@ misbehaving due to their existence.
          auto-save-file-name-transforms)))
 
   (dolist (item lock-file-name-transforms)
-    (let ((uniquify (nth 2 item)))
+    (let ((uniquify (nthcdr 2 item)))
       (if uniquify (setcar uniquify 'sha512))))
 #+end_src
 You can test the transforms by calling this:
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (make-lock-file-name (buffer-file-name))
 #+end_src
 *** Buffer cleanup
