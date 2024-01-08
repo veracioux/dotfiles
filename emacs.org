@@ -623,13 +623,9 @@ Some custom keybindings are defined here as well.
 #+end_src
 * Programming languages
 ** YAML
-YAML indentation is just broken. This disables it completely.
-  (defun yaml-indent-line ())
-  (setq yaml-indent-offset 2)
 #+begin_src elisp
-#+end_src
-*** YAML Pro Mode
-#+begin_src elisp
+  (evil-collection-init 'yaml-mode)
+
   (eval-after-load "yaml"
     (defun haris//after-load/yaml ()
       (use-package yaml-pro)))
@@ -640,12 +636,15 @@ YAML indentation is just broken. This disables it completely.
       (add-hook hook 'eldoc-mode)
       (add-hook hook 'yaml-pro-ts-mode)
       (add-hook hook (lambda ()
-                       (setq-local counsel-jq-command "yq")))))
+                       (setq-local counsel-jq-command "yq")))
+      (add-hook 'yaml-mode-hook 'lsp)))
 #+end_src
 *** Keybindings
 #+begin_src elisp
   (eval-after-load "yaml"
     (lambda ()
+      (evil-define-key 'normal yaml-mode-map (kbd "SPC j =")    'lsp-format-buffer)
+
       (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "M-n") 'yaml-pro-ts-next-subtree)
       (evil-define-key 'normal yaml-pro-ts-mode-map (kbd "g j") 'yaml-pro-ts-next-subtree)
       (define-key yaml-pro-ts-mode-map (kbd "C-c C-n") nil)
@@ -680,6 +679,10 @@ YAML indentation is just broken. This disables it completely.
 
       (evil-define-key 'normal yaml-pro-ts-mode-map (kbd ", p") 'yaml-pro-ts-paste-subtree)
       (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-y") nil)))
+#+end_src
+*** Dependencies
+#+begin_src text (haris/tangle-deps "emacs/yaml.pacman")
+  yaml-language-server yamllint
 #+end_src
 ** JSON
 #+begin_src elisp
@@ -776,6 +779,14 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
         web-mode-code-indent-offset 2
         css-indent-offset 2)
 #+end_src
+** Vue
+#+begin_src text :tangle (haris/tangle-deps "emacs/vue.pacman")
+  vue-language-server
+#+end_src
+** Angular
+#+begin_src text :tangle (haris/tangle-deps "emacs/angular.npm")
+  @angular/language-service@next typescript @angular/language-server
+#+end_src
 ** Shells
 #+begin_src elisp
   (use-package company-shell)
@@ -800,6 +811,10 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
          (evil-execute-macro 1 "\"yyyp^v$"))
 
   (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
+#+end_src
+** Dockerfile
+#+begin_src text (haris/tangle-deps "emacs/dockerfile.aur")
+  dockerfile-language-server
 #+end_src
 * Apps
 ** Man
@@ -1894,11 +1909,14 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      emacs-lisp
      shell
      (shell-scripts :variables shell-scripts-backend 'lsp)
+     javascript
      typescript
-     yaml
+     prettier
+     vue
+     (yaml :variables yaml-enable-lsp t)
      csv
      rust
-     docker
+     (docker :variables docker-dockerfile-backend 'lsp)
      vagrant
      translate
      git
@@ -1954,7 +1972,6 @@ Spacemacs would delete them every time on startup.
      command-log-mode
      org-preview-html
      vimrc-mode
-     yaml-pro
      systemd
      evil-quickscope
      edbi
