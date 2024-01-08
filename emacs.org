@@ -1892,6 +1892,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      ipython-notebook
      emacs-lisp
      shell
+     (shell-scripts :variables shell-scripts-backend 'lsp)
      typescript
      yaml
      csv
