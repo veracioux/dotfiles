@@ -821,6 +821,7 @@ Fix for empty image list (not sure if the fix works):
 #+begin_src elisp
   (use-package transient :defer t)
   (use-package docker-compose-mode :defer t)
+  (evil-collection-init 'docker)
 #+end_src
 ** Go Translate
 #+begin_src elisp
@@ -1924,7 +1925,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
       auto-completion-enable-help-tooltip 'manual
       auto-completion-enable-sort-by-usage nil ;; I configure this manually
       ;; This is not working for some reason:
-      :disabled-for org)
+      :disabled-for org sh fish)
      openai))
 #+end_src
 ** Additional packages
