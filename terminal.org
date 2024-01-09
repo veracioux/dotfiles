@@ -169,6 +169,8 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   bind l select-pane -R
 
   set -g default-terminal "screen-256color"
+  # Use the terminal emulator's scrollback
+  set -g terminal-overrides '*:smcup@:rmcup@'
 #+end_src
 * Screen
 #+begin_src conf :tangle (haris/tangle-home ".screenrc")
