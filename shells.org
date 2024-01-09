@@ -314,7 +314,10 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   if functions | grep --quiet fzf_configure_bindings
       fzf_configure_bindings
   else if [ -e ~/.config/fish/conf.d/fzf.fish ]
-      source ~/.config/fish/conf.d/fzf.fish
+      function __haris_load_fzf --on-event fish_prompt
+          source ~/.config/fish/conf.d/fzf.fish
+          functions --erase __haris_load_fzf
+      end
   end
 #+end_src
 *** Dependencies
