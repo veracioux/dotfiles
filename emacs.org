@@ -2015,7 +2015,8 @@ I use this variable to check if the config loaded correctly.
 ** Private config
 The private config is loaded from [[~/.emacs.d/haris/private][~/.emacs.d/haris/private.el]].
 #+begin_src elisp
-  (load-file "~/.emacs.d/haris/private.el")
+  (let ((file "~/.emacs.d/haris/private.el"))
+    (when (file-exists-p file) (load-file file)))
 #+end_src
 ** Local variables                                                :noexport:
 # Local Variables:
