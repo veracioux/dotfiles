@@ -21,7 +21,11 @@ purposes of experimentation. They are not under VCS.
 Note: I keep fish aliases in [[#alias-fish][Aliases]].
 #+begin_src fish
   set fish_greeting ''
-  [ -z "$EMACS_VTERM_PATH" ] && fish_vi_key_bindings || fish_default_key_bindings
+  function __haris_init_key_bindings --on-event fish_prompt
+      # If I don't postpone it, something overrides it in certain setups
+      [ -z "$EMACS_VTERM_PATH" ] && fish_vi_key_bindings || fish_default_key_bindings
+      functions --erase __haris_init_key_bindings
+  end
 
   # Disable path shortening
   set fish_prompt_pwd_dir_length 0
