@@ -1020,7 +1020,11 @@ abbreviations for equivalent apt operations.
 **** Miscellaneous
 #+begin_src fish
   conditional_abbr -g g     'git'
-  conditional_abbr -g e     'myemacs -c'
+  if [ -n "$DISPLAY" ]
+      conditional_abbr -g e     'myemacs -c'
+  else
+      conditional_abbr -g e     'myemacs'
+  end
   conditional_abbr -g E     'myemacs'
   conditional_abbr -g s     'sudo'
   conditional_abbr -g py    'python'
