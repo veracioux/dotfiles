@@ -381,7 +381,7 @@ External bindings are served by sxhkd.
   mod4 + ctrl + Return
       eterm
   mod4 + shift + f
-      firefox -P haris
+      firefox -P «eval-user-name()»
   mod4 + shift + v
       alacritty --class Alacritty,Float -e fish -C vifm
   mod4 + v
@@ -658,7 +658,7 @@ Menu of utilities that allow me to talk to my computer.
   bindsym d       exec <<o>> ~/.config/i3/scripts/dictate.sh, mode default
   bindsym s       exec <<o>> ~/.config/i3/scripts/chatgpt.sh --speak, mode default
   bindsym c       exec <<o>> ~/.config/i3/scripts/chatgpt.sh, mode default
-  bindsym b       exec auto-browser -P haris "https://chat.openai.com/chat", \
+  bindsym b       exec auto-browser -P «eval-user-name()» "https://chat.openai.com/chat", \
                   mode default
   bindsym k       exec ~/.config/i3/scripts/kill-gpt.sh, mode default
   bindsym r       exec <<o>> ~/.config/i3/scripts/gpt-repeat-action.sh
@@ -1372,6 +1372,10 @@ I use picom as my compositor with the i3 window manager.
   paru -S swhkd-git
 #+end_src
 * Local variables                                                  :noexport:
+#+NAME: eval-user-name
+#+begin_src elisp
+  (user-login-name)
+#+end_src
 # Local variables:
 # org-confirm-babel-evaluate: nil
 # End:

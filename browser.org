@@ -11,7 +11,7 @@ my main profile.
 * Settings
 All my browser preferences that I don't need to keep secret go here.
 #+NAME: user.js
-#+begin_src javascript :tangle (haris/tangle-home ".mozilla/firefox/haris/user.js")
+#+begin_src javascript :tangle (concat main-profile-dir "/user.js")
   user_pref("devtools.theme", "dark");
   user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
   user_pref("browser.bookmarks.autoExportHTML", false);
@@ -49,7 +49,7 @@ All my browser preferences that I don't need to keep secret go here.
 #+end_src
 * CSS customizations
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".mozilla/firefox/haris/chrome/userChrome.css")
+:header-args+: :tangle (concat main-profile-dir "/chrome/userChrome.css")
 :END:
 #+begin_src css
   #navigator-toolbox:not(:hover) #nav-bar {
@@ -122,7 +122,11 @@ All my browser preferences that I don't need to keep secret go here.
   }
 #+end_src
 #+begin_src css :tangle (haris/tangle-home ".mozilla/firefox/ext/chrome/userChrome.css")
-  @import url("/home/haris/.mozilla/firefox/haris/chrome/userChrome.css");
+  @import url("«main-profile-dir()»/chrome/userChrome.css");
+#+end_src
+#+NAME: main-profile-dir
+#+begin_src elisp
+  main-profile-dir
 #+end_src
 ** Right-click bug
 I don't remember what the bug is - something about a context menu sometimes being
@@ -215,7 +219,7 @@ a blank page loaded from a local file (because it is lightning-fast). This way I
 have tridactyl ready every time I launch a new firefox window, without having to
 press the exit hatch keys.
 
-#+begin_src javascript :tangle (haris/tangle-home ".mozilla/firefox/haris/user.js")
+#+begin_src javascript :tangle (concat main-profile-dir "/user.js")
   user_pref(
       "browser.startup.homepage",
       "file:///home/<<username()>>/.local/share/haris/blank.html"
@@ -444,4 +448,5 @@ This code block is that blank page, and is tangled to the appropriate location:
 # Local Variables:
 # org-confirm-babel-evaluate: nil
 # eval: (org-sbe "load")
+# eval: (setq-local main-profile-dir (format  "%s.mozilla/firefox/%s" (haris/tangle-home) (user-login-name))))
 # End:
