@@ -1535,6 +1535,11 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
 
   ;; Default backends for any new mode
   (setq-default company-backends company-backends-text-mode)
+
+  ;; Show popup even when the current text is the only candidate
+  (with-eval-after-load 'company
+    (setq company-frontends (delq 'company-pseudo-tooltip-unless-just-one-frontend company-frontends))
+    (add-to-list 'company-frontends 'company-pseudo-tooltip-frontend))
 #+end_src
 *** Functions
 #+begin_src elisp
