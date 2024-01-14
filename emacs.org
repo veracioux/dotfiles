@@ -804,6 +804,8 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
      :type git
      :host github
      :repo "CeleritasCelery/company-fish"))
+
+  (add-to-list 'spacemacs--indent-variable-alist '(fish-mode . fish-indent-offset))
 #+end_src
 ** RST
 #+begin_src elisp
