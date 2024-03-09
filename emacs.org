@@ -125,7 +125,8 @@ I use =straight= to clone some packages that are not available on =melpa=.
    '(explain-pause-mode
      :type git
      :host github
-     :repo "lastquestion/explain-pause-mode"))
+     :repo "lastquestion/explain-pause-mode"
+     :init (evil-collection-init 'explain-pause-mode)))
 #+end_src
 *** Language modes
 #+begin_src elisp
