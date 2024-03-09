@@ -201,7 +201,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
       /home/haris/proj/tem/repo
       /home/haris/repo/src
       /home/haris/repo/cheat
-  editor = nvim
+  editor = myemacs -c
 
   [ls]
   command = lsd -1
