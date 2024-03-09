@@ -64,6 +64,7 @@ unnecessary code.
     Restart=on-failure
     TimeoutStartSec=600
     TimeoutStopSec=30
+    StartLimitBurst=0
 
     [Install]
     WantedBy=default.target
@@ -1062,6 +1063,7 @@ slack-mode-hook hook, it never connects. Investigate
   Restart=on-failure
   TimeoutStartSec=600
   TimeoutStopSec=30
+  StartLimitBurst=0
 
   [Install]
   WantedBy=default.target
@@ -1548,6 +1550,7 @@ and crashes of my default Emacs instance.
   Restart=on-failure
   TimeoutStartSec=600
   TimeoutStopSec=30
+  StartLimitBurst=0
 
   [Install]
   WantedBy=default.target
