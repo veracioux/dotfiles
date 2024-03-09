@@ -2073,6 +2073,12 @@ Remove Info mode annoying keybindings.
 #+begin_src elisp
   (use-package company-nginx)
 #+end_src
+** Helpful
+#+begin_src elisp
+  (add-hook 'helpful-mode-hook
+            (lambda ()
+              (setq evil-lookup-func 'helpful-at-point)))
+#+end_src
 * Spacemacs
 #+begin_src elisp
   (setq dotspacemacs-ask-for-lazy-installation nil)
