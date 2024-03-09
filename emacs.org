@@ -2079,6 +2079,11 @@ Remove Info mode annoying keybindings.
             (lambda ()
               (setq evil-lookup-func 'helpful-at-point)))
 #+end_src
+** atomic-chrome
+#+begin_src elisp
+  (use-package atomic-chrome)
+  (setq atomic-chrome-buffer-open-style 'frame)
+#+end_src
 * Spacemacs
 #+begin_src elisp
   (setq dotspacemacs-ask-for-lazy-installation nil)
