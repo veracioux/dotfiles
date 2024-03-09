@@ -160,13 +160,13 @@ context finishes. This applies to commands that are:
 - running without a terminal that can be accessed, e.g. launched via dmenu
 
 This applies only to graphical sessions, the linux TTY is unaffected.
-**** =fish_right_prompt=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_right_prompt.fish")
-  function fish_right_prompt
+**** =__haris_notify_bg_task_done=
+#+begin_src fish
+  function __haris_notify_bg_task_done --on-event fish_postexec
+      set -l _status "$status"
+
       [ -n "$HARIS_BACKGROUND_TASKS_SILENT" ] && return
       [ -n "$DISPLAY" ] || return
-
-      set -l _status "$status"
 
       if ! type --quiet xdotool
           return 0
