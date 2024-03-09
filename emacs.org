@@ -692,6 +692,8 @@ Some custom keybindings are defined here as well.
   (defun haris/json/set-indent-level () (setq-local js-indent-level 2))
 
   (add-hook 'json-mode-hook 'haris/json/set-indent-level)
+
+  (defalias 'jq 'counsel-jq)
 #+end_src
 ** LSP
 Some performance improvement settings depend on the power of your hardware. You
