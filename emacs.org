@@ -2002,6 +2002,13 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      spacemacs-language
      spacemacs-navigation
      spacemacs-project
+     (spacemacs-editing
+      :variables
+      vim-style-enable-undo-region t)
+     spacemacs-editing-visual
+     spacemacs-org
+     spell-checking
+     major-modes
      helpful
      ivy
      imenu-list
