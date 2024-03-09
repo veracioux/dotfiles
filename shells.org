@@ -49,6 +49,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_prompt.fish")
   function fish_prompt --description 'Write out the prompt'
       set -l last_pipestatus $pipestatus
+
       set -l normal (set_color normal)
 
       # Color the prompt differently when we're root
@@ -91,38 +92,59 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
                   (set_color yellow)          \n" $suffix "
 
       # These are needed because some apps (docker-compose) don't clean up properly
-      # Exit AppMode
-      echo -ne "\e[?1l"
-      # Show the cursor again
-      echo -e "\e[?25h"
+      begin
+          # Exit AppMode
+          echo -ne "\e[?1l"
+          # Show the cursor again
+          echo -e "\e[?25h"
+      end
   end
 #+end_src
 **** =fish_mode_prompt=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_mode_prompt.fish")
   function fish_mode_prompt
-      [ -n "$EMACS_VTERM_PATH" ] && return
-      switch $fish_bind_mode
-          case default
-              set_color --bold brred
-              echo '[N] '
-          case insert
-              # Show nothing
-          case replace_one
-              set_color --bold green
-              echo '[r] '
-          case replace
-              set_color --bold blue
-              echo '[R] '
-          case visual
-              set_color --bold magenta
-              echo '[V] '
-          case '*'
-              set_color --bold red
-              echo '?'
+      if [ -z "$EMACS_VTERM_PATH" ]
+          switch $fish_bind_mode
+              case default
+                  set_color --bold brred
+                  echo '[N] '
+              case insert
+                  # Show nothing
+              case replace_one
+                  set_color --bold green
+                  echo '[r] '
+              case replace
+                  set_color --bold blue
+                  echo '[R] '
+              case visual
+                  set_color --bold magenta
+                  echo '[V] '
+              case '*'
+                  set_color --bold red
+                  echo '?'
+          end
       end
       set_color normal
   end
+#+end_src
+*** Horizontal command output separator
+**** =__haris_draw_output_separator=
+This function prints a horizontal line spanning the terminal screen,
+that serves as a visual separator of command outputs. It helps me to inspect the
+scrollback buffer more easily.
 
+It is bound to the =fish_postexec= event, so it is printed any time a command
+finishes; unless the command was =clear= in which case we don't print it in order
+to prevent the line to be visible after clearing.
+#+begin_src fish
+  function __haris_draw_output_separator --on-event fish_postexec
+      # When clearing the screen using 'clean' (without -x), the output separator
+      # should not be drawn. Otherwise the terminal would contain a line on the top.
+      if echo "$argv" | grep -v -- '-x' | grep -qE '^clear($|\s)'
+          return
+      end
+      bash -c 'echo -ne "\e[38;5;238m"; printf "%*s\n" "${COLUMNS:-$(tput cols)}" " " | sed "s: :—:g"'
+  end
 #+end_src
 *** Notification when background job exits
 Sends a graphical notification when a command running in a non-visible
@@ -211,9 +233,6 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       commandline -f repaint
       '
   end
-
-  # Ctrl+L to clear screen
-  bind_both_modes \cl 'clear; commandline -f repaint'
 #+end_src
 *** Utility bindings
 #+begin_src fish
