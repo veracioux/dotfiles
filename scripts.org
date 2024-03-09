@@ -339,6 +339,13 @@ get better search matches.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vscode")
   code "$@"
 #+end_src
+** =lnav=                                                           :script:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/lnav")
+  export TERM=xterm-256color
+
+  # alternative-command lnav "$@"
+  /usr/bin/lnav "$@"
+#+end_src
 * Utilities
 ** =visual-editor=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/visual-editor")
