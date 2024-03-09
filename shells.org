@@ -983,6 +983,7 @@ abbreviations for equivalent apt operations.
 
   abbr -g dv     "$__haris_docker volume"
   abbr -g dvl    "$__haris_docker volume ls"
+  abbr -g dvc    "$__haris_docker volume create"
   abbr -g dvi    "$__haris_docker volume inspect"
   abbr -g dvp    "$__haris_docker volume prune"
 
@@ -1022,6 +1023,7 @@ abbreviations for equivalent apt operations.
       abbr -g Dub    'docker-compose up --build'
       abbr -g Dud    'docker-compose up -d'
       abbr -g Dubd   'docker-compose up --build -d'
+      abbr -g Dubt   'docker-compose up --build --timestamps'
 
       abbr -g Dr     'docker-compose run'
       abbr -g Drit   'docker-compose run -it'
