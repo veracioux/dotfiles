@@ -631,16 +631,41 @@ Some custom keybindings are defined here as well.
 
   (eval-after-load "yaml"
     (defun haris//after-load/yaml ()
-      (use-package yaml-pro)))
+      (use-package yaml-pro)
+      (require 'openapi-yaml-mode)
+      (require 'openapi-preview)))
+
+  ;; Use yaml-ts-mode instead of yaml-mode (it's faster), unless the mode is docker-compose-mode.
+  (add-hook 'yaml-mode-hook
+            (defun haris/replace-yaml-with-yaml-ts ()
+              (when (not (eq major-mode 'docker-compose-mode))
+                (yaml-ts-mode))))
 
   (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook))
         (hook))
     (dolist (hook hooks)
-      (add-hook hook 'eldoc-mode)
-      (add-hook hook 'yaml-pro-ts-mode)
-      (add-hook hook (lambda ()
-                       (setq-local counsel-jq-command "yq")))
-      (add-hook 'yaml-mode-hook 'lsp)))
+      (add-hook hook #'eldoc-mode 90)
+      (add-hook hook #'yaml-pro-ts-mode 91)
+      (add-hook hook
+                (lambda ()
+                  (setq-local counsel-jq-command "yq")) 92)
+      (add-hook hook #'lsp 94)))
+
+  (add-hook 'yaml-pro-ts-mode-hook
+            (lambda ()
+              (setq-local lsp-enable-imenu nil)))
+#+end_src
+*** OpenAPI
+#+begin_src elisp
+  (straight-use-package '(openapi-yaml-mode :type git :host github :repo "magoyette/openapi-yaml-mode"))
+  (straight-use-package '(openapi-preview :type git :host github :repo "merrickluo/openapi-preview"))
+
+  (eval-after-load "yaml"
+    (defun haris//after-load/openapi ()
+      (require 'openapi-yaml-mode)
+      (require 'openapi-preview)))
+
+  (add-to-list 'auto-mode-alist '("(openapi|swagger)\\.ya?ml$" . openapi-yaml-mode))
 #+end_src
 *** Keybindings
 #+begin_src elisp
