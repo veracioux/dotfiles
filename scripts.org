@@ -1011,7 +1011,7 @@ are designed to be easily integrated into dmenu scripts.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/eterm")
   # Run an emacs-hosted terminal via vterm
   <<add-create-frame-option-if-term-dumb>>
-  myemacs --eval '(multi-vterm)' "$@"
+  myemacs --socket-name=vterm --eval '(multi-vterm)' "$@"
 #+end_src
 ** =eman=
 #+NAME: eman
