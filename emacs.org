@@ -700,7 +700,7 @@ Some custom keybindings are defined here as well.
       (define-key yaml-pro-ts-mode-map (kbd "C-c C-x C-y") nil)))
 #+end_src
 *** Dependencies
-#+begin_src text (haris/tangle-deps "emacs/yaml.pacman")
+#+begin_src text :tangle (haris/tangle-deps "emacs/yaml.pacman")
   yaml-language-server yamllint
 #+end_src
 ** JSON
@@ -834,7 +834,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
 #+end_src
 ** Dockerfile
-#+begin_src text (haris/tangle-deps "emacs/dockerfile.aur")
+#+begin_src text :tangle (haris/tangle-deps "emacs/dockerfile.aur")
   dockerfile-language-server
 #+end_src
 * Apps
