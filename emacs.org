@@ -172,6 +172,8 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (setq uniquify-buffer-name-style 'forward)
   (setq frame-title-format "%b"
         dotspacemacs-frame-title-format nil)
+  (add-to-list 'recentf-exclude "^/tmp/haris-pipe-")
+
   (add-to-list 'image-types 'svg)
   (setq dired-kill-when-opening-new-dired-buffer t)
   ;; Enable clipboard in the terminal
