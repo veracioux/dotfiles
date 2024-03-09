@@ -610,9 +610,6 @@ Some custom keybindings are defined here as well.
                                             "Search through current history"
                                             (interactive)
                                             (counsel-shell-history)))
-
-  (define-key evil-normal-state-map (kbd "<tab>") #'evil-shift-right-line)
-  (define-key evil-normal-state-map (kbd "<backtab>") #'evil-shift-left-line)
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<bindings-miscellaneous>>
@@ -696,8 +693,12 @@ Some custom keybindings are defined here as well.
   (add-hook 'json-mode-hook 'haris/json/set-indent-level)
 #+end_src
 ** LSP
+Some performance improvement settings depend on the power of your hardware. You
+can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. You can place them in your [[*Private config][private configuration]].
 #+begin_src elisp
-  (setq projectile-require-project-root t)
+  (setq projectile-require-project-root nil)
+  (setq projectile-auto-discover nil)
+  (setq projectile-track-known-projects-automatically nil)
 
   ;; Diagnostic mode doesn't work well with flycheck
   (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
@@ -1184,7 +1185,10 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
            (helpful-symbol . "^"))
          ivy-initial-inputs-alist))
 
-  (setq xref-show-xrefs-function 'ivy-xref-show-xrefs)
+  (add-hook 'lsp-mode-hook
+            (lambda ()
+              (setq xref-show-xrefs-function 'ivy-xref-show-xrefs
+                    xref-show-definitions-function 'ivy-xref-show-defs)))
 
   (evil-define-key 'insert ivy-minibuffer-map (kbd "<backtab>")
     (lambda () (interactive) (ivy-insert-current)))
@@ -1429,6 +1433,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; Magit is essential to my workflow so having it eagerly loaded is no tradeoff.
   (use-package magit)
 
+  (evil-collection-init 'git-timemachine)
+
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
         magit-diff-refine-hunk 'all
         magit-save-repository-buffers nil)
@@ -1518,7 +1524,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (defalias 'haris/vterm-toggle-freeze 'vterm-copy-mode
     "Freeze/unfreeze the output of the current vterm buffer")
 #+end_src
-** Line wrapping workaround
+*** Line wrapping workaround
 Vterm doesn't automatically re-wrap truncated lines when the terminal width
 increases. This seems to be a [[https://github.com/akermu/emacs-libvterm/issues/179][bug]].
 
@@ -1983,6 +1989,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      html
      spacemacs-language
      spacemacs-navigation
+     spacemacs-project
      helpful
      ivy
      imenu-list
@@ -2026,6 +2033,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      sql
      nginx
      systemd
+     tmux
      ;; eaf
      ;; emms
      debug
