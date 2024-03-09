@@ -296,7 +296,13 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =ssh=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/ssh")
-  if [ -z "$SSH_ASKPASS" ]; then
+  # This checks whether ssh is run via sshpass or perhaps some other tool that
+  # assigns its own terminal to ssh.
+  is_tty_available() {
+      { : >/dev/tty; } &>/dev/null
+  }
+
+  if [ -z "$SSH_ASKPASS" ] && is_tty_available; then
       export SSH_ASKPASS="$(mktemp)"
       export SSH_ASKPASS_REQUIRE="prefer"
       chmod u+x "$SSH_ASKPASS"
