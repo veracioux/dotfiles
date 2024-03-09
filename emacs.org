@@ -526,7 +526,7 @@ Some custom keybindings are defined here as well.
   (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
   (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
 
-  (define-key input-decode-map "\C-i" [C-i])
+  (define-key input-decode-map [?\C-i] [C-i])
   (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
   (define-key evil-visual-state-map (kbd "C-i") 'evil-jump-forward)
 #+end_src
@@ -611,7 +611,7 @@ Some custom keybindings are defined here as well.
                                             (interactive)
                                             (counsel-shell-history)))
 
-  (define-key evil-normal-state-map (kbd "TAB") #'evil-shift-right-line)
+  (define-key evil-normal-state-map (kbd "<tab>") #'evil-shift-right-line)
   (define-key evil-normal-state-map (kbd "<backtab>") #'evil-shift-left-line)
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
@@ -708,6 +708,11 @@ Some custom keybindings are defined here as well.
   (setq lsp-completion-provider :none)
 
   (setq lsp-restart nil)
+#+end_src
+*** Keybindings
+#+begin_src elisp
+  (evil-define-key 'normal lsp-mode-map (kbd "M-RET") #'lsp-execute-code-action)
+  (evil-define-key 'insert lsp-mode-map (kbd "M-RET") #'lsp-execute-code-action)
 #+end_src
 ** DAP
 #+begin_src elisp
