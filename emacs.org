@@ -50,10 +50,6 @@ unnecessary code.
   editing and applications that don't warrant a standalone daemon.
   - Configuration file :: =~/.emacs.d/default.el=
 
-  #+begin_src systemd :tangle no
-    <<emacs.service>>
-  #+end_src
-
   #+NAME: emacs.service
   #+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/emacs.service") :exports none
     [Unit]
@@ -63,6 +59,7 @@ unnecessary code.
     [Service]
     Type=forking
     Environment=COLORTERM=truecolor
+    Environment=LSP_USE_PLISTS=true
     ExecStart=/usr/bin/emacs --daemon="emacs"
     Restart=on-failure
     TimeoutStartSec=600
