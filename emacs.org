@@ -1496,10 +1496,9 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 * Vterm
 #+begin_src elisp
+  (setq vterm-max-scrollback 10000)
+
   (setq vterm-exit-functions 'delete-frame)
-  ;; If I set vterm-shell directly, it is overriden by shell layer
-  (setq shell-default-term-shell "fish")
-  (setq vterm-min-window-width 99999)
 
   (defun haris/vterm-set-environment-windowid (&rest _)
     (setq
@@ -1510,8 +1509,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
                         (cadr (cadr
                                (current-frame-configuration)))))))))
 
-  ;; Ideally, I would add haris/vterm-set-environment-windowid to a vterm-before-shell-hook,
-  ;; if such a hook existed. But it doesn't, so...
+  ;; Ideally, I would add haris/vterm-set-environment-windowid to a
+  ;; vterm-before-shell-hook, if such a hook existed. But it doesn't, so...
   (advice-add #'vterm                          :before #'haris/vterm-set-environment-windowid)
   (advice-add #'multi-vterm                    :before #'haris/vterm-set-environment-windowid)
   (advice-add #'spacemacs/shell-pop-vterm      :before #'haris/vterm-set-environment-windowid)
@@ -1519,19 +1518,31 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 
   (defalias 'haris/vterm-toggle-freeze 'vterm-copy-mode
     "Freeze/unfreeze the output of the current vterm buffer")
+#+end_src
+** Line wrapping workaround
+Vterm doesn't automatically re-wrap truncated lines when the terminal width
+increases. This seems to be a [[https://github.com/akermu/emacs-libvterm/issues/179][bug]].
+
+I wrap my shell in =screen= as a workaround. NOTE: If I set =vterm-shell=
+directly, it is overriden by the Spacemacs shell layer.
+#+begin_src elisp
+  (setq shell-default-term-shell "screen fish")
+#+end_src
+** Bindings
+#+begin_src elisp
+  (defun haris/vterm-clear-keep-scrollback ()
+    (interactive)
+    (let ((vterm-clear-scrollback-when-clearing nil))
+      (vterm-clear)))
+
+  (evil-define-key 'normal vterm-mode-map (kbd "C-l") #'haris/vterm-clear-keep-scrollback)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-l") #'haris/vterm-clear-keep-scrollback)
 
   (evil-define-key 'normal vterm-mode-map      (kbd "0")     'evil-collection-vterm-first-non-blank)
   (evil-define-key 'normal vterm-mode-map      (kbd "A")     'evil-append-line)
   (evil-define-key 'normal vterm-mode-map      (kbd "M-TAB") 'other-window)
   (evil-define-key 'normal vterm-mode-map      (kbd ",f")    'haris/vterm-toggle-freeze)
   (evil-define-key 'normal vterm-copy-mode-map (kbd ",f")    'haris/vterm-toggle-freeze)
-#+end_src
-** TODO WTF?
-This doesn't work consistently.
-#+begin_src elisp
-  ;; (define-key vterm-mode-map (kbd "C-l") 'vterm-clear-scrollback)
-  ;; (define-key vterm-mode-map (kbd "C-l") 'erase-buffer)
-  ;; (define-key vterm-mode-map (kbd "C-d") 'vterm-send-C-d)
 #+end_src
 * Completion
 Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].

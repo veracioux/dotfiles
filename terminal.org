@@ -175,6 +175,8 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 * Screen
 #+begin_src conf :tangle (haris/tangle-home ".screenrc")
   bindkey ^X quit
+  termcapinfo * ti@:te@
+  term screen-256color
 #+end_src
 * Cheat
 #+begin_src yaml :tangle (haris/tangle-home ".config/cheat/conf.yml")
