@@ -52,7 +52,7 @@ alternative dotfiles directory to '~/.haris'."
       (message "Tangling file: %s" file)
       (haris/tangle--file-non-interactively file)))
   (when to-destination
-    (shell-command (concat "rsync -rvu " (haris/tangle-home) " ~/"))))
+    (shell-command (concat "rsync -rvu --keep-dirlinks " (haris/tangle-home) " ~/"))))
 
 (defun org-babel-noweb-wrap (&optional regexp)
   (rx-to-string

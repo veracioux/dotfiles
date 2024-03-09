@@ -1315,7 +1315,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
       (delete-directory tangle-home t)
       (org-transclusion-add-all)
       (org-babel-tangle prefix-arg)
-      (shell-command (concat "rsync -ru " tangle-home " ~/"))))
+      (shell-command (concat "rsync -ru --keep-dirlinks " tangle-home " ~/"))))
 
   (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle-dest)
 #+end_src

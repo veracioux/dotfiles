@@ -81,7 +81,7 @@ Custom functions and tweaks:
         (message "Tangling file: %s" file)
         (haris/tangle--file-non-interactively file)))
     (when to-destination
-      (shell-command (concat "rsync -rvu " (haris/tangle-home) " ~/"))))
+      (shell-command (concat "rsync -rvu --keep-dirlinks " (haris/tangle-home) " ~/"))))
 #+end_src
 The normal =<<...>>= syntax for noweb references breaks shell blocks. So I allow
 =«...»= as an alternative syntax to prevent that.
