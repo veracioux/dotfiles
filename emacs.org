@@ -187,8 +187,10 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (url-handler-mode)
 
   ;; Scrolling
-  (pixel-scroll-precision-mode)
   (setq scroll-bar-mode-explicit nil)
+  (use-package fast-scroll)
+  (fast-scroll-config)
+  (fast-scroll-mode 1)
 
   (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
   (if (not (boundp 'haris/prepended-path))
