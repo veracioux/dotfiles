@@ -2043,7 +2043,7 @@ I use this variable to check if the config loaded correctly.
   (setq haris/config-loaded-fine (current-time-string))
 #+end_src
 ** Private config
-The private config is loaded from [[~/.emacs.d/haris/private][~/.emacs.d/haris/private.el]].
+The private config is loaded from [[~/.emacs.d/haris/private.el]].
 #+begin_src elisp
   (let ((file "~/.emacs.d/haris/private.el"))
     (when (file-exists-p file) (load-file file)))
