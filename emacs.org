@@ -1754,13 +1754,14 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
            original-value))
         (t original-value))))
 
-  (defun haris/init-company-for-mode (mode)
+  (defun haris/init-company-backends-for-mode (mode company-backends)
     "Add a hook for MODE which initializes company backends for it.
   The backends are taken from the variable haris/company-backends-MODE."
     (let ((mode-hook-symbol (intern (format "%s-hook" mode)))
           (init-func-symbol (intern
                              (format "haris/init-company-backends-for-%s" mode)))
           (backends-var-symbol (intern (format "haris/company-backends-%s" mode))))
+      (eval `(setq ,backends-var-symbol company-backends))
       (defalias init-func-symbol
         `(lambda ()
            (setq-local company-backends ,backends-var-symbol))
@@ -1776,91 +1777,67 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
           (company-semantic company-dabbrev-code company-keywords :with company-yasnippet)
           (company-dabbrev :with company-yasnippet)))
 
-  (setq haris/company-backends-sh-mode
-        '(
-          (company-files :with company-yasnippet)
-          (;; This will only take effect in fish mode
-           company-fish-shell
-           company-shell-env
-           company-shell
-           company-capf
-           :with company-yasnippet)
-          (company-semantic
-           company-dabbrev-code
-           company-keywords
-           :with company-yasnippet)
-          (company-dabbrev :with company-yasnippet)))
-  (haris/init-company-for-mode 'sh-mode)
+  (haris/init-company-backends-for-mode
+   'sh-mode
+   '(
+     (company-files :with company-yasnippet)
+     (;; This will only take effect in fish mode
+      company-fish-shell
+      company-shell-env
+      company-shell
+      company-capf
+      :with company-yasnippet)
+     (company-semantic
+      company-dabbrev-code
+      company-keywords
+      :with company-yasnippet)
+     (company-dabbrev :with company-yasnippet)))
 
-  (remove-hook 'org-mode-hook #'spacemacs//init-company-org-mode)
-  (setq haris/company-backends-org-mode
-        '(haris/company-tempo
-          (company-files :with company-yasnippet)
-          (company-capf :with company-yasnippet)
-          (company-semantic
-           company-dabbrev-code
-           company-keywords
-           :with company-yasnippet)
-          (company-dabbrev :with company-yasnippet)))
-  (haris/init-company-for-mode 'org-mode)
+  (remove-hook 'org-mode-hook #'spacemacs//init-company-backends-org-mode)
+  (haris/init-company-backends-for-mode
+   'org-mode
+   '(haris/company-tempo
+     (company-files :with company-yasnippet)
+     (company-capf :with company-yasnippet)
+     (company-semantic
+      company-dabbrev-code
+      company-keywords
+      :with company-yasnippet)
+     (company-dabbrev :with company-yasnippet)))
 
-  (setq haris/company-backends-nginx-mode
-        '((company-files :with company-yasnippet)
-          (company-nginx
-           company-semantic
-           company-dabbrev-code
-           company-keywords
-           :with company-yasnippet)
-          (company-dabbrev :with company-yasnippet)))
-  (haris/init-company-for-mode 'nginx-mode)
+  (haris/init-company-backends-for-mode
+   'nginx-mode
+   '((company-files :with company-yasnippet)
+     (company-nginx
+      company-semantic
+      company-dabbrev-code
+      company-keywords
+      :with company-yasnippet)
+     (company-dabbrev :with company-yasnippet)))
 
-  (setq haris/company-backends-yaml-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'yaml-mode)
+  (haris/init-company-backends-for-mode 'yaml-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'yaml-ts-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'java-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'python-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'sql-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'systemd-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'haris/git-commit-major-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'typescript-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'emacs-lisp-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'lisp-data-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'docker-compose-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'markdown-mode haris/company-backends-default)
 
-  (setq haris/company-backends-yaml-ts-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'yaml-ts-mode)
-
-  (setq haris/company-backends-java-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'java-mode)
-
-  (setq haris/company-backends-python-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'python-mode)
-
-  (setq haris/company-backends-sql-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'sql-mode)
-
-  (setq haris/company-backends-systemd-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'systemd-mode)
-
-  (setq haris/company-backends-haris/git-commit-major-mode
-        haris/company-backends-default)
-  (haris/init-company-for-mode 'haris/git-commit-major-mode)
-
-  (setq haris/company-backends-typescript-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'typescript-mode)
-
-  (setq haris/company-backends-emacs-lisp-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'emacs-lisp-mode)
-
-  (setq haris/company-backends-lisp-data-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'lisp-data-mode)
-
-  (setq haris/company-backends-docker-compose-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'docker-compose-mode)
-
-  (setq haris/company-backends-markdown-mode haris/company-backends-default)
-  (haris/init-company-for-mode 'markdown-mode)
-
-  ;; TODO: company-edbi seems to be useless
-  (setq haris/company-backends-sql-interactive-mode
-        '((company-files :with company-yasnippet)
-          (company-edbi
-           company-semantic
-           company-dabbrev-code
-           company-keywords
-           :with company-yasnippet)
-          (company-dabbrev :with company-yasnippet)))
-  (haris/init-company-for-mode 'sql-interactive-mode)
+  (haris/init-company-backends-for-mode
+   'sql-interactive-mode
+   '((company-files :with company-yasnippet)
+     ;; TODO: company-edbi seems to be useless
+     (company-edbi
+      company-semantic
+      company-dabbrev-code
+      company-keywords
+      :with company-yasnippet)
+     (company-dabbrev :with company-yasnippet)))
 #+end_src
 This variable is initialized too late, and we require it [[(company-backends-emacs-lisp-mode/usage)][here]]. I wasn't able to
 identify where exactly it is initialized by spacemacs, so I set it explicitly here.
