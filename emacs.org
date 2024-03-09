@@ -635,9 +635,7 @@ Some custom keybindings are defined here as well.
 
   (eval-after-load "yaml"
     (defun haris//after-load/yaml ()
-      (use-package yaml-pro)
-      (require 'openapi-yaml-mode)
-      (require 'openapi-preview)))
+      (use-package yaml-pro)))
 
   ;; Use yaml-ts-mode instead of yaml-mode (it's faster), unless the mode is docker-compose-mode.
   (add-hook 'yaml-mode-hook
@@ -648,6 +646,10 @@ Some custom keybindings are defined here as well.
   (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook))
         (hook))
     (dolist (hook hooks)
+      (add-hook hook
+                (lambda ()
+                  (require 'openapi-yaml-mode)
+                  (require 'openapi-preview)))
       (add-hook hook #'eldoc-mode 90)
       (add-hook hook #'yaml-pro-ts-mode 91)
       (add-hook hook
