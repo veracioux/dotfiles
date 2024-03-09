@@ -701,6 +701,9 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
   (setq projectile-auto-discover nil)
   (setq projectile-track-known-projects-automatically nil)
 
+  (setq lsp-idle-delay 0.1)
+  (setq lsp-keep-workspace-alive nil)
+
   ;; Diagnostic mode doesn't work well with flycheck
   (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
 
@@ -1408,6 +1411,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
               'haris/org-src-tangle)
   (define-key spacemacs-org-src-mode-map (kbd "bT")
               'haris/org-src-tangle-dest)
+
+  (spacemacs/set-leader-keys-for-minor-mode 'org-mode "l" #'lsp-org)
 #+end_src
 *** Helper functions
 #+begin_src elisp
