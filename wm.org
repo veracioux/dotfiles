@@ -96,11 +96,11 @@ These scripts are used by the other sections:
 
   # Common sizes
   set $resizeW0         resize set width 20
-  set $resizeH0         resize set height 20
-  set $resize1          resize set width 710  height   600
-  set $resize2          resize set width 900  height   700
-  set $resize3          resize set width 1100 height  800
-  set $resize4          resize set width 1400 height  900
+  set $resizeH0         resize set            height 20
+  set $resize1          resize set width 710  height 600
+  set $resize2          resize set width 900  height 700
+  set $resize3          resize set width 1100 height 800
+  set $resize4          resize set width 1400 height 900
   set $resize_devtools  resize set width 1400 height 600
   set $resize_fullhd    resize set width 1920 height 1080
   set $resize_term      resize set width 710
@@ -149,6 +149,7 @@ Shared between i3 and sway:
   hide_edge_borders none
   gaps inner 6
   gaps outer 0
+  popup_during_fullscreen leave_fullscreen
   for_window [window_type="dialog"]     border normal 2
   for_window [window_type="popup_menu"] border normal 2
 
