@@ -138,11 +138,18 @@ finishes; unless the command was =clear= in which case we don't print it in orde
 to prevent the line to be visible after clearing.
 #+begin_src fish
   function __haris_draw_output_separator --on-event fish_postexec
-      # When clearing the screen using 'clean' (without -x), the output separator
+      set -l _pipestatus "$fish_pipestatus"
+      # When clearing the screen using 'clear' (without -x), the output separator
       # should not be drawn. Otherwise the terminal would contain a line on the top.
       if echo "$argv" | grep -v -- '-x' | grep -qE '^clear($|\s)'
           return
       end
+
+      # Clear any ^C text (due to pressing Ctrl+C to quit the previous process)
+      if string match -rq 'SIGINT$' (__fish_print_pipestatus '' '' ' ' '' '' $pipestatus)
+          echo -ne '\b\b'
+      end
+
       bash -c 'echo -ne "\e[38;5;238m"; printf "%*s\n" "${COLUMNS:-$(tput cols)}" " " | sed "s: :—:g"'
   end
 #+end_src
