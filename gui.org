@@ -105,6 +105,7 @@ Some settings in GTK 3.0 don't work if we quote their values.
   file:///home/<<eval-user-name()>>/repo repo
   file:///home/<<eval-user-name()>>/data/literature literature
   file:///home/<<eval-user-name()>>/cloud unbound
+  file:///dev/null unbound
   file:///tmp/stage-<<eval-user-name()>> stage
 #+end_src
 * Flameshot
