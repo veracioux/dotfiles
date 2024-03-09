@@ -1845,6 +1845,9 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (setq haris/company-backends-docker-compose-mode haris/company-backends-default)
   (haris/init-company-for-mode 'docker-compose-mode)
 
+  (setq haris/company-backends-markdown-mode haris/company-backends-default)
+  (haris/init-company-for-mode 'markdown-mode)
+
   ;; TODO: company-edbi seems to be useless
   (setq haris/company-backends-sql-interactive-mode
         '((company-files :with company-yasnippet)
