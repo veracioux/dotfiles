@@ -998,6 +998,7 @@ abbreviations for equivalent apt operations.
   abbr -g dv     "$__haris_docker volume"
   abbr -g dvl    "$__haris_docker volume ls"
   abbr -g dvc    "$__haris_docker volume create"
+  abbr -g dvr    "$__haris_docker volume rm"
   abbr -g dvi    "$__haris_docker volume inspect"
   abbr -g dvp    "$__haris_docker volume prune"
 
