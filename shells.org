@@ -454,7 +454,13 @@ on the plugin list above.
 *** =chbg=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/chbg.fish")
   function chbg
-      set path /usr/share/backgrounds/"$argv[1]"
+      set -l path (
+          ls 2>/dev/null \
+              ~/.local/share/backgrounds/"$argv[1]" \
+              /usr/local/share/backgrounds/"$argv[1]" \
+              /usr/share/backgrounds/"$argv[1]" |
+              head -1
+      )
       feh --bg-fill "$path"
       rm ~/.wallpaper
       ln -s "$path" ~/.wallpaper
@@ -462,7 +468,15 @@ on the plugin list above.
 #+end_src
 **** Completions
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/chbg.fish")
-  complete --command chbg --no-files --arguments="(pushd /usr/share/backgrounds/; command ls -1; popd)"
+  complete --command chbg --no-files --arguments="(
+      begin
+          ls -1 2>/dev/null ~/.local/share/backgrounds
+          ls -1 2>/dev/null /usr/local/share/backgrounds
+          ls -1 2>/dev/null /usr/share/backgrounds
+      end |
+          sort |
+          uniq
+  )"
 #+end_src
 *** =vicmd=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/vicmd.fish")
