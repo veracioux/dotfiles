@@ -831,6 +831,22 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 #+begin_src text :tangle (haris/tangle-deps "emacs/dockerfile.aur")
   dockerfile-language-server
 #+end_src
+** Docker Compose
+#+begin_src elisp
+  (add-to-list 'auto-mode-alist '("compose\.ya?ml$" . docker-compose-mode))
+
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection
+                                     '("docker-compose-langserver" "--stdio"))
+                    :activation-fn (lsp-activate-on "yaml")
+                    :priority 0
+                    :server-id 'compose-ls
+                    :major-modes '(docker-compose-mode)))
+#+end_src
+*** Dependencies
+#+begin_src text :tangle (haris/tangle-deps "emacs/docker-compose.npm")
+  docker-compose-langserver
+#+end_src
 ** SQL
 #+begin_src elisp
   (setq sql-capitalize-keywords t)
