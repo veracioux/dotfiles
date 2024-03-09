@@ -932,99 +932,113 @@ abbreviations for equivalent apt operations.
   if [ -n "$__haris_docker" ]
 #+end_src
 #+begin_src fish
-  conditional_abbr -g d      "$__haris_docker"
-  conditional_abbr -g db     "$__haris_docker build"
-  conditional_abbr -g dbn    "$__haris_docker build --no-cache"
+  abbr -g d      "$__haris_docker"
+  abbr -g db     "$__haris_docker build"
+  abbr -g dbn    "$__haris_docker build --no-cache"
 
-  conditional_abbr -g dr     "$__haris_docker run"
-  conditional_abbr -g drit   "$__haris_docker run -it"
-  conditional_abbr -g drite  "$__haris_docker run -it --entrypoint"
+  abbr -g dr     "$__haris_docker run"
+  abbr -g drit   "$__haris_docker run -it"
+  abbr -g drite  "$__haris_docker run -it --entrypoint"
 
-  conditional_abbr -g deit   "$__haris_docker exec -it"
+  abbr -g deit   "$__haris_docker exec -it"
 
-  conditional_abbr -g drm    "$__haris_docker rm -f"
+  abbr -g drm    "$__haris_docker rm -f"
 
-  conditional_abbr -g di     "$__haris_docker image"
-  conditional_abbr -g dil    "$__haris_docker image ls"
-  conditional_abbr -g dip    "$__haris_docker image prune"
-  conditional_abbr -g dii    "$__haris_docker image inspect"
-  conditional_abbr -g dir    "$__haris_docker image rm"
+  abbr -g di     "$__haris_docker image"
+  abbr -g dil    "$__haris_docker image ls"
+  abbr -g dip    "$__haris_docker image prune"
+  abbr -g dii    "$__haris_docker image inspect"
+  abbr -g dir    "$__haris_docker image rm"
 
-  conditional_abbr -g dc     "$__haris_docker container"
-  conditional_abbr -g dcl    "$__haris_docker container ls"
-  conditional_abbr -g dcp    "$__haris_docker container prune"
-  conditional_abbr -g dci    "$__haris_docker container inspect"
+  abbr -g dc     "$__haris_docker container"
+  abbr -g dcl    "$__haris_docker container ls"
+  abbr -g dcp    "$__haris_docker container prune"
+  abbr -g dci    "$__haris_docker container inspect"
 
-  conditional_abbr -g dv     "$__haris_docker volume"
-  conditional_abbr -g dvl    "$__haris_docker volume ls"
-  conditional_abbr -g dvi    "$__haris_docker volume inspect"
-  conditional_abbr -g dvp    "$__haris_docker volume prune"
+  abbr -g dv     "$__haris_docker volume"
+  abbr -g dvl    "$__haris_docker volume ls"
+  abbr -g dvi    "$__haris_docker volume inspect"
+  abbr -g dvp    "$__haris_docker volume prune"
 
-  conditional_abbr -g ds     "$__haris_docker system"
-  conditional_abbr -g dsp    "$__haris_docker system prune"
-  conditional_abbr -g dsd    "$__haris_docker system df -v"
+  abbr -g dn     "$__haris_docker network"
+  abbr -g dnl    "$__haris_docker network ls"
+  abbr -g dni    "$__haris_docker network inspect"
+  abbr -g dnp    "$__haris_docker network prune"
+  abbr -g dnr    "$__haris_docker network rm"
+  abbr -g dnc    "$__haris_docker network connect"
+  abbr -g dnd    "$__haris_docker network disconnect"
+  abbr -g dnC    "$__haris_docker network create"
 
-  conditional_abbr -g dm     "$__haris_docker manifest"
-  conditional_abbr -g dmi    "$__haris_docker manifest inspect"
+  abbr -g ds     "$__haris_docker system"
+  abbr -g dsp    "$__haris_docker system prune"
+  abbr -g dsd    "$__haris_docker system df -v"
 
-  conditional_abbr -g dhh    "$__haris_docker history"
+  abbr -g dm     "$__haris_docker manifest"
+  abbr -g dmi    "$__haris_docker manifest inspect"
+
+  abbr -g dhh    "$__haris_docker history"
 #+end_src
 #+begin_src fish
   end
 #+end_src
 ***** Compose
 #+begin_src fish
-  if [ "$__haris_docker" = "docker" ]
-      conditional_abbr -g D      'docker-compose'
+  if [ "$__haris_docker" = "docker" ] &&
+      begin
+          docker compose version ||
+          docker-compose version
+      end &>/dev/null
+      abbr -g D      'docker-compose'
 
-      conditional_abbr -g Db     'docker-compose build'
+      abbr -g Db     'docker-compose build'
 
-      conditional_abbr -g Du     'docker-compose up'
-      conditional_abbr -g Dub    'docker-compose up --build'
-      conditional_abbr -g Dud    'docker-compose up -d'
-      conditional_abbr -g Dubd   'docker-compose up --build -d'
+      abbr -g Du     'docker-compose up'
+      abbr -g Dub    'docker-compose up --build'
+      abbr -g Dud    'docker-compose up -d'
+      abbr -g Dubd   'docker-compose up --build -d'
 
-      conditional_abbr -g Dr     'docker-compose run'
-      conditional_abbr -g Drit   'docker-compose run -it'
-      conditional_abbr -g Dritd  'docker-compose run -it -d'
-      conditional_abbr -g Dritb  'docker-compose run -it --build'
-      conditional_abbr -g Dritn  'docker-compose run -it --no-deps'
-      conditional_abbr -g Dritbn 'docker-compose run -it --build --no-deps'
-      conditional_abbr -g Drite  'docker-compose run -it --entrypoint'
+      abbr -g Dr     'docker-compose run'
+      abbr -g Drit   'docker-compose run -it'
+      abbr -g Dritd  'docker-compose run -it -d'
+      abbr -g Dritb  'docker-compose run -it --build'
+      abbr -g Dritn  'docker-compose run -it --no-deps'
+      abbr -g Dritbn 'docker-compose run -it --build --no-deps'
+      abbr -g Drite  'docker-compose run -it --entrypoint'
 
-      conditional_abbr -g Ds     'docker-compose start'
-      conditional_abbr -g DS     'docker-compose stop'
-      conditional_abbr -g DR     'docker-compose restart'
+      abbr -g Ds     'docker-compose start'
+      abbr -g DS     'docker-compose stop'
+      abbr -g DR     'docker-compose restart'
 
-      conditional_abbr -g Deit   'docker-compose exec -it'
-      conditional_abbr -g Drm    'docker-compose rm -sf'
-      conditional_abbr -g Dd     'docker-compose down'
-      conditional_abbr -g DD     'docker-compose down'
-      conditional_abbr -g Dl     'docker-compose logs -f'
-      conditional_abbr -g Dc     'docker-compose config'
+      abbr -g Deit   'docker-compose exec -it'
+      abbr -g Drm    'docker-compose rm -sf'
+      abbr -g Dd     'docker-compose down'
+      abbr -g DD     'docker-compose down'
+      abbr -g Dl     'docker-compose logs -f'
+      abbr -g Dc     'docker-compose config'
   end
 #+end_src
 **** Pass
 #+begin_src fish
-  # Pass
-  conditional_abbr -g pn 'pass insert'
-  conditional_abbr -g pg 'pass generate --clip'
-  conditional_abbr -g pe 'pass edit'
-  conditional_abbr -g pc 'pass show --clip'
+  if command --quiet pass
+      conditional_abbr -g pn 'pass insert'
+      conditional_abbr -g pg 'pass generate --clip'
+      conditional_abbr -g pe 'pass edit'
+      conditional_abbr -g pc 'pass show --clip'
+  end
 #+end_src
 **** Watch
 #+begin_src fish
-  conditional_abbr -g w0 'watch -n0.1'
-  conditional_abbr -g w1 'watch -n1'
-  conditional_abbr -g w2 'watch -n2'
+  abbr -g w0 'watch -n0.1'
+  abbr -g w1 'watch -n1'
+  abbr -g w2 'watch -n2'
 #+end_src
 **** Miscellaneous
 #+begin_src fish
   conditional_abbr -g g     'git'
   if [ -n "$DISPLAY" ]
-      conditional_abbr -g e     'myemacs -c'
+      conditional_abbr -g e 'myemacs -c'
   else
-      conditional_abbr -g e     'myemacs'
+      conditional_abbr -g e 'myemacs'
   end
   conditional_abbr -g E     'myemacs'
   conditional_abbr -g s     'sudo'
