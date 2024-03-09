@@ -1669,7 +1669,6 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
            company-shell
            company-capf
            :with company-yasnippet)
-          (company-emoji :with company-yasnippet)
           (company-semantic
            company-dabbrev-code
            company-gtags
@@ -1682,7 +1681,6 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (remove-hook 'org-mode-hook #'spacemacs//init-company-org-mode)
   (setq haris/company-backends-org-mode
         '(haris/company-tempo
-          (company-emoji :with company-yasnippet)
           (company-capf :with company-yasnippet)
           (company-semantic
            company-dabbrev-code
@@ -1695,8 +1693,7 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (haris/init-company-for-mode 'org-mode)
 
   (setq haris/company-backends-nginx-mode
-        '((company-emoji :with company-yasnippet)
-          (company-nginx company-semantic company-dabbrev-code company-gtags company-etags company-keywords :with company-yasnippet)
+        '((company-nginx company-semantic company-dabbrev-code company-gtags company-etags company-keywords :with company-yasnippet)
           (company-files :with company-yasnippet)
           (company-dabbrev :with company-yasnippet)))
   (haris/init-company-for-mode 'nginx-mode)
