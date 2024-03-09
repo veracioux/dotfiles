@@ -180,24 +180,6 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (setq xclip-program "xsel")
   (xclip-mode)
 
-  ;; Mark my own dotfiles as safe for all local variables
-  (defun haris/advice/whitelist-local-variables-in-trusted-files (orig-fun &rest args)
-    (let ((file-name ""))
-      ;; Get the file-name the operation applies to
-      (if (eql (type-of (car args)) 'string)
-          (setq file-name (car args))
-        (setq file-name buffer-file-name))
-      ;; If file whitelisted, enable local variables and local eval
-      (if (string-prefix-p (expand-file-name "~/.haris") file-name)
-          (let ((enable-local-variables :all)
-                (enable-local-eval t))
-            (apply orig-fun args))
-        (apply orig-fun args))))
-
-  ;; Whitelist local variables and evals in some files I trust
-  (advice-add #'find-file-noselect :around #'haris/advice/whitelist-local-variables-in-trusted-files)
-  (advice-add #'revert-buffer      :around #'haris/advice/whitelist-local-variables-in-trusted-files)
-
   ;; Handle URLs as files
   (url-handler-mode)
 
