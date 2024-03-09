@@ -915,6 +915,16 @@ prevent the scripts from prompting the user for a password for =pass=.
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
   <<workspaces>>
 #+end_src
+** Workaround for Emacs
+Sometimes an Emacs frame becomes faulty and I can't close it. This workspace
+exists so I can move the frame there. The workspace is not bound to any keys so
+any window moved there is effectively closed.
+
+Note: The workspace is available using "workspace next/prev" navigation, but I
+seldom use that so it's fine.
+#+begin_src i3wm-config
+  bindsym $mod+apostrophe   move  container to  workspace "trash"
+#+end_src
 * Status bar
 #+begin_src i3wm-config
   bar {
