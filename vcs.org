@@ -45,6 +45,9 @@ My config for version control systems I use (overwhelmingly git + GitHub).
     b = branch
     chx = update-index --chmod=+x
     root = rev-parse --show-toplevel  # Needed for older versions of git
+#+end_src
+*** sparse-checkout
+#+begin_src gitconfig
     sc = sparse-checkout
     scl = sparse-checkout list
     sci = sparse-checkout init
