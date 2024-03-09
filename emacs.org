@@ -1664,6 +1664,12 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
 *** Backend configurations
 Most of these have been createdu using the default ones set up by Spacemacs [[(auto-completion)][auto-completion]] as the starting value.
 #+begin_src elisp
+  (setq haris/company-backends-default
+        '((company-files :with company-yasnippet)
+           (company-capf :with company-yasnippet)
+           (company-semantic company-dabbrev-code company-keywords :with company-yasnippet)
+           (company-dabbrev :with company-yasnippet)))
+
   (setq haris/company-backends-sh-mode
         '(
           (company-files :with company-yasnippet)
@@ -1675,8 +1681,6 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
            :with company-yasnippet)
           (company-semantic
            company-dabbrev-code
-           company-gtags
-           company-etags
            company-keywords
            :with company-yasnippet)
           (company-dabbrev :with company-yasnippet)))
@@ -1685,41 +1689,52 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (remove-hook 'org-mode-hook #'spacemacs//init-company-org-mode)
   (setq haris/company-backends-org-mode
         '(haris/company-tempo
+          (company-files :with company-yasnippet)
           (company-capf :with company-yasnippet)
           (company-semantic
            company-dabbrev-code
-           company-gtags
-           company-etags
            company-keywords
            :with company-yasnippet)
-          (company-files :with company-yasnippet)
           (company-dabbrev :with company-yasnippet)))
   (haris/init-company-for-mode 'org-mode)
 
   (setq haris/company-backends-nginx-mode
-        '((company-nginx company-semantic company-dabbrev-code company-gtags company-etags company-keywords :with company-yasnippet)
-          (company-files :with company-yasnippet)
-          (company-dabbrev :with company-yasnippet)))
-  (haris/init-company-for-mode 'nginx-mode)
-
-  (setq haris/company-backends-yaml-mode
         '((company-files :with company-yasnippet)
-          (company-capf :with company-yasnippet)
-          (company-semantic
+          (company-nginx
+           company-semantic
            company-dabbrev-code
            company-keywords
            :with company-yasnippet)
           (company-dabbrev :with company-yasnippet)))
+  (haris/init-company-for-mode 'nginx-mode)
+
+  (setq haris/company-backends-yaml-mode haris/company-backends-default)
   (haris/init-company-for-mode 'yaml-mode)
+
+  (setq haris/company-backends-java-mode haris/company-backends-default)
+  (haris/init-company-for-mode 'java-mode)
+
+  (setq haris/company-backends-python-mode haris/company-backends-default)
+  (haris/init-company-for-mode 'python-mode)
+
+  (setq haris/company-backends-sql-mode haris/company-backends-default)
+  (haris/init-company-for-mode 'sql-mode)
+
+  ;; TODO: company-edbi seems to be useless
+  (setq haris/company-backends-sql-interactive-mode
+        '((company-files :with company-yasnippet)
+           (company-edbi
+            company-semantic
+            company-dabbrev-code
+            company-keywords
+            :with company-yasnippet)
+           (company-dabbrev :with company-yasnippet)))
+  (haris/init-company-for-mode 'sql-interactive-mode)
 #+end_src
 This variable is initialized too late, and we require it [[(company-backends-emacs-lisp-mode/usage)][here]]. I wasn't able to
 identify where exactly it is initialized by spacemacs, so I set it explicitly here.
 #+begin_src elisp
-  (setq company-backends-emacs-lisp-mode
-        '((company-capf company-dabbrev-code :with company-yasnippet)
-          (company-semantic company-dabbrev-code company-gtags company-etags company-keywords :with company-yasnippet)
-          (company-files :with company-yasnippet)
-          (company-dabbrev :with company-yasnippet)))
+  (setq company-backends-emacs-lisp-mode haris/company-backends-default)
 #+end_src
 *** Behavior overrides
 #+begin_src elisp
