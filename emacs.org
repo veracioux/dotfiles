@@ -1726,6 +1726,9 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (setq haris/company-backends-sql-mode haris/company-backends-default)
   (haris/init-company-for-mode 'sql-mode)
 
+  (setq haris/company-backends-systemd-mode haris/company-backends-default)
+  (haris/init-company-for-mode 'systemd-mode)
+
   ;; TODO: company-edbi seems to be useless
   (setq haris/company-backends-sql-interactive-mode
         '((company-files :with company-yasnippet)
@@ -1787,6 +1790,8 @@ other maps, so I define it here.
 #+begin_src elisp
   (use-package yasnippet)
   (yas-reload-all)
+
+  (setq yas-alias-to-yas/prefix-p nil)
 
   (add-hook 'git-commit-mode-hook #'haris/yas-minor-mode-on)
   (add-hook 'git-commit-mode-hook (lambda () (yas-activate-extra-mode 'git-commit-mode)))
