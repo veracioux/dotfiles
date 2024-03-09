@@ -1465,6 +1465,17 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (remove-hook 'server-switch-hook 'magit-commit-diff)
   (remove-hook 'with-editor-filter-visit-hook 'magit-commit-diff)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+
+  (define-derived-mode haris/git-commit-major-mode
+    text-mode
+    "Git commit major mode (Custom)"
+    "Custom major mode for editing git commit messages.")
+  (add-hook 'git-commit-mode-hook #'haris/git-commit-major-mode)
+
+  (defun haris/git-commit/cd-to-worktree ()
+    (setq-local default-directory (magit-toplevel)))
+
+  (add-hook 'haris/git-commit-major-mode-hook #'haris/git-commit/cd-to-worktree 90)
 #+end_src
 ** Custom transient commands
 #+begin_src elisp
@@ -1764,6 +1775,10 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
 
   (setq haris/company-backends-systemd-mode haris/company-backends-default)
   (haris/init-company-for-mode 'systemd-mode)
+
+  (setq haris/company-backends-haris/git-commit-major-mode
+        haris/company-backends-default)
+  (haris/init-company-for-mode 'haris/git-commit-major-mode)
 
   ;; TODO: company-edbi seems to be useless
   (setq haris/company-backends-sql-interactive-mode
