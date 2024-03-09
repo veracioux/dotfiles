@@ -1210,6 +1210,10 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<ivy>>
 #+end_src
+** Imenu
+#+begin_src elisp
+  (setq imenu-max-item-length nil)
+#+end_src
 * Org mode
 ** Packages
 #+begin_src elisp
