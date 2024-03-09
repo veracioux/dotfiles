@@ -1035,10 +1035,13 @@ abbreviations for equivalent apt operations.
       abbr -g DS     'docker-compose stop'
       abbr -g DR     'docker-compose restart'
 
+      abbr -g Dd     'docker-compose down'
+      abbr -g Ddo    'docker-compose down --remove-orphans'
+      abbr -g Ddv    'docker-compose down --volumes'
+      abbr -g Ddov   'docker-compose down --remove-orphans --volumes'
+
       abbr -g Deit   'docker-compose exec -it'
       abbr -g Drm    'docker-compose rm -sf'
-      abbr -g Dd     'docker-compose down'
-      abbr -g DD     'docker-compose down'
       abbr -g Dl     'docker-compose logs -f'
       abbr -g Dc     'docker-compose config'
   end
