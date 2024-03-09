@@ -2379,6 +2379,13 @@ Open a GUI window in the correct workspace.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/snip")
   nvim ~/.vim/snips/"$1".snippets
 #+end_src
+** =renice-emacs=
+Modify niceness of emacs processes to give them higher priority.
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/renice-emacs")
+  for pid in $(pgrep emacs); do
+      /usr/bin/renice -n -15 "$pid"
+  done
+#+end_src
 ** sxhkd
 TODO: move to main README
 
