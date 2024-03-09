@@ -1192,8 +1192,17 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
               (setq xref-show-xrefs-function 'ivy-xref-show-xrefs
                     xref-show-definitions-function 'ivy-xref-show-defs)))
 
-  (evil-define-key 'insert ivy-minibuffer-map (kbd "<backtab>")
-    (lambda () (interactive) (ivy-insert-current)))
+  (defun haris/ivy-insert-current ()
+    "Exactly the same as ivy-insert-current, but made interactive."
+    (interactive)
+    (ivy-insert-current))
+
+
+  (define-key ivy-minibuffer-map (kbd "<backtab>") #'haris/ivy-insert-current)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "C-n") #'ivy-next-line)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "C-p") #'ivy-previous-line)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "gg")   #'ivy-beginning-of-buffer)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "G")   #'ivy-end-of-buffer)
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<ivy>>
