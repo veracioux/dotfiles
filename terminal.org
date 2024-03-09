@@ -151,10 +151,10 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   }
 #+end_src
 * Tmux
-#+begin_src shell :tangle (haris/tangle-home ".tmux.conf")
+#+begin_src shell :tangle (haris/tangle-home ".tmux.conf") :shebang ""
   set -g status off
   set -g default-command /usr/bin/fish
-  set -g mouse on
+  set -g mouse off
   set -g escape-time 50  # millis
 
   # Change prefix key
