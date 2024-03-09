@@ -721,6 +721,9 @@ Some custom keybindings are defined here as well.
   (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
 
   (setq lsp-enable-on-type-formatting nil)
+
+  ;; This prevents lsp from overriding my custom 'company-backends'
+  (setq lsp-completion-provider :none)
 #+end_src
 ** DAP
 #+begin_src elisp
