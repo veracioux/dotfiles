@@ -84,6 +84,22 @@ the type of the purpose of the current emacs daemon (by reading the
                    ("~/.emacs.d/haris/default.el")))
 #+end_src
 * General
+** Theme
+I use a slightly customized version of the beautiful Dracula theme.
+*** Setup
+#+begin_src elisp
+  (setq custom-theme-directory "~/.emacs.d/private/themes")
+#+end_src
+*** Theme: Dracula
+#+begin_src elisp
+  (add-hook 'after-make-frame-functions
+            (defun haris/load-theme-delayed (frame)
+              ;; Without this the theme only loads after a second frame is created
+              (run-with-timer 0 nil
+                              (lambda ()
+                                (load-theme 'dracula t)))
+              (remove-hook 'after-make-frame-functions #'haris/load-theme-delayed)))
+#+end_src
 ** Package bootstrapping
 I normally use =use-package= for installing packages (with =melpa= as the default source).
 I use =straight= to clone some packages that are not available on =melpa=.
@@ -145,18 +161,12 @@ I use =straight= to clone some packages that are not available on =melpa=.
 #+begin_src elisp
   ;; Performance improvements
   (setq native-comp-async-report-warnings-errors nil)
-  (setq gc-cons-threshold (* 50 1024 1024))
+  ;; 500 MB
+  (setq gc-cons-threshold (* 500 1024 1024))
 
-  (setq fill-column 80)
-  (spacemacs/toggle-visual-line-navigation-globally-on)
-  (set-language-environment "UTF-8")
-  (setq-default tab-width 4)
-  (setq browse-url-generic-program (executable-find "firefox"))
   (setq image-auto-resize 'fit-width)
   (setq image-auto-resize-on-window-resize t)
   (setq evil-want-keybinding nil)
-  (setq mouse-wheel-scroll-amount '(6))
-  (setq dotspacemacs-search-tools '("rg" "grep"))
   (setq uniquify-buffer-name-style 'forward)
   (setq frame-title-format "%b"
         dotspacemacs-frame-title-format nil)
@@ -187,12 +197,6 @@ I use =straight= to clone some packages that are not available on =melpa=.
   ;; Handle URLs as files
   (url-handler-mode)
 
-  ;; Scrolling
-  (setq scroll-bar-mode-explicit nil)
-  (use-package fast-scroll)
-  (fast-scroll-config)
-  (fast-scroll-mode 1)
-
   (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
   (if (not (boundp 'haris/prepended-path))
       (progn
@@ -202,24 +206,36 @@ I use =straight= to clone some packages that are not available on =melpa=.
   ;; TODO whatever this does
   (add-hook 'text-mode-hook #'auto-fill-mode)
   (add-hook 'prog-mode-hook #'auto-fill-mode)
-
-  ;; Init and set theme
-  (setq custom-theme-directory "~/.emacs.d/private/themes")
-  (add-hook 'after-make-frame-functions
-            (defun haris/load-theme-delayed (frame)
-              ;; Without this the theme only loads after a second frame is created
-              (run-with-timer 0 nil
-                              (lambda ()
-                                (load-theme 'dracula t)))
-              (remove-hook 'after-make-frame-functions #'haris/load-theme-delayed)))
+#+end_src
+#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+  <<global-settings>>
+#+end_src
+*** Editor settings
+#+begin_src elisp
+  (setq fill-column 80)
+  (setq-default tab-width 4)
+  (spacemacs/toggle-visual-line-navigation-globally-on)
+  (set-language-environment "UTF-8")
+#+end_src
+*** External tools
+#+begin_src elisp
+  (setq browse-url-generic-program (executable-find "firefox"))
+  (setq dotspacemacs-search-tools '("rg" "grep"))
 
   ;; Ways to spawn shells from within Emacs
   (setq shell-default-shell 'shell)
   (setq terminal-here-linux-terminal-command '("alacritty")
         terminal-here-mac-terminal-command   '("alacritty"))
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
-  <<global-settings>>
+*** Scrolling
+#+begin_src elisp
+  (setq scroll-bar-mode-explicit nil)
+  (setq mouse-wheel-scroll-amount '(6))
+
+  ;; Fix scrolling performance
+  (use-package fast-scroll)
+  (fast-scroll-config)
+  (fast-scroll-mode 1)
 #+end_src
 *** Custom miscellaneous backup file patterns
 I change the following in order to prevent Emacs from complaining about
