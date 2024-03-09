@@ -175,6 +175,9 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (setq dired-kill-when-opening-new-dired-buffer t)
   ;; Enable clipboard in the terminal
   (use-package xclip)
+  ;; Using xclip instead makes emacsclient hang
+  (setq xclip-method 'xsel)
+  (setq xclip-program "xsel")
   (xclip-mode)
 
   ;; Mark my own dotfiles as safe for all local variables
