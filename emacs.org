@@ -93,6 +93,7 @@ I use a slightly customized version of the beautiful Dracula theme.
 #+end_src
 *** Theme: Dracula
 #+begin_src elisp
+  (load-theme 'dracula t)
   (add-hook 'after-make-frame-functions
             (defun haris/load-theme-delayed (frame)
               ;; Without this the theme only loads after a second frame is created
