@@ -729,7 +729,7 @@ them as code blocks here for better readability.
 *** TODO consider extracting this script into its own project
 ** =auto-browser=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/auto-browser")
-  browser='firefox'
+  browser='firefox -P «eval-user-name()»'
   # If a firefox window is currently active, open the link in the active window
   if xprop -id "$(xdotool getactivewindow)" | grep -qi 'firefox'; then
       where='--new-tab'
@@ -2451,6 +2451,11 @@ Returns the second executable with the given name, looked up in execpath.
 #+NAME: add-create-frame-option-if-term-dumb
 #+begin_src shell :tangle no
   set -- "$@" $([ "$TERM" = "dumb" ] && echo --create-frame || echo '')
+#+end_src
+** =eval-user-name=
+#+NAME: eval-user-name
+#+begin_src elisp
+  (user-login-name)
 #+end_src
 * Local variables                                                  :noexport:
 # Local Variables:
