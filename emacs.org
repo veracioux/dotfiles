@@ -628,6 +628,9 @@ Some custom keybindings are defined here as well.
                                             "Search through current history"
                                             (interactive)
                                             (counsel-shell-history)))
+
+  (define-key evil-normal-state-map (kbd "TAB") #'evil-shift-right-line)
+  (define-key evil-normal-state-map (kbd "<backtab>") #'evil-shift-left-line)
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<bindings-miscellaneous>>
