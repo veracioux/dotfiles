@@ -1937,6 +1937,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
      (shell-scripts :variables shell-scripts-backend 'lsp)
      javascript
      typescript
+     java
      prettier
      vue
      (yaml :variables yaml-enable-lsp t)
