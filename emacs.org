@@ -1469,7 +1469,14 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
 #+end_src
-* Comint
+* REPLs in Emacs
+** Common settings
+#+begin_src elisp
+  (add-hook 'comint-mode-hook #'smartparens-mode)
+  (add-hook 'vterm-mode-hook #'smartparens-mode)
+  (add-hook 'eshell-mode-hook #'smartparens-mode)
+#+end_src
+** Comint
 #+NAME: comint
 #+begin_src elisp
   (evil-collection-init 'comint)
@@ -1486,15 +1493,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<comint>>
 #+end_src
-* EAF
-** Dependencies
-#+begin_src shell :tangle (haris/tangle-deps "emacs/eaf.pacman")
-  git nodejs npm python-pyqt5 python-pyqt5-sip python-pyqtwebengine wmctrl python-pymupdf
-#+end_src
-#+begin_src shell :tangle (haris/tangle-deps "emacs/eaf.aur")
-  python-epc
-#+end_src
-* Vterm
+** Vterm
 #+begin_src elisp
   (setq vterm-max-scrollback 10000)
 
@@ -1528,6 +1527,25 @@ directly, it is overriden by the Spacemacs shell layer.
 #+begin_src elisp
   (setq shell-default-term-shell "screen fish")
 #+end_src
+*** Vterm daemon
+I sometimes use Emacs as my terminal emulator. For that I need additional
+stability, so I run a separate daemon for that, which is unaffected by blockage
+and crashes of my default Emacs instance.
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/vterm.service")
+  [Unit]
+  Description=Emacs daemon for Vterm
+
+  [Service]
+  Type=forking
+  Environment=COLORTERM=truecolor
+  ExecStart=/usr/bin/emacs --daemon="vterm"
+  Restart=on-failure
+  TimeoutStartSec=600
+  TimeoutStopSec=30
+
+  [Install]
+  WantedBy=default.target
+#+end_src
 ** Bindings
 #+begin_src elisp
   (defun haris/vterm-clear-keep-scrollback ()
@@ -1543,6 +1561,14 @@ directly, it is overriden by the Spacemacs shell layer.
   (evil-define-key 'normal vterm-mode-map      (kbd "M-TAB") 'other-window)
   (evil-define-key 'normal vterm-mode-map      (kbd ",f")    'haris/vterm-toggle-freeze)
   (evil-define-key 'normal vterm-copy-mode-map (kbd ",f")    'haris/vterm-toggle-freeze)
+#+end_src
+* EAF
+** Dependencies
+#+begin_src shell :tangle (haris/tangle-deps "emacs/eaf.pacman")
+  git nodejs npm python-pyqt5 python-pyqt5-sip python-pyqtwebengine wmctrl python-pymupdf
+#+end_src
+#+begin_src shell :tangle (haris/tangle-deps "emacs/eaf.aur")
+  python-epc
 #+end_src
 * Completion
 Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
