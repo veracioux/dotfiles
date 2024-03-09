@@ -4,15 +4,10 @@
 * Docker
 #+begin_src json :tangle (haris/tangle-home ".docker/config.json")
   {
-      "auths": {
-          "docker.veracioux.me": {},
-          "registry.heroku.com": {},
-          "veracioux.me": {}
-      },
-      "credsStore": "pass",
-      "aliases": {
-          "builder": "buildx"
-      }
+    "credsStore": "pass",
+    "aliases": {
+      "builder": "buildx"
+    }
   }
 #+end_src
 * Dunst
