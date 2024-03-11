@@ -1721,6 +1721,10 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
     (setq company-frontends (delq 'company-pseudo-tooltip-unless-just-one-frontend company-frontends))
     (add-to-list 'company-frontends 'company-pseudo-tooltip-frontend))
 #+end_src
+*** company-dabbrev
+#+begin_src elisp
+  (setq company-dabbrev-char-regexp "\\sw\\(?:-\\sw\\)*")
+#+end_src
 *** Functions
 #+begin_src elisp
   (defun haris/company-disable-idle-popup ()
