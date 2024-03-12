@@ -1861,6 +1861,7 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (haris/init-company-backends-for-mode 'typescript-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'emacs-lisp-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'lisp-data-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'dockerfile-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'docker-compose-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'markdown-mode haris/company-backends-default)
 
