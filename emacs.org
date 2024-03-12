@@ -1587,6 +1587,54 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
 #+end_src
+* AI
+** ChatGPT
+#+begin_src elisp
+  (setq chatgpt-model "gpt-4-turbo-preview")
+  (setq chatgpt-window-prompt "")
+  (setq chatgpt-display-method
+        (lambda (buffer-or-name)
+          (pop-to-buffer buffer-or-name
+                                  `((display-buffer-in-direction)
+                                    (dedicated . t)))
+          (spacemacs/toggle-maximize-buffer)
+          (chatgpt-type-response)))
+  (add-hook 'chatgpt-input-mode-hook
+            (defun haris//chatgpt-input-setup ()
+              (call-interactively 'evil-insert-state)))
+#+end_src
+*** Keybindings
+#+begin_src elisp
+  ;; ChatGPT mode
+  (define-key chatgpt-mode-map (kbd "q") 'quit-window)
+  (define-key chatgpt-mode-map (kbd "RET")
+              (defun haris//chatgpt-type-response ()
+                (interactive)
+                (let ((haris/chatgpt-session-buffer (current-buffer)))
+                  (chatgpt-type-response))))
+
+  ;; ChatGPT input mode
+  (evil-define-key 'normal chatgpt-input-mode-map (kbd "q") 'kill-this-buffer)
+  (evil-define-key 'visual chatgpt-input-mode-map (kbd "q") 'kill-this-buffer)
+#+end_src
+** Copilot
+  #+begin_src elisp
+    (straight-use-package '(copilot
+                            :type git
+                            :host github
+                            :repo "copilot-emacs/copilot.el"))
+    (setq copilot-indent-offset-warning-disable t)
+
+    (add-hook 'prog-mode-hook 'copilot-mode)
+    (add-hook 'org-mode-hook 'copilot-mode)
+    (add-hook 'minibuffer-mode-hook 'copilot-mode)
+
+    (with-eval-after-load 'copilot
+      (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+      (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+      (define-key copilot-completion-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
+      (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-word))
+#+end_src
 * REPLs in Emacs
 ** Common settings
 #+begin_src elisp
