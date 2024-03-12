@@ -205,6 +205,9 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   [url "git@veracioux.me:"]
     insteadOf = me:
 
+  [url "eo-git@veracioux.me:"]
+    insteadOf = me-eo:
+
   [url "https://gitlab.com/"]
     insteadOf = gl:
   [url "git@gitlab.com:"]
