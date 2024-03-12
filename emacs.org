@@ -631,6 +631,9 @@ Some custom keybindings are defined here as well.
   (add-hook 'evil-insert-state-exit-hook #'company-cancel)
 #+end_src
 * Programming languages
+#+begin_src elisp
+  (add-hook 'prog-mode-hook 'spacemacs/toggle-fill-column-indicator)
+#+end_src
 ** YAML
 #+begin_src elisp
   (evil-collection-init 'yaml-mode)
@@ -652,8 +655,10 @@ Some custom keybindings are defined here as well.
                 (lambda ()
                   (require 'openapi-yaml-mode)
                   (require 'openapi-preview)))
+      (add-hook hook 'spacemacs/toggle-indent-guide)
       (add-hook hook #'eldoc-mode 90)
       (add-hook hook #'yaml-pro-ts-mode 91)
+      (add-hook hook 'spacemacs/toggle-fill-column-indicator)
       (add-hook hook
                 (lambda ()
                   (setq-local counsel-jq-command "yq")) 92)
@@ -725,6 +730,7 @@ Some custom keybindings are defined here as well.
   (defun haris/json/set-indent-level () (setq-local js-indent-level 2))
 
   (add-hook 'json-mode-hook 'haris/json/set-indent-level)
+  (add-hook 'json-mode-hook 'spacemacs/toggle-indent-guide)
 
   (defalias 'jq 'counsel-jq)
 #+end_src
