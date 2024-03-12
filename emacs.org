@@ -1283,7 +1283,8 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
       (use-package ob-restclient)
       (use-package ol-man :ensure nil)
       (use-package org-tempo :ensure nil)
-      (use-package org-modern)))
+      (use-package org-modern)
+      (use-package company-org-block)))
 #+end_src
 ** Basic config
 #+begin_src elisp
@@ -1903,7 +1904,8 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
    '(haris/company-tempo
      (company-files :with company-yasnippet)
      (company-capf :with company-yasnippet)
-     (company-semantic
+     (company-org-block
+      company-semantic
       company-dabbrev-code
       company-keywords
       :with company-yasnippet)
