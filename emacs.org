@@ -1406,14 +1406,16 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 
   (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle-dest)
 #+end_src
-*** Associate org-src buffer to a file
+*** Make org-src buffer support lsp-mode
 #+begin_src elisp
   (add-hook
    'org-src-mode-hook
-   (defun haris/org-src-mode-assign-buffer-file-name ()
-     "Create a temporary file and associate it the current org-src-mode buffer to
-  it by setting 'buffer-file-name'. Cleanup of the temporary file is also
-  scheduled for when the buffer is killed."
+   (defun haris/org-src-mode-prepare-for-lsp-mode ()
+     "Make the current org-src buffer support lsp-mode.
+  1. Create a temporary file and associate it the current org-src-mode buffer to
+  it by setting 'buffer-file-name'.
+  2. Set the projectile-project-root to be the same as the source org buffer
+  3. Cleanup of the temporary file is also scheduled for when the buffer is killed."
      (let* ((tmpdir (make-temp-file "" t))
             ;; Naming the file " " is a hack that prevents an ugly
             ;; "<name>Edit, then exit with ..." in the org-src buffer's header
@@ -1421,6 +1423,10 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
        ;; Create a temporary association of the file with the proper major-mode
        (setq-local buffer-file-name filename)
        (write-region nil nil buffer-file-name)
+       ;; Set project root
+       (setq-local projectile-project-root
+             (org-src-do-at-code-block (projectile-project-root)))
+       (setq lsp-auto-guess-root t)
        ;; Clean up
        (add-hook
         'kill-buffer-hook
@@ -1511,6 +1517,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
               'haris/org-src-tangle-dest)
 
   (spacemacs/set-leader-keys-for-minor-mode 'org-mode "l" #'lsp-org)
+  (spacemacs/set-leader-keys-for-minor-mode 'org-src-mode "l" #'lsp)
 #+end_src
 *** Helper functions
 #+begin_src elisp
