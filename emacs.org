@@ -2190,13 +2190,14 @@ Remove Info mode annoying keybindings.
   (use-package tldr :defer t)
   (use-package devdocs-browser :defer t)
 
-  (setq devdocs-browser-major-mode-docs-alist
-        (append
-         devdocs-browser-major-mode-docs-alist
-         '((typescript-mode "TypeScript")
-           (javascript-mode "JavaScript")
-           (java-mode "OpenJDK")
-           (org-mode "elisp"))))
+  (with-eval-after-load 'devdocs-browser
+    (setq devdocs-browser-major-mode-docs-alist
+          (append
+           devdocs-browser-major-mode-docs-alist
+           '((typescript-mode "TypeScript")
+             (javascript-mode "JavaScript")
+             (java-mode "OpenJDK")
+             (org-mode "elisp")))))
 #+end_src
 *** Keybindings
 #+begin_src elisp
