@@ -208,6 +208,8 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (spacemacs/toggle-visual-line-navigation-globally-on)
   (set-language-environment "UTF-8")
   (modify-syntax-entry ?_ "w")
+  (setq indent-guide-delay 0.1)
+
 #+end_src
 *** External tools
 #+begin_src elisp
@@ -745,7 +747,7 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
   ;; This prevents lsp from overriding my custom 'company-backends'
   (setq lsp-completion-provider :none)
 
-  (setq lsp-restart nil)
+  (setq lsp-restart 'ignore)
 #+end_src
 *** Keybindings
 #+begin_src elisp
@@ -1274,7 +1276,8 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
       (use-package org-drill        :defer t)
       (use-package ob-restclient)
       (use-package ol-man :ensure nil)
-      (use-package org-tempo :ensure nil)))
+      (use-package org-tempo :ensure nil)
+      (use-package org-modern)))
 #+end_src
 ** Basic config
 #+begin_src elisp
@@ -1314,6 +1317,9 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
 
   (add-to-list 'org-file-apps '("\\.x?html?\\'" . "firefox %s"))
   (add-to-list 'org-export-backends 'md)
+
+  ;; Enable org-modern-mode
+  (with-eval-after-load 'org (global-org-modern-mode))
 #+end_src
 ** Agenda
 #+begin_src elisp
@@ -2152,6 +2158,8 @@ Remove Info mode annoying keybindings.
 #+begin_src elisp
   (use-package atomic-chrome)
   (setq atomic-chrome-buffer-open-style 'frame)
+
+  (add-hook 'after-init-hook 'atomic-chrome-start-server)
 #+end_src
 ** gitconfig-mode
 #+begin_src elisp
