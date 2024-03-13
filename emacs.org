@@ -1612,6 +1612,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 ** ChatGPT
 #+begin_src elisp
   (setq chatgpt-model "gpt-4-turbo-preview")
+  (setq codegpt-model "gpt-4-1106-preview")
   (setq chatgpt-window-prompt "")
   (setq chatgpt-display-method
         (lambda (buffer-or-name)
@@ -1633,6 +1634,9 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
                 (interactive)
                 (let ((haris/chatgpt-session-buffer (current-buffer)))
                   (chatgpt-type-response))))
+  ;; CodeGPT mode
+  (evil-define-key 'insert codegpt-mode-map (kbd "q") 'quit-window)
+  (evil-define-key 'normal codegpt-mode-map (kbd "q") 'quit-window)
 
   ;; ChatGPT input mode
   (evil-define-key 'normal chatgpt-input-mode-map (kbd "q") 'kill-this-buffer)
