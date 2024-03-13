@@ -1805,8 +1805,8 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
     (kill-local-variable 'company-idle-delay))
 
   (defun haris/company-candidate-is-snippet-p (candidate)
-    (member (get-text-property 0 'company-backend candidate)
-            '(company-tempo company-yasnippet)))
+    (equal (get-text-property 0 'company-backend candidate)
+            'company-yasnippet))
 
   (defun haris/company-sort-snippets-first (candidates)
     "Sort candidates using backend company-yasnippet before other ones."
@@ -1844,20 +1844,6 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
                   99999999
                 (funcall old-score-calc candidate)))))
       (company-sort-by-statistics candidates)))
-
-
-  (defun haris/company-tempo (command &rest rest)
-    "Customization of company-tempo.
-    By default, company-tempo does not properly stop when the prefix doesn't match
-    any of the completions it supports, which doesn't allow other backends to do
-    their own processing correctly."
-    (let ((original-value (apply #'company-tempo (append (list command) rest))))
-      (cl-case command
-        (prefix
-         (when (assoc (replace-regexp-in-string "^<" "" original-value)
-                      org-structure-template-alist)
-           original-value))
-        (t original-value))))
 
   (defun haris/init-company-backends-for-mode (mode company-backends)
     "Add a hook for MODE which initializes company backends for it.
@@ -1901,8 +1887,7 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (remove-hook 'org-mode-hook #'spacemacs//init-company-backends-org-mode)
   (haris/init-company-backends-for-mode
    'org-mode
-   '(haris/company-tempo
-     (company-files :with company-yasnippet)
+   '((company-files :with company-yasnippet)
      (company-capf :with company-yasnippet)
      (company-org-block
       company-semantic
