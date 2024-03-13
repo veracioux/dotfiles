@@ -2204,15 +2204,41 @@ Remove Info mode annoying keybindings.
   (spacemacs/set-leader-keys "hbd" 'devdocs-browser-open)
 #+end_src
 * Spacemacs
+This prevents Spacemacs from asking me to install missing layers. This forces me to put
+layers directly in [[(dotspacemacs-configuration-layers)][dotspacemacs-configuration-layers]], and keeps me from
+forgetting to put the layers in the versioned config.
 #+begin_src elisp
   (setq dotspacemacs-ask-for-lazy-installation nil)
 #+end_src
-The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file
-is in turn loaded from [[~/.spacemacs]]. code block]].
+** Custom config organization
+Spacemacs provides the =spacemacs/ediff-dotfile-and-template= function (bound to
+=SPC f e D=) for updating the dotfile at [[~/.spacemacs]] when Spacemacs is updated.
+But the dotfile also contains content dynamically inserted by Emacs, which I
+don't want to version. That's why I keep the crux of my configuration in a
+separate file: [[~/.haris/.spacemacs]]. This file is loaded from [[~/.spacemacs]], and
+should contain the following (along with any content dynamically inserted by
+Emacs):
+#+begin_src elisp
+  (load-file "~/.haris/.spacemacs")
+  ;; Do not write anything past this comment. This is where Emacs will
+  ;; auto-generate custom variable definitions.
+#+end_src
+In order to have the =spacemacs/ediff-dotfile-and-template= function use my custom
+file, I advise it with a custom function:
+#+begin_src elisp
+    (advice-add
+     'spacemacs/ediff-dotfile-and-template
+     :around
+     (defun haris//advice/ediff-dotfile-and-template (oldfun &rest ignored)
+       "Use a different file as the diff target instead of ~/.spacemacs."
+       (let ((dotspacemacs-filepath (expand-file-name "~/.haris/.spacemacs")))
+         (call-interactively oldfun))))
+#+end_src
+The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file is in turn loaded from [[~/.spacemacs]].
 ** Layers
 #+begin_src elisp :tangle (haris/tangle-home ".spacemacs-init.el")
   (setq-default
-   dotspacemacs-configuration-layers
+   dotspacemacs-configuration-layers ; (ref:dotspacemacs-configuration-layers)
    '(syntax-checking
      octave
      markdown
@@ -2225,6 +2251,7 @@ is in turn loaded from [[~/.spacemacs]]. code block]].
       vim-style-enable-undo-region t)
      spacemacs-editing-visual
      spacemacs-org
+     search-engine
      spell-checking
      major-modes
      helpful
