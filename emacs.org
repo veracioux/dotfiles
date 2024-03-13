@@ -1658,6 +1658,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
     (add-hook 'prog-mode-hook 'copilot-mode)
     (add-hook 'org-mode-hook 'copilot-mode)
     (add-hook 'minibuffer-mode-hook 'copilot-mode)
+    (add-hook 'editorconfig-mode-hook 'copilot-mode)
 
     (with-eval-after-load 'copilot
       (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
