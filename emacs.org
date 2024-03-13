@@ -1906,6 +1906,7 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
       :with company-yasnippet)
      (company-dabbrev :with company-yasnippet)))
 
+  (haris/init-company-backends-for-mode 'fundamental-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'yaml-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'yaml-ts-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'java-mode haris/company-backends-default)
