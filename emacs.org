@@ -1920,6 +1920,7 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (haris/init-company-backends-for-mode 'yaml-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'yaml-ts-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'java-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'conf-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'python-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'sql-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'systemd-mode haris/company-backends-default)
