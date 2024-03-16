@@ -240,6 +240,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       commandline -f repaint
       '
   end
+
+  bind_both_modes \eL 'clear; commandline -f repaint'
 #+end_src
 *** Utility bindings
 #+begin_src fish
