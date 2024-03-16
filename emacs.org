@@ -1195,6 +1195,15 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
                             '(eval-expression
                               edebug-eval-expression))
                 (haris/minibuffer-elisp-mode 1))))
+
+  (add-hook
+   'minibuffer-mode-hook
+   (defun haris//enable-company-in-non-completing-minibuffers ()
+     "Enable company-mode in buffers which don't already have some kind of
+  inherent completion mechanism."
+     (when (and (not minibuffer-completion-predicate)
+                (not minibuffer-completion-table))
+       (company-mode))))
 #+end_src
 ** Elisp evaluation
 #+begin_src elisp
@@ -1931,6 +1940,7 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (haris/init-company-backends-for-mode 'dockerfile-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'docker-compose-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'markdown-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'minibuffer-mode haris/company-backends-default)
 
   (haris/init-company-backends-for-mode
    'sql-interactive-mode
