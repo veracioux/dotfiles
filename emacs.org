@@ -735,6 +735,7 @@ Some custom keybindings are defined here as well.
 
   (add-hook 'json-mode-hook 'haris/json/set-indent-level)
   (add-hook 'json-mode-hook 'spacemacs/toggle-indent-guide)
+  (add-hook 'json-mode-hook 'json-ts-mode 90)
 
   (defalias 'jq 'counsel-jq)
 #+end_src
