@@ -1675,22 +1675,102 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (evil-define-key 'visual chatgpt-input-mode-map (kbd "q") 'kill-this-buffer)
 #+end_src
 ** Copilot
-  #+begin_src elisp
-    (straight-use-package '(copilot
-                            :type git
-                            :host github
-                            :repo "copilot-emacs/copilot.el"))
-    (setq copilot-indent-offset-warning-disable t)
+#+begin_src elisp
+  (straight-use-package '(copilot
+                          :type git
+                          :host github
+                          :repo "copilot-emacs/copilot.el"))
+  (setq copilot-indent-offset-warning-disable t)
 
-    (add-hook 'prog-mode-hook 'copilot-mode)
-    (add-hook 'minibuffer-mode-hook 'copilot-mode)
-    (add-hook 'editorconfig-mode-hook 'copilot-mode)
+  (defvar haris/allow-copilot nil
+    "Whether the copilot-mode function should be allowed to run. This is a
+      security measure to prevent sharing of sensitive information in undesired
+      contexts.")
+  (add-hook 'after-change-major-mode-hook
+            (lambda ()
+              (when haris/allow-copilot
+                (copilot-mode))) 90)
 
-    (with-eval-after-load 'copilot
-      (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-      (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-      (define-key copilot-completion-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
-      (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-word))
+  (defun haris/allow-copilot (allow)
+    "Allow copilot if ALLOW, disallow otherwise"
+    (interactive (list (not haris/allow-copilot)))
+    (alert (format "%s" allow))
+    (setq-local haris/allow-copilot allow)
+    (when (called-interactively-p 'any)
+      (message "%s copilot in the current buffer" (if allow
+                                                      "Allowed"
+                                                    "Disallowed")))
+    (unless allow
+      (copilot-mode -1)))
+#+end_src
+*** Privacy enhancements
+#+begin_src elisp
+  (with-eval-after-load 'copilot
+    (advice-add
+     'copilot-mode
+     :around
+     (defun haris//advice/copilot-mode (orig-func &rest args)
+       "Checks if 'haris/allow-copilot' is true before running ORIG-FUNC."
+       (let* ((arg (car args))
+              (enabling (if (eq arg 'toggle) (not copilot-mode)
+                          (or
+                           (not (numberp arg))
+                           (not (< arg 0))))))
+
+         ;; If interactive and copilot is disallowed, prompt the user to allow it
+         (if (and (not haris/allow-copilot)
+                  (called-interactively-p 'any))
+             (when
+                 (yes-or-no-p
+                  "Copilot is disallowed. Do you want to allow it (buffer-locally)?")
+               (setq-local haris/allow-copilot t)))
+
+         ;; If copilot is allowed and enable was requested, enable it
+         ;; If disable is requested, disable it unconditionally
+         (if (or (not enabling)
+                 haris/allow-copilot)
+             (progn
+               (apply orig-func args)
+               ;; Notify the user if interactive
+               (when (called-interactively-p 'any)
+                 (message "%s Copilot in current buffer"
+                          (if enabling
+                              "Enabled"
+                            "Disabled"))))
+           (unless (called-interactively-p 'any)
+             (message
+              "Warning: Copilot is disallowed (haris/allow-copilot is nil in buffer %s)"
+              (buffer-name))))))))
+#+end_src
+**** Test                                                              :test:
+:PROPERTIES:
+:header-args:elisp+: :tangle no
+:END:
+#+begin_src elisp
+  (with-temp-buffer
+    (let ((haris/allow-copilot t))
+      ;; Should enable copilot-mode successfully
+      (copilot-mode)
+      (cl-assert copilot-mode)
+
+      ;; Should disable copilot-mode successfully
+      (setq haris/allow-copilot t)
+      (copilot-mode -1)
+      (cl-assert (not copilot-mode))
+
+      ;; With copilot disallowed, attempt to enable should fail without error
+      (setq haris/allow-copilot nil)
+      (copilot-mode)
+      (cl-assert (not copilot-mode))))
+#+end_src
+*** Keybindings
+#+begin_src elisp
+  (with-eval-after-load 'copilot
+    (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+    (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+    (define-key copilot-completion-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
+    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-word)
+    (spacemacs/set-leader-keys "oC" 'copilot-mode))
 #+end_src
 * REPLs in Emacs
 ** Common settings
