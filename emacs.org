@@ -2202,7 +2202,7 @@ Remove Info mode annoying keybindings.
   (use-package atomic-chrome)
   (setq atomic-chrome-buffer-open-style 'frame)
 
-  (add-hook 'after-init-hook 'atomic-chrome-start-server)
+  (atomic-chrome-start-server)
 #+end_src
 ** gitconfig-mode
 #+begin_src elisp
