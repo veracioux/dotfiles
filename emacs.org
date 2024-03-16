@@ -738,6 +738,8 @@ Some custom keybindings are defined here as well.
   (add-hook 'json-mode-hook 'json-ts-mode 90)
 
   (defalias 'jq 'counsel-jq)
+
+  (setq counsel-jq-json-buffer-mode 'json-ts-mode)
 #+end_src
 ** LSP
 Some performance improvement settings depend on the power of your hardware. You
