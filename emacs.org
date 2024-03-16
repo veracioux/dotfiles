@@ -1942,6 +1942,9 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (haris/init-company-backends-for-mode 'docker-compose-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'markdown-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'minibuffer-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'web-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'sgml-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'nxml-mode haris/company-backends-default)
 
   (haris/init-company-backends-for-mode
    'sql-interactive-mode
