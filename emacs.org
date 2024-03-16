@@ -832,6 +832,20 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 ** Java
 #+begin_src elisp
   (use-package lsp-java)
+
+  (setq-default haris/java-lombok-jar-path nil)
+
+  (defun haris/modify-java-vmargs-in-lsp-java ()
+    (when (and lsp-mode (eq major-mode 'java-mode))
+      (add-to-list 'lsp-java-vmargs "-Xmx3G" t)
+      (add-to-list 'lsp-java-vmargs "-Xms512m" t)
+      (add-to-list 'lsp-java-vmargs  "-XX:+UseStringDeduplication" t)
+      ;; Add Lombok to the lsp server
+      (when haris/java-lombok-jar-path
+        (add-to-list 'lsp-java-vmargs
+                     (format "-javaagent:%s" haris/java-lombok-jar-path) t))))
+
+  (add-hook 'lsp-before-initialize-hook #'haris/modify-java-vmargs-in-lsp-java)
 #+end_src
 ** Web
 #+begin_src elisp
