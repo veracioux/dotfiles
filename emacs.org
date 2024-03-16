@@ -1683,7 +1683,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
     (setq copilot-indent-offset-warning-disable t)
 
     (add-hook 'prog-mode-hook 'copilot-mode)
-    (add-hook 'org-mode-hook 'copilot-mode)
     (add-hook 'minibuffer-mode-hook 'copilot-mode)
     (add-hook 'editorconfig-mode-hook 'copilot-mode)
 
