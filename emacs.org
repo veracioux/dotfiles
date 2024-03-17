@@ -199,7 +199,8 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (add-hook 'prog-mode-hook #'auto-fill-mode)
 
   ;; Some packages prefer helm over ivy and don't provide a customization option.
-  (fmakunbound 'helm)
+  (with-eval-after-load 'helm
+    (fmakunbound 'helm))
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<global-settings>>
