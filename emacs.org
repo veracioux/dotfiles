@@ -61,7 +61,7 @@ unnecessary code.
     Environment=COLORTERM=truecolor
     Environment=LSP_USE_PLISTS=true
     ExecStart=/usr/bin/emacs --daemon="emacs"
-    Restart=on-failure
+    Restart=always
     TimeoutStartSec=600
     TimeoutStopSec=30
     StartLimitBurst=0
@@ -1142,7 +1142,7 @@ slack-mode-hook hook, it never connects. Investigate
   Type=forking
   Environment=COLORTERM=truecolor
   ExecStart=/usr/bin/emacs --daemon="irc"
-  Restart=on-failure
+  Restart=always
   TimeoutStartSec=600
   TimeoutStopSec=30
   StartLimitBurst=0
@@ -1843,7 +1843,7 @@ and crashes of my default Emacs instance.
   Type=forking
   Environment=COLORTERM=truecolor
   ExecStart=/usr/bin/emacs --daemon="vterm"
-  Restart=on-failure
+  Restart=always
   TimeoutStartSec=600
   TimeoutStopSec=30
   StartLimitBurst=0
