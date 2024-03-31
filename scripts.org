@@ -1069,7 +1069,7 @@ are designed to be easily integrated into dmenu scripts.
       (setq gts-after-buffer-render-hook -gts-after-buffer-render-hook)))
 #+end_src
 *** Helper script
-This script prints the contents
+This script prints the contents of the clipboard
 #+NAME: etranslate/get-selection
 #+begin_src bash :tangle (haris/tangle-home ".local/lib/haris/etranslate-helper")
   # In order to get the time when the selection happened I use a timestamp
