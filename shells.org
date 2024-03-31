@@ -276,6 +276,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   bind_both_modes \eA 'commandline -i "(adhoc - | string collect)"'
 
   bind_both_modes \eG 'magit'
+
+  bind_both_modes \e\cd 'disown'
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions
