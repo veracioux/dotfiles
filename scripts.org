@@ -810,7 +810,7 @@ process management in emacs is shit.
   fi
 
   arg="$(
-      emacs --batch --load "$tmpfile" "$input_file" "${@:2}" 2>&1
+      emacs --quick --batch --load "$tmpfile" "$input_file" "${@:2}"
   )"
   myemacs --no-tty --no-wait --eval "$arg" | sed '/^<<do-not-print-token>>$/d'
 
