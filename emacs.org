@@ -912,7 +912,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 #+end_src
 ** Docker Compose
 #+begin_src elisp
-  (add-to-list 'auto-mode-alist '("compose\.ya?ml$" . docker-compose-mode))
+  (add-to-list 'auto-mode-alist '("compose.*\.ya?ml$" . docker-compose-mode))
 
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection
