@@ -174,7 +174,9 @@ I use =straight= to clone some packages that are not available on =melpa=.
         dotspacemacs-frame-title-format nil)
   (eval-after-load "recentf"
     (defun haris//after-load/recentf ()
-      (add-to-list 'recentf-exclude "^/tmp/haris-pipe-")))
+      (add-to-list 'recentf-exclude "^/tmp/haris-pipe-")
+      (cl-delete-if (lambda (el) (string= el "~/.emacs.d/elpa/29.1/develop/"))
+                    recentf-exclude)))
 
   (add-to-list 'image-types 'svg)
   (setq dired-kill-when-opening-new-dired-buffer t)
