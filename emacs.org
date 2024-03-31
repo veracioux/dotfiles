@@ -525,6 +525,7 @@ Some custom keybindings are defined here as well.
 #+begin_src elisp
   (setq evil-collection-setup-minibuffer t)
   (evil-collection-init 'tabulated-list)
+  (evil-collection-init 'tablist)
   (evil-collection-init 'minibuffer)
   (evil-collection-init 'proced)
   (evil-collection-init 'doc-view)
