@@ -645,6 +645,13 @@ Some custom keybindings are defined here as well.
 
   (add-hook 'evil-insert-state-exit-hook #'company-cancel)
 #+end_src
+** Projectile
+#+begin_src elisp
+  (setq projectile-require-project-root nil)
+  (setq projectile-auto-discover nil)
+  (setq projectile-track-known-projects-automatically nil)
+  (setq projectile-git-ignored-command "git ls-files -zcoi -X=.gitignore")
+#+end_src
 * Programming languages
 #+begin_src elisp
   (add-hook 'prog-mode-hook 'spacemacs/toggle-fill-column-indicator)
@@ -756,10 +763,6 @@ Some custom keybindings are defined here as well.
 Some performance improvement settings depend on the power of your hardware. You
 can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. You can place them in your [[*Private config][private configuration]].
 #+begin_src elisp
-  (setq projectile-require-project-root nil)
-  (setq projectile-auto-discover nil)
-  (setq projectile-track-known-projects-automatically nil)
-
   (setq lsp-idle-delay 0.1)
   (setq lsp-keep-workspace-alive nil)
 
