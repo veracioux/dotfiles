@@ -320,13 +320,19 @@ You can test the transforms by calling this:
   (setq clean-buffer-list-delay-general 1
         clean-buffer-list-delay-special 1800
         clean-buffer-list-kill-regexps
-        '("^\\*Man "
+        '(
+          "^haris-pipe-"
+          "^\\*Help\\*"
           "^\\*helpful "
+          "^\\*ivy-occur"
+          "^\\*lsp-help\\*"
+          "^\\*lsp session\\*"
           "^magit: "
           "^magit-\\(log\\|diff\\|stash\\|revision\\)"
-          "\\*which-key\\*"
+          "^\\*Man "
           "^\\*straight-process\\*"
-          "^haris-pipe-"))
+          "\\*which-key\\*"
+          "^\\*xref\\*"))
 #+end_src
 This enables periodic cleanup:
 #+begin_src elisp
