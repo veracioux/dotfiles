@@ -4,6 +4,7 @@
 * Docker
 #+begin_src json :tangle (haris/tangle-home ".docker/config.json")
   {
+    "experimental": "enabled",
     "credsStore": "pass",
     "aliases": {
       "builder": "buildx"
