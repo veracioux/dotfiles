@@ -928,6 +928,10 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (setq sql-capitalize-keywords t)
 #+end_src
 * Apps
+** Calendar
+#+begin_src elisp
+  (evil-collection-init 'calendar)
+#+end_src
 ** Man
 #+begin_src elisp
   (setq Man-notify-method 'bully)
