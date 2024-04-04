@@ -85,10 +85,16 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
           set host "$normal"(set_color white)"[$hostname]"
       end
 
+      set -l sudo_privilege
+      if sudo -n true 2>/dev/null
+          set sudo_privilege " (#)"
+      end
+
       echo -n -s  (set_color --bold brblue)   "$USER$host "                \
                   (set_color magenta)         (prompt_pwd)        $normal  \
                   (set_color brmagenta)       "$vcs_prompt"                \
                   (set_color brmagenta)       $prompt_status               \
+                  (set_color white)           $sudo_privilege              \
                   (set_color yellow)          \n" $suffix "
 
       # These are needed because some apps (docker-compose) don't clean up properly
