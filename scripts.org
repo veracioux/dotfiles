@@ -2173,9 +2173,8 @@ The quickmenu script is optional and must be provided separately at
 ** =pacman-update-mirrorlist=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/pacman-update-mirrorlist")
   # Update /etc/pacman.d/mirrorlist using reflector
-  # (requires sudo)
 
-  reflector --sort rate --save /etc/pacman.d/mirrorlist
+  sudo reflector --sort rate --save /etc/pacman.d/mirrorlist
 #+end_src
 ** =texclean=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/texclean")
@@ -2203,6 +2202,7 @@ The quickmenu script is optional and must be provided separately at
   rm -rf ~/.local/share/baloo
 
   sudo journalctl --vacuum-size=250M
+  paccache -vuk0 -r
 #+end_src
 ** =createhome=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/createhome")
