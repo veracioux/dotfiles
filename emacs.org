@@ -1334,7 +1334,8 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
       (use-package ob-restclient)
       (use-package ol-man :ensure nil)
       (use-package org-tempo :ensure nil)
-      (use-package org-modern)
+      (use-package org-modern
+        :config (setq org-modern-star nil))
       (use-package company-org-block)))
 #+end_src
 ** Basic config
