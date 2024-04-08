@@ -1937,7 +1937,7 @@ lightweight shell.
 #+end_src
 ** System
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/system")
-  choice="$(echo "Suspend\nShutdown\nReboot..." | dmenu)"
+  choice="$(echo "Suspend\nSuspend & Lock\nShutdown\nReboot..." | dmenu)"
 
   # No choice, bye-bye
   [ -z "$choice" ] && exit
@@ -1947,9 +1947,11 @@ lightweight shell.
       choice="$(echo " No\n Yes, shutdown" | dmenu -p 'Sure?')"
       [ "$choice" = " Yes, shutdown" ] && shutdown now
 
-  elif [ "$choice" = "Suspend" ]; then
+  elif [ "$choice" = "Suspend & Lock" ]; then
       xlock &  # NOTE: using the 'o' script here doesn't detach tmux for some reason
       sleep 1
+      systemctl suspend -i
+  elif [ "$choice" = "Suspend" ]; then
       systemctl suspend -i
   elif [ "$choice" = "Reboot..." ]; then
       print_entries() {
