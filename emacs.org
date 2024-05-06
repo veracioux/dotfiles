@@ -2505,7 +2505,7 @@ When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][sp
 #+end_src
 ** Config check
 I use this variable to check if the config loaded correctly.
-#+NAME: config-loaded-fine
+#+NAME: haris/config-loaded-fine
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
   (setq haris/config-loaded-fine (current-time-string))
 #+end_src
