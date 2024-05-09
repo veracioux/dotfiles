@@ -47,8 +47,17 @@ alternative dotfiles directory to '~/.haris'."
   (interactive)
   (when to-destination (delete-directory (haris/tangle-home) t))
   (let ((org-dotfiles-root (or dotfiles-dir "~/.haris")))
-    (dolist (file (cl-delete-if (lambda (x) (string-match-p "^\\.#" x))
-                                (append (directory-files-recursively org-dotfiles-root "\\.org$"))))
+    (dolist (file (cl-delete-if
+                   (lambda (x) (string-match-p "^\\.#" x))
+                   (append (directory-files-recursively
+                            org-dotfiles-root
+                            "\\.org$"
+                            nil
+                            ;; Exclude hidden directories
+                            (lambda (dir-name)
+                              (string-match
+                               "^[^\\.]"
+                               (file-name-nondirectory dir-name)))))))
       (message "Tangling file: %s" file)
       (haris/tangle--file-non-interactively file)))
   (when to-destination
