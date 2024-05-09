@@ -2352,7 +2352,7 @@ Options:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/handle-low-bat")
   # Suspend when battery low
 
-  if acpi | grep -qP '\s[0-9]%' && acpi | grep -q 'Discharging'; then
+  if acpi | grep -qP '\s1?[0-9]%' && acpi | grep -q 'Discharging'; then
       timeout 0.4 ~/.local/bin/notify-send 'Low battery' 'Suspending in 5s'
       sleep 5s
       systemctl suspend -i
