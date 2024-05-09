@@ -1,3 +1,4 @@
 private
 /temporary.org
 /.worktree-*
+/cron.d/

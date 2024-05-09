@@ -1,0 +1,92 @@
+#+TITLE: Background processes
+#+SETUPFILE: .setup.org
+#+TAGS: service(S)
+
+* Setup
+Enable all the background services with:
+#+begin_src shell
+  systemctl --user enable --now haris-background.target
+#+end_src
+** Systemd target for all background services
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/haris-background.target")
+  [Unit]
+  Description=Background services
+  Requires=crontab-listen-update.service
+  AllowIsolate=yes
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+* Cron
+I define my main users cron jobs in files matching the glob =~/.haris/cron.d/crontab.*=.
+** Default cron jobs
+:PROPERTIES:
+:header-args+: :tangle (haris/tangle-home ".haris/cron.d/crontab.50")
+:END:
+Modify PATH variable to match the normal environment's value:
+#+begin_src crontab
+  PATH=<<eval-path-env()>>
+#+end_src
+*** Low battery suspend
+#+begin_src crontab
+  * * * * * handle-low-bat
+#+end_src
+*** Check website online
+#+begin_src crontab
+  0 */2 *   * 1-6 website-healthcheck
+  0 20  */4 * 1-6 website-healthcheck --notify-success
+#+end_src
+*** Remind me to reissue SSL certificate
+#+begin_src crontab
+  0 18-23 10 */2 * notify-send 'REMINDER' 'Reissue SSL certificate for veracioux.me'
+#+end_src
+** Listen/update service                                           :service:
+This service updates the user's crontab when any of the custom crontab files change.
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/crontab-listen-update.service")
+  [Unit]
+  Description=Crontab change listener and updater
+
+  [Service]
+  ExecStart=<<eval-user-home()>>.local/bin/crontab-listen-update
+  Restart=on-failure
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+*** Executable
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/crontab-listen-update")
+  mkdir -p ~/.haris/cron.d/
+  while :; do
+      content=''
+      for file in ~/.haris/cron.d/*; do
+          echo "Read crontab file: $file"
+          content="$(
+              echo "$content"
+              echo
+              echo "############## START $file"
+              echo
+              cat "$file"
+              echo
+              echo "############## END  $file"
+          )"
+      done
+      echo "$content" | crontab -
+      echo "Resulting content of crontab:"
+      crontab -l
+      echo
+      inotifywait -e modify -e attrib -e create -e delete ~/.haris/cron.d/
+  done
+#+end_src
+* Helpers
+#+NAME: eval-user-home
+#+begin_src emacs-lisp :cache yes
+  (getenv "HOME")
+#+end_src
+#+NAME: eval-path-env
+#+begin_src emacs-lisp
+  (getenv "PATH")
+#+end_src
+* Local variables
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:
