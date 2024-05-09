@@ -1,0 +1,40 @@
+#+TITLE: Test Users
+#+SETUPFILE: ../.setup.org
+
+This directory should contain home directories for test users, which can be used
+to test the dotfiles with some basic degree of isolation.
+
+The test usernames should follow the pattern =test[0-9]+=, and they can be created
+with the following command, replacing =<N>= with the desired number of the test user:
+#+NAME: setup-user
+#+begin_src bash
+  username=test"«input-user-number()»"
+  homedir=~/.haris/.test/"$username"
+  sudo sh <<EOF_3abca62d
+  «setup-user-as-sudo»
+  EOF_3abca62d
+#+end_src
+* Helpers
+#+NAME: input-user-number
+#+begin_src elisp
+  (read-string "Enter the number of the test user: ")
+#+end_src
+#+NAME: setup-user-as-sudo
+#+begin_src shell
+  groupadd -f test
+
+  useradd "$username"                             \
+          --home-dir "$homedir"                   \
+          --create-home                           \
+          --shell "$(which dash || which bash)"
+  usermod -aG test "$username"
+  # Remove password from the user
+  sudo passwd -d test1
+
+  chown "$username:test" -R "$homedir"
+  chmod g+rwx "$homedir"
+#+end_src
+* Local variables
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:
