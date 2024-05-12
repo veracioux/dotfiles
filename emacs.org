@@ -176,6 +176,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
       (add-to-list 'recentf-exclude "^/tmp/haris-pipe-")
       (cl-delete-if (lambda (el) (string= el "~/.emacs.d/elpa/29.1/develop/"))
                     recentf-exclude)))
+  (setq winum-scope 'frame-local)
 
   (add-to-list 'image-types 'svg)
   (setq dired-kill-when-opening-new-dired-buffer t)
@@ -185,6 +186,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (setq xclip-method 'xsel)
   (setq xclip-program "xsel")
   (xclip-mode)
+  (setq warning-minimum-level :emergency)
 
   ;; Handle URLs as files
   (url-handler-mode)
@@ -661,6 +663,7 @@ Some custom keybindings are defined here as well.
   (evil-collection-init 'tablist)
   (evil-collection-init 'tabulated-list)
   (evil-collection-init 'yaml-mode)
+  (evil-collection-init 'compilation)
 #+end_src
 ** Projectile
 #+begin_src elisp
@@ -1544,6 +1547,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   (add-hook 'verb-response-body-mode-hook 'verb-toggle-show-headers)
 
+  (setq verb-json-use-mode 'json-ts-mode)
+
   (spacemacs/set-leader-keys-for-minor-mode
     'verb-response-body-mode
     "rs" #'verb-show-request)
@@ -2058,6 +2063,8 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (haris/init-company-backends-for-mode 'fundamental-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'yaml-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'yaml-ts-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'json-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'json-ts-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'java-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'java-ts-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'conf-mode haris/company-backends-default)
@@ -2076,6 +2083,9 @@ Most of these have been createdu using the default ones set up by Spacemacs [[(a
   (haris/init-company-backends-for-mode 'web-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'sgml-mode haris/company-backends-default)
   (haris/init-company-backends-for-mode 'nxml-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'chatgpt-input-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'sql-interactive-mode haris/company-backends-default)
+  (haris/init-company-backends-for-mode 'nodejs-repl-mode haris/company-backends-default)
 
   (haris/init-company-backends-for-mode
    'sql-interactive-mode
