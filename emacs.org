@@ -2355,6 +2355,10 @@ Remove Info mode annoying keybindings.
   (add-hook 'gitconfig-mode-hook
             (lambda () (setq-local tab-width 2)))
 #+end_src
+** bookmark
+#+begin_src elisp
+  (evil-collection-init 'bookmark)
+#+end_src
 ** Documentation
 #+begin_src elisp
   (use-package tldr :defer t)
