@@ -672,6 +672,11 @@ Some custom keybindings are defined here as well.
   (setq projectile-auto-discover nil)
   (setq projectile-track-known-projects-automatically nil)
   (setq projectile-git-ignored-command "git ls-files -zcoi -X=.gitignore")
+
+  (setq projectile-ignored-projects '("~/"))
+
+  (setq projectile-indexing-method 'hybrid
+        projectile-enable-caching t)
 #+end_src
 * Programming languages
 #+begin_src elisp
