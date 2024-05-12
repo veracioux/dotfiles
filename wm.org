@@ -446,7 +446,7 @@ dmenu doesn't work.
 ** Resize menu
 #+NAME: resize-menu
 #+begin_src i3wm-config
-  set $mode_resize     " resize | [w]idth [h]eight [+] [-] (Shift modifier available) | Presets [0/Shift+0] [1] [2] [3] [4] [d]evtools [f]ullHD"
+  set $mode_resize     " resize | [w]idth [h]eight [+] [-] (+ Shift variants) | Presets [0/Shift+0] [1] [2] [3] [4] [a] [b] [d]evtools [f]ullHD"
 
   mode $mode_resize {
   bindsym w               resize  shrink  width   1
@@ -473,6 +473,8 @@ dmenu doesn't work.
   bindsym 4               $resize4; move position center
   bindsym d               $resize_devtools; move position center
   bindsym f               $resize_fullhd; move position center
+  bindsym a               resize set width 592 height 926;
+  bindsym b               resize set width 292 height 580;
 
   # Back to normal: Enter or Escape or $mod+r
   bindsym Escape          mode default
