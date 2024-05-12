@@ -141,8 +141,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
    '(explain-pause-mode
      :type git
      :host github
-     :repo "lastquestion/explain-pause-mode"
-     :init (evil-collection-init 'explain-pause-mode)))
+     :repo "lastquestion/explain-pause-mode"))
 #+end_src
 *** Language modes
 #+begin_src elisp
@@ -525,13 +524,6 @@ Some custom keybindings are defined here as well.
 
 #+NAME: consistent-vim-bindings
 #+begin_src elisp
-  (setq evil-collection-setup-minibuffer t)
-  (evil-collection-init 'tabulated-list)
-  (evil-collection-init 'tablist)
-  (evil-collection-init 'minibuffer)
-  (evil-collection-init 'proced)
-  (evil-collection-init 'doc-view)
-
   (define-key evil-normal-state-map (kbd "Q")     'delete-window)
   (define-key evil-motion-state-map (kbd "Q")     'delete-window)
 
@@ -645,6 +637,31 @@ Some custom keybindings are defined here as well.
 
   (add-hook 'evil-insert-state-exit-hook #'company-cancel)
 #+end_src
+*** evil-collection
+#+begin_src elisp
+  (setq evil-collection-setup-minibuffer t)
+  ;; Please keep this sorted
+  (evil-collection-init 'bluetooth)
+  (evil-collection-init 'bookmark)
+  (evil-collection-init 'calendar)
+  (evil-collection-init 'comint)
+  (evil-collection-init 'daemons)
+  (evil-collection-init 'docker)
+  (evil-collection-init 'doc-view)
+  (evil-collection-init 'edbi)
+  (evil-collection-init 'edebug)
+  (evil-collection-init 'explain-pause-mode)
+  (evil-collection-init 'git-timemachine)
+  (evil-collection-init 'ibuffer)
+  (evil-collection-init 'info)
+  (evil-collection-init 'ivy)
+  (evil-collection-init 'man)
+  (evil-collection-init 'minibuffer)
+  (evil-collection-init 'proced)
+  (evil-collection-init 'tablist)
+  (evil-collection-init 'tabulated-list)
+  (evil-collection-init 'yaml-mode)
+#+end_src
 ** Projectile
 #+begin_src elisp
   (setq projectile-require-project-root nil)
@@ -658,8 +675,6 @@ Some custom keybindings are defined here as well.
 #+end_src
 ** YAML
 #+begin_src elisp
-  (evil-collection-init 'yaml-mode)
-
   (eval-after-load "yaml"
     (defun haris//after-load/yaml ()
       (use-package yaml-pro)))
@@ -931,18 +946,12 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (setq sql-capitalize-keywords t)
 #+end_src
 * Apps
-** Calendar
-#+begin_src elisp
-  (evil-collection-init 'calendar)
-#+end_src
 ** Man
 #+begin_src elisp
   (setq Man-notify-method 'bully)
 #+end_src
 *** Bindings
 #+begin_src elisp
-  (evil-collection-init 'man)
-
   (defun haris/man-search () (interactive)
          (swiper "^[[:space:]]+"))
 
@@ -954,7 +963,6 @@ Fix for empty image list (not sure if the fix works):
 #+begin_src elisp
   (use-package transient :defer t)
   (use-package docker-compose-mode :defer t)
-  (evil-collection-init 'docker)
 #+end_src
 ** Go Translate
 #+begin_src elisp
@@ -990,7 +998,6 @@ Fix for empty image list (not sure if the fix works):
 ** Bluetooth
 #+begin_src elisp
   (use-package bluetooth :defer t)
-  (evil-collection-init 'bluetooth)
 #+end_src
 ** TODO Email
 :PROPERTIES:
@@ -1289,7 +1296,6 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
 ** Ivy
 #+NAME: ivy
 #+begin_src elisp
-  (evil-collection-init 'ivy)
   (setq ivy-initial-inputs-alist
         (append
          '((helpful-function . "^")
@@ -1616,8 +1622,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; Magit is essential to my workflow so having it eagerly loaded is no tradeoff.
   (use-package magit)
 
-  (evil-collection-init 'git-timemachine)
-
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
         magit-diff-refine-hunk 'all
         magit-save-repository-buffers nil)
@@ -1812,7 +1816,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 ** Comint
 #+NAME: comint
 #+begin_src elisp
-  (evil-collection-init 'comint)
   (defun comint-clear-buffer-goto () (interactive)
          (comint-clear-buffer) (evil-goto-line))
   (define-key comint-mode-map (kbd "C-l") 'comint-clear-buffer-goto)
@@ -2200,7 +2203,6 @@ precedence of TAB-bound commands for all modes.
 Remove Info mode annoying keybindings.
 #+NAME: info
 #+begin_src elisp
-  (evil-collection-init 'info)
   (evil-define-key 'normal Info-mode-map (kbd "[")    'Info-prev)
   (evil-define-key 'normal Info-mode-map (kbd "]")    'Info-next)
   (evil-define-key 'normal Info-mode-map (kbd "C-p")  'Info-backward-node)
@@ -2256,7 +2258,6 @@ Remove Info mode annoying keybindings.
 #+end_src
 ** Ibuffer
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
-  (evil-collection-init 'ibuffer)
   (define-key ibuffer-mode-map (kbd "j") 'evil-next-line)
   (define-key ibuffer-mode-map (kbd "k") 'evil-previous-line)
 #+end_src
@@ -2293,9 +2294,6 @@ Remove Info mode annoying keybindings.
 ** Daemons
 #+begin_src elisp
   (use-package daemons)
-
-  (evil-collection-init 'daemons)
-
   (evil-define-key 'normal daemons-mode-map (kbd "u") #'daemons-systemd-toggle-user)
 #+end_src
 ** Nginx
@@ -2319,10 +2317,6 @@ Remove Info mode annoying keybindings.
 #+begin_src elisp
   (add-hook 'gitconfig-mode-hook
             (lambda () (setq-local tab-width 2)))
-#+end_src
-** bookmark
-#+begin_src elisp
-  (evil-collection-init 'bookmark)
 #+end_src
 ** Documentation
 #+begin_src elisp
