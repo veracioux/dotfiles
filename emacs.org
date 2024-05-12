@@ -2456,6 +2456,7 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      javascript
      typescript
      java
+     go
      prettier
      vue
      (yaml :variables yaml-enable-lsp t)
