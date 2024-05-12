@@ -2359,6 +2359,12 @@ Remove Info mode annoying keybindings.
 #+begin_src elisp
   (evil-collection-init 'bookmark)
 #+end_src
+** nmcli-wifi
+#+begin_src elisp
+  (straight-use-package '(nmcli-wifi :type git :host github :repo "luckysori/nmcli-wifi"))
+  (evil-define-key 'normal nmcli-wifi-mode-map (kbd "c") 'nmcli-wifi-connect)
+  (evil-define-key 'normal nmcli-wifi-mode-map (kbd "r") 'nmcli-wifi-refresh)
+#+end_src
 ** Documentation
 #+begin_src elisp
   (use-package tldr :defer t)
