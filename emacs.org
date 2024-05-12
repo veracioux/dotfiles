@@ -2302,7 +2302,12 @@ Remove Info mode annoying keybindings.
           (< («))
           (> (»))))
 
-  (define-key evil-insert-state-map (kbd "M-RET") #'accent-menu)
+  (define-key evil-insert-state-map (kbd "M-S-<return>") 'accent-menu)
+  (define-key evil-normal-state-map (kbd "M-S-<return>")
+              (defun haris/accent-menu-normal-mode ()
+                (interactive)
+                (let ((accent-position 'after))
+                  (accent-menu))))
 #+end_src
 ** Ibuffer
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
