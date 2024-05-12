@@ -566,6 +566,9 @@ get better search matches.
         MSG='disabled'
   }
   [ "$?" = 0 ] && notify-send "second monitor sucessfully $MSG" || notify-send -u "monitor operation unsuccessful"
+
+  # Fix wallpaper on second monitor
+  feh --bg-fill .wallpaper
 #+end_src
 ** =xrandr2=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr2")
