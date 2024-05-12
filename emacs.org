@@ -1725,7 +1725,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (defun haris/allow-copilot (allow)
     "Allow copilot if ALLOW, disallow otherwise"
     (interactive (list (not haris/allow-copilot)))
-    (alert (format "%s" allow))
     (setq-local haris/allow-copilot allow)
     (when (called-interactively-p 'any)
       (message "%s copilot in the current buffer" (if allow
