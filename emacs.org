@@ -1459,7 +1459,16 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 
   (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle-dest)
 #+end_src
-*** Make org-src buffer support lsp-mode
+*** org-src buffer
+#+begin_src elisp
+  (add-hook 'org-src-mode-hook
+            (defun haris//org-src-inherit-allow-copilot ()
+              (setq-local haris/allow-copilot
+                          (org-src-do-at-code-block haris/allow-copilot))
+              (when haris/allow-copilot
+                (copilot-mode))))
+#+end_src
+**** Make org-src buffer support lsp-mode
 #+begin_src elisp
   (add-hook
    'org-src-mode-hook
@@ -1497,7 +1506,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
      (when buffer-file-name
        (write-region nil nil buffer-file-name))))
 #+end_src
-*** Utility functions
+**** Utility functions
 #+begin_src elisp
   (defun haris/extract-tangle-dest ()
     "Extract the tangle destination from the code block under point."
