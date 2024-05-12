@@ -359,6 +359,16 @@ This enables periodic cleanup:
   (defun haris/yas-minor-mode-on ()
     "Like yas-minor-mode-on, but do not honor yas-dont-activate-functions"
     (yas-minor-mode 1))
+
+  (defun haris/fifo (text)
+    "Send TEXT to the fifo I use for testing"
+    (interactive "sInput: ")
+    (with-temp-buffer
+      (insert text "\n")
+      (shell-command-on-region
+       (point-min)
+       (point-max)
+       "fifo")))
 #+end_src
 ** Avy
 *** Try to make evil-easymotion work bidirectionally
