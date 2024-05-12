@@ -276,6 +276,12 @@ Some settings in GTK 3.0 don't work if we quote their values.
   Exec=pycharm
   Name=PyCharm
 #+end_src
+** GoLand
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/goland.desktop")
+  <<desktop-base>>
+  Exec=goland
+  Name=GoLand
+#+end_src
 ** Emacs
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/emacs.desktop")
   <<desktop-base>>
