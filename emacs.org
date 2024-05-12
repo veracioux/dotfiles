@@ -1807,8 +1807,12 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (with-eval-after-load 'copilot
     (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
     (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-    (define-key copilot-completion-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
-    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-word)
+    (define-key copilot-completion-map (kbd "M-<backspace>") 'copilot-clear-overlay)
+    (define-key copilot-completion-map (kbd "M-l") 'copilot-accept-completion-by-word)
+    (define-key copilot-completion-map (kbd "M-j") 'copilot-accept-completion-by-line)
+    (define-key copilot-completion-map (kbd "M-n") 'copilot-next-completion)
+    (define-key copilot-completion-map (kbd "M-p") 'copilot-previous-completion)
+    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-panel-complete)
     (spacemacs/set-leader-keys "oC" 'copilot-mode))
 #+end_src
 * REPLs in Emacs
