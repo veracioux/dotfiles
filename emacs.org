@@ -867,11 +867,16 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 #+begin_src shell :tangle (haris/tangle-deps "emacs/python.pip")
   pyls-isort pyls-mypy pyls-memestra autoflake importmagic epc ptvsd
 #+end_src
-** JavaScript
+** JavaScript & TypeScript
 #+begin_src elisp
+  (use-package mocha-snippets :ensure t)
+
   (setq javascript-indent-level 4
         js-indent-level 4
         js2-basic-offset 4)
+
+  (with-eval-after-load 'js (require 'dap-node))
+  (with-eval-after-load 'ts (require 'dap-node))
 #+end_src
 ** Java
 #+begin_src elisp
