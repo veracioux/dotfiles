@@ -284,6 +284,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   bind_both_modes \eG 'magit'
 
   bind_both_modes \e\cd 'disown'
+
+  bind_both_modes \eC 'edocker-compose'
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions

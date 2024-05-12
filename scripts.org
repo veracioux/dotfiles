@@ -1115,10 +1115,23 @@ This script prints the contents of the clipboard
 ** =edocker=
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/edocker")
+  (let ((dir default-directory))
   (with-selected-frame (make-frame `((name . "EmacsFloat")
                                      (display . ,(getenv "DISPLAY"))))
+    (setq-local default-directory dir)
     (spacemacs/switch-to-scratch-buffer)
-    (run-with-timer 0.3 nil 'docker))
+    (run-with-timer 0.3 nil 'docker)))
+#+end_src
+** =edocker-compose=
+#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
+#+begin_src elisp :tangle (haris/tangle-home ".local/bin/edocker-compose")
+  (let ((dir default-directory))
+    (with-selected-frame (make-frame `((name . "EmacsFloat")
+                                     (display . ,(getenv "DISPLAY"))))
+    (setq-local default-directory dir)
+    (alert (format "%s" default-directory))
+    (dired default-directory)
+    (run-with-timer 0.3 nil 'docker-compose)))
 #+end_src
 ** =ebluetooth=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/ebluetooth")
