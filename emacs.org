@@ -802,9 +802,9 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
     (setq lsp-restart 'ignore)
 
     (setq lsp-auto-execute-action nil)
-    (setq lsp-inlay-hint-enable t))
+    (setq lsp-inlay-hint-enable t)
 
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$"))
 #+end_src
 *** Keybindings
 #+begin_src elisp
