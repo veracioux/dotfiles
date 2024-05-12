@@ -1503,7 +1503,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
               (setq-local haris/allow-copilot
                           (org-src-do-at-code-block haris/allow-copilot))
               (when haris/allow-copilot
-                (copilot-mode))))
+                ;; NOTE: Doesn't work without the timer for some reason
+                (run-with-timer 0.1 nil 'copilot-mode))))
 #+end_src
 **** Make org-src buffer support lsp-mode
 #+begin_src elisp
