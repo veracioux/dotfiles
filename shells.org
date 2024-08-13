@@ -1090,6 +1090,11 @@ abbreviations for equivalent apt operations.
   abbr -g w1 'watch -n1'
   abbr -g w2 'watch -n2'
 #+end_src
+**** Ufw
+#+begin_src fish
+  abbr ufw   'sudo ufw'
+  abbr ufws  'sudo ufw status numbered'
+#+end_src
 **** Miscellaneous
 #+begin_src fish
   conditional_abbr -g g     'git'
