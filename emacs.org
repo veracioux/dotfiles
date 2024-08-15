@@ -999,7 +999,14 @@ Fix for empty image list (not sure if the fix works):
 #+begin_src elisp
   (use-package go-translate)
 
-  (setq gts-translate-list '(("en" "cs") ("cs" "en") ("en" "bs") ("en" "de")))
+  (setq gts-translate-list '(("en" "de")
+                             ("en" "es")
+                             ("es" "en")
+                             ("en" "tr")
+                             ("tr" "en")
+                             ("de" "en")
+                             ("en" "cs")
+                             ("cs" "en")))
 
   (add-hook 'gts-after-buffer-render-hook
             (defun haris/disable-evil-in-go-translate (&rest _)
