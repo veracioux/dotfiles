@@ -14,5 +14,3 @@ RUN chown -R user .
 USER user
 
 ENTRYPOINT ["/tmp/entrypoint.sh"]
-
-# vim: filetype=dockerfile

@@ -2,4 +2,5 @@
 !*.org
 temporary.org
 !bootstrap
+bootstrap/Dockerfile
 .#*
