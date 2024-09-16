@@ -967,6 +967,7 @@ abbreviations for equivalent apt operations.
   abbr -g drelu     'systemctl daemon-reload --user'
   abbr -g relu      'systemctl reload --user'
   abbr -g resu      'systemctl restart  --user'
+  abbr -g dresu     'systemctl daemon-reload --user && systemctl restart  --user'
   abbr -g ju        'journalctl --user -f -u'
 #+end_src
 ***** End guard
