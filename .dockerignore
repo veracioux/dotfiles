@@ -1,6 +1,12 @@
-*
-!*.org
-temporary.org
-!bootstrap
-bootstrap/Dockerfile
+# NOTE: Cannot use a '*' pattern because directories under .test/ might have
+# stricter permissions, which may cause the docker build to fail.
 .#*
+bootstrap/Dockerfile
+.dockerignore
+.git/
+.github/
+out/
+private/
+temporary.org
+.test/
+.wt-*/
