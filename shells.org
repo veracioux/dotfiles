@@ -1164,7 +1164,7 @@ abbreviations for equivalent apt operations.
 #+end_src
 * .profile
 #+begin_src shell :tangle (haris/tangle-home ".profile")
-  export PATH=~/.local/bin:$PATH:~/.go/bin:~/.pyenv/versions/3.8.3/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator
+  export PATH=~/.local/bin:$PATH:~/.go/bin:"$CLOUDSDK_ROOT_DIR"/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator
   mkdir -p ~/.go
   export GOPATH="$HOME"/.go
 
