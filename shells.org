@@ -336,6 +336,18 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   set -U fish_color_end               yellow
 #+end_src
 ** Plugins
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/fish_plugins")
+  jorgebucaran/fisher
+  edc/bass
+  oh-my-fish/plugin-pj
+  PatrickF1/fzf.fish
+  jorgebucaran/nvm.fish
+  evanlucas/fish-kubectl-completions
+  # Fixes some vterm issues
+  pymander/vfish
+  brgmnn/fish-docker-compose
+#+end_src
+*** Initialization
 #+begin_src fish
   # pj plugin
   set -gx PROJECT_PATHS ~/proj ~/proj/drytoe
@@ -371,18 +383,6 @@ System packages:
   fish
   # Dependencies for fzf.fish
   fd bat
-#+end_src
-Fish plugins:
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/fish_plugins")
-  jorgebucaran/fisher
-  edc/bass
-  oh-my-fish/plugin-pj
-  PatrickF1/fzf.fish
-  jorgebucaran/nvm.fish
-  evanlucas/fish-kubectl-completions
-  # Fixes some vterm issues
-  pymander/vfish
-  brgmnn/fish-docker-compose
 #+end_src
 This code block installs all system dependencies and all plugins in fish based
 on the plugin list above.
