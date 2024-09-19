@@ -1180,6 +1180,11 @@ abbreviations for equivalent apt operations.
   export MOZ_USE_XINPUT2=1
   [ "$(get-os-type)" = "arch" ] && export QT_QPA_PLATFORMTHEME=gtk2
 
+  # If rootless docker is used, configure the DOCKER_HOST variable
+  if systemctl is-enabled --user --quiet docker.service; then
+      export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+  fi
+
   # Better pager for psql command
   if which pspg >/dev/null 2>&1; then
       # '-s 5' chooses the mutt theme
