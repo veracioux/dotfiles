@@ -240,8 +240,6 @@ to the laptop I currently use. Please change to suit your needs.
 
   xrdb ~/.Xresources
   feh --bg-fill ~/.wallpaper                  # Set wallpaper
-
-  clipmenud &                                 # Daemon for dmenu clipboard
   # vim: ft=sh
 #+end_src
 ** i3 start-up

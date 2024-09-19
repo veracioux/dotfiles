@@ -54,7 +54,10 @@ This is a wrapper around GNU =pass=.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/pass")
   shopt -s expand_aliases
 
+  # TODO: Use alternative-command instead
   alias pass=/usr/bin/pass
+
+  clipctl disable >/dev/null || true
 
   # Add a password read directly from stdin (without prompting to interactively
   # enter it)
@@ -66,6 +69,8 @@ This is a wrapper around GNU =pass=.
   else
       pass "$@"
   fi
+
+  clipctl enable >/dev/null || true
 #+end_src
 ** =dmenu=
 Note: This depends on my custom build of dmenu with the height patch applied.
@@ -351,6 +356,12 @@ get better search matches.
 
   # alternative-command lnav "$@"
   /usr/bin/lnav "$@"
+#+end_src
+** =clipmenu=                                                         :script:
+NOTE: The =CM_DIR= environment variable should be in sync with [[file:background.org::*Clipmenud][clipmenud configuration]].
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/clipmenu")
+  export CM_DIR=«eval-user-home()»/.local/share/haris/clipmenu
+  alternative-command clipmenu "$@"
 #+end_src
 * Utilities
 ** =visual-editor=
@@ -2497,6 +2508,11 @@ Returns the second executable with the given name, looked up in execpath.
 #+NAME: eval-user-name
 #+begin_src elisp
   (user-login-name)
+#+end_src
+** =eval-user-home=
+#+NAME: eval-user-home
+#+begin_src emacs-lisp :cache yes
+  (getenv "HOME")
 #+end_src
 * Local variables                                                  :noexport:
 # Local Variables:

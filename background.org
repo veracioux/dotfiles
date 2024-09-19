@@ -11,8 +11,24 @@ Enable all the background services with:
 #+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/haris-background.target")
   [Unit]
   Description=Background services
-  Requires=crontab-listen-update.service
+  Requires=crontab-listen-update.service,emacs.service,ssh-agent.service,clipmenud.service
   AllowIsolate=yes
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+* Clipmenud
+NOTE: The =CM_DIR= environment variable should be in sync with the [[file:scripts.org::*=clipmenu=][clipmenu wrapper script]].
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/clipmenud.service")
+  [Unit]
+  Description=Clipboard daemon
+
+  [Service]
+  Environment=CM_DEBUG=1
+  Environment=CM_MAX_CLIPS=99999
+  Environment=CM_DIR=<<eval-user-home()>>/.local/share/haris/clipmenu
+  Environment=XDG_RUNTIME_DIR=<<eval-xdg-runtime-dir()>>
+  ExecStart=/usr/bin/env clipmenud
 
   [Install]
   WantedBy=default.target
@@ -85,6 +101,10 @@ This service updates the user's crontab when any of the custom crontab files cha
 #+NAME: eval-path-env
 #+begin_src emacs-lisp
   (getenv "PATH")
+#+end_src
+#+NAME: eval-xdg-runtime-dir
+#+begin_src emacs-lisp
+  (getenv "XDG_RUNTIME_DIR")
 #+end_src
 * Local variables
 # Local Variables:
