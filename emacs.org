@@ -83,9 +83,51 @@ the type of the purpose of the current emacs daemon (by reading the
                    ("~/.emacs.d/haris/default.el")))
 #+end_src
 * General
+** Setup
+:PROPERTIES:
+:header-args:bash+: :tangle (haris/tangle-home ".haris-setup/setup-emacs.sh")
+:END:
+Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setup/setup-emacs.sh]].
+
+#+begin_src bash
+  set -e
+#+end_src
+*** Initialize spacemacs repo
+#+begin_src bash
+  pushd ~/.emacs.d >/dev/null
+  if [ ! -d .git ]; then
+      git init
+      git remote add origin 'https://github.com/syl20bnr/spacemacs'
+      git fetch origin develop
+      git checkout «spacemacs-good-commit»
+  fi
+  popd >/dev/null
+#+end_src
+#+NAME: spacemacs-good-commit
+#+begin_src text
+  4a227fc94651136a8de54bcafa7d22abe1fa0295
+#+end_src
+*** Interactively install spacemacs
+#+begin_src bash
+  echo "Emacs will be launched now. Follow the prompts to setup spacemacs"
+  echo "When done, you can close the emacs window"
+  COLORTERM=truecolor LSP_USE_PLISTS=true emacs
+#+end_src
+*** Install themes
+#+begin_src bash
+  themes_dir=~/.emacs.d/private/themes
+
+  mkdir -p "$themes_dir/dracula"
+
+  git clone 'https://github.com/veracioux/dracula-emacs' "$themes_dir/dracula"
+
+  cd "$themes_dir"
+  ln -sf dracula/dracula-theme.el dracula-theme.el
+#+end_src
 ** Theme
-I use a slightly customized version of the beautiful Dracula theme.
-*** Setup
+I use a slightly customized version of the beautiful Dracula theme. Make sure
+you perfomed the [[*Setup][setup]] in order to have the theme available.
+*** Configure custom theme directory
 #+begin_src elisp
   (setq custom-theme-directory "~/.emacs.d/private/themes")
 #+end_src
