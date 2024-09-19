@@ -977,6 +977,7 @@ are designed to be easily integrated into dmenu scripts.
           terminal.org)   echo ~/.haris/terminal.org ;;
           repl.org)       echo ~/.haris/repl.org ;;
           bootstrap.org)  echo ~/.haris/bootstrap/README.org ;;
+          background.org) echo ~/.haris/background.org ;;
           alacritty)      echo ~/.haris/terminal.org ;;
           alias-tmp)      echo ~/.alias-tmp ;;
           alias-gui-tmp)  echo ~/.alias-gui-tmp ;;
