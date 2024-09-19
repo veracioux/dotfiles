@@ -1134,7 +1134,12 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g px    'ping x'
   conditional_abbr -g ii    'curl ipinfo.io'
   conditional_abbr -g bt    'bluetoothctl'
-  conditional_abbr -g man   'eman'
+  conditional_abbr -g sshk  --set-cursor 'ssh-copy-id -i ~/.ssh/%'
+  conditional_abbr -g sshkm 'ssh-copy-id -i ~/.ssh/main.pub'
+
+  if [ "$TERM" != "linux" ]
+      conditional_abbr -g man   'eman'
+  end
   conditional_abbr -g R     'reset'
   conditional_abbr -g pa    'printarg'
   conditional_abbr -g hosts 'myemacs -c /etc/hosts'
