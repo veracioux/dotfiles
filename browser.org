@@ -12,10 +12,13 @@ my main profile.
 All my browser preferences that I don't need to keep secret go here.
 #+NAME: user.js
 #+begin_src javascript :tangle (concat main-profile-dir "/user.js")
-  user_pref("devtools.theme", "dark");
+  // Use dark theme
+  user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
+
   user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
   user_pref("browser.bookmarks.autoExportHTML", false);
   user_pref("browser.startup.page", 3);
+  user_pref("browser.toolbar.bookmarks.visibility", "never");
 
   user_pref("places.history.enabled", true);
   user_pref("geo.enabled", false);
@@ -28,6 +31,7 @@ All my browser preferences that I don't need to keep secret go here.
   user_pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 
   // Devtools
+  user_pref("devtools.theme", "dark");
   user_pref("devtools.chrome.enabled", true);
   user_pref("devtools.debugger.remote-enabled", true);
 
