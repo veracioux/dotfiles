@@ -94,6 +94,8 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
 #+end_src
 *** Initialize spacemacs repo
 #+begin_src bash
+  mkdir -p ~/.emacs.d
+
   pushd ~/.emacs.d >/dev/null
   if [ ! -d .git ]; then
       git init
@@ -109,6 +111,7 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
 #+end_src
 *** Interactively install spacemacs
 #+begin_src bash
+  ln -s ~/.haris/.spacemacs ~/.spacemacs
   echo "Emacs will be launched now. Follow the prompts to setup spacemacs"
   echo "When done, you can close the emacs window"
   COLORTERM=truecolor LSP_USE_PLISTS=true emacs
