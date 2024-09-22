@@ -1113,8 +1113,12 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g oct   'octave'
   conditional_abbr -g octb  'OCTAVE_BASIC=true command octave'
   conditional_abbr -g va    'vagrant'
+  conditional_abbr -g M --set-cursor 'sudo mount -o uid=(id -u),gid=(id -g) /dev/%'
   conditional_abbr -g u     'fusermount -u'
-  conditional_abbr -g um    'sudo umount'
+  conditional_abbr -g um --set-cursor 'fusermount -u ~/mnt/%'
+  conditional_abbr -g U     'sudo umount'
+  conditional_abbr -g Um --set-cursor 'sudo umount ~/mnt/%'
+  conditional_abbr -g UM --set-cursor 'sudo umount ~/mnt/%'
   conditional_abbr -g cmd   'command'
   conditional_abbr -g w     'which'
   conditional_abbr -g P     "pgrep -af"
