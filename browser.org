@@ -34,6 +34,7 @@ All my browser preferences that I don't need to keep secret go here.
   user_pref("devtools.theme", "dark");
   user_pref("devtools.chrome.enabled", true);
   user_pref("devtools.debugger.remote-enabled", true);
+  user_pref("devtools.toolbox.host", "window");
 
   user_pref("tridactyl.unfixedamo_removed", true);
 
