@@ -11,6 +11,11 @@
     }
   }
 #+end_src
+* SSH
+#+begin_src ssh-config :tangle (haris/tangle-home ".ssh/conf.d/90-haris.conf")
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/main
+#+end_src
 * Dunst
 :PROPERTIES:
 :header-args+: :tangle (haris/tangle-home ".config/dunst/dunstrc")
