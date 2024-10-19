@@ -390,6 +390,11 @@ get better search matches.
       yarnpkg "$@"
   fi
 #+end_src
+** =iredis=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/iredis")
+  export PAGER=cat
+  alternative-command iredis "$@"
+#+end_src
 * Utilities
 ** =visual-editor=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/visual-editor")
