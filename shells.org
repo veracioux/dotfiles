@@ -882,14 +882,22 @@ with arguments, but only if the callable actually exists.
   function conditional_abbr
       set -l command (echo $argv[-1] | cut -f1 -d' ')
       if type --quiet "$command"
-          abbr -g $argv
+          _abbr -g $argv
       end
+  end
+#+end_src
+***** =_abbr=
+A wrapper around built-in =abbr= that adds the =--set-cursor= option, to reduce
+verbosity of abbreviation definitions.
+#+begin_src fish
+  function _abbr
+      builtin abbr --set-cursor $argv
   end
 #+end_src
 **** Safety precautions
 #+begin_src fish
-  abbr -g rm 'rm -i'
-  abbr -g mv 'mv -i'
+  _abbr -g rm 'rm -i'
+  _abbr -g mv 'mv -i'
 #+end_src
 **** Typo correction
 #+begin_src fish
@@ -915,22 +923,22 @@ abbreviations for equivalent apt operations.
 #+end_src
 ***** Abbreviations
 #+begin_src fish
-  abbr -g p     (_if_pacman_else 'pacman'         'apt')
-  abbr -g pq    (_if_pacman_else 'pacman -Q'      'apt list --installed')
-  abbr -g pqq   (_if_pacman_else 'pacman -Qq'     'apt list --installed')
-  abbr -g pqi   (_if_pacman_else 'pacman -Qi'     'dpkg --status')
-  abbr -g pql   (_if_pacman_else 'pacman -Ql'     'dpkg --listfiles')
-  abbr -g pqm   (_if_pacman_else 'pacman -Qm')
-  abbr -g pqe   (_if_pacman_else 'pacman -Qe')
-  abbr -g pqo   (_if_pacman_else 'pacman -Qo'     'apt-file search --regexp')
-  abbr -g pqs   (_if_pacman_else 'pacman -Qs')
-  abbr -g psi   (_if_pacman_else 'pacman -Si'     'apt-cache show')
-  abbr -g pss   (_if_pacman_else 'pacman -Ss'     'apt search')
-  abbr -g pqdtq (_if_pacman_else 'pacman -Qdtq')
-  abbr -g sp    (_if_pacman_else 'sudo pacman'    'sudo apt')
-  abbr -g sps   (_if_pacman_else 'sudo pacman -S' 'sudo apt install')
-  abbr -g spr   (_if_pacman_else 'sudo pacman -R' 'sudo apt remove')
-  abbr -g sprq  (_if_pacman_else 'sudo pacman -R (pacman -Qdtq)' 'sudo apt autoremove')
+  _abbr -g p     (_if_pacman_else 'pacman'         'apt')
+  _abbr -g pq    (_if_pacman_else 'pacman -Q'      'apt list --installed')
+  _abbr -g pqq   (_if_pacman_else 'pacman -Qq'     'apt list --installed')
+  _abbr -g pqi   (_if_pacman_else 'pacman -Qi'     'dpkg --status')
+  _abbr -g pql   (_if_pacman_else 'pacman -Ql'     'dpkg --listfiles')
+  _abbr -g pqm   (_if_pacman_else 'pacman -Qm')
+  _abbr -g pqe   (_if_pacman_else 'pacman -Qe')
+  _abbr -g pqo   (_if_pacman_else 'pacman -Qo'     'apt-file search --regexp')
+  _abbr -g pqs   (_if_pacman_else 'pacman -Qs')
+  _abbr -g psi   (_if_pacman_else 'pacman -Si'     'apt-cache show')
+  _abbr -g pss   (_if_pacman_else 'pacman -Ss'     'apt search')
+  _abbr -g pqdtq (_if_pacman_else 'pacman -Qdtq')
+  _abbr -g sp    (_if_pacman_else 'sudo pacman'    'sudo apt')
+  _abbr -g sps   (_if_pacman_else 'sudo pacman -S' 'sudo apt install')
+  _abbr -g spr   (_if_pacman_else 'sudo pacman -R' 'sudo apt remove')
+  _abbr -g sprq  (_if_pacman_else 'sudo pacman -R (pacman -Qdtq)' 'sudo apt autoremove')
 #+end_src
 ***** End guard
 #+begin_src fish
@@ -944,31 +952,32 @@ abbreviations for equivalent apt operations.
 #+end_src
 ***** Abbreviations
 #+begin_src fish
-  abbr -g ctl       'sudo systemctl'
-  abbr -g start     'sudo systemctl start'
-  abbr -g stop      'sudo systemctl stop'
-  abbr -g en        'sudo systemctl enable'
-  abbr -g dis       'sudo systemctl disable'
-  abbr -g sts       'systemctl status'
-  abbr -g drel      'sudo systemctl daemon-reload'
-  abbr -g rel       'sudo systemctl reload'
-  abbr -g res       'sudo systemctl restart'
-  abbr -g sus       'systemctl suspend'
-  abbr -g j         'journalctl -f -u'
+  _abbr -g ctl       'sudo systemctl'
+  _abbr -g start     'sudo systemctl start'
+  _abbr -g stop      'sudo systemctl stop'
+  _abbr -g en        'sudo systemctl enable'
+  _abbr -g dis       'sudo systemctl disable'
+  _abbr -g sts       'systemctl status'
+  _abbr -g drel      'sudo systemctl daemon-reload'
+  _abbr -g rel       'sudo systemctl reload'
+  _abbr -g res       'sudo systemctl restart'
+  _abbr -g dres      'sudo systemctl daemon-reload --user && systemctl restart  --user'
+  _abbr -g sus       'systemctl suspend'
+  _abbr -g j         'journalctl -f -u'
 #+end_src
 ****** --user versions
 #+begin_src fish
-  abbr -g ctlu      'systemctl --user'
-  abbr -g startu    'systemctl start --user'
-  abbr -g stopu     'systemctl stop --user'
-  abbr -g enu       'systemctl enable --user'
-  abbr -g disu      'systemctl disable --user'
-  abbr -g stsu      'systemctl status --user'
-  abbr -g drelu     'systemctl daemon-reload --user'
-  abbr -g relu      'systemctl reload --user'
-  abbr -g resu      'systemctl restart  --user'
-  abbr -g dresu     'systemctl daemon-reload --user && systemctl restart  --user'
-  abbr -g ju        'journalctl --user -f -u'
+  _abbr -g ctlu      'systemctl --user'
+  _abbr -g startu    'systemctl start --user'
+  _abbr -g stopu     'systemctl stop --user'
+  _abbr -g enu       'systemctl enable --user'
+  _abbr -g disu      'systemctl disable --user'
+  _abbr -g stsu      'systemctl status --user'
+  _abbr -g drelu     'systemctl daemon-reload --user'
+  _abbr -g relu      'systemctl reload --user'
+  _abbr -g resu      'systemctl restart  --user'
+  _abbr -g dresu     'systemctl daemon-reload --user && systemctl restart  --user'
+  _abbr -g ju        'journalctl --user -f -u'
 #+end_src
 ***** End guard
 #+begin_src fish
@@ -985,53 +994,56 @@ abbreviations for equivalent apt operations.
   if [ -n "$__haris_docker" ]
 #+end_src
 #+begin_src fish
-  abbr -g d      "$__haris_docker"
-  abbr -g db     "$__haris_docker build"
-  abbr -g dbn    "$__haris_docker build --no-cache"
+  _abbr -g d      "$__haris_docker"
+  _abbr -g db     "$__haris_docker build"
+  _abbr -g dbn    "$__haris_docker build --no-cache"
 
-  abbr -g dr     "$__haris_docker run"
-  abbr -g drit   "$__haris_docker run -it"
-  abbr -g drite  "$__haris_docker run -it --entrypoint"
+  _abbr -g dr     "$__haris_docker run"
+  _abbr -g drit   "$__haris_docker run -it"
+  _abbr -g drite  "$__haris_docker run -it --entrypoint"
 
-  abbr -g deit   "$__haris_docker exec -it"
+  _abbr -g deit   "$__haris_docker exec -it"
 
-  abbr -g drm    "$__haris_docker rm -f"
+  _abbr -g drm    "$__haris_docker rm -f"
 
-  abbr -g di     "$__haris_docker image"
-  abbr -g dil    "$__haris_docker image ls"
-  abbr -g dip    "$__haris_docker image prune"
-  abbr -g dii    "$__haris_docker image inspect"
-  abbr -g dir    "$__haris_docker image rm"
+  _abbr -g di     "$__haris_docker image"
+  _abbr -g dil    "$__haris_docker image ls"
+  _abbr -g dip    "$__haris_docker image prune"
+  _abbr -g dii    "$__haris_docker image inspect"
+  _abbr -g dir    "$__haris_docker image rm"
 
-  abbr -g dc     "$__haris_docker container"
-  abbr -g dcl    "$__haris_docker container ls"
-  abbr -g dcp    "$__haris_docker container prune"
-  abbr -g dci    "$__haris_docker container inspect"
+  _abbr -g dc     "$__haris_docker container"
+  _abbr -g dcl    "$__haris_docker container ls"
+  _abbr -g dcp    "$__haris_docker container prune"
+  _abbr -g dci    "$__haris_docker container inspect"
 
-  abbr -g dv     "$__haris_docker volume"
-  abbr -g dvl    "$__haris_docker volume ls"
-  abbr -g dvc    "$__haris_docker volume create"
-  abbr -g dvr    "$__haris_docker volume rm"
-  abbr -g dvi    "$__haris_docker volume inspect"
-  abbr -g dvp    "$__haris_docker volume prune"
+  _abbr -g dv     "$__haris_docker volume"
+  _abbr -g dvl    "$__haris_docker volume ls"
+  _abbr -g dvc    "$__haris_docker volume create"
+  _abbr -g dvr    "$__haris_docker volume rm"
+  _abbr -g dvi    "$__haris_docker volume inspect"
+  _abbr -g dvp    "$__haris_docker volume prune"
 
-  abbr -g dn     "$__haris_docker network"
-  abbr -g dnl    "$__haris_docker network ls"
-  abbr -g dni    "$__haris_docker network inspect"
-  abbr -g dnp    "$__haris_docker network prune"
-  abbr -g dnr    "$__haris_docker network rm"
-  abbr -g dnc    "$__haris_docker network connect"
-  abbr -g dnd    "$__haris_docker network disconnect"
-  abbr -g dnC    "$__haris_docker network create"
+  _abbr -g dn     "$__haris_docker network"
+  _abbr -g dnl    "$__haris_docker network ls"
+  _abbr -g dni    "$__haris_docker network inspect"
+  _abbr -g dnp    "$__haris_docker network prune"
+  _abbr -g dnr    "$__haris_docker network rm"
+  _abbr -g dnc    "$__haris_docker network connect"
+  _abbr -g dnd    "$__haris_docker network disconnect"
+  _abbr -g dnC    "$__haris_docker network create"
 
-  abbr -g ds     "$__haris_docker system"
-  abbr -g dsp    "$__haris_docker system prune"
-  abbr -g dsd    "$__haris_docker system df -v"
+  _abbr -g ds     "$__haris_docker system"
+  _abbr -g dsp    "$__haris_docker system prune"
+  _abbr -g dsd    "$__haris_docker system df -v"
 
-  abbr -g dm     "$__haris_docker manifest"
-  abbr -g dmi    "$__haris_docker manifest inspect"
+  _abbr -g dm     "$__haris_docker manifest"
+  _abbr -g dmi    "$__haris_docker manifest inspect"
 
-  abbr -g dhh    "$__haris_docker history"
+  _abbr -g dhh    "$__haris_docker history"
+
+  # Misc
+  _abbr -g ENT --position anywhere -- '--entrypoint env%'
 #+end_src
 #+begin_src fish
   end
@@ -1043,37 +1055,43 @@ abbreviations for equivalent apt operations.
           docker compose version ||
           docker-compose version
       end &>/dev/null
-      abbr -g D      'docker-compose'
+      _abbr -g D      'docker-compose'
 
-      abbr -g Db     'docker-compose build'
+      _abbr -g Db     'docker-compose build'
 
-      abbr -g Du     'docker-compose up'
-      abbr -g Dub    'docker-compose up --build'
-      abbr -g Dud    'docker-compose up -d'
-      abbr -g Dubd   'docker-compose up --build -d'
-      abbr -g Dubt   'docker-compose up --build --timestamps'
+      _abbr -g Du     'docker-compose up'
+      _abbr -g Dub    'docker-compose up --build'
+      _abbr -g Dud    'docker-compose up -d'
+      _abbr -g Dubd   'docker-compose up --build -d'
+      _abbr -g Dubt   'docker-compose up --build --timestamps'
 
-      abbr -g Dr     'docker-compose run'
-      abbr -g Drit   'docker-compose run -it'
-      abbr -g Dritd  'docker-compose run -it -d'
-      abbr -g Dritb  'docker-compose run -it --build'
-      abbr -g Dritn  'docker-compose run -it --no-deps'
-      abbr -g Dritbn 'docker-compose run -it --build --no-deps'
-      abbr -g Drite  'docker-compose run -it --entrypoint'
+      _abbr -g Dr     'docker-compose run'
+      _abbr -g Drit   'docker-compose run -it'
+      _abbr -g Dritd  'docker-compose run -it -d'
+      _abbr -g Dritb  'docker-compose run -it --build'
+      _abbr -g Dritn  'docker-compose run -it --no-deps'
+      _abbr -g Dritbn 'docker-compose run -it --build --no-deps'
+      _abbr -g Drite  'docker-compose run -it --entrypoint'
 
-      abbr -g Ds     'docker-compose start'
-      abbr -g DS     'docker-compose stop'
-      abbr -g DR     'docker-compose restart'
+      _abbr -g Ds     'docker-compose start'
+      _abbr -g DS     'docker-compose stop'
+      _abbr -g DR     'docker-compose restart'
 
-      abbr -g Dd     'docker-compose down'
-      abbr -g Ddo    'docker-compose down --remove-orphans'
-      abbr -g Ddv    'docker-compose down --volumes'
-      abbr -g Ddov   'docker-compose down --remove-orphans --volumes'
+      _abbr -g Dd     'docker-compose down'
+      _abbr -g Ddo    'docker-compose down --remove-orphans'
+      _abbr -g Ddv    'docker-compose down --volumes'
+      _abbr -g Ddov   'docker-compose down --remove-orphans --volumes'
 
-      abbr -g Deit   'docker-compose exec -it'
-      abbr -g Drm    'docker-compose rm -sf'
-      abbr -g Dl     'docker-compose logs -f'
-      abbr -g Dc     'docker-compose config'
+      _abbr -g Deit   'docker-compose exec -it'
+      _abbr -g Drm    'docker-compose rm -sf'
+      _abbr -g Dl     'docker-compose logs -f'
+      _abbr -g Dc     'docker-compose config'
+
+      # Misc
+      _abbr -g Dsh  'docker-compose exec -it % sh'
+      _abbr -g Denv 'docker-compose exec -i % env'
+      _abbr -g Dp   'export COMPOSE_PROFILES=%'
+      _abbr -g DP   'export COMPOSE_PROJECT_NAME=%'
   end
 #+end_src
 **** Pass
@@ -1087,14 +1105,14 @@ abbreviations for equivalent apt operations.
 #+end_src
 **** Watch
 #+begin_src fish
-  abbr -g w0 'watch -n0.1'
-  abbr -g w1 'watch -n1'
-  abbr -g w2 'watch -n2'
+  _abbr -g w0 'watch -n0.1'
+  _abbr -g w1 'watch -n1'
+  _abbr -g w2 'watch -n2'
 #+end_src
 **** Ufw
 #+begin_src fish
-  abbr ufw   'sudo ufw'
-  abbr ufws  'sudo ufw status numbered'
+  _abbr ufw   'sudo ufw'
+  _abbr ufws  'sudo ufw status numbered'
 #+end_src
 **** Miscellaneous
 #+begin_src fish
@@ -1113,12 +1131,12 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g oct   'octave'
   conditional_abbr -g octb  'OCTAVE_BASIC=true command octave'
   conditional_abbr -g va    'vagrant'
-  conditional_abbr -g M --set-cursor 'sudo mount -o uid=(id -u),gid=(id -g) /dev/%'
+  conditional_abbr -g M     'sudo mount -o uid=(id -u),gid=(id -g) /dev/%'
   conditional_abbr -g u     'fusermount -u'
-  conditional_abbr -g um --set-cursor 'fusermount -u ~/mnt/%'
+  conditional_abbr -g um    'fusermount -u ~/mnt/%'
   conditional_abbr -g U     'sudo umount'
-  conditional_abbr -g Um --set-cursor 'sudo umount ~/mnt/%'
-  conditional_abbr -g UM --set-cursor 'sudo umount ~/mnt/%'
+  conditional_abbr -g Um    'sudo umount ~/mnt/%'
+  conditional_abbr -g UM    'sudo umount ~/mnt/%'
   conditional_abbr -g cmd   'command'
   conditional_abbr -g w     'which'
   conditional_abbr -g P     "pgrep -af"
@@ -1138,7 +1156,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g px    'ping x'
   conditional_abbr -g ii    'curl ipinfo.io'
   conditional_abbr -g bt    'bluetoothctl'
-  conditional_abbr -g sshk  --set-cursor 'ssh-copy-id -i ~/.ssh/%'
+  conditional_abbr -g sshk  'ssh-copy-id -i ~/.ssh/%'
   conditional_abbr -g sshkm 'ssh-copy-id -i ~/.ssh/main.pub'
 
   if [ "$TERM" != "linux" ]
