@@ -2470,10 +2470,6 @@ Arch Linux.
 By default, the adapters are archived. In order to enable them, simply unarchive
 them if the current PC setup is the one they are intended for.
 ** Ubuntu                                                          :ARCHIVE:
-*** =docker-compose=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/docker-compose")
-  docker compose "$@"
-#+end_src
 *** =fd=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/fd")
   fdfind "$@"
