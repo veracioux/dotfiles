@@ -200,6 +200,8 @@ Here are the configs you can choose from:
   sxhkd &                                       # Load default bindings
   sxhkd.private &                               # Load private bindings
 
+  systemctl start --user clipmenud.service      # (ref:clipmenud)
+
   export DESKTOP_SESSION=i3
   exec i3                                       # Window manager
 #+end_src
