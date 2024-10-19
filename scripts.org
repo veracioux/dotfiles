@@ -363,7 +363,7 @@ get better search matches.
 #+end_src
 ** =docker-compose=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/docker-compose")
-  if [ "$(which -a docker-compose | wc -l)" -gt 1 ]; then
+  if [ "$(which -a docker-compose | uniq | wc -l)" -gt 1 ]; then
       alternative-command docker-compose "$@"
   else
       docker compose "$@"
@@ -376,7 +376,7 @@ get better search matches.
 #+end_src
 ** =teams=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/teams")
-  if [ "$(which -a teams | wc -l)" -gt 1 ]; then
+  if [ "$(which -a teams | uniq | wc -l)" -gt 1 ]; then
       alternative-command teams "$@"
   else
       teams-for-linux "$@"
@@ -384,7 +384,7 @@ get better search matches.
 #+end_src
 ** =yarn=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/yarn")
-  if [ "$(which -a yarn | wc -l)" -gt 1 ]; then
+  if [ "$(which -a yarn | uniq | wc -l)" -gt 1 ]; then
       alternative-command yarn "$@"
   else
       yarnpkg "$@"
