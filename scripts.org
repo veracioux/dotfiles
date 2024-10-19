@@ -361,6 +361,35 @@ get better search matches.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/clipmenu")
   alternative-command clipmenu "$@"
 #+end_src
+** =docker-compose=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/docker-compose")
+  if [ "$(which -a docker-compose | wc -l)" -gt 1 ]; then
+      alternative-command docker-compose "$@"
+  else
+      docker compose "$@"
+  fi
+#+end_src
+** =ngrok=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/ngrok")
+  export TERM=xterm-256color
+  alternative-command ngrok "$@"
+#+end_src
+** =teams=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/teams")
+  if [ "$(which -a teams | wc -l)" -gt 1 ]; then
+      alternative-command teams "$@"
+  else
+      teams-for-linux "$@"
+  fi
+#+end_src
+** =yarn=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/yarn")
+  if [ "$(which -a yarn | wc -l)" -gt 1 ]; then
+      alternative-command yarn "$@"
+  else
+      yarnpkg "$@"
+  fi
+#+end_src
 * Utilities
 ** =visual-editor=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/visual-editor")
