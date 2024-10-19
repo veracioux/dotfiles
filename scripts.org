@@ -1422,6 +1422,8 @@ Create a Xephyr session for the current user that tries to mimic a regular
 * Dmenu
 ** Main entrypoint (=dmenu_run=)
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/dmenu_run")
+  CACHE_FILE=~/.cache/.desktop-apps.txt
+
   # If an argument is provided, run corresponding custom dmenu script
   if [ -n "$1" ]; then
       script=~/.local/lib/dmenu/"$1"
@@ -1449,19 +1451,18 @@ Create a Xephyr session for the current user that tries to mimic a regular
 
   pull_desktop_apps() {
       # Print out desktop apps by reading *.desktop files and also cache them
-      sh <<'EOF'
+      CACHE_FILE="$CACHE_FILE" sh <<'EOF'
   «pull_desktop_apps»
   EOF
   }
   get_desktop_apps() {
-      cache_file=~/.cache/.desktop-apps.txt
-      age="$(date -d "now - $(stat -c '%Y' "$cache_file") seconds" +%s)"
+      age="$(date -d "now - $(stat -c '%Y' "$CACHE_FILE") seconds" +%s)"
       # Refresh the cache only if the file is older than a specified age (seconds)
       {
-          if [ ! -f "$cache_file" -o  $age -gt 36000 ]; then
+          if [ ! -f "$CACHE_FILE" -o  $age -gt 36000 ]; then
               pull_desktop_apps
           else
-              cat "$cache_file"
+              cat "$CACHE_FILE"
           fi
           find ~/.local/bin -executable -type f -printf '%f\n' | sed 's/^/ /'
       } | sort | uniq
@@ -1514,14 +1515,13 @@ Create a Xephyr session for the current user that tries to mimic a regular
       choice="$1"
   else
       choice="$(get_commands | dmenu)"
+      [ "$?" = "0" ] || exit
       # If it starts with a non-ascii character (as in get-commands), remove it and the space following it
       if grep -P "[^\x00-\x7F]" <<<"$choice"; then
           choice="$(cut -f2 -d' ' <<<"$choice")"
       fi
   fi
   case "$choice" in
-      "")
-          exit ;;
       "Open")
           run_script open ;;
       "Clipboard")
@@ -1601,7 +1601,7 @@ lightweight shell.
       echo -n ' '  # Represents a GUI app
       basename "$(sh -c "eval set -- $line; echo \$1")"
   done \
-      | sort | uniq | tee "$cache_file"
+      | sort | uniq | tee "$CACHE_FILE"
 #+end_src
 ** Open
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/open")
