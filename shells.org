@@ -1088,10 +1088,11 @@ abbreviations for equivalent apt operations.
       _abbr -g Dc     'docker-compose config'
 
       # Misc
-      _abbr -g Dsh  'docker-compose exec -it % sh'
-      _abbr -g Denv 'docker-compose exec -i % env'
-      _abbr -g Dp   'export COMPOSE_PROFILES=%'
-      _abbr -g DP   'export COMPOSE_PROJECT_NAME=%'
+      _abbr -g Dsh    'docker-compose exec -it % sh'
+      _abbr -g Dbash  'docker-compose exec -it % bash'
+      _abbr -g Denv   'docker-compose exec -i % env'
+      _abbr -g Dp     'export COMPOSE_PROFILES=%'
+      _abbr -g DP     'export COMPOSE_PROJECT_NAME=%'
   end
 #+end_src
 **** Pass
@@ -1165,6 +1166,8 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g R     'reset'
   conditional_abbr -g pa    'printarg'
   conditional_abbr -g hosts 'myemacs -c /etc/hosts'
+
+  _abbr            -g WT    'export WORKTREE=%'
 #+end_src
 **** Google cloud
 #+begin_src fish
