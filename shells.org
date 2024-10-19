@@ -1171,6 +1171,16 @@ abbreviations for equivalent apt operations.
 #+begin_src fish
   set aur 'aur@aur.archlinux.org'
 #+end_src
+* Environment
+#+begin_src conf :tangle (haris/tangle-home ".config/environment.d/90-haris.conf")
+  # Clipmenu
+  # (ref:CM_DIR)
+  CM_DIR=$HOME/.local/share/haris/clipmenu
+#+end_src
+Make the environment variables available for shells as well:
+#+begin_src shell :tangle (haris/tangle-home ".profile")
+  eval "$(cat ~/.config/environment.d/90-haris.conf | grep -vP '^\s*#' | sed 's/^/export /')"
+#+end_src
 * .profile
 #+begin_src shell :tangle (haris/tangle-home ".profile")
   export PATH=~/.local/bin:$PATH:~/.go/bin:"$CLOUDSDK_ROOT_DIR"/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator

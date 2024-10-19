@@ -18,7 +18,7 @@ Enable all the background services with:
   WantedBy=default.target
 #+end_src
 * Clipmenud
-NOTE: The =CM_DIR= environment variable should be in sync with the [[file:scripts.org::*=clipmenu=][clipmenu wrapper script]].
+NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DIR)][here]].
 #+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/clipmenud.service")
   [Unit]
   Description=Clipboard daemon
@@ -26,8 +26,7 @@ NOTE: The =CM_DIR= environment variable should be in sync with the [[file:script
   [Service]
   Environment=CM_DEBUG=1
   Environment=CM_MAX_CLIPS=99999
-  Environment=CM_DIR=<<eval-user-home()>>/.local/share/haris/clipmenu
-  Environment=XDG_RUNTIME_DIR=<<eval-xdg-runtime-dir()>>
+  Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env clipmenud
 
   [Install]

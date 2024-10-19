@@ -358,9 +358,7 @@ get better search matches.
   /usr/bin/lnav "$@"
 #+end_src
 ** =clipmenu=                                                         :script:
-NOTE: The =CM_DIR= environment variable should be in sync with [[file:background.org::*Clipmenud][clipmenud configuration]].
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/clipmenu")
-  export CM_DIR=«eval-user-home()»/.local/share/haris/clipmenu
   alternative-command clipmenu "$@"
 #+end_src
 * Utilities
