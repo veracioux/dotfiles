@@ -13,12 +13,16 @@ All my browser preferences that I don't need to keep secret go here.
 #+NAME: user.js
 #+begin_src javascript :tangle (concat main-profile-dir "/user.js")
   // Use dark theme
+  user_pref("layout.css.prefers-color-scheme.content-override", 0);
+  user_pref("browser.theme.content-theme", 0);
+  user_pref("browser.theme.toolbar-theme", 0);
   user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
 
   user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
   user_pref("browser.bookmarks.autoExportHTML", false);
   user_pref("browser.startup.page", 3);
   user_pref("browser.toolbar.bookmarks.visibility", "never");
+  user_pref("browser.toolbars.bookmarks.visibility", "never");
 
   user_pref("places.history.enabled", true);
   user_pref("geo.enabled", false);
