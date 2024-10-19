@@ -1094,21 +1094,12 @@ are designed to be easily integrated into dmenu scripts.
   (with-selected-frame (make-frame `((name . "EmacsFloat")
                                      (display . ,(getenv "DISPLAY"))))
     (spacemacs/switch-to-scratch-buffer)
-    (let ((-gts-after-buffer-render-hook gts-after-buffer-render-hook))
-      (run-with-timer
-       0.2
-       nil
-       (lambda ()
-         ;; This is the only thing I've tried that doesn't report the buffer as read-only
-         (call-interactively #'evil-delete-whole-line)
-         (insert (shell-command-to-string "~/.local/lib/haris/etranslate-helper 2>/dev/null"))))
-
-      (add-hook 'gts-after-buffer-render-hook
-                (lambda ()
-                  (delete-other-windows (get-buffer-window nil t)))
-                100)
-      (gts-do-translate)
-      (setq gts-after-buffer-render-hook -gts-after-buffer-render-hook)))
+    (with-temp-buffer
+      (insert (shell-command-to-string "~/.local/lib/haris/etranslate-helper 2>/dev/null"))
+      (let* ((gt-taker-text 'buffer)
+             (gt-buffer-prompt-window-config '(display-buffer-same-window))
+             (gt-buffer-render-window-config gt-buffer-prompt-window-config))
+        (gt-do-translate))))
 #+end_src
 *** Helper script
 This script prints the contents of the clipboard

@@ -646,7 +646,7 @@ Some custom keybindings are defined here as well.
   (define-key haris/command-log-prefix-map (kbd "l") #'haris/command-log)
 
   ;; Misc
-  (spacemacs/set-leader-keys "ot" #'gts-do-translate)
+  (spacemacs/set-leader-keys "ot" #'gt-do-translate)
 
   ;; Friendly descriptions
   (which-key-add-key-based-replacements
@@ -1043,40 +1043,60 @@ Fix for empty image list (not sure if the fix works):
 ** Go Translate
 #+begin_src elisp
   (use-package go-translate)
+  (setq gt-taker-prompt 'buffer)
+  (setq gt-langs '(en es de bs tr cs))
+  (setq gt-buffer-render-follow-p t)
+  (setq gt-polyglot-p t)
+  (setq gt-taker-pick nil)
 
-  (setq gts-translate-list '(("en" "de")
-                             ("en" "es")
-                             ("es" "en")
-                             ("en" "tr")
-                             ("tr" "en")
-                             ("de" "en")
-                             ("en" "cs")
-                             ("cs" "en")))
+  (setq gt-default-translator
+        (gt-translator
+         :engines (gt-google-engine)
+         :render (gt-buffer-render)))
+#+end_src
+*** Keybindings
+#+begin_src elisp
+  ;; Perform translation
+  (evil-define-key 'normal gt-buffer-prompt-map (kbd ",c") (kbd "C-c C-c"))
+  ;; Abort translation
+  (evil-define-key 'normal gt-buffer-prompt-map (kbd ",k") (kbd "C-c C-k"))
 
-  (add-hook 'gts-after-buffer-render-hook
-            (defun haris/disable-evil-in-go-translate (&rest _)
-              (select-window (get-buffer-window nil t) (current-buffer))
-              (define-key gts-buffer-local-map              (kbd "SPC SPC") #'counsel-M-x)
-              (define-key gts-buffer-local-map              (kbd "TAB")     #'turn-on-evil-mode)
-              (evil-define-key 'normal gts-buffer-local-map (kbd "TAB")     #'turn-off-evil-mode)
-              (evil-define-key 'normal gts-buffer-local-map (kbd "q")       #'haris/force-kill-window)
-              (use-local-map gts-buffer-local-map)))
+  ;; Switch translator engine
+  (evil-define-key 'normal gt-buffer-prompt-map (kbd ",e") (kbd "C-c C-e"))
+  ;; Next language
+  (evil-define-key 'normal gt-buffer-prompt-map (kbd "M-n") (kbd "C-c C-n"))
+  ;; Previous language
+  (evil-define-key 'normal gt-buffer-prompt-map (kbd "M-p") (kbd "C-c C-p"))
 
-  (defun gts-prompt-picker-prev-path ()
-    (interactive)
-    (gts-prompt-picker-next-path t))
+  ;; go-translate provides only a function for next, but not for prev
+  (defun haris/gt-buffer-render--cycle-prev (&optional ignore-rules)
+    (interactive "P")
+    (with-slots (target taker keep) gt-buffer-render-translator
+      (if (and (slot-boundp taker 'langs) (gt-functionp (oref taker langs)))
+          (user-error "Current taker not support cycle prev")
+        (let* ((curr gt-last-target)
+               (gt-skip-lang-rules-p ignore-rules)
+               (gt-ignore-target-history-p t)
+               (prev (gt-target taker gt-buffer-render-translator 'prev)))
+          (unless (equal prev curr)
+            (setf target prev keep t)
+            (gt-start gt-buffer-render-translator))))))
 
-  (evil-define-key 'insert gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
-  (evil-define-key 'normal gts-prompt-picker-keymap (kbd "TAB")       #'gts-prompt-picker-next-path)
-  (evil-define-key 'insert gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
-  (evil-define-key 'normal gts-prompt-picker-keymap (kbd "<backtab>") #'gts-prompt-picker-prev-path)
-
-  (eval-after-load "gts"
-    (setq gts-default-translator
-          (gts-translator
-           :picker (gts-prompt-picker)
-           :engines `(,(gts-google-engine))
-           :render (gts-buffer-render))))
+  (add-hook
+   'gt-buffer-render-output-hook
+   (defun haris//gt-buffer-render-output-init-bindings () (interactive)
+          ;; Without this, the following keybindings don't take effect
+          (evil-normal-state)
+          (evil-define-key 'normal gt-buffer-render-local-map
+            (kbd "M-n") 'gt-buffer-render--cycle-next)
+          (evil-define-key 'normal gt-buffer-render-local-map
+            (kbd "M-p") 'haris/gt-buffer-render--cycle-prev)
+          (evil-define-key 'normal gt-buffer-render-local-map
+            (kbd "q") 'haris/force-kill-window)
+          (evil-define-key 'normal gt-buffer-render-local-map
+            (kbd "?") (defun haris/gt-buffer-render-help ()
+                        (interactive)
+                        (describe-keymap gt-buffer-render-local-map)))))
 #+end_src
 ** Bluetooth
 #+begin_src elisp
