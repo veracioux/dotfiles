@@ -217,6 +217,10 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (setq frame-title-format "%b"
         dotspacemacs-frame-title-format nil)
   (eval-after-load "recentf"
+    (add-hook 'dired-after-readin-hook
+              (defun haris//add-file-to-recentf ()
+                (recentf-add-file default-directory)))
+
     (defun haris//after-load/recentf ()
       (add-to-list 'recentf-exclude "^/tmp/haris-pipe-")
       (cl-delete-if (lambda (el) (string= el "~/.emacs.d/elpa/29.1/develop/"))
