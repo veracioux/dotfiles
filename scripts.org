@@ -376,10 +376,17 @@ get better search matches.
 #+end_src
 ** =teams=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/teams")
+  flatpak_name="com.github.IsmaelMartinez.teams_for_linux"
+
   if [ "$(which -a teams | uniq | wc -l)" -gt 1 ]; then
       alternative-command teams "$@"
-  else
+  elif [ "$(which -a teams-for-linux | uniq | wc -l)" -gt 0 ]; then
       teams-for-linux "$@"
+  elif flatpak info "$flatpak_name" >/dev/null 2>&1; then
+       flatpak run "$flatpak_name"
+  else
+      echo "Teams is not installed. Tried:" >&2
+      printf '    %s\n' teams teams-for-linux "Flatpak: $flatpak_name"
   fi
 #+end_src
 ** =yarn=
