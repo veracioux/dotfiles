@@ -46,6 +46,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
     chx = update-index --chmod=+x
     root = rev-parse --show-toplevel  # Needed for older versions of git
     cr = commit --allow-empty -m REBASE
+  	rmc = rm --cached -r
 #+end_src
 *** sparse-checkout
 #+begin_src gitconfig
@@ -123,8 +124,10 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   [alias]
     ppo = pull origin
     ppom = pull origin master
+    ppoh = pull origin HEAD
     ppu = pull upstream
     ppum = pull upstream master
+    ppuh = pull upstream HEAD
 #+end_src
 *** checkout
 #+begin_src gitconfig
