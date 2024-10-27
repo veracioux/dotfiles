@@ -521,6 +521,19 @@ get better search matches.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/lscf")
   cat $(fcmd cf) | sed -n 's/\s*\(.*\)).*/\1/p'
 #+end_src
+** =ls-wallpapers=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/ls-wallpapers")
+  lookup_dirs=(
+      ~/.local/share/wallpapers
+      ~/.local/share/backgrounds
+      /usr/local/share/wallpapers
+      /usr/local/share/backgrounds
+      /usr/share/wallpapers
+      /usr/share/backgrounds
+  )
+
+  fd . "${lookup_dirs[@]}" 2>/dev/null
+#+end_src
 ** =n=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/n")
   # Print n of the received arguments, where n=$1
@@ -1421,6 +1434,72 @@ Create a Xephyr session for the current user that tries to mimic a regular
               xrandr
           fi
       done
+#+end_src
+** =lock-screen=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/lock-screen")
+  # Custom configuration
+  HARIS_WALLPAPER_CHANGE=true
+  HARIS_WALLPAPER_CHANGE_INTERVAL_SEC=60
+
+  # Configure xsecurelock
+  export XSECURELOCK_LIST_VIDEOS_COMMAND="ls-wallpapers | grep -P '\.(mp4|webm|avi|mkv|gif)$'"
+  export XSECURELOCK_AUTH_TIMEOUT=10
+  export XSECURELOCK_SAVER=saver_mpv
+  export XSECURELOCK_IMAGE_DURATION_SECONDS=3
+  export XSECURELOCK_VIDEOS_FLAGS='--loop'
+  export XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE='0'
+
+  if [ -z "$($XSECURELOCK_LIST_VIDEOS_COMMAND)" ]; then
+      # No videos found, use images
+      export XSECURELOCK_LIST_VIDEOS_COMMAND="ls-wallpapers | grep -P '\.(png|jpg|jpeg|webp)$'"
+      export XSECURELOCK_VIDEOS_FLAGS=''
+      HARIS_WALLPAPER_CHANGE=''
+  fi
+
+  picom_running="$(pgrep '^picom$' >/dev/null && echo true)"
+  pkill '^picom$'
+
+  # Kill gpg-agent
+  pkill gpg-agent 2>/dev/null
+
+  # Run xsecurelock, restarting at intervals in order to change the wallpaper
+  xsecurelock &
+  xsecurelock_pid="$!"
+  last_change_time="$(date +%s)"
+  # Restart xsecurelock at intervals to change the wallpaper,
+  # but without interrupting the user if they are entering their password.
+  while [ -n "$HARIS_WALLPAPER_CHANGE" ]; do
+      sleep 1s
+      if ! ps -p "$xsecurelock_pid" >/dev/null; then
+          # xsecurelock exited, exit this program as well
+          break
+      fi
+      # Check if the wallpaper has been active for enough time
+      now="$(date +%s)"
+      change_interval="$HARIS_WALLPAPER_CHANGE_INTERVAL_SEC"
+      diff="$(($now - $last_change_time))"
+      echo "Wallpaper has been active for $diff s."
+      if [ "$diff" -ge "$change_interval" ]; then
+          echo "Wallpaper change is due"
+          idle_time="$(xprintidle)"
+          if [ "$idle_time" -ge "${XSECURELOCK_AUTH_TIMEOUT}000" ]; then
+              echo "Changing wallpaper"
+              last_change_time="$(date +%s)"
+              xsecurelock &
+              new_pid="$!"
+              sleep 0.3s
+              kill "$xsecurelock_pid"
+              xsecurelock_pid="$new_pid"
+          else
+              echo "Wallpaper change skipped due to user activity. idle_time: $idle_time ms"
+          fi
+      fi
+  done
+
+  if [ -n "$picom_running" ]; then
+      sleep 0.5s
+      o picom
+  fi
 #+end_src
 * Dmenu
 ** Main entrypoint (=dmenu_run=)

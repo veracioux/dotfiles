@@ -200,8 +200,6 @@ Here are the configs you can choose from:
   sxhkd &                                       # Load default bindings
   sxhkd.private &                               # Load private bindings
 
-  systemctl start --user clipmenud.service      # (ref:clipmenud)
-
   export DESKTOP_SESSION=i3
   exec i3                                       # Window manager
 #+end_src
@@ -237,8 +235,10 @@ to the laptop I currently use. Please change to suit your needs.
   «dell-g15-xinitrc»
   xset r rate 200 60                          # Increase key press rate
   redshift &                                  # Blue light filter
-  xset s 1000                                 # Set lock timeout
-  xss-lock -- xlock &                         # Lock screen daemon
+
+  xset s 300                                  # Set lock timeout (seconds)
+  xss-lock -- lock-screen &                   # Lock screen daemon
+  systemctl start --user clipmenud            # (ref:clipmenud)
 
   xrdb ~/.Xresources
   feh --bg-fill ~/.wallpaper                  # Set wallpaper
@@ -354,7 +354,7 @@ External bindings are served by sxhkd.
 #+begin_src sxhkdrc :tangle (haris/tangle-home ".config/sxhkd/sxhkdrc")
   # Lock screen
   mod4 + ctrl + l
-      xlock
+      lock-screen
 
   # Dmenu stuff
   mod4 + ISO_Level3_Shift
