@@ -568,7 +568,12 @@ Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
     (interactive)
     (load-file "~/.emacs.d/haris/root.el"))
 
+  (defun haris/open-dotfiles-git ()
+    (interactive)
+    (magit-status "~/.haris"))
+
   (define-key evil-normal-state-map (kbd "SPC f e h") #'haris/open-emacs.org)
+  (define-key evil-normal-state-map (kbd "SPC f e H") #'haris/open-dotfiles-git)
   (define-key evil-normal-state-map (kbd "SPC f e r") #'haris/load-user-config)
 
   (defalias 'spacemacs/default-pop-shell 'spacemacs/shell-pop-multivterm)
