@@ -866,9 +866,7 @@ a terminal and runs the aliased command.
       alias debian    'docker run -it --name debian debian:bookworm-slim'
   end
 
-  function dragon
-      o dragon-drag-and-drop --on-top --thumb-size 32 $argv
-  end
+  alias dragon 'o "$(which dragon)"'
 
   function vrg --wraps rg; vim (rg -l $argv); end
   function vfd --wraps fd; vim (fd $argv); end
