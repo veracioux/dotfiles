@@ -1,6 +1,8 @@
 #+TITLE: Scripts
 #+SETUPFILE: .setup.org
-#+PROPERTY: header-args+ :comments headline
+#+PROPERTY: header-args+
+#+PROPERTY: header-args:shell+ :comments both
+#+PROPERTY: header-args:bash+ :comments both
 
 This is where my custom scripts live. That includes shell scripts, dmenu scripts,
 and potentially programming language-specific scripts. One of the things I
@@ -1686,10 +1688,11 @@ lightweight shell.
       | sort | uniq | tee "$CACHE_FILE"
 #+end_src
 ** Open
+Open a website in Firefox. Suggests bookmarks managed by buku, but you can input
+any URL. To suggest additional URLs, you can create the script
+[[~/.local/lib/haris/custom/dmenu/open.sh]], which should print a list of additional
+URLs (each on a new line) to display in this menu.
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/open")
-  # Open a website in Firefox
-  # Suggests bookmarks managed by buku, but you can input any URL
-
   edit=" Edit..."
   sync=" Sync..."
 
@@ -1698,6 +1701,7 @@ lightweight shell.
           echo "$edit"
           echo "$sync"
           unbuffer buku -p --format 30 | grep -v '^$' | sort
+          [ -x ~/.local/lib/haris/custom/dmenu/open.sh ] && ~/.local/lib/haris/custom/dmenu/open.sh
       } | dmenu -p 'Open:'
   )"
 
