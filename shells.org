@@ -1042,6 +1042,8 @@ abbreviations for equivalent apt operations.
 
   _abbr -g dhh    "$__haris_docker history"
 
+  _abbr -g dl     "$__haris_docker logs -f"
+
   # Misc
   _abbr -g ENT --position anywhere -- '--entrypoint env%'
 #+end_src
@@ -1128,6 +1130,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g py    'python'
   conditional_abbr -g ipy   'ipython'
   conditional_abbr -g copy  'xsel -b'
+  conditional_abbr -g Copy  'tee /dev/tty | xsel -b'
   conditional_abbr -g paste 'xsel -b -o'
   conditional_abbr -g oct   'octave'
   conditional_abbr -g octb  'OCTAVE_BASIC=true command octave'
