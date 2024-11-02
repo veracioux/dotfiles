@@ -384,7 +384,7 @@ External bindings are served by sxhkd.
   mod4 + shift + f
       firefox -P «eval-user-name()»
   mod4 + shift + v
-      alacritty --class Alacritty,Float -e fish -C vifm
+      myemacs-float -c --eval "(progn (scratch-buffer) (call-interactively 'find-file))"
   mod4 + v
       myemacs-float -c --eval '(scratch-buffer)'
   mod4 + shift + e
