@@ -1446,7 +1446,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
   export XSECURELOCK_AUTH_TIMEOUT=10
   export XSECURELOCK_SAVER=saver_mpv
   export XSECURELOCK_IMAGE_DURATION_SECONDS=3
-  export XSECURELOCK_VIDEOS_FLAGS='--loop'
+  export XSECURELOCK_VIDEOS_FLAGS='--loop --panscan=1 --autofit=100%x100%'
   export XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE='0'
 
   if [ -z "$($XSECURELOCK_LIST_VIDEOS_COMMAND)" ]; then
