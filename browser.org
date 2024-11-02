@@ -12,6 +12,10 @@ my main profile.
 All my browser preferences that I don't need to keep secret go here.
 #+NAME: user.js
 #+begin_src javascript :tangle (concat main-profile-dir "/user.js")
+  // General
+  user_pref("dom.security.https_only_mode", true);
+  user_pref("dom.security.https_only_mode_ever_enabled", true);
+
   // Use dark theme
   user_pref("layout.css.prefers-color-scheme.content-override", 0);
   user_pref("browser.theme.content-theme", 0);
