@@ -1171,6 +1171,9 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g hosts 'myemacs -c /etc/hosts'
 
   _abbr            -g WT    'export WORKTREE=%'
+
+  # Npm installation
+  _abbr            -g sni   'sudo npm install -g'
 #+end_src
 **** Google cloud
 #+begin_src fish
