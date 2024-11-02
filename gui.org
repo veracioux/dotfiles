@@ -97,14 +97,17 @@ Some settings in GTK 3.0 don't work if we quote their values.
   <<gtk-settings-3.0>>
 #+end_src
 ** File dialog bookmarks
+Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
+=Alt+<number>=, where indexing starts from 1, and =Alt+0= chooses the 10th item.
 #+begin_src conf :tangle (haris/tangle-home ".config/gtk-3.0/bookmarks")
-  file:///home/<<eval-user-name()>>/proj  projects
-  file:///home/<<eval-user-name()>>/src src
-  file:///home/<<eval-user-name()>>/data  data
-  file:///home/<<eval-user-name()>>/cloud cloud
-  file:///home/<<eval-user-name()>>/repo repo
-  file:///home/<<eval-user-name()>>/data/literature literature
-  file:///home/<<eval-user-name()>>/cloud unbound
+  file://<<eval-user-home()>>/proj projects
+  file://<<eval-user-home()>>/src src
+  file://<<eval-user-home()>>/tmp ~/tmp
+  file://<<eval-user-home()>>/data data
+  file://<<eval-user-home()>>/mnt/cloud cloud
+  file://<<eval-user-home()>>/repo repo
+  file://<<eval-user-home()>>/data/literature literature
+  file://<<eval-user-home()>>/.local/share ~/.local/share
   file:///dev/null unbound
   file:///tmp/stage-<<eval-user-name()>> stage
 #+end_src
