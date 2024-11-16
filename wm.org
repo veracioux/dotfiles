@@ -237,7 +237,7 @@ to the laptop I currently use. Please change to suit your needs.
   redshift &                                  # Blue light filter
 
   xset s 300                                  # Set lock timeout (seconds)
-  xss-lock -- lock-screen &                   # Lock screen daemon
+  xss-lock -l -- lock-screen &                # Start lock screen daemon
   systemctl start --user clipmenud            # (ref:clipmenud)
 
   xrdb ~/.Xresources
