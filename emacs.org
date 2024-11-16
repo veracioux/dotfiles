@@ -111,7 +111,7 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
 #+end_src
 *** Interactively install spacemacs
 #+begin_src bash
-  ln -s ~/.haris/.spacemacs ~/.spacemacs
+  ln -s ~/.haris/.spacemacs ~/.spacemacs || true
   echo "Emacs will be launched now. Follow the prompts to setup spacemacs"
   echo "When done, you can close the emacs window"
   COLORTERM=truecolor LSP_USE_PLISTS=true emacs
