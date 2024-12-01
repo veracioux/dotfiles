@@ -1099,6 +1099,7 @@ abbreviations for equivalent apt operations.
       _abbr -g Dsh    'docker-compose exec -it % sh'
       _abbr -g Dbash  'docker-compose exec -it % bash'
       _abbr -g Denv   'docker-compose exec -i % env'
+      _abbr -g Denvr  'docker-compose run --rm -i % env'
       _abbr -g Dp     'export COMPOSE_PROFILES=%'
       _abbr -g DP     'export COMPOSE_PROJECT_NAME=%'
   end
@@ -1179,6 +1180,8 @@ abbreviations for equivalent apt operations.
   _abbr            -g WT    'export WORKTREE=%'
   _abbr            -g sni   'sudo npm install -g'
   _abbr            -g c     'cut -d " " -f'
+  _abbr            -g ..    'cd ../%'
+  _abbr            -g ...   'cd ../../%'
 #+end_src
 **** Google cloud
 #+begin_src fish
