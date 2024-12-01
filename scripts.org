@@ -1528,7 +1528,8 @@ Create a Xephyr session for the current user that tries to mimic a regular
 * Dmenu
 ** Main entrypoint (=dmenu_run=)
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/dmenu_run")
-  CACHE_FILE=~/.cache/.desktop-apps.txt
+  CACHE_FILE=~/.cache/haris/desktop-apps.txt
+  mkdir -p "$(dirname "$CACHE_FILE")"
 
   # If an argument is provided, run corresponding custom dmenu script
   if [ -n "$1" ]; then
@@ -1655,7 +1656,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
       "Services")
           run_script services ;;
       "Update cache")
-          rm ~/.cache/.desktop-apps.txt ;;
+          rm "$CACHE_FILE" ;;
       "Tem")
           alacritty -e fish -C 'pj tem; clear' ;;
       "Octave")
