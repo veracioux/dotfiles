@@ -2346,6 +2346,7 @@ precedence of TAB-bound commands for all modes.
                 ;; If there's nothing to cycle, go to next link
                 ((_ 'org-next-link)))))
        ;; Default: indent
+       ((when (eq major-mode 'minibuffer-mode) (_ 'minibuffer-complete)))
        ((_ 'indent-for-tab-command)))
 
       (when alert
