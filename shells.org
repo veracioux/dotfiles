@@ -680,6 +680,12 @@ Note: This code block must not contain any apostrophes!
       /usr/bin/rm -f "$tmp"
   end
 #+end_src
+*** =funcat=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/funcat.fish")
+  function funcat
+      type $argv[1] | sed '1,3d;$d' | fish_indent
+  end
+#+end_src
 *** =^=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/^.fish")
   function '^' -d "cd to the first directory in the hierarchy by specified name" -a name
