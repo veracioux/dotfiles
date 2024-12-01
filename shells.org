@@ -214,10 +214,11 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 :PROPERTIES:
 :header-args:fish+: :tangle (haris/tangle-home ".config/fish/functions/fish_user_key_bindings.fish")
 :END:
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/bind_both_modes.fish")
-  function bind_both_modes
-      bind -M default $argv
-      bind -M insert $argv
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/bind_all_modes.fish")
+  function bind_all_modes
+      for mode in (bind --list-modes)
+          bind -M "$mode" $argv
+      end
   end
 #+end_src
 #+begin_src fish
@@ -225,21 +226,21 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+end_src
 *** Quasi-vim-like key bindings
 #+begin_src fish
-  bind_both_modes \el forward-char
-  bind_both_modes \eh backward-char
-  bind_both_modes \cp up-or-search
-  bind_both_modes \cn down-or-search
+  bind_all_modes \el forward-char
+  bind_all_modes \eh backward-char
+  bind_all_modes \cp up-or-search
+  bind_all_modes \cn down-or-search
 #+end_src
 *** Fish behavior control bindings
 #+begin_src fish
-  bind_both_modes \er src_fish
+  bind_all_modes \er src_fish
 
   # Some terminals like linux TTY and emacs vterm send Ctrl+P as \cP, so I enable
   # it only for alacritty which has been proven to work. I can add other terminals
   # here as needed.
 
   if [ "$TERM" = "alacritty" ]
-      bind_both_modes \cP \
+      bind_all_modes \cP \
       '
       echo Starting private mode...;
       set fish_private_mode true;
@@ -247,45 +248,45 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       '
   end
 
-  bind_both_modes \eL 'clear; commandline -f repaint'
+  bind_all_modes \eL 'clear; commandline -f repaint'
 #+end_src
 *** Utility bindings
 #+begin_src fish
   # Copy the current contents of the command line
-  bind_both_modes \ec 'commandline -b | xsel -b'
+  bind_all_modes \ec 'fish_clipboard_copy'
 
   # Run the current command in bash
-  bind_both_modes \eb __haris_run_in_bash
+  bind_all_modes \eb __haris_run_in_bash
 
   # Prepend o in front of current command
-  bind_both_modes \eo '__haris_cmdline_prepend o'
+  bind_all_modes \eo '__haris_cmdline_prepend o'
 
   # Prepend man in front of current command
-  bind_both_modes \em '__haris_show_man'
+  bind_all_modes \em '__haris_show_man'
 
   # Append --help to the end of the command line and submit
-  bind_both_modes \eH '__haris_cmdline_append_or_toggle --help'
+  bind_all_modes \eH '__haris_cmdline_append_or_toggle --help'
 
   # Append --version to the end of the command line and submit
-  bind_both_modes \eV '__haris_cmdline_append_or_toggle --version'
+  bind_all_modes \eV '__haris_cmdline_append_or_toggle --version'
 
-  bind_both_modes \et term
+  bind_all_modes \et term
 
-  bind_both_modes \eg 'dragon (command ls | fzf --multi) >/dev/null 2>&1'
+  bind_all_modes \eg 'dragon (command ls | fzf --multi) >/dev/null 2>&1'
 
-  bind_both_modes \ee 'edit_command_buffer_custom'
+  bind_all_modes \ee 'edit_command_buffer_custom'
 
-  bind_both_modes \eE 'myemacs-float .'
+  bind_all_modes \eE 'myemacs-float .'
 
-  bind_both_modes \ea 'commandline -i "(adhoc)"'
+  bind_all_modes \ea 'commandline -i "(adhoc)"'
 
-  bind_both_modes \eA 'commandline -i "(adhoc - | string collect)"'
+  bind_all_modes \eA 'commandline -i "(adhoc - | string collect)"'
 
-  bind_both_modes \eG 'magit'
+  bind_all_modes \eG 'magit'
 
-  bind_both_modes \e\cd 'disown'
+  bind_all_modes \e\cd 'disown'
 
-  bind_both_modes \eC 'edocker-compose'
+  bind_all_modes \eC 'edocker-compose'
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions
