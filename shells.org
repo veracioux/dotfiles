@@ -287,6 +287,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   bind_all_modes \e\cd 'disown'
 
   bind_all_modes \eC 'edocker-compose'
+
+  bind_all_modes \eT '__haris_test_eval'
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions
@@ -319,6 +321,11 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       end
       commandline --append " $text"
       commandline -f execute
+  end
+#+end_src
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_test_eval.fish")
+  function __haris_test_eval
+      eval "$(adhoc - (mktemp -t XXXXXXXX.fish) 2>/dev/null)"
   end
 #+end_src
 ** Custom colors
