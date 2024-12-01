@@ -583,7 +583,7 @@ get better search matches.
       files=("$(mktemp "$destdir"/XXXXXXXXXXX)")
   fi
 
-  term --class Float -e fish -c "nvim ${files[*]}"
+  myemacs-float --wait "${files[@]}" >&2
 
   if [ -n "$print_content" ]; then
       cat "${files[@]}"
