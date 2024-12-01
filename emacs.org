@@ -1750,17 +1750,20 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (remove-hook 'server-switch-hook 'magit-commit-diff)
   (remove-hook 'with-editor-filter-visit-hook 'magit-commit-diff)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
-
+#+end_src
+** Commit
+#+begin_src elisp
   (define-derived-mode haris/git-commit-major-mode
     text-mode
     "Git commit major mode (Custom)"
     "Custom major mode for editing git commit messages.")
 
   (defun haris/git-commit/cd-to-worktree ()
+    "Make sure that the default-directory in git-commit-mode is the worktree."
     (setq-local default-directory (magit-toplevel)))
 
-  (add-hook 'git-commit-mode-hook #'haris/git-commit-major-mode)
-  (add-hook 'git-commit-mode-hook #'haris/git-commit/cd-to-worktree)
+  (add-hook 'git-commit-mode-hook 'haris/git-commit/cd-to-worktree)
+  (setq git-commit-major-mode 'haris/git-commit-major-mode)
 #+end_src
 ** Custom transient commands
 #+begin_src elisp
