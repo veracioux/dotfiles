@@ -1164,6 +1164,18 @@ abbreviations for equivalent apt operations.
       _abbr -g Denvr  'docker-compose run --rm -i % env'
       _abbr -g Dp     'export COMPOSE_PROFILES=%'
       _abbr -g DP     'export COMPOSE_PROJECT_NAME=%'
+
+      # Restart using rm + up
+      set -l tmp_func_name __tmp_(random)
+      function "$tmp_func_name"
+          begin
+              set -l container %
+              docker-compose rm -f "$container"
+              docker-compose up -d "$container"
+          end
+      end
+      _abbr -g DRR    "$(funcat "$tmp_func_name")"
+      functions --erase "$tmp_func_name"
   end
 #+end_src
 **** Pass
