@@ -289,6 +289,10 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   bind_all_modes \eC 'edocker-compose'
 
   bind_all_modes \eT '__haris_test_eval'
+
+  # Ctrl+Alt+L
+  # TODO: Add sol command installation instructions
+  bind_all_modes \e\f 'commandline --replace (commandline | sol -b -s -a -jqobj)'
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions
