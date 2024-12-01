@@ -1631,7 +1631,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
       [ "$?" = "0" ] || exit
       # If it starts with a non-ascii character (as in get-commands), remove it and the space following it
       if grep -P "[^\x00-\x7F]" <<<"$choice"; then
-          choice="$(cut -f2 -d' ' <<<"$choice")"
+          choice="$(cut -f2- -d' ' <<<"$choice")"
       fi
   fi
   case "$choice" in
