@@ -35,6 +35,10 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 
   [github]
     user = veracioux
+
+  # Configure branches with this as pushRemote to effectively block pushes
+  [remote "null"]
+  	url = /dev/null
 #+end_src
 ** Aliases
 *** General
