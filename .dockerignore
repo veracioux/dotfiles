@@ -9,4 +9,5 @@ out/
 private/
 temporary.org
 .test/
-.wt-*/
+.wt*/
+wt*/
