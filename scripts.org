@@ -1015,6 +1015,12 @@ Get the OS type.
       alternative-command dragon "$@"
   fi
 #+end_src
+** =tee-notify=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/tee-notify")
+  content="$(cat)"
+  notify-send "tee-notify" "$content"
+  echo "$content"
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
