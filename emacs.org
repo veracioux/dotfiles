@@ -662,13 +662,16 @@ Some custom keybindings are defined here as well.
   ;; Misc
   (with-eval-after-load 'go-translate
     (spacemacs/set-leader-keys "ot" #'gt-do-translate))
+  (with-eval-after-load 'npm-mode
+    (spacemacs/set-leader-keys "on" npm-mode-command-keymap))
 
   ;; Friendly descriptions
   (which-key-add-key-based-replacements
     "SPC o b" "Buffer manipulation"
     "SPC o c" "Command log"
     "SPC o c l" "Local command log"
-    "SPC o t" "Translate")
+    "SPC o t" "Translate"
+    "SPC o n" "NPM")
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
   <<custom-global-map>>
@@ -940,6 +943,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 ** JavaScript & TypeScript
 #+begin_src elisp
   (use-package mocha-snippets :ensure t)
+  (use-package npm-mode :ensure t)
 
   (setq javascript-indent-level 4
         js-indent-level 4
@@ -947,6 +951,8 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 
   (with-eval-after-load 'js (require 'dap-node))
   (with-eval-after-load 'ts (require 'dap-node))
+
+  (with-eval-after-load "npm-mode" (npm-global-mode t))
 #+end_src
 ** Java
 #+begin_src elisp
