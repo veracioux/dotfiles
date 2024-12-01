@@ -763,6 +763,11 @@ Some custom keybindings are defined here as well.
   (setq projectile-indexing-method 'hybrid
         projectile-enable-caching t)
 #+end_src
+*** Keybindings
+#+begin_src elisp
+  ;; Provides better namespacing than the default spacemacs/projectile-shell-pop
+  (define-key spacemacs-cmds (kbd "p '") 'multi-vterm-project)
+#+end_src
 * Programming languages
 #+begin_src elisp
   (add-hook 'prog-mode-hook 'spacemacs/toggle-fill-column-indicator)
