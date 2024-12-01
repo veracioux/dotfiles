@@ -1,4 +1,5 @@
 private
 /temporary.org
-/.worktree-*
+/.wt*
+/wt*
 /cron.d/
