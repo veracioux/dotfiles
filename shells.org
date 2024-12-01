@@ -1060,9 +1060,9 @@ abbreviations for equivalent apt operations.
   _abbr -g db     "$__haris_docker build"
   _abbr -g dbn    "$__haris_docker build --no-cache"
 
-  _abbr -g dr     "$__haris_docker run"
-  _abbr -g drit   "$__haris_docker run -it"
-  _abbr -g drite  "$__haris_docker run -it --entrypoint"
+  _abbr -g dr     "$__haris_docker run --rm"
+  _abbr -g drit   "$__haris_docker run -it --rm"
+  _abbr -g drite  "$__haris_docker run -it --rm --entrypoint"
 
   _abbr -g deit   "$__haris_docker exec -it"
 
@@ -1129,13 +1129,13 @@ abbreviations for equivalent apt operations.
       _abbr -g Dubd   'docker-compose up --build -d'
       _abbr -g Dubt   'docker-compose up --build --timestamps'
 
-      _abbr -g Dr     'docker-compose run'
-      _abbr -g Drit   'docker-compose run -it'
-      _abbr -g Dritd  'docker-compose run -it -d'
-      _abbr -g Dritb  'docker-compose run -it --build'
-      _abbr -g Dritn  'docker-compose run -it --no-deps'
-      _abbr -g Dritbn 'docker-compose run -it --build --no-deps'
-      _abbr -g Drite  'docker-compose run -it --entrypoint'
+      _abbr -g Dr     'docker-compose run --rm'
+      _abbr -g Drit   'docker-compose run -it --rm'
+      _abbr -g Dritd  'docker-compose run -it -d --rm'
+      _abbr -g Dritb  'docker-compose run -it --build --rm'
+      _abbr -g Dritn  'docker-compose run -it --no-deps --rm'
+      _abbr -g Dritbn 'docker-compose run -it --build --no-deps --rm'
+      _abbr -g Drite  'docker-compose run -it --rm --entrypoint'
 
       _abbr -g Ds     'docker-compose start'
       _abbr -g DS     'docker-compose stop'
