@@ -2432,7 +2432,7 @@ The quickmenu script is optional and must be provided separately at
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
 also tangle it to a standalone destination that I also keep under version control.
-#+begin_src elisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh")
+#+begin_src elisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh") :tangle-mode (identity #o755)
   #!/usr/bin/env -S emacs --script
 
   (load-file (format "%s/tangle.el" (file-name-directory load-file-name)))
@@ -2449,7 +2449,7 @@ also tangle it to a standalone destination that I also keep under version contro
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
 also tangle it to a standalone destination that I also keep under version control.
-#+begin_src emacs-lisp :tangle (haris/tangle-home ".haris/bootstrap/tangle-all.sh")
+#+begin_src elisp :tangle (haris/tangle-home ".haris/bootstrap/tangle-all.sh") :tangle-mode (identity #o755)
   #!/usr/bin/env -S emacs --script
 
   ;; Tangle all my dotfiles. If --dest is used, then the files are tangled to
