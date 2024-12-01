@@ -743,6 +743,14 @@ Some custom keybindings are defined here as well.
   (evil-collection-init 'yaml-mode)
   (evil-collection-init 'compilation)
 #+end_src
+*** Functions
+#+begin_src elisp
+  (defmacro haris/evil-define-key-both (keymap key def &rest bindings)
+    "evil-define-key in both normal and insert state"
+    ;; Forward to evil-define-key, handling &rest args properly
+    (apply 'evil-define-key* (append `(normal ,keymap ,key ,def) bindings))
+    (apply 'evil-define-key* (append `(insert ,keymap ,key ,def) bindings)))
+#+end_src
 ** Projectile
 #+begin_src elisp
   (setq projectile-require-project-root nil)
@@ -885,8 +893,7 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
 #+end_src
 *** Keybindings
 #+begin_src elisp
-  (evil-define-key 'normal lsp-mode-map (kbd "M-RET") #'lsp-execute-code-action)
-  (evil-define-key 'insert lsp-mode-map (kbd "M-RET") #'lsp-execute-code-action)
+  (haris/evil-define-key-both lsp-mode-map (kbd "M-RET") #'lsp-execute-code-action)
 #+end_src
 ** DAP
 #+begin_src elisp
@@ -1089,9 +1096,9 @@ Fix for empty image list (not sure if the fix works):
   ;; Switch translator engine
   (evil-define-key 'normal gt-buffer-prompt-map (kbd ",e") (kbd "C-c C-e"))
   ;; Next language
-  (evil-define-key 'normal gt-buffer-prompt-map (kbd "M-n") (kbd "C-c C-n"))
+  (haris/evil-define-key-both gt-buffer-prompt-map (kbd "M-n") (kbd "C-c C-n"))
   ;; Previous language
-  (evil-define-key 'normal gt-buffer-prompt-map (kbd "M-p") (kbd "C-c C-p"))
+  (haris/evil-define-key-both gt-buffer-prompt-map (kbd "M-p") (kbd "C-c C-p"))
 
   ;; go-translate provides only a function for next, but not for prev
   (defun haris/gt-buffer-render--cycle-prev (&optional ignore-rules)
@@ -1836,8 +1843,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
                 (let ((haris/chatgpt-session-buffer (current-buffer)))
                   (chatgpt-type-response))))
   ;; CodeGPT mode
-  (evil-define-key 'insert codegpt-mode-map (kbd "q") 'quit-window)
-  (evil-define-key 'normal codegpt-mode-map (kbd "q") 'quit-window)
+  (haris/evil-define-key-both codegpt-mode-map (kbd "q") 'quit-window)
 
   ;; ChatGPT input mode
   (evil-define-key 'normal chatgpt-input-mode-map (kbd "q") 'kill-this-buffer)
@@ -2028,8 +2034,7 @@ and crashes of my default Emacs instance.
     (let ((vterm-clear-scrollback-when-clearing nil))
       (vterm-clear)))
 
-  (evil-define-key 'normal vterm-mode-map (kbd "C-l") #'haris/vterm-clear-keep-scrollback)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-l") #'haris/vterm-clear-keep-scrollback)
+  (haris/evil-define-key-both vterm-mode-map (kbd "C-l") #'haris/vterm-clear-keep-scrollback)
 
   (evil-define-key 'normal vterm-mode-map      (kbd "0")     'evil-collection-vterm-first-non-blank)
   (evil-define-key 'normal vterm-mode-map      (kbd "A")     'evil-append-line)
