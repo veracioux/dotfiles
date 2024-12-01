@@ -660,7 +660,8 @@ Some custom keybindings are defined here as well.
   (define-key haris/command-log-prefix-map (kbd "l") #'haris/command-log)
 
   ;; Misc
-  (spacemacs/set-leader-keys "ot" #'gt-do-translate)
+  (with-eval-after-load 'go-translate
+    (spacemacs/set-leader-keys "ot" #'gt-do-translate))
 
   ;; Friendly descriptions
   (which-key-add-key-based-replacements
