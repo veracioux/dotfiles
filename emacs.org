@@ -2550,6 +2550,7 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
   (setq-default
    dotspacemacs-configuration-layers ; (ref:dotspacemacs-configuration-layers)
    '(syntax-checking
+     multiple-cursors
      octave
      markdown
      html
