@@ -227,7 +227,6 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (setq winum-scope 'frame-local)
 
   (add-to-list 'image-types 'svg)
-  (setq dired-kill-when-opening-new-dired-buffer t)
   ;; Enable clipboard in the terminal
   (use-package xclip)
   ;; Using xclip instead makes emacsclient hang
@@ -429,6 +428,11 @@ This enables periodic cleanup:
 #+begin_src elisp
   (define-key evil-normal-state-map (kbd "M-w") 'avy-goto-word-0)
   (define-key evil-normal-state-map (kbd "M-f") 'avy-goto-char)
+#+end_src
+** Dired
+#+begin_src elisp
+  (setq dired-listing-switches "-al \"--time-style=+%Y-%m-%d %H:%M\"")
+  (setq dired-kill-when-opening-new-dired-buffer t)
 #+end_src
 ** Interactive commands
 These are commands that I primarily intend to use interactively and directly,
