@@ -428,7 +428,7 @@ dmenu doesn't work.
 #+end_src
 ** Applications menu
 #+begin_src i3wm-config
-  set $mode_apps "Apps | [p]acman [c]lipmenu [e]lement [v]iber [u]nicode [V]pn"
+  set $mode_apps "Apps | [p]acman [c]lipmenu [e]lement [v]iber [u]nicode [V]pn [t]eams"
 
   mode $mode_apps {
   bindsym p       exec dmenu_run pacman, mode default
@@ -437,6 +437,7 @@ dmenu doesn't work.
   bindsym v       exec viber, mode default
   bindsym u       exec dmenu_run Unicode, mode default
   bindsym Shift+v exec vpn-toggle, mode default
+  bindsym t       exec teams, mode default
 
   bindsym Escape mode default
   }
