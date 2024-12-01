@@ -714,6 +714,62 @@ Note: This code block must not contain any apostrophes!
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/forever.fish")
   complete -c forever --wraps command --wraps builtin
 #+end_src
+*** =wt=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/wt.fish")
+  function wt --argument-names wt_index subpath
+      if [ (count $argv) = 1 ] && ! string match -qr '^[0-9]+$' "$wt_index"
+          set subpath $wt_index
+          set wt_index
+      end
+
+      set -l worktree_root
+
+      if [ -n "$wt_index" ]
+          set worktree_root (git worktree list | cut -f1 -d' ' | grep "wt$wt_index\$")
+      else
+          set worktree_root (git worktree list | fzf | cut -f1 -d' ')
+      end
+
+      if [ -z "$worktree_root" ]
+          return 1
+      end
+
+      cd "$worktree_root/$subpath"
+  end
+#+end_src
+**** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_complete_wt.fish")
+  function __haris_complete_wt
+      set -l args (commandline -op)
+
+      set -l git_root (git root)
+      set -l current_subpath (realpath (pwd) --relative-to "$git_root")/
+      set -l new_git_root "$git_root"
+
+      # The worktree index was provided
+      if [ (count $args) -gt 1 ]
+          set -l wt_index {$args[2]}
+          set new_git_root (git worktree list | cut -f1 -d' ' | grep "wt$wt_index\$")
+          if [ -z "$new_git_root" ]
+              return
+          end
+      end
+
+      if [ -d "$new_git_root/$current_subpath" ]
+          echo "$current_subpath"
+      end
+
+      set -l arg (commandline -ot)
+
+      pushd "$new_git_root"
+      complete -C"cd $arg"
+      popd
+  end
+#+end_src
+
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/wt.fish")
+  complete -c wt -fk -a '(__haris_complete_wt)'
+#+end_src
 *** Miscellaneous others
 #+begin_src fish
   function cdcf;   set -l file (cf "$argv");   test -f "$file" && cd (dirname        "$file"); end
