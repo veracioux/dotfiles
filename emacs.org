@@ -394,7 +394,13 @@ This enables periodic cleanup:
 #+end_src
 ** Functions
 #+begin_src elisp
-  (defun haris/stage () (interactive) (mkdir "/tmp/stage" t) (dired "/tmp/stage"))
+  (defun haris/stage ()
+    "Go to a user-specific temporary staging directory, useful as a playground."
+    (interactive)
+    (let ((dir (format "/tmp/stage-%s"
+                       (user-login-name))))
+      (mkdir dir t)
+      (dired dir)))
 
   (defun haris/force-kill-window (&optional window)
     "Kill a window, and the frame as well if it's the last one."
