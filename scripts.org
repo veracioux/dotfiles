@@ -2494,6 +2494,58 @@ Options:
 
   restart_if_running stubby
   restart_if_running dnsmasq
+
+  # Make vpn-notifier perform an eager query
+  systemctl kill --user vpn-notifier --signal=SIGUSR1
+#+end_src
+** =vpn-notifier=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/vpn-notifier")
+  # Interval at which queries to ipinfo.io are performed periodically
+  default_requery_interval_sec=60
+  requery_time_after_sigusr1=5s
+
+  echo "PID: $$"
+
+  signal_received=''
+
+  trap 'signal_received=true' SIGUSR1
+
+  old_ip=''
+
+  while :; do
+      echo
+      echo "Querying ipinfo.io..."
+      response="$(curl -fs ipinfo.io)"
+      ip="$(jq -r .ip <<<"$response")"
+      country="$(jq -r .location <<<"$response")"
+      if [ "$ip" != "$old_ip" ]; then
+          yaml="$(yq -y 'del(.readme)' <<<"$response")"
+          echo
+          echo -n "IP changed:"
+          if [ -n "$old_ip" ]; then
+              notify-send "🌐 IP changed " "$yaml"
+          else
+              echo -n " (initial state)"
+          fi
+          echo
+          echo
+          echo "$(sed 's/^/  /' <<<"$yaml")"
+      else
+          echo "IP unchanged."
+          echo
+      fi
+      old_ip="$ip"
+      for x in $(seq 1 "$default_requery_interval_sec"); do
+          sleep 1s
+          if [ -n "$signal_received" ]; then
+              echo
+              echo "Received SIGUSR1, querying ipinfo.io in $requery_time_after_sigusr1..."
+              sleep "$requery_time_after_sigusr1"
+              signal_received=''
+              break
+          fi
+      done
+  done
 #+end_src
 * Miscellaneous
 ** =term=

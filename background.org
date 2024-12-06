@@ -33,6 +33,19 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   [Install]
   WantedBy=default.target
 #+end_src
+* VPN Notifier
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/vpn-notifier.service")
+  [Unit]
+  Description=VPN notifier
+
+  [Service]
+  Environment=XDG_RUNTIME_DIR=/run/user/%U
+  ExecStart=/usr/bin/env vpn-notifier
+  SyslogIdentifier=vpn-notifier
+
+  [Install]
+  WantedBy=default.target
+#+end_src
 * Cron
 I define my main users cron jobs in files matching the glob =~/.haris/cron.d/crontab.*=.
 ** Default cron jobs
