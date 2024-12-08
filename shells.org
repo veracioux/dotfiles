@@ -273,12 +273,12 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   # here as needed.
 
   if [ "$TERM" = "alacritty" ]
-      bind_all_modes \cP \
-      '
-      echo Starting private mode...;
-      set fish_private_mode true;
-      commandline -f repaint
-      '
+      function __haris_toggle_private_mode
+          set -g fish_private_mode ([ -z "$fish_private_mode" ] && echo true)
+          commandline -f repaint
+      end
+
+      bind_all_modes \cP __haris_toggle_private_mode
   end
 
   bind_all_modes \eL 'clear; commandline -f repaint'
