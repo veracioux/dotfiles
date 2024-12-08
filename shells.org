@@ -821,14 +821,14 @@ Note: This code block must not contain any apostrophes!
 
       set -gx WORKTREE "$worktree_index"
       set -gx COMPOSE_PROJECT_NAME "$project$worktree_index"
-      set -gx EXPOSED_IP (dig +short "$COMPOSE_PROJECT_NAME")
+      set -gx EXPOSED_IP (dig +short "$COMPOSE_PROJECT_NAME" | grep -v '^;;')
 
       if [ -z "$EXPOSED_IP" ]
           set_color yellow
           echo "EXPOSED_IP set to localhost. Consider aliasing $COMPOSE_PROJECT_NAME to a unique IP under the 127.x.x.x subnet in /etc/hosts"
           set_color normal
           echo
-          export EXPOSED_IP=(dig +short localhost)
+          set -gx EXPOSED_IP (dig +short localhost | grep -v '^;;')
       end
 
       echo "Variables:"
