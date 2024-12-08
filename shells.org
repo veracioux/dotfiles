@@ -133,6 +133,32 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       set_color normal
   end
 #+end_src
+**** =fish_right_prompt=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_right_prompt.fish")
+  function fish_right_prompt
+      set_color yellow
+      set -l any_content
+      if [ -n "$WORKTREE" ]
+          echo -n "WT: $WORKTREE"
+          set any_content true
+      end
+      if [ "$COMPOSE_PROJECT_NAME" ]
+          if [ -n "$any_content" ]
+              echo -n " | "
+          end
+          echo -n "COMPOSE: $COMPOSE_PROJECT_NAME"
+          set any_content true
+      end
+      if [ -n "$EXPOSED_IP" ]
+          if [ -n "$any_content" ]
+              echo -n " | "
+          end
+          echo -n "IP: $EXPOSED_IP"
+          set any_content true
+      end
+      set_color normal
+  end
+#+end_src
 *** Horizontal command output separator
 **** =__haris_draw_output_separator=
 This function prints a horizontal line spanning the terminal screen,
