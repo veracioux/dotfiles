@@ -1007,6 +1007,13 @@ Get the OS type.
   notify-send "tee-notify" "$content"
   echo "$content"
 #+end_src
+** =get-cert=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/get-cert")
+  {
+      timeout 0.5 openssl s_client -connect "$1" -showcerts 2>/dev/null
+      true
+  } | awk '/^-----BEGIN CERTIFICATE-----$/,/^-----END CERTIFICATE-----$/'
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
