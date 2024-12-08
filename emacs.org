@@ -630,9 +630,7 @@ Some custom keybindings are defined here as well.
   (define-key evil-normal-state-map (kbd "M-/")   'haris/nohighlight)
   (define-key evil-motion-state-map (kbd "M-/")   'haris/nohighlight)
 
-  (define-key input-decode-map [?\C-i] [C-i])
-  (define-key evil-normal-state-map [C-i] 'evil-jump-forward)
-  (define-key evil-visual-state-map [C-i] 'evil-jump-forward)
+  (setq dotspacemacs-distinguish-gui-tab t)
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<consistent-vim-bindings>>
