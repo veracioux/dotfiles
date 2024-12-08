@@ -1009,7 +1009,13 @@ a terminal and runs the aliased command.
       alias debian    'docker run -it --name debian debian:bookworm-slim'
   end
 
-  alias dragon 'o "$(which dragon)"'
+  function dragon
+      if contains -- --help $argv
+          command dragon --help
+      else
+          o "$(which dragon)" $argv
+      end
+  end
 
   function vrg --wraps rg; vim (rg -l $argv); end
   function vfd --wraps fd; vim (fd $argv); end
