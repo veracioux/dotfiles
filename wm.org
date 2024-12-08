@@ -301,7 +301,7 @@ change it according to your preference:
 Only a core set of keybindings whose behavior is coupled to i3 are defined in
 the i3 config. All the other bindings are provided by an external program -
 sxhkd on X and swhkd on Wayland. See [[*Start-up][Start-up]]. These bindings can be found [[*External bindings][here]].
-#+begin_src i3wm-config
+#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
   exec --no-startup-id swhks
 #+end_src
 ** Default mode bindings
