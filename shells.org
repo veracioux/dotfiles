@@ -750,7 +750,8 @@ Note: This code block must not contain any apostrophes!
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/forever.fish")
   complete -c forever --wraps command --wraps builtin
 #+end_src
-*** =wt=
+*** Worktree utilities
+**** =wt=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/wt.fish")
   function wt --argument-names wt_index subpath
       if [ (count $argv) = 1 ] && ! string match -qr '^[0-9]+$' "$wt_index"
@@ -773,7 +774,7 @@ Note: This code block must not contain any apostrophes!
       cd "$worktree_root/$subpath"
   end
 #+end_src
-**** Completions
+***** Completions
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_complete_wt.fish")
   function __haris_complete_wt
       set -l args (commandline -op)
@@ -805,6 +806,27 @@ Note: This code block must not contain any apostrophes!
 
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/wt.fish")
   complete -c wt -fk -a '(__haris_complete_wt)'
+#+end_src
+**** =wt_setup_compose=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/wt_setup_compose.fish")
+  function wt_setup_compose --argument-names project worktree_index
+      begin [ -z "$project" ] || [ -z "$worktree_index" ]; end && echo "Usage: wt_setup_compose PROJECT WORKTREE_INDEX" && return 1
+
+      set -gx WORKTREE "$worktree_index"
+      set -gx COMPOSE_PROJECT_NAME "$project$worktree_index"
+      set -gx EXPOSED_IP (dig +short "$COMPOSE_PROJECT_NAME")
+
+      if [ -z "$EXPOSED_IP" ]
+          set_color yellow
+          echo "EXPOSED_IP set to localhost. Consider aliasing $COMPOSE_PROJECT_NAME to a unique IP under the 127.x.x.x subnet in /etc/hosts"
+          set_color normal
+          echo
+          export EXPOSED_IP=(dig +short localhost)
+      end
+
+      echo "Variables:"
+      env | grep -P '^(WORKTREE|COMPOSE_PROJECT_NAME|EXPOSED_IP)=' | cat
+  end
 #+end_src
 *** Miscellaneous others
 #+begin_src fish
