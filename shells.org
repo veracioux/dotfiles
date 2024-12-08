@@ -857,6 +857,20 @@ Note: This code block must not contain any apostrophes!
       end
   end
 #+end_src
+**** =tmp_func=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/tmp_func.fish")
+  function tmp_func
+      set -g __haris_latest_tmp_func_name "__tmp_func_$(uuidgen | tr '-' '_')"
+      echo "$__haris_latest_tmp_func_name"
+  end
+#+end_src
+**** =tmp_func_consume_content=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/tmp_func_consume_content.fish")
+  function tmp_func_consume_content
+      funcat "$__haris_latest_tmp_func_name"
+      functions --erase "$__haris_latest_tmp_func_name"
+  end
+#+end_src
 ** Completions
 Function(s) that will be used by many completions.
 Completions for the functions defined in [[Functions]].
@@ -1225,16 +1239,14 @@ abbreviations for equivalent apt operations.
       _abbr -g DP     'export COMPOSE_PROJECT_NAME=%'
 
       # Restart using rm + up
-      set -l tmp_func_name __tmp_(random)
-      function "$tmp_func_name"
+      function (tmp_func)
           begin
               set -l container %
               docker-compose rm -f "$container"
               docker-compose up -d "$container"
           end
       end
-      _abbr -g DRR    "$(funcat "$tmp_func_name")"
-      functions --erase "$tmp_func_name"
+      _abbr -g DRR    "$(tmp_func_consume_content)"
   end
 #+end_src
 **** Pass
@@ -1324,7 +1336,11 @@ abbreviations for equivalent apt operations.
 #+begin_src fish
   # Tmux
   conditional_abbr -g x   'tmux'
-  conditional_abbr -g X   'tmux attach -t (tmux list-sessions -F "#{session_created} #{session_name}" | sort | tac | grep -Po "(?<= ).*" | fzf -s)'
+
+  function (tmp_func)
+      tmux attach -t (tmux list-sessions -F "#{session_created} #{session_name}" | sort | tac | grep -Po "(?<= ).*" | fzf -s)
+  end
+  conditional_abbr -g X   "$(tmp_func_consume_content)"
 #+end_src
 **** VirtualBox
 #+begin_src fish
