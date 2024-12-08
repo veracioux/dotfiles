@@ -127,6 +127,14 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
   cd "$themes_dir"
   ln -sf dracula/dracula-theme.el dracula-theme.el
 #+end_src
+*** Install custom snippets
+#+begin_src bash
+  repo_url='https://github.com/veracioux/snippets'
+  snippets_dir=~/.emacs.d/private/snippets
+
+  git clone "$repo_url" "$snippets_dir" ||
+      echo "Snippets already cloned. Manual setup might be required."
+#+end_src
 ** Theme
 I use a slightly customized version of the beautiful Dracula theme. Make sure
 you perfomed the [[*Setup][setup]] in order to have the theme available.
