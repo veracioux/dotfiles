@@ -90,7 +90,14 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
           set sudo_privilege " (#)"
       end
 
+      set -l private
+      if [ -n "$fish_private_mode" ]
+          set private "(private) "
+      end
+
+
       echo -n -s  (set_color --bold brblue)   "$USER$host "                \
+                  (set_color bryellow)        "$private"          $normal  \
                   (set_color magenta)         (prompt_pwd)        $normal  \
                   (set_color brmagenta)       "$vcs_prompt"                \
                   (set_color brmagenta)       $prompt_status               \
