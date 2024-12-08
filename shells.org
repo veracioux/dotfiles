@@ -388,7 +388,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 *** Initialization
 #+begin_src fish
   # pj plugin
-  set -gx PROJECT_PATHS ~/proj ~/proj/drytoe
+  set -g PROJECT_PATHS ~/proj ~/proj/drytoe
 
   # z.lua
   set _ZL_CMD z
