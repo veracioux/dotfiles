@@ -1831,6 +1831,15 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
           ("~/proj/drytoe" . 1)
           ("~" . 0)))
 
+  (setq magit-generate-buffer-name-function
+        (defun haris/magit-generate-buffer-name (mode &optional value)
+          "Simple wrapper around `magit-generate-buffer-name-default-function'
+        that always includes the full path to the repository."
+          (let ((magit-buffer-name-format
+                 (string-replace "%t" (magit-toplevel)
+                                 magit-buffer-name-format)))
+            (magit-generate-buffer-name-default-function mode value))))
+
   ;; Performance improvements
   (remove-hook 'server-switch-hook 'magit-commit-diff)
   (remove-hook 'with-editor-filter-visit-hook 'magit-commit-diff)
