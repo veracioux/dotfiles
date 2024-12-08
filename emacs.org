@@ -780,13 +780,42 @@ Some custom keybindings are defined here as well.
 #+begin_src elisp
   (setq projectile-require-project-root nil)
   (setq projectile-auto-discover nil)
-  (setq projectile-track-known-projects-automatically nil)
+  (setq projectile-track-known-projects-automatically t)
   (setq projectile-git-ignored-command "git ls-files -zcoi -X=.gitignore")
 
   (setq projectile-ignored-projects '("~/"))
 
   (setq projectile-indexing-method 'hybrid
         projectile-enable-caching t)
+#+end_src
+*** Default known projects
+#+begin_src elisp
+  (with-eval-after-load 'magit
+    (let*
+        ((projects '("~/.haris/"
+                     "~/.emacs.d/"
+                     "~/.emacs.d/private/snippets/"
+                     "~/.emacs.d/private/themes/dracula/"
+                     "~/wiki/"))
+         (worktrees
+          (flatten-list
+           (mapcar
+            (lambda (proj)
+              (append
+               ;; Add all worktrees of the project's repo as projects
+               (let ((default-directory proj))
+                 (mapcar 'car (magit-list-worktrees))
+                 ;; In case it is not a git repo, worktrees would be nil, so add the
+                 ;; project itself
+                 (list proj))))
+            projects))))
+      ;; Add each project (+ its worktrees) to projectile-known-projects
+      (dolist (worktree worktrees)
+        (add-to-list 'projectile-known-projects worktree nil 'file-equal-p)
+        ;; Also create a .projectile file in case the directory exists and it is not
+        ;; a git repo
+        (when (and (file-exists-p worktree) (not (magit-git-repo-p worktree)))
+          (f-touch (f-join worktree ".projectile"))))))
 #+end_src
 *** Keybindings
 #+begin_src elisp
