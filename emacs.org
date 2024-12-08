@@ -375,10 +375,12 @@ You can test the transforms by calling this:
 #+end_src
 *** Buffer cleanup
 #+begin_src elisp
+  (setq haris/custom-temp-buffer-name "*haris-temp*")
+
   (setq clean-buffer-list-delay-general 1
         clean-buffer-list-delay-special 1800
         clean-buffer-list-kill-regexps
-        '(
+        `(
           "^haris-pipe-"
           "^\\*Help\\*"
           "^\\*helpful "
@@ -390,7 +392,12 @@ You can test the transforms by calling this:
           "^\\*Man "
           "^\\*straight-process\\*"
           "\\*which-key\\*"
-          "^\\*xref\\*"))
+          "^\\*xref\\*"
+          ;; Docker command output buffers
+          "^\\* docker .*\\*"
+          ;; Docker compose command output buffers
+          "^\\* .* docker-compose .*\\*"
+          (concat "^" (regexp-quote haris/custom-temp-buffer-name))))
 #+end_src
 This enables periodic cleanup:
 #+begin_src elisp
