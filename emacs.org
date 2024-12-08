@@ -1114,6 +1114,11 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 #+begin_src elisp
   (setq sql-capitalize-keywords t)
 #+end_src
+** Protobuf
+#+begin_src elisp
+  (use-package protobuf-mode :ensure t)
+  (use-package protobuf-ts-mode :ensure t)
+#+end_src
 * Apps
 ** Man
 #+begin_src elisp
