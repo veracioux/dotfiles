@@ -33,6 +33,9 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   [clone]
     depth = 300
 
+  [push]
+  	recurseSubmodules = check
+
   [github]
     user = veracioux
 
