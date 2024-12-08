@@ -763,6 +763,11 @@ Some custom keybindings are defined here as well.
   (evil-collection-init 'yaml-mode)
   (evil-collection-init 'compilation)
 #+end_src
+*** evil-surround
+#+begin_src elisp
+  (with-eval-after-load 'evil-surround
+    (add-to-list 'evil-surround-pairs-alist '(?$ . ("\"$(" . ")\""))))
+#+end_src
 *** Functions
 #+begin_src elisp
   (defun haris/evil-define-key-both (keymap key def &rest bindings)
