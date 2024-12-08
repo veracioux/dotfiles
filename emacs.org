@@ -682,13 +682,20 @@ Some custom keybindings are defined here as well.
   (with-eval-after-load 'npm-mode
     (spacemacs/set-leader-keys "on" npm-mode-command-keymap))
 
+  ;; Git
+  (setq haris/git-prefix-map (make-sparse-keymap))
+  (with-eval-after-load 'magit
+    (spacemacs/set-leader-keys "og" haris/git-prefix-map))
+  (define-key haris/git-prefix-map (kbd "c") 'magit-find-git-config-file)
+
   ;; Friendly descriptions
   (which-key-add-key-based-replacements
     "SPC o b" "Buffer manipulation"
     "SPC o c" "Command log"
     "SPC o c l" "Local command log"
     "SPC o t" "Translate"
-    "SPC o n" "NPM")
+    "SPC o n" "NPM"
+    "SPC o g" "Git")
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
   <<custom-global-map>>
