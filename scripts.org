@@ -866,9 +866,10 @@ process management in emacs is shit.
 #+NAME: myemacs-load
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/myemacs-load") :eval no
   tmpfile="$(mktemp)"
-  cat >"$tmpfile" <<'EOF'
+  cat >"$tmpfile" <<'EOF_c478eee3'
     <<stringify-arg-to-eval-option>>
-  EOF
+  EOF_c478eee3
+
   if [ -t 0 ]; then
       input_file="$(realpath "$1")"
   else
@@ -892,8 +893,7 @@ process management in emacs is shit.
                   (defvar process-environment)
                   (defvar default-directory)
                   (let ((argv (list ,@(cdr argv)))
-                        (process-environment (list ,@process-environment))
-                        (default-directory ,default-directory))
+                        (process-environment (list ,@process-environment)))
                     (load ,file)
                     <<do-not-print-token>>))))
     (prin1 code))
@@ -1095,7 +1095,8 @@ are designed to be easily integrated into dmenu scripts.
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/eman")
   (with-selected-frame (make-frame `((name . "EmacsMan")
-                                     (display . ,(getenv "DISPLAY"))))
+                                     (display . ,(getenv "DISPLAY"))
+                                     (environment . ,process-environment)))
     (let ((man-buffer nil))
       (defvar haris/last-man-buffer nil "The last man buffer that was opened")
       (setq man-buffer
@@ -1121,7 +1122,8 @@ are designed to be easily integrated into dmenu scripts.
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/etranslate")
   (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                     (display . ,(getenv "DISPLAY"))))
+                                     (display . ,(getenv "DISPLAY"))
+                                     (environment . ,process-environment)))
     (spacemacs/switch-to-scratch-buffer)
     (with-temp-buffer
       (insert (shell-command-to-string "~/.local/lib/haris/etranslate-helper 2>/dev/null"))
@@ -1178,22 +1180,27 @@ This script prints the contents of the clipboard
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/edocker")
   (let ((dir default-directory))
-  (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                     (display . ,(getenv "DISPLAY"))))
-    (setq-local default-directory dir)
-    (spacemacs/switch-to-scratch-buffer)
-    (run-with-timer 0.3 nil 'docker)))
+    (with-selected-frame (make-frame `((name . "EmacsFloat")
+                                       (display . ,(getenv "DISPLAY"))
+                                       (environment . ,process-environment)))
+      (setq-local default-directory dir)
+      (spacemacs/switch-to-scratch-buffer)
+      (run-with-timer 0.3 nil 'docker)))
 #+end_src
 ** =edocker-compose=
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/edocker-compose")
   (let ((dir default-directory))
     (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                     (display . ,(getenv "DISPLAY"))))
-    (setq-local default-directory dir)
-    (alert (format "%s" default-directory))
-    (dired default-directory)
-    (run-with-timer 0.3 nil 'docker-compose)))
+                                       (display . ,(getenv "DISPLAY"))
+                                       (environment . ,process-environment)))
+      (switch-to-buffer (get-buffer-create
+                         (generate-new-buffer-name haris/custom-temp-buffer-name)))
+      (setq-local default-directory dir)
+      (setq-local process-environment (cdr (assq 'environment
+                                                 (frame-parameters
+                                                  (selected-frame)))))
+      (run-with-timer 0.3 nil 'docker-compose)))
 #+end_src
 ** =ebluetooth=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/ebluetooth")
@@ -1209,7 +1216,8 @@ This script prints the contents of the clipboard
 #+begin_src elisp :tangle (haris/tangle-home ".local/bin/magit")
   (let ((dir default-directory))
     (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                       (display . ,(getenv "DISPLAY"))))
+                                       (display . ,(getenv "DISPLAY"))
+                                       (environment . ,process-environment)))
       (let ((default-directory dir))
         (magit-status))))
 #+end_src
