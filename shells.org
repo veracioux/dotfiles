@@ -1428,16 +1428,39 @@ Make the environment variables available for shells as well:
 #+end_src
 * Temporary and private configs
 These are optional and must be provided separately.
+** TODO Private
+TODO: Will be renamed to local.
+Local configurations that I don't want to keep under version control.
 [[~/.config/fish/private.fish][Click to edit]].
 #+begin_src fish
   if [ -f ~/.config/fish/private.fish ]
       source ~/.config/fish/private.fish
   end
 #+end_src
+** Temporary
+Temporary configurations that I don't want to keep under version control, but
+also don't want to use for a long time. Mostly useful for debugging.
 [[~/.config/fish/tmp.fish][Click to edit]]
 #+begin_src fish
   if [ -f ~/.config/fish/tmp.fish ]
       source ~/.config/fish/tmp.fish
+  end
+#+end_src
+** Ephemeral
+Configuration that lives until reboot. [[elisp:(org-sbe "open-ephemeral.config.fish")][Click to edit]]
+
+Code block that is evaluated in order to edit it:
+#+NAME: open-ephemeral.config.fish
+#+begin_src elisp :eval yes
+  (spacemacs/find-file-split
+   (format "%s/ephemeral.config.fish"
+           (getenv "XDG_RUNTIME_DIR" (selected-frame))))
+#+end_src
+
+Code to load the config:
+#+begin_src fish
+  if [ -w "$XDG_RUNTIME_DIR/ephemeral.config.fish" ]
+      source "$XDG_RUNTIME_DIR/ephemeral.config.fish"
   end
 #+end_src
 * Dependencies
