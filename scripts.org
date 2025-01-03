@@ -1726,12 +1726,47 @@ URLs (each on a new line) to display in this menu.
   edit=" Edit..."
   sync=" Sync..."
 
+  firefox_about_pages() {
+      cat <<'EOF_e245552b'
+  about:about
+  about:addons
+  about:buildconfig
+  about:cache
+  about:certificate
+  about:config
+  about:crashes
+  about:credits
+  about:devtools
+  about:downloads
+  about:home
+  about:license
+  about:memory
+  about:networking
+  about:newtab
+  about:performance
+  about:plugins
+  about:preferences
+  about:privatebrowsing
+  about:profiles
+  about:protections
+  about:rights
+  about:robots
+  about:serviceworkers
+  about:sessionrestore
+  about:support
+  about:telemetry
+  about:welcome
+  about:studies
+  EOF_e245552b
+  }
+
   choice="$(
       {
           echo "$edit"
           echo "$sync"
           unbuffer buku -p --format 30 | grep -v '^$' | sort
           [ -x ~/.local/lib/haris/custom/dmenu/open.sh ] && ~/.local/lib/haris/custom/dmenu/open.sh
+          firefox_about_pages
       } | dmenu -p 'Open:'
   )"
 
