@@ -1497,6 +1497,25 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
 ** Ivy
 #+NAME: ivy
 #+begin_src elisp
+  (use-package ivy-rich
+    :ensure t
+    :config
+    (ivy-rich-mode 1)
+    (when (not (cl-find 'helpful-callable ivy-rich-display-transformers-list))
+      (setq ivy-rich-display-transformers-list
+            (append
+             ivy-rich-display-transformers-list
+             `(helpful-callable
+               ,(nth
+                 (+ 1 (cl-position 'counsel-describe-function
+                                   ivy-rich-display-transformers-list))
+                 ivy-rich-display-transformers-list)
+               )))))
+  (use-package all-the-icons-ivy-rich
+    :ensure t
+    :config
+    (all-the-icons-ivy-rich-mode 1))
+
   (setq ivy-initial-inputs-alist
         (append
          '((helpful-function . "^")
