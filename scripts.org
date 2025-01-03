@@ -1014,6 +1014,13 @@ Get the OS type.
       true
   } | awk '/^-----BEGIN CERTIFICATE-----$/,/^-----END CERTIFICATE-----$/'
 #+end_src
+** =forever=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/forever")
+  while :; do
+      command "$@"
+      sleep 2
+  done
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
