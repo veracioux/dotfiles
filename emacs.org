@@ -1497,24 +1497,39 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
 ** Ivy
 #+NAME: ivy
 #+begin_src elisp
-  (use-package ivy-rich
-    :ensure t
-    :config
-    (ivy-rich-mode 1)
-    (when (not (cl-find 'helpful-callable ivy-rich-display-transformers-list))
-      (setq ivy-rich-display-transformers-list
-            (append
-             ivy-rich-display-transformers-list
-             `(helpful-callable
-               ,(nth
-                 (+ 1 (cl-position 'counsel-describe-function
-                                   ivy-rich-display-transformers-list))
-                 ivy-rich-display-transformers-list)
-               )))))
   (use-package all-the-icons-ivy-rich
     :ensure t
     :config
     (all-the-icons-ivy-rich-mode 1))
+
+  (use-package ivy-rich
+    :ensure t
+    :config
+    (setq ivy-rich-display-transformers-list
+          (append
+           ivy-rich-display-transformers-list
+           `(helpful-symbol
+             (:columns
+              ((,(defun haris/helpful-symbol-transformer (symbol)
+                   (or (counsel-describe-variable-transformer symbol)
+                       (counsel-describe-function-transformer symbol)))
+                (:width 0.3))
+               (all-the-icons-ivy-rich-symbol-class
+                (:width 8 :face all-the-icons-ivy-rich-type-face))
+               (all-the-icons-ivy-rich-symbol-docstring
+                (:face all-the-icons-ivy-rich-doc-face)))))
+           `(helpful-callable
+             ,(nth
+               (+ 1 (cl-position 'counsel-describe-function
+                                 ivy-rich-display-transformers-list))
+               ivy-rich-display-transformers-list))
+           `(helpful-variable
+             ,(nth
+               (+ 1 (cl-position 'counsel-describe-variable
+                                 ivy-rich-display-transformers-list))
+               ivy-rich-display-transformers-list))))
+    (ivy-rich-mode 1))
+
 
   (setq ivy-initial-inputs-alist
         (append
