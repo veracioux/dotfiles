@@ -98,7 +98,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 
       echo -n -s  (set_color --bold brblue)   "$USER$host "                \
                   (set_color bryellow)        "$private"          $normal  \
-                  (set_color magenta)         (prompt_pwd)        $normal  \
+                  (set_color --bold magenta)  (prompt_pwd)        $normal  \
                   (set_color brmagenta)       "$vcs_prompt"                \
                   (set_color brmagenta)       $prompt_status               \
                   (set_color white)           $sudo_privilege              \
