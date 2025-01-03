@@ -917,6 +917,29 @@ Completions for the functions defined in [[Functions]].
 #+begin_src shell :tangle (haris/tangle-home ".config/fish/completions/otp.fish")
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
+*** Self-bootstrapping
+Some commands provide a =completion= subcommand (maybe under a slightly different
+name) which generates the completion script for a specific shell. If you source
+this script from that shell, you will get completions for that command. In this
+section I take advantage of that for some programs.
+
+Each self-bootstrapping completion script should set the =source= variable to the
+desired final content of the completion script.
+#+NAME: completions/self-bootstrapping/common
+#+begin_src fish :tangle no
+  [ "$status" != 0 ] && return 1
+  echo "$source" | tee "$(status filename)" | source
+#+end_src
+**** =bufls=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/bufls.fish")
+  set -l source "$(bufls completion fish 2>/dev/null)"
+  «completions/self-bootstrapping/common»
+#+end_src
+**** =gh=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/gh.fish")
+  set -l source "$(gh completion -s fish 2>/dev/null)"
+  «completions/self-bootstrapping/common»
+#+end_src
 *** Miscellaneous others
 #+begin_src fish
   # *cf and *cmd style commands
