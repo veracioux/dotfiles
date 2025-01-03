@@ -35,6 +35,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 
   [push]
   	recurseSubmodules = check
+  	autoSetupRemote = true
 
   [github]
     user = veracioux
