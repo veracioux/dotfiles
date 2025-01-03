@@ -1425,6 +1425,9 @@ Make the environment variables available for shells as well:
   [ -f ~/.alias-gui ]       && . ~/.alias-gui       || true
   [ -f ~/.alias-gui-tmp ]   && . ~/.alias-gui-tmp   || true
   [ -f ~/.profile-private ] && . ~/.profile-private || true
+
+  systemctl start --user ssh-agent.service
+  eval "$(ssh-agent)" >/dev/null
 #+end_src
 * Temporary and private configs
 These are optional and must be provided separately.
