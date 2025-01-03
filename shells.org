@@ -323,6 +323,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 
   bind_all_modes \eT '__haris_test_eval'
 
+  bind_all_modes \e\? '__haris_cmdline_prepend whatis'
+
   # Ctrl+Alt+L
   # TODO: Add sol command installation instructions
   bind_all_modes \e\f 'commandline --replace (commandline | sol -b -s -a -jqobj)'
@@ -436,6 +438,15 @@ on the plugin list above.
   fish -c "fisher update"
 #+end_src
 ** Functions
+*** =whatis=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/whatis.fish")
+  function whatis --wraps type --description "Print what something is, regardless of type" --argument-names what
+      type "$what"
+      if [ "$(type --type "$what")" = 'file' ]
+          catcmd "$what"
+      end
+  end
+#+end_src
 *** =ndir=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/ndir.fish")
   # Create a new dir and cd
