@@ -1244,7 +1244,7 @@ abbreviations for equivalent apt operations.
       function (tmp_func)
           begin
               set -l container %
-              docker-compose rm -f "$container"
+              docker-compose rm -sf "$container"
               docker-compose up -d "$container"
           end
       end
