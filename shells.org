@@ -325,6 +325,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions
+***** =__haris_run_in_bash=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_run_in_bash.fish")
   function __haris_run_in_bash
       set -l cmd (commandline -b)
@@ -334,6 +335,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       commandline -r ''
   end
 #+end_src
+***** =__haris_cmdline_prepend=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_cmdline_prepend.fish")
   function __haris_cmdline_prepend
       commandline --cursor 0
@@ -341,11 +343,13 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       commandline --function end-of-line
   end
 #+end_src
+***** =__haris_show_man=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_show_man.fish")
   function __haris_show_man
       eman (commandline --current-process --tokenize | grep -v '^sudo$' | head -1)
   end
 #+end_src
+***** =__haris_cmdline_append_or_toggle=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_cmdline_append_or_toggle.fish")
   function __haris_cmdline_append_or_toggle -a text
       if [ (commandline -o | tail -1) = "$text" ]
@@ -356,6 +360,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       commandline -f execute
   end
 #+end_src
+***** =__haris_test_eval=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_test_eval.fish")
   function __haris_test_eval
       eval "$(adhoc - (mktemp -t XXXXXXXX.fish) 2>/dev/null)"
