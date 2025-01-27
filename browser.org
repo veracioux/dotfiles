@@ -18,6 +18,7 @@ All my browser preferences that I don't need to keep secret go here.
 
   // Use dark theme
   user_pref("layout.css.prefers-color-scheme.content-override", 0);
+  user_pref("browser.uidensity", 1);
   user_pref("browser.theme.content-theme", 0);
   user_pref("browser.theme.toolbar-theme", 0);
   user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
