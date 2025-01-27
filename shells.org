@@ -1354,6 +1354,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g bt    'bluetoothctl'
   conditional_abbr -g sshk  'ssh-copy-id -i ~/.ssh/%'
   conditional_abbr -g sshkm 'ssh-copy-id -i ~/.ssh/main.pub'
+  _abbr            -g ek    'sudo etckeeper'
 
   if [ "$TERM" != "linux" ]
       conditional_abbr -g man   'eman'
