@@ -74,6 +74,16 @@ This is a wrapper around GNU =pass=.
 
   clipctl enable >/dev/null || true
 #+end_src
+** =passmenu=
+This is a wrapper around =passmenu=, trying to use =passmenu-otp= if present,
+otherwise falling back to the default =passmenu=.
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/passmenu")
+  if command -v passmenu-otp >/dev/null; then
+      passmenu-otp "$@"
+  else
+      alternative-command passmenu "$@"
+  fi
+#+end_src
 ** =dmenu=
 Note: This depends on my custom build of dmenu with the height patch applied.
 The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
