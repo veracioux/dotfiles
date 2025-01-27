@@ -114,7 +114,10 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
   ln -s ~/.haris/.spacemacs ~/.spacemacs || true
   echo "Emacs will be launched now. Follow the prompts to setup spacemacs"
   echo "When done, you can close the emacs window"
-  COLORTERM=truecolor LSP_USE_PLISTS=true emacs
+  read -n1 -p 'Press any key to continue: '
+  # NOTE: In same cases I observed that the GUI won't run on initial spacemacs
+  # startup, so I used --no-window-system
+  COLORTERM=truecolor LSP_USE_PLISTS=true emacs --debug-init --no-window-system
 #+end_src
 *** Install themes
 #+begin_src bash
@@ -195,6 +198,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
      :type git
      :host github
      :repo "lastquestion/explain-pause-mode"))
+  (use-package fontawesome :defer t)
 #+end_src
 *** Language modes
 #+begin_src elisp
@@ -448,6 +452,11 @@ This enables periodic cleanup:
 #+begin_src elisp
   (setq dired-listing-switches "-al \"--time-style=+%Y-%m-%d %H:%M\"")
   (setq dired-kill-when-opening-new-dired-buffer t)
+#+end_src
+*** Additional packages
+#+begin_src elisp
+  (use-package dired-rsync :defer t)
+  (use-package dired-rsync-transient :defer t)
 #+end_src
 ** Interactive commands
 These are commands that I primarily intend to use interactively and directly,
@@ -792,11 +801,13 @@ Some custom keybindings are defined here as well.
 #+begin_src elisp
   (with-eval-after-load 'magit
     (let*
-        ((projects '("~/.haris/"
-                     "~/.emacs.d/"
-                     "~/.emacs.d/private/snippets/"
-                     "~/.emacs.d/private/themes/dracula/"
-                     "~/wiki/"))
+        ((projects (-filter
+                    'file-directory-p
+                    '("~/.haris/"
+                      "~/.emacs.d/"
+                      "~/.emacs.d/private/snippets/"
+                      "~/.emacs.d/private/themes/dracula/"
+                      "~/wiki/")))
          (worktrees
           (flatten-list
            (mapcar
