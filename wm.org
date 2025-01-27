@@ -171,7 +171,6 @@ Shared between i3 and sway:
 #+end_src
 * X config
 #+begin_src conf-xdefaults :tangle (haris/tangle-home ".Xresources"))
-  Xcursor.size: 16
   ,*.*.font: Ubuntu Mono
 #+end_src
 * Start-up
@@ -240,7 +239,7 @@ to the laptop I currently use. Please change to suit your needs.
   xss-lock -l -- lock-screen &                # Start lock screen daemon
   systemctl start --user clipmenud            # (ref:clipmenud)
 
-  xrdb ~/.Xresources
+  xrdb -merge ~/.Xresources $(ls ~/.local.Xresources 2>/dev/null)
   feh --bg-fill ~/.wallpaper                  # Set wallpaper
   # vim: ft=sh
 #+end_src

@@ -53,9 +53,6 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
       family: Ubuntu Mono
       style: Italic
 
-    # Point size of the font
-    size: 7
-
   colors:
     # Default colors
     primary:

@@ -329,9 +329,8 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =alacritty=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty")
-  WINIT_X11_SCALE_FACTOR=1.5 /usr/bin/alacritty "$@"
-  #WINIT_X11_SCALE_FACTOR=1.5 prime-run /usr/bin/alacritty "$@"
-#+end_src
+  alternative-command alacritty "$@"
+  #+end_src
 ** =alacritty-float=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty-float")
   alacritty --class Alacritty,Float "$@"
