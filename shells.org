@@ -614,7 +614,7 @@ on the plugin list above.
 
       tmux new -d \
           -s "$tmux_session" \
-          env "$(env)" fish --private -C "source $tempfile"
+          fish --private -C "$(env | grep -v '\s' | tr '\n' ' ') source $tempfile"
 
       if [ -n "$_flag_attach" ]
           tmux attach -t "$tmux_session"
