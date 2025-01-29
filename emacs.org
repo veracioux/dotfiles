@@ -457,6 +457,7 @@ This enables periodic cleanup:
 #+begin_src elisp
   (use-package dired-rsync :defer t)
   (use-package dired-rsync-transient :defer t)
+  (straight-use-package '(dired-hacks :type git :host github :repo "Fuco1/dired-hacks"))
 #+end_src
 ** Interactive commands
 These are commands that I primarily intend to use interactively and directly,
