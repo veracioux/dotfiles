@@ -39,6 +39,29 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   [Install]
   WantedBy=default.target
 #+end_src
+* Jira Branch Transformer
+#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/jira-branch-transformer.service")
+  [Unit]
+  Description=Jira Branch Transformer
+
+  [Service]
+  ExecStart=/usr/bin/env jira-branch-transformer
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+** Executable
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/jira-branch-transformer")
+  while :; do
+      echo "Scanning clipboard..."
+      cb="$(timeout 1s xsel -bo)"
+      if grep -qE <<<"$cb" "^git checkout -b [A-Z]+-[0-9]+"; then
+          echo "Clipboard matched. Transforming to branch name..."
+          get-branch
+      fi
+      sleep 2
+  done
+#+end_src
 * VPN Notifier
 #+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/vpn-notifier.service")
   [Unit]
