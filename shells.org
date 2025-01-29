@@ -319,6 +319,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 
   bind_all_modes \e\? '__haris_cmdline_prepend whatis'
 
+  bind_all_modes \ey '__haris_copy_cmdline_and_output'
+
   # Ctrl+Alt+L
   # TODO: Add sol command installation instructions
   bind_all_modes \e\f 'commandline --replace (commandline | sol -b -s -a -jqobj)'
@@ -364,6 +366,26 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_test_eval.fish")
   function __haris_test_eval
       eval "$(adhoc - (mktemp -t XXXXXXXX.fish) 2>/dev/null)"
+  end
+#+end_src
+***** =__haris_copy_cmdline_and_output=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_copy_cmdline_and_output.fish")
+  function __haris_copy_cmdline_and_output
+      set -l commandline "$(commandline)"
+
+      if string match -qr __haris_copy_cmdline_and_output "$commandline"
+          echo >&2
+          echo "Error: __haris_copy_cmdline_and_output is not allowed to be used recursively" >&2
+          commandline -f repaint
+          return 1
+      end
+
+      echo
+
+      begin
+          echo "\$ $commandline"
+          eval "$commandline" 2>&1 | tee /dev/tty
+      end | fish_clipboard_copy
   end
 #+end_src
 ** Custom colors
