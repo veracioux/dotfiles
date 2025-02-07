@@ -1011,11 +1011,8 @@ a terminal and runs the aliased command.
   if which nvim >/dev/null; then
       alias vim='nvim'
   fi
-  alias snips='cd ~/.vim/snips'
   alias vidir='VISUAL=nvim command vidir'
-  alias cppman='PAGER=viman command cppman'
   alias aurvote='ssh aur@aur.archlinux.org vote'
-  alias ...='cd ../..'
   alias l1='ls -1'
   alias src='cd ~/src'
   alias tmp='cd /tmp'
@@ -1025,10 +1022,8 @@ a terminal and runs the aliased command.
 #+end_src
 ** GUI
 #+begin_src shell :tangle (haris/tangle-home ".alias-gui")
-  alias calc='speedcrunch'
   alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
   alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
-  alias ff="firefox"
 #+end_src
 ** Fish
 :PROPERTIES:
@@ -1345,6 +1340,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g fm    'vifm'
   conditional_abbr -g fb    'facebook-cli'
   conditional_abbr -g fl    'flameshot'
+  conditional_abbr -g ff    'firefox'
   conditional_abbr -g tb    'nc termbin.com 9999'
   conditional_abbr -g asc   'asciinema'
   conditional_abbr -g hk    'heroku'
