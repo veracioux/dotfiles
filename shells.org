@@ -1401,17 +1401,35 @@ abbreviations for equivalent apt operations.
   # Clipmenu
   # (ref:CM_DIR)
   CM_DIR=$HOME/.local/share/haris/clipmenu
+  RCLONE_PASSWORD_COMMAND="pass rclone/config"
+  VAGRANT_HOME=/usr/local/share/haris/vagrant
 #+end_src
 Make the environment variables available for shells as well:
 #+begin_src shell :tangle (haris/tangle-home ".profile")
   eval "$(cat ~/.config/environment.d/90-haris.conf | grep -vP '^\s*#' | sed 's/^/export /')"
 #+end_src
 * .profile
+** Executable paths
 #+begin_src shell :tangle (haris/tangle-home ".profile")
-  export PATH=~/.local/bin:$PATH:~/.go/bin:"$CLOUDSDK_ROOT_DIR"/bin:~/mnt/vm/.tem/path:/opt/android-sdk/emulator
   mkdir -p ~/.go
   export GOPATH="$HOME"/.go
 
+  export PATH="$CLOUDSDK_ROOT_DIR"/bin:"$PATH"
+  export PATH=~/.go/bin:"$PATH"
+  gempath="$(gem environment gempath)"
+  if [ -n "$gempath" ]; then
+      export PATH="$(echo "$gempath" | sed -E 's_(:|$)_/bin:_g')$PATH"
+  fi
+  export PATH=~/vm/.tem/path:"$PATH"
+  export PATH=~/.local/bin:"$PATH"
+#+end_src
+** SSH agent
+#+begin_src shell :tangle (haris/tangle-home ".profile")
+  systemctl start --user ssh-agent.service
+  eval "$(ssh-agent)" >/dev/null
+#+end_src
+** Miscellaneous
+#+begin_src shell :tangle (haris/tangle-home ".profile")
   export MAKEFLAGS='-j6'
   export GPG_TTY=$(tty)
   export PYTHONSTARTUP=~/.startup.py
@@ -1437,9 +1455,6 @@ Make the environment variables available for shells as well:
   [ -f ~/.alias-gui ]       && . ~/.alias-gui       || true
   [ -f ~/.alias-gui-tmp ]   && . ~/.alias-gui-tmp   || true
   [ -f ~/.profile-private ] && . ~/.profile-private || true
-
-  systemctl start --user ssh-agent.service
-  eval "$(ssh-agent)" >/dev/null
 #+end_src
 * Temporary and private configs
 These are optional and must be provided separately.
