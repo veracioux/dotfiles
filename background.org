@@ -69,6 +69,10 @@ Modify PATH variable to match the normal environment's value:
 #+begin_src crontab
   0 18-23 10 */2 * notify-send 'REMINDER' 'Reissue SSL certificate for veracioux.me'
 #+end_src
+*** Update fish completions
+#+begin_src crontab
+  0 20 * * * fish -c 'fish_update_completions'
+#+end_src
 ** Listen/update service                                           :service:
 This service updates the user's crontab when any of the custom crontab files change.
 #+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/crontab-listen-update.service")
@@ -84,6 +88,11 @@ This service updates the user's crontab when any of the custom crontab files cha
 #+end_src
 *** Executable
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/crontab-listen-update")
+  if ! which inotifywait 2>/dev/null; then
+      echo "ERROR: inotifywait is not installed. Aborting."
+      exit 1
+  fi
+
   mkdir -p ~/.haris/cron.d/
   while :; do
       content=''

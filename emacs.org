@@ -211,6 +211,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (use-package git-modes :defer t)
   (use-package systemd :defer t)
   (use-package ssh-config-mode :defer t)
+  (use-package crontab-mode :defer t)
 #+end_src
 ** Global settings
 #+NAME: global-settings
