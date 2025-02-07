@@ -2615,6 +2615,11 @@ Remove Info mode annoying keybindings.
   (evil-define-key 'normal nmcli-wifi-mode-map (kbd "c") 'nmcli-wifi-connect)
   (evil-define-key 'normal nmcli-wifi-mode-map (kbd "r") 'nmcli-wifi-refresh)
 #+end_src
+** transient
+#+begin_src elisp
+  (with-eval-after-load 'transient
+    (setq transient-values-file "~/.emacs.d/transient/values.el"))
+#+end_src
 ** Documentation
 #+begin_src elisp
   (use-package tldr :defer t)
