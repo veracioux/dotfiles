@@ -2451,6 +2451,7 @@ The quickmenu script is optional and must be provided separately at
       src
       tmp
       repo
+      data
   )
   mkdir -p "${dirs[@]}"
 
@@ -2458,9 +2459,11 @@ The quickmenu script is optional and must be provided separately at
   cd ~/mnt
 
   dirs=(
-      cloud
-      hdd
+      drive
+      dbox
       phone
+      android1
+      android2
       ssd
       usb
       usb-guest
@@ -2470,7 +2473,6 @@ The quickmenu script is optional and must be provided separately at
   )
 
   mkdir -p "${dirs[@]}"
-
 #+end_src
 ** =cleanhome=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cleanhome")
