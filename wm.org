@@ -311,8 +311,8 @@ These bindings are available in the default mode, i.e. when no submenu is active
   floating_modifier $mod
 
   # kill focused window
-  bindsym $mod+w       kill
-  bindsym $mod+Ctrl+w exec xdotool getactivewindow windowkill
+  bindsym $mod+w            kill
+  bindsym $mod+Ctrl+w       exec xdotool getactivewindow windowkill
 
   # Navigation
   bindsym $mod+m            scratchpad show
@@ -343,7 +343,6 @@ These bindings are available in the default mode, i.e. when no submenu is active
   bindsym $mod+minus        resize shrink width   20;
   bindsym $mod+Shift+plus   resize grow   height  20;
   bindsym $mod+Shift+minus  resize shrink height  20;
-  bindsym $mod+g            move position center
 #+end_src
 #+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
   <<general-bindings>>
@@ -446,27 +445,25 @@ dmenu doesn't work.
 ** Resize menu
 #+NAME: resize-menu
 #+begin_src i3wm-config
-  set $mode_resize     " resize | [w]idth [h]eight [+] [-] (+ Shift variants) | Presets [0/Shift+0] [1] [2] [3] [4] [a] [b] [d]evtools [f]ullHD"
+  set $mode_resize     " resize | [+] [-] (+ Alt variants) | [c]enter | Presets [0/Alt+0] [1] [2] [3] [4] [a] [b] [d]evtools [f]ullHD"
 
   mode $mode_resize {
-  bindsym w               resize  shrink  width   1
-  bindsym Shift+w         resize  grow    width   1
-  bindsym h               resize  shrink  height  1
-  bindsym Shift+h         resize  grow    height  1
+  bindsym plus            resize  grow    width   1; move position center
+  bindsym mod1+plus       resize  grow    height  1; move position center
+  bindsym minus           resize  shrink  width   1; move position center
+  bindsym mod1+minus      resize  shrink  height  1; move position center
 
-  bindsym plus            resize  grow    width   20; move position center
-  bindsym Shift+plus      resize  grow    height  20; move position center
-  bindsym minus           resize  shrink  width   20; move position center
-  bindsym Shift+minus     resize  shrink  height  20; move position center
+  bindsym c               move position center
 
-  # equal key on my keyboard
+  bindsym =               exec --no-startup-id i3_balance_workspace
+  # On some systems the = keysym is not emitted, so I use Shift+0 as a backup
   bindsym Shift+0         exec --no-startup-id i3_balance_workspace
 
   bindsym t               $resize_term; mode default
 
   # Some standard sizes
   bindsym 0               $resizeW0
-  bindsym Shift+0         $resizeH0
+  bindsym mod1+0          $resizeH0
   bindsym 1               $resize1; move position center
   bindsym 2               $resize2; move position center
   bindsym 3               $resize3; move position center
@@ -480,7 +477,7 @@ dmenu doesn't work.
   bindsym Escape          mode default
   }
 
-  bindsym $mod+r            mode $mode_resize
+  bindsym $mod+r          mode $mode_resize
 #+end_src
 ** Controlling the i3 session
 #+NAME: i3-session-bindings
@@ -968,7 +965,7 @@ seldom use that so it's fine.
 #+begin_src shell :results output :tangle no
   pactl get-default-source | tr -d '\n'
 #+end_src
-
+*** Custom script
 #+begin_src python :tangle (haris/tangle-home ".config/i3status/custom-script.py") :tangle-mode (identity #o744)
   #!/usr/bin/env python
 
@@ -1079,7 +1076,7 @@ seldom use that so it's fine.
       sys.exit(i3status.wait())
 
 #+end_src
-
+*** Configuration
 #+begin_src conf
   # It is important that this file is edited as UTF-8.
   # The following line should contain a sharp s:
