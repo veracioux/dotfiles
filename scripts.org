@@ -89,7 +89,7 @@ Note: This depends on my custom build of dmenu with the height patch applied.
 The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+NAME: dmenu
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu")
-  timeout --foreground 10s alternative-command dmenu -b -f -i -h 25 \
+  alternative-command dmenu -b -f -i -h 25 \
       -nb '#1e1e1e' -nf '#dddddd' -sb '#99a3ff' -sf '#1e1e1e' \
       -fn 'Ubuntu Mono-12' \
       "$@"
@@ -1594,8 +1594,10 @@ Create a Xephyr session for the current user that tries to mimic a regular
           else
               cat "$CACHE_FILE"
           fi
-          find ~/.local/bin -executable -type f -printf '%f\n' | sed 's/^/ /'
       } | sort | uniq
+  }
+  get_custom_scripts() {
+      find ~/.local/bin -executable -type f -printf '%f\n' | sort | uniq | sed 's/^/ /'
   }
   get_aliases() {
       extract_aliases ~/.alias ~/.alias-tmp
@@ -1610,12 +1612,12 @@ Create a Xephyr session for the current user that tries to mimic a regular
   # ┏━━━━━━━━━━━━━━━┓
   # ┃ dmenu entries ┃
   # ┗━━━━━━━━━━━━━━━┛
-  get_commands() {
+  get_dmenu_entries() {
       echo " Open"           # Open an URL or bookmark
       echo " Clipboard"      # Clipboard using clipmenu
       echo " Snippets"       # Text snippets
       echo " TODO"           # Open TODO file of a project
-      echo " Windows"        # Choose windows
+      echo " Windows"        # Choose windows
       echo " Pacman"         # Package management
       echo " Color"          # Pick a color
       echo " Unicode"        # Pick an icon
@@ -1636,6 +1638,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
       echo "$aliases" | sed 's/^/ /'
       echo "$gui_aliases" | sed 's/^/ /'
       get_desktop_apps        # Programs extracted from *.desktop files
+      get_custom_scripts      # Programs from ~/.local/bin
   }
 
   # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -1644,10 +1647,13 @@ Create a Xephyr session for the current user that tries to mimic a regular
   if [ -n "$1" ]; then
       choice="$1"
   else
-      choice="$(get_commands | dmenu)"
+      choice="$(get_dmenu_entries | dmenu)"
       [ "$?" = "0" ] || exit
+      if grep -q '^' <<<"$choice"; then
+          is_dotdesktop_app=true
+      fi
       # If it starts with a non-ascii character (as in get-commands), remove it and the space following it
-      if grep -P "[^\x00-\x7F]" <<<"$choice"; then
+      if grep -qP "[^\x00-\x7F]" <<<"$choice"; then
           choice="$(cut -f2- -d' ' <<<"$choice")"
       fi
   fi
@@ -1698,6 +1704,11 @@ Create a Xephyr session for the current user that tries to mimic a regular
           run_script quickmenu ;;
       # The rest: aliases and regular commands
       ,*)
+          if [ -n "$is_dotdesktop_app" ]; then
+              # If the choice is an x.desktop app, launch it
+              o gtk-launch "$choice"
+              exit
+          fi
           # If the command is an aliased GUI program, just run it
           for alias in $gui_aliases; do
               if [ "$choice" = "$alias" ]; then
@@ -1723,15 +1734,10 @@ possibly benefit from a performance boost, in case =sh= happens to point to a mo
 lightweight shell.
 #+NAME: pull_desktop_apps
 #+begin_src shell
-  sed -n -e '/^Exec=/p' \
-      /usr/share/applications/*.desktop \
-      ~/.local/share/applications/*.desktop \
-      | sed 's/Exec=\(.*\)/\1/' \
-      | while read line; do
-      echo -n ' '  # Represents a GUI app
-      basename "$(sh -c "eval set -- $line; echo \$1")"
-  done \
-      | sort | uniq | tee "$CACHE_FILE"
+  ls -1 /usr/share/applications/*.desktop \
+     ~/.local/share/applications/*.desktop |
+      sort | uniq |
+      sed -E 's|.*/([^/]+)\.desktop$| \1|' | tee "$CACHE_FILE"
 #+end_src
 ** Open
 Open a website in Firefox. Suggests bookmarks managed by buku, but you can input

@@ -250,42 +250,6 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   Type=Application
   NoDisplay=true
 #+end_src
-** CLion
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/clion.desktop")
-  <<desktop-base>>
-  Exec=clion
-  Name=CLion
-#+end_src
-** WebStorm
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/webstorm.desktop")
-  <<desktop-base>>
-  Exec=webstorm
-  Name=WebStorm
-#+end_src
-** PhpStorm
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/phpstorm.desktop")
-  <<desktop-base>>
-  Exec=phpstorm
-  Name=PhpStorm
-#+end_src
-** IDEA
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/idea.desktop")
-  <<desktop-base>>
-  Exec=intellij-idea-ultimate-edition
-  Name=IDEA
-#+end_src
-** PyCharm
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/pycharm.desktop")
-  <<desktop-base>>
-  Exec=pycharm
-  Name=PyCharm
-#+end_src
-** GoLand
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/goland.desktop")
-  <<desktop-base>>
-  Exec=goland
-  Name=GoLand
-#+end_src
 ** Emacs
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/emacs.desktop")
   <<desktop-base>>
@@ -294,21 +258,16 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   MimeType=text/plain;text/markdown;text/org;application/x-bibtex;application/x-octet-stream;
 #+end_src
 ** VS Code
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/code.desktop")
+#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/vscode.desktop")
   <<desktop-base>>
   Exec=code
-  Name=Code
+  Name=VSCode
 #+end_src
 ** alacritty-open
 #+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/alacritty-open.desktop")
   <<desktop-base>>
   Exec=alacritty --working-directory %U
   MimeType=inode/directory
-#+end_src
-** Peek
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/peek.desktop")
-  <<desktop-base>>
-  Exec=peek
 #+end_src
 * Helpers
 #+NAME: eval-user-name
