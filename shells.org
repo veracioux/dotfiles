@@ -1042,17 +1042,18 @@ a terminal and runs the aliased command.
       alias alpine    'docker run -it --rm --name alpine alpine'
       alias debian    'docker run -it --name debian debian:bookworm-slim'
   end
-
-  function dragon
+  function vrg --wraps rg; vim (rg -l $argv); end
+  function vfd --wraps fd; vim (fd $argv); end
+#+end_src
+*** =dragon=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/dragon.fish")
+  function dragon --wraps dragon-drop --wraps dragon-drag-and-drop
       if contains -- --help $argv
           command dragon --help
       else
           o "$(which dragon)" $argv
       end
   end
-
-  function vrg --wraps rg; vim (rg -l $argv); end
-  function vfd --wraps fd; vim (fd $argv); end
 #+end_src
 *** Abbreviations
 **** Helper functions

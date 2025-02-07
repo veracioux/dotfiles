@@ -1001,11 +1001,13 @@ Get the OS type.
   "$@"
 #+end_src
 ** =dragon=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/dragon")
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/dragon")
   set -- --on-top --thumb-size 32 "$@"
 
-  if which -s dragon-drag-and-drop; then
+  if which dragon-drag-and-drop &>/dev/null; then
       dragon-drag-and-drop "$@"
+  elif which dragon-drop &>/dev/null; then
+      dragon-drop "$@"
   else
       alternative-command dragon "$@"
   fi
