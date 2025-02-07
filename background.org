@@ -8,11 +8,17 @@ Enable all the background services with:
   systemctl --user enable --now haris-background.target
 #+end_src
 ** Systemd target for all background services
-Note: [[*Clipmenud][Clipmenud]] is started by [[file:wm.org::(clipmenud)][startx]] to ensure a graphical session exists
+Note: [[*Clipmenud][Clipmenud]] is started by [[file:wm.org::(clipmenud)][startx]] to ensure a graphical session exists.
 #+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/haris-background.target")
   [Unit]
   Description=Background services
-  Requires=crontab-listen-update.service,emacs.service,ssh-agent.service
+  Wants=crontab-listen-update.service
+  Wants=emacs.service
+  Wants=irc.service
+  Wants=verm.service
+  Wants=ssh-agent.service
+  Wants=vpn-notifier.service
+  # Wants=clipmenud.service
   AllowIsolate=yes
 
   [Install]
