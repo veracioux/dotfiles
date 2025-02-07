@@ -1305,6 +1305,11 @@ abbreviations for equivalent apt operations.
   _abbr ufw   'sudo ufw'
   _abbr ufws  'sudo ufw status numbered'
 #+end_src
+**** MQTT
+#+begin_src fish
+  _abbr sub 'mosquitto_sub -t'
+  _abbr pub 'mosquitto_pub -t'
+#+end_src
 **** Miscellaneous
 #+begin_src fish
   conditional_abbr -g g     'git'
