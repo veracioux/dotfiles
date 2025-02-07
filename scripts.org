@@ -1904,6 +1904,11 @@ URLs (each on a new line) to display in this menu.
       echo "$edit"
   }
 
+  get_fish_cmd() {
+      echo "echo 'Running command: $*'"
+      echo "$*"
+  }
+
   choice="$(print_options | dmenu -l $(print_options | wc -l))"
 
   case "$choice" in
@@ -1922,26 +1927,26 @@ URLs (each on a new line) to display in this menu.
           choice="$(echo "$list" | dmenu -l 20)"
           [ -z "$choice" ] && exit
           cmd="$(pacman -Ss "^$choice\$" >/dev/null && echo sudo pacman -S || echo paru)"
-          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify $cmd $choice" && exit
+          alacritty --class Alacritty,Float -e fish -C "$(get_fish_cmd $cmd $choice)" && exit
           ;;
       "$about")
           choice="$(echo "$(pacman -Qq)" | dmenu -p 'About:' -l 20)"
           [ -z "$choice" ] && exit
-          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify pacman -Qi $choice" && exit
+          alacritty --class Alacritty,Float -e fish -C "$(get_fish_cmd pacman -Qi $choice)" && exit
           ;;
       "$update")
-          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify paru -Syu"
+          alacritty --class Alacritty,Float -e fish -C "paru -Syu"
           ;;
       "$remove")
           choice="$(pacman -Qq | dmenu -l 20)"
           [ -z "$choice" ] && exit
-          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify sudo pacman -R $choice" && exit
+          alacritty --class Alacritty,Float -e fish -C "$(get_fish_cmd sudo pacman -R $choice)" && exit
           ;;
       "$manage")
-          gvim "$(fcmd system-install)"
+          myemacs-float "$(fcmd system-install)"
           ;;
       "$keyring")
-          alacritty --class Alacritty,Float -e fish -C "cmd-with-notify sudo pacman -Sy archlinux-keyring && exit"
+          alacritty --class Alacritty,Float -e fish -C "$(get_fish_cmd sudo pacman -Sy archlinux-keyring && exit)"
           ;;
       "$edit")
           gvim "$0"
