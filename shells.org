@@ -1254,10 +1254,11 @@ abbreviations for equivalent apt operations.
 **** Pass
 #+begin_src fish
   if command --quiet pass
-      conditional_abbr -g pn 'pass insert'
-      conditional_abbr -g pg 'pass generate --clip'
-      conditional_abbr -g pe 'pass edit'
-      conditional_abbr -g pc 'pass show --clip'
+      conditional_abbr -g pn  'pass insert'
+      conditional_abbr -g pg  'pass generate --clip'
+      conditional_abbr -g pe  'pass edit'
+      conditional_abbr -g pc  'pass show --clip'
+      conditional_abbr -g pon 'pass otp insert'
   end
 #+end_src
 **** Watch
