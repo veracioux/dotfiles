@@ -63,7 +63,7 @@ All my browser preferences that I don't need to keep secret go here.
 #+end_src
 * CSS customizations
 :PROPERTIES:
-:header-args+: :tangle (concat main-profile-dir "/chrome/userChrome.css")
+:header-args+: :tangle (concat main-profile-dir "/chrome/userChrome.css") :tangle no
 :END:
 #+begin_src css
   #navigator-toolbox:not(:hover) #nav-bar {
