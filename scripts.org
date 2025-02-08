@@ -3,22 +3,24 @@
 #+PROPERTY: header-args+
 #+PROPERTY: header-args:shell+ :comments both
 #+PROPERTY: header-args:bash+ :comments both
+#+TAGS: wrapper(w) script(s)
 
-This is where my custom scripts live. That includes shell scripts, dmenu scripts,
-and potentially programming language-specific scripts. One of the things I
-strive for is to have the same script available in different formats. For
-example, I have a dmenu script for creating a QR code, which allows me to scan
-or generate a QR code with a few keystrokes. But sometimes I want to call this
-script from a terminal, so I also have a =qr= command available in =~/.local/bin=.
-Likewise, I have ideas to port some scripts to tridactyl (a firefox extension)
-as well. Since those different versions of the same script differ only by UX, it
-is useful to have all the versions defined in the same place - here.
+This is where my custom scripts live. That includes shell scripts, dmenu
+scripts, and potentially programming-language-specific scripts. One of the
+things I strive for is to have the same script available in different
+environments. For example, I have a dmenu script for creating a QR code, which
+allows me to scan or generate a QR code with a few keystrokes. But sometimes I
+want to call this script from a terminal, so I also have a =qr= command available
+in =~/.local/bin=. Likewise, I have ideas to port some scripts to tridactyl (a
+firefox extension) as well. Since those different versions of the same script
+differ only by UX, it is useful to have all the versions defined in the same
+place - here.
 
 Note: For code reusability, I use some [[* Helper code][helper code blocks]] defined at the bottom
 of this document. These code blocks are utilized via =org-sbe= or via noweb references.
 
 * Wrappers around existing commands
-** =git=
+** =git=                                                             :wrapper:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/git")
   git() {
       alternative-command git "$@"
@@ -36,7 +38,7 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
       git "$@"
   fi
 #+end_src
-** =rm=
+** =rm=                                                              :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/rm")
   for arg in "$@"; do
       [ ! -e "$arg" ] && continue
@@ -51,7 +53,7 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
   done
   /usr/bin/rm "$@"
 #+end_src
-** =pass=
+** =pass=                                                            :wrapper:
 This is a wrapper around GNU =pass=.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/pass")
   shopt -s expand_aliases
@@ -74,7 +76,7 @@ This is a wrapper around GNU =pass=.
 
   clipctl enable >/dev/null || true
 #+end_src
-** =passmenu=
+** =passmenu=                                                        :wrapper:
 This is a wrapper around =passmenu=, trying to use =passmenu-otp= if present,
 otherwise falling back to the default =passmenu=.
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/passmenu")
@@ -84,7 +86,7 @@ otherwise falling back to the default =passmenu=.
       alternative-command passmenu "$@"
   fi
 #+end_src
-** =dmenu=
+** =dmenu=                                                           :wrapper:
 Note: This depends on my custom build of dmenu with the height patch applied.
 The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+NAME: dmenu
@@ -94,11 +96,11 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       -fn 'Ubuntu Mono-12' \
       "$@"
 #+end_src
-** =ipython=
+** =ipython=                                                         :wrapper:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/ipython")
   /usr/bin/ipython "$@" -i -- "$PYTHONSTARTUP"
 #+end_src
-** =gvim=
+** =gvim=                                                            :wrapper:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/gvim")
   # Fake gvim which will just launch a terminal with neovim in it
 
@@ -125,15 +127,15 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
       rm -f "$pipe_input"
   fi
 #+end_src
-** =redshift=
+** =redshift=                                                        :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/redshift")
   /usr/bin/redshift -l 43.84:18.35
 #+end_src
-** =firefox=
+** =firefox=                                                         :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/firefox")
   /usr/bin/firefox $(printarg --new-tab "$@" | uniq)
 #+end_src
-** =myemacs=
+** =myemacs=                                                         :wrapper:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/myemacs")
   # Run emacsclient in the terminal, unless the -c option is given, which will
   # open the GUI.
@@ -276,18 +278,18 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   complete -c myemacs --wraps emacsclient
   complete -c myemacs --long "wait" --description "Override --no-wait if it would otherwise be in effect"
 #+end_src
-** =myemacs-float=
+** =myemacs-float=                                                   :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs-float")
   myemacs -c --frame-parameters='(quote (name . "EmacsFloat"))' "$@"
 #+end_src
-** =notify-send=
+** =notify-send=                                                     :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/notify-send")
   export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/<<eval-real-uid()>>/bus"
 
   # If notify-send can't communicate, it blocks. That's the reason for the timeout
   timeout 1s alternative-command notify-send "$@"
 #+end_src
-** =sudo=
+** =sudo=                                                            :wrapper:
 #+NAME: sudo
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sudo")
   # Sudo but with a hook that sends a notification when the prompt is shown
@@ -311,7 +313,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   #!/usr/bin/env sh
   askpass "[sudo] password for $(getent passwd "$USER" | cut -d: -f1)" "SUDO password" "Please enter your password"
 #+end_src
-** =ssh=
+** =ssh=                                                             :wrapper:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/ssh")
   # This checks whether ssh is run via sshpass or perhaps some other tool that
   # assigns its own terminal to ssh.
@@ -337,31 +339,31 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   prompt="$(echo "$1" | sed 's/: $//')"
   askpass "$prompt" "SSH passphrase" "Please enter SSH passphrase"
 #+end_src
-** =alacritty=
+** =alacritty=                                                       :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty")
   alternative-command alacritty "$@"
   #+end_src
-** =alacritty-float=
+** =alacritty-float=                                                 :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty-float")
   alacritty --class Alacritty,Float "$@"
 #+end_src
-** =sway=
+** =sway=                                                            :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/sway")
   export XDG_CURRENT_DESKTOP=Sway
   /usr/bin/sway --unsupported-gpu "$@"
 #+end_src
-** =xlock=
+** =xlock=                                                           :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xlock")
   pkill gpg-agent 2>/dev/null
   alternative-command xlock "$@"
 #+end_src
-** =vscode=                                                         :script:
+** =vscode=                                                          :wrapper:
 The name =code= is a bit too generic. I need something more specific in order to
 get better search matches.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vscode")
   code "$@"
 #+end_src
-** =lnav=                                                           :script:
+** =lnav=                                                            :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/lnav")
   export TERM=xterm-256color
 
@@ -380,12 +382,12 @@ get better search matches.
       docker compose "$@"
   fi
 #+end_src
-** =ngrok=
+** =ngrok=                                                           :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/ngrok")
   export TERM=xterm-256color
   alternative-command ngrok "$@"
 #+end_src
-** =teams=
+** =teams=                                                           :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/teams")
   flatpak_name="com.github.IsmaelMartinez.teams_for_linux"
 
@@ -400,7 +402,7 @@ get better search matches.
       printf '    %s\n' teams teams-for-linux "Flatpak: $flatpak_name"
   fi
 #+end_src
-** =yarn=
+** =yarn=                                                            :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/yarn")
   if [ "$(which -a yarn | uniq | wc -l)" -gt 1 ]; then
       alternative-command yarn "$@"
@@ -408,10 +410,19 @@ get better search matches.
       yarnpkg "$@"
   fi
 #+end_src
-** =iredis=
+** =iredis=                                                          :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/iredis")
   export PAGER=cat
   alternative-command iredis "$@"
+#+end_src
+** =VirtualBox=                                                      :wrapper:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/VirtualBox")
+  export QT_QPA_PLATFORMTHEME=qt
+  alternative-command VirtualBox "$@"
+#+end_src
+** =screenkey=                                                       :wrapper:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/screenkey")
+  alternative-command screenkey --bg-color "#99a3ff" --font-color "#1e1e1e" "$@"
 #+end_src
 * Utilities
 ** =visual-editor=
@@ -1577,10 +1588,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
       fi
   }
 
-  extract_aliases() {
-      grep -v '^\s*#' "$@" 2>/dev/null | sed "s_.* \(.*\)=\('\|\"\).*\2.*_\1_"
-  }
-
   pull_desktop_apps() {
       # Print out desktop apps by reading *.desktop files and also cache them
       CACHE_FILE="$CACHE_FILE" sh <<'EOF'
@@ -1601,15 +1608,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
   get_custom_scripts() {
       find ~/.local/bin -executable -type f -printf '%f\n' | sort | uniq | sed 's/^/ /'
   }
-  get_aliases() {
-      extract_aliases ~/.alias ~/.alias-tmp
-  }
-  get_gui_aliases() {
-      extract_aliases ~/.alias-gui ~/.alias-gui-tmp
-  }
-
-  aliases="$(get_aliases)"
-  gui_aliases="$(get_gui_aliases)"
 
   # ┏━━━━━━━━━━━━━━━┓
   # ┃ dmenu entries ┃
@@ -1637,8 +1635,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
       echo " Books"         # Pick a book to read
       echo " IRC"           # Open emacs client for IRC
       echo "Quickmenu"        # Menu to quickly revisit recent activity
-      echo "$aliases" | sed 's/^/ /'
-      echo "$gui_aliases" | sed 's/^/ /'
       get_desktop_apps        # Programs extracted from *.desktop files
       get_custom_scripts      # Programs from ~/.local/bin
   }
@@ -1705,26 +1701,12 @@ Create a Xephyr session for the current user that tries to mimic a regular
       "Quickmenu")
           run_script quickmenu ;;
       # The rest: aliases and regular commands
-      ,*)
+      *)
           if [ -n "$is_dotdesktop_app" ]; then
               # If the choice is an x.desktop app, launch it
               o gtk-launch "$choice"
               exit
           fi
-          # If the command is an aliased GUI program, just run it
-          for alias in $gui_aliases; do
-              if [ "$choice" = "$alias" ]; then
-                  o "$choice"
-                  exit
-              fi
-          done
-          # If the command is an aliased CLI program, open it in fish
-          for alias in $aliases; do
-              if [ "$choice" = "$alias" ]; then
-                  guirun alacritty --class Alacritty,Float -e fish -C "o --silent --attach $choice"
-                  exit
-              fi
-          done
           # Fallback, if the entry matches none of the above, just run the command
           fish -c "o $choice"
           ;;
@@ -1816,48 +1798,6 @@ URLs (each on a new line) to display in this menu.
       auto-browser -P haris "$url"
   fi
 #+end_src
-** Snippets
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/snips")
-  edit=" Edit..."
-  edit_snips=" Edit snips..."
-  add=" Add..."
-
-  print_options() {
-      echo "$edit"
-      echo "$add"
-      echo "$edit_clip"
-  }
-
-  # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  # ┃ Edit this - these are your entries ┃
-  # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  print_entries() {
-      echo "$(cd ~/mail && command ls -1)"            # All my mail addresses
-      cat ~/.local/snippets.txt | awk '{print $1}'    # TODO Snippets (temporary)
-  }
-
-  options="$(print_options)"
-  entries="$(print_entries)"
-
-  choice="$(echo "$options\n$entries" | dmenu )"
-
-  [ -z "$choice" ] && exit
-
-  if [ "$choice" = "$edit" ]; then
-      gvim "$0"
-  elif [ "$choice" = "$edit_snips" ]; then
-      gvim ~/.local/snippets.txt
-  elif [ "$choice" = "$add" ]; then
-      choice="$(echo '' | dmenu)"
-      [ -n "$choice" ] && echo "$choice" >> ~/.local/snippets.txt
-  else
-      match="$(sed -n "/^$choice\[\s\|$\]/p" ~/.local/snippets.txt | sed 's/\S*\s*//')"
-      print_match() { [ -n "$match" ] && echo "$match" || echo "$choice"; }
-      print_match | xsel -b
-      : # TODO integrate with tem;
-  fi
-#+end_src
-*** TODO Use something more universal
 ** Todo
 #+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/todo")
   edit=" Edit..."
@@ -2559,7 +2499,7 @@ Options:
       ~/.local/bin/notify-send 'Staging website' 'Status: alive'
   fi
 #+end_src
-** =vpn-toggle=                                                     :script:
+** =vpn-toggle=                                                      :script:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vpn-toggle")
   restart_if_running() {
       if systemctl is-active --quiet "$1"; then

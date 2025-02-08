@@ -10,12 +10,6 @@ Using org-tangle, I output the configs to the files they need to be in:
 
 - =~/.profile= is sourced by login, making everything in it available to all shells.
 - =~/.bashrc= is sourced by *bash* and *fish* (using the *bass* extension).
-- The files =~/.alias= and =~/.alias-gui= contain aliases that I want available in
-  all shells.
-
-Additionally, =~/.alias-tmp= and  =~/.alias-gui-tmp= are not tangled from this file.
-Instead I create them manually when needed to hold temporary aliases for the
-purposes of experimentation. They are not under VCS.
 
 * Fish
 Note: I keep fish aliases in [[#alias-fish][Aliases]].
@@ -967,11 +961,6 @@ Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src bash :tangle (haris/tangle-home ".bashrc")
   PS1='\[\e[1;36m\]\u\[\e[1;31m\]@\[\e[1;34m\]\h \[\e[1;32m\]\W \[\e[1;31m\]\$ \[\e[0;32m\]\[\e[0m\]'
 
-  [ -f ~/.alias ]         && source ~/.alias
-  [ -f ~/.alias-tmp ]     && source ~/.alias-tmp
-  [ -f ~/.alias-gui ]     && source ~/.alias-gui
-  [ -f ~/.alias-gui-tmp ] && source ~/.alias-gui-tmp
-
   # Shell options
   shopt -s extglob
   shopt -s autocd
@@ -993,37 +982,14 @@ Note: =~/.bashrc= is sourced by fish as well.
   fi
 #+end_src
 * Aliases
-There are some aliases that I want to have available in all shells. I break
-them up into two groups: aliases for CLI (~~/.alias~) and aliases GUI programs
-(~~/.alias-gui~). I make this distinction because my custom ~dmenu_run~ script
-takes all the aliases from the latter and I can run them as normal programs.
-Both files have a variant suffixed by ~-tmp~ in which I keep temporary aliases
-and I do not keep them under version control.
-
-It makes no sense to launch CLI programs from dmenu. Still, I make aliases
-from ~~/.alias~ available in ~dmenu_run~. When I enter them in dmenu, it launches
-a terminal and runs the aliased command.
-** CLI
-#+begin_src shell :tangle (haris/tangle-home ".alias")
+** Posix Sh
+#+begin_src shell :tangle (haris/tangle-home ".profile")
   if which startx >/dev/null; then
       alias x='startx'
   fi
   if which nvim >/dev/null; then
       alias vim='nvim'
   fi
-  alias vidir='VISUAL=nvim command vidir'
-  alias aurvote='ssh aur@aur.archlinux.org vote'
-  alias l1='ls -1'
-  alias src='cd ~/src'
-  alias tmp='cd /tmp'
-  alias stage='mkdir -p /tmp/stage-"$USER"; cd /tmp/stage-"$USER"'
-  alias bin='cd ~/.local/bin'
-  alias usb='cd ~/mnt/usb'
-#+end_src
-** GUI
-#+begin_src shell :tangle (haris/tangle-home ".alias-gui")
-  alias screenkey='screenkey --bg-color "#99a3ff" --font-color "#1e1e1e"'
-  alias VirtualBox="QT_QPA_PLATFORMTHEME=qt command VirtualBox"
 #+end_src
 ** Fish
 :PROPERTIES:
@@ -1040,7 +1006,7 @@ a terminal and runs the aliased command.
   function vrg --wraps rg; vim (rg -l $argv); end
   function vfd --wraps fd; vim (fd $argv); end
 #+end_src
-*** =dragon=
+**** =dragon=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/dragon.fish")
   function dragon --wraps dragon-drop --wraps dragon-drag-and-drop
       if contains -- --help $argv
@@ -1393,6 +1359,18 @@ abbreviations for equivalent apt operations.
 #+begin_src fish
   set aur 'aur@aur.archlinux.org'
 #+end_src
+*** Load local and temporary configs
+#+begin_src fish
+  if [ -f ~/.config/fish/local.fish ]
+      source ~/.config/fish/local.fish
+  end
+  if [ -f ~/.config/fish/tmp.fish ]
+      source ~/.config/fish/tmp.fish
+  end
+  if [ -w "$XDG_RUNTIME_DIR/ephemeral.config.fish" ]
+      source "$XDG_RUNTIME_DIR/ephemeral.config.fish"
+  end
+#+end_src
 * Environment
 #+begin_src conf :tangle (haris/tangle-home ".config/environment.d/90-haris.conf")
   # Clipmenu
@@ -1406,8 +1384,12 @@ Make the environment variables available for shells as well:
   eval "$(cat ~/.config/environment.d/90-haris.conf | grep -vP '^\s*#' | sed 's/^/export /')"
 #+end_src
 * .profile
+:PROPERTIES:
+:header-args:shell+: :tangle (haris/tangle-home ".profile")
+:END:
+** Local configuration                                        :configurable:
 ** Executable paths
-#+begin_src shell :tangle (haris/tangle-home ".profile")
+#+begin_src shell
   mkdir -p ~/.go
   export GOPATH="$HOME"/.go
 
@@ -1421,12 +1403,12 @@ Make the environment variables available for shells as well:
   export PATH=~/.local/bin:"$PATH"
 #+end_src
 ** SSH agent
-#+begin_src shell :tangle (haris/tangle-home ".profile")
+#+begin_src shell
   systemctl start --user ssh-agent.service
   eval "$(ssh-agent)" >/dev/null
 #+end_src
 ** Miscellaneous
-#+begin_src shell :tangle (haris/tangle-home ".profile")
+#+begin_src shell
   export MAKEFLAGS='-j6'
   export GPG_TTY=$(tty)
   export PYTHONSTARTUP=~/.startup.py
@@ -1447,50 +1429,30 @@ Make the environment variables available for shells as well:
 
   mkdir -p /tmp/stage-"$USER"
 
-  [ -f ~/.alias ]           && . ~/.alias           || true
-  [ -f ~/.alias-tmp ]       && . ~/.alias-tmp       || true
-  [ -f ~/.alias-gui ]       && . ~/.alias-gui       || true
-  [ -f ~/.alias-gui-tmp ]   && . ~/.alias-gui-tmp   || true
-  [ -f ~/.profile-private ] && . ~/.profile-private || true
+  if [ -f ~/.local.profile ]; then . ~/.local.profile; fi
 #+end_src
-* Temporary and private configs
+* Local and temporary configs                                  :configurable:
 These are optional and must be provided separately.
-** TODO Private
-TODO: Will be renamed to local.
+** Local
 Local configurations that I don't want to keep under version control.
-[[~/.config/fish/private.fish][Click to edit]].
-#+begin_src fish
-  if [ -f ~/.config/fish/private.fish ]
-      source ~/.config/fish/private.fish
-  end
-#+end_src
+[[~/.config/fish/local.fish][Click to edit]].
 ** Temporary
 Temporary configurations that I don't want to keep under version control, but
 also don't want to use for a long time. Mostly useful for debugging.
 [[~/.config/fish/tmp.fish][Click to edit]]
-#+begin_src fish
-  if [ -f ~/.config/fish/tmp.fish ]
-      source ~/.config/fish/tmp.fish
-  end
-#+end_src
 ** Ephemeral
 Configuration that lives until reboot. [[elisp:(org-sbe "open-ephemeral.config.fish")][Click to edit]]
-
-Code block that is evaluated in order to edit it:
+* Appendix
+** Helpers
+*** =open-ephemeral.config.fish=
+Code block that is evaluated in order to edit the ephemeral configuration file.
 #+NAME: open-ephemeral.config.fish
 #+begin_src elisp :eval yes
   (spacemacs/find-file-split
    (format "%s/ephemeral.config.fish"
            (getenv "XDG_RUNTIME_DIR" (selected-frame))))
 #+end_src
-
-Code to load the config:
-#+begin_src fish
-  if [ -w "$XDG_RUNTIME_DIR/ephemeral.config.fish" ]
-      source "$XDG_RUNTIME_DIR/ephemeral.config.fish"
-  end
-#+end_src
-* Dependencies
+** Dependencies
 #+begin_src text :tangle (haris/tangle-deps "shells.pacman")
   dash fish
 #+end_src

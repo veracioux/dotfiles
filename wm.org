@@ -953,7 +953,7 @@ seldom use that so it's fine.
   }
 #+end_src
 ** i3status
-*** Local configuration
+*** Local configuration                                      :configurable:
 Make a symlink at [[elisp:(org-sbe "make-symlink-to-cpu-temperature-0")][~/.local/share/haris/local.cpu-temperature-0]], pointing to your
 machine-specific file that provides the CPU temperature to show.
 *** Custom script

@@ -4,6 +4,15 @@
 #+PROPERTY: header-args:fish+ :shebang "#!/usr/bin/env fish" :tangle-mode (identity #o744) :results output
 #+PROPERTY: header-args:python+ :shebang "#!/usr/bin/env python3" :tangle-mode (identity #o744) :results output
 #+PROPERTY: header-args:dockerfile+ :eval no
-#+TAGS: test(t)
+#+TAGS: test(t) configurable(c)
 This file includes the basic Org properties common to most of my literate configurations
 and wiki files.
+
+* Tags
+- =test= :: The section represents a test of some other part of the ORG file, for
+  example a code block
+- =configurable= :: The section provides the user a way to plug a custom
+  configuration, usually by specifying a separate file that the user can edit.
+  This allows the user to make different customizations for different
+  machines they use, to keep some sensitive parts of the configuration secret,
+  or to set ephemeral settings that shouldn't survive a reboot.
