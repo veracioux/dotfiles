@@ -429,7 +429,7 @@ Not sure if they have any effect.
     --tridactyl-container-chill-url: url("resource://usercontext-content/chill.svg");
   }
 #+end_src
-* Dependencies
+* Dependencies                                                         :deps:
 #+begin_src text :tangle (haris/tangle-deps "browser.pacman")
   firefox-tridactyl
 #+end_src

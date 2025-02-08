@@ -587,7 +587,7 @@ the setup script as well!.*
 :PROPERTIES:
 :header-args+: :tangle no
 :END:
-** Dependencies
+** Dependencies                                                       :deps:
 #+begin_src bash :tangle (haris/tangle-deps "vim.sh")
   # Install vim-plug
   mkdir -p ~/.vim/autoload

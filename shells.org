@@ -415,7 +415,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       end
   end
 #+end_src
-*** Dependencies
+*** Dependencies                                                     :deps:
 System packages:
 #+begin_src text :tangle (haris/tangle-deps "fish/plugins.aur")
   fisher
@@ -1453,7 +1453,7 @@ Code block that is evaluated in order to edit the ephemeral configuration file.
    (format "%s/ephemeral.config.fish"
            (getenv "XDG_RUNTIME_DIR" (selected-frame))))
 #+end_src
-** Dependencies
+** Dependencies                                                       :deps:
 #+begin_src text :tangle (haris/tangle-deps "shells.pacman")
   dash fish
 #+end_src

@@ -845,7 +845,7 @@ prevent the scripts from prompting the user for a password for =pass=.
   pkill -P $(cat "$file")
   echo > "$file"
 #+end_src
-*** Dependencies
+*** Dependencies                                                     :deps:
 #+begin_src text :tangle (haris/tangle-deps "talk-menu.pacman")
   festival pandoc mpv
 #+end_src
@@ -1354,7 +1354,7 @@ I use picom as my compositor with the i3 window manager.
   # Do not fade destroyed ARGB windows with WM frame. Workaround of bugs in Openbox, Fluxbox, etc.
   no-fading-destroyed-argb = false
 #+end_src
-* Dependencies
+* Dependencies                                                         :deps:
 ** i3
 #+begin_src shell :tangle no
   sudo pacman -S i3status ttf-font-awesome
