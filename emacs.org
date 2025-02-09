@@ -125,7 +125,11 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
 
   mkdir -p "$themes_dir/dracula"
 
-  git clone 'https://github.com/veracioux/dracula-emacs' "$themes_dir/dracula"
+  if [ ! -d "$themes_dir/dracula" ]; then
+      git clone 'https://github.com/veracioux/dracula-emacs' "$themes_dir/dracula"
+  else
+      echo "Theme already cloned. Manual setup might be required."
+  fi
 
   cd "$themes_dir"
   ln -sf dracula/dracula-theme.el dracula-theme.el
@@ -135,8 +139,11 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
   repo_url='https://github.com/veracioux/snippets'
   snippets_dir=~/.emacs.d/private/snippets
 
-  git clone "$repo_url" "$snippets_dir" ||
+  if [ ! -d "$snippets_dir" ]; then
+      git clone "$repo_url" "$snippets_dir"
+  else
       echo "Snippets already cloned. Manual setup might be required."
+  fi
 #+end_src
 ** Theme
 I use a slightly customized version of the beautiful Dracula theme. Make sure
