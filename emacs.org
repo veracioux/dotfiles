@@ -2405,6 +2405,11 @@ Disabled posframe in [[(disable-posframe)][Spacemacs Layers]].
               (haris/yas-minor-mode-on)
               (yas-activate-extra-mode 'git-commit-mode))
             90)
+  (add-hook 'org-src-mode-hook
+            (defun haris/org-src-init-yasnippet ()
+              (haris/yas-minor-mode-on)
+              (yas-activate-extra-mode 'org-src-mode))
+            90)
 
   (add-hook 'verb-mode-hook (lambda () (yas-activate-extra-mode 'verb-mode)))
 
