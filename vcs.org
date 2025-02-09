@@ -13,7 +13,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
     name = Haris Gušić
     signingkey = 2333BDF9F505C46F2E3F5FDB0348E6D2D1D44A6D
   [include]
-    path = ~/.gitconfig.private
+    path = ~/.local.gitconfig
   [core]
     autocrlf      = input
     pager         = less -F -X
