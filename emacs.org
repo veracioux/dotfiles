@@ -99,15 +99,12 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
   pushd ~/.emacs.d >/dev/null
   if [ ! -d .git ]; then
       git init
-      git remote add origin 'https://github.com/syl20bnr/spacemacs'
-      git fetch origin develop
-      git checkout «spacemacs-good-commit»
+      git remote add origin 'https://github.com/veracioux/spacemacs'
+      git remote set-url --push origin 'git@github.com:veracioux/spacemacs'
+      git remote add upstream 'https://github.com/syl20bnr/spacemacs'
+      git checkout --recurse-submodules haris/main
   fi
   popd >/dev/null
-#+end_src
-#+NAME: spacemacs-good-commit
-#+begin_src text
-  4a227fc94651136a8de54bcafa7d22abe1fa0295
 #+end_src
 *** Interactively install spacemacs
 #+begin_src bash
@@ -118,32 +115,6 @@ Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setu
   # NOTE: In same cases I observed that the GUI won't run on initial spacemacs
   # startup, so I used --no-window-system
   COLORTERM=truecolor LSP_USE_PLISTS=true emacs --debug-init --no-window-system
-#+end_src
-*** Install themes
-#+begin_src bash
-  themes_dir=~/.emacs.d/private/themes
-
-  mkdir -p "$themes_dir/dracula"
-
-  if [ ! -d "$themes_dir/dracula" ]; then
-      git clone 'https://github.com/veracioux/dracula-emacs' "$themes_dir/dracula"
-  else
-      echo "Theme already cloned. Manual setup might be required."
-  fi
-
-  cd "$themes_dir"
-  ln -sf dracula/dracula-theme.el dracula-theme.el
-#+end_src
-*** Install custom snippets
-#+begin_src bash
-  repo_url='https://github.com/veracioux/snippets'
-  snippets_dir=~/.emacs.d/private/snippets
-
-  if [ ! -d "$snippets_dir" ]; then
-      git clone "$repo_url" "$snippets_dir"
-  else
-      echo "Snippets already cloned. Manual setup might be required."
-  fi
 #+end_src
 ** Theme
 I use a slightly customized version of the beautiful Dracula theme. Make sure
@@ -2156,7 +2127,7 @@ and crashes of my default Emacs instance.
   [Install]
   WantedBy=default.target
 #+end_src
-** Bindings
+*** Bindings
 #+begin_src elisp
   (defun haris/vterm-clear-keep-scrollback ()
     (interactive)
