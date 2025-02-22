@@ -1325,6 +1325,8 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g ipy   'ipython'
   conditional_abbr -g copy  'fish_clipboard_copy'
   conditional_abbr -g Copy  'tee /dev/tty | fish_clipboard_copy'
+  conditional_abbr -g C     'tee /dev/tty | fish_clipboard_copy'
+  conditional_abbr -g CC    'clipctl tmp-disable | fish_clipboard_copy'
   conditional_abbr -g paste 'xsel -b -o'
   conditional_abbr -g oct   'octave'
   conditional_abbr -g octb  'OCTAVE_BASIC=true command octave'

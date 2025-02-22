@@ -374,6 +374,52 @@ get better search matches.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/clipmenu")
   alternative-command clipmenu "$@"
 #+end_src
+** =clipctl=                                                         :wrapper:
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/clipctl")
+  set -e
+
+  if [ "$#" -ne 1 ]; then
+      echo "Usage: $0 enable|disable|status|tmp-disable"
+      echo "  enable: enable clipboard synchronization"
+      echo "  disable: disable clipboard synchronization"
+      echo "  status: shows the current clipboard synchronization status"
+      echo "  tmp-disable: disable clipboard synchronization for the current shell pipeline, cat stdin to stdout"
+      exit 1
+  fi
+
+  status_file="$XDG_RUNTIME_DIR/haris/clipctl-status"
+  mkdir -p "$(dirname "$status_file")"
+
+  previous_state="$(cat "$status_file" 2>/dev/null || echo "enable")"
+
+  # Perform action
+  if [ "$1" = "enable" ] || [ "$1" = "disable" ]; then
+      alternative-command clipctl "$1"
+      echo "$1" > "$status_file"
+  elif [ "$1" = "status" ]; then
+       echo "$previous_state"
+  elif [ "$1" = "tmp-disable" ]; then
+      if [ "$previous_state" = "disable" ]; then
+          clipctl disable >/dev/null # Just making sure
+          cat
+      else
+          alternative-command clipctl disable >/dev/null &
+          wait
+          cat
+          alternative-command clipctl "$(cat "$status_file")" >/dev/null
+      fi
+  else
+      echo "Invalid argument: $1"
+      exit 1
+  fi
+#+end_src
+*** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/clipctl.fish")
+  complete -c clipctl -f -a "enable" -d "Enable clipboard synchronization"
+  complete -c clipctl -f -a "disable" -d "Disable clipboard synchronization"
+  complete -c clipctl -f -a "status" -d "Show the current clipboard synchronization status"
+  complete -c clipctl -f -a "tmp-disable" -d "Disable clipboard synchronization for the current shell pipeline; cat"
+#+end_src
 ** =docker-compose=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/docker-compose")
   if [ "$(which -a docker-compose | uniq | wc -l)" -gt 1 ]; then
