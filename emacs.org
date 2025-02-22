@@ -2144,6 +2144,10 @@ and crashes of my default Emacs instance.
     (evil-define-key 'normal vterm-mode-map      (kbd ",f")    'haris/vterm-toggle-freeze)
     (evil-define-key 'normal vterm-copy-mode-map (kbd ",f")    'haris/vterm-toggle-freeze))
 #+end_src
+*** Dependencies                                                     :deps:
+#+begin_src text :tangle (haris/tangle-deps "emacs/vterm.pacman")
+  libvterm
+#+end_src
 * EAF
 ** Dependencies                                                       :deps:
 #+begin_src shell :tangle (haris/tangle-deps "emacs/eaf.pacman")
