@@ -1497,3 +1497,7 @@ Code block that is evaluated in order to edit the ephemeral configuration file.
 #+begin_src text :tangle (haris/tangle-deps "shells.pacman")
   dash fish
 #+end_src
+** Local variables
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:
