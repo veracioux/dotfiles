@@ -1147,6 +1147,35 @@ Create a BitBucket PR.
 
   gtk-launch "$(xdg-settings get default-web-browser)" "$url"
 #+end_src
+** =mosquitto_sub_yq=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/mosquitto_sub_yq")
+  mosquitto_sub \
+      -F '{"topic": "%t",\n"body": %p}' \
+      "$@" |
+      while :; do
+          echo
+          yq -P \
+             2> >(grep -v "Error: bad file '-': yaml: line [0-9]\+: did not find expected <document start>")
+      done
+#+end_src
+*** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/mosquitto_sub_yq.fish")
+  complete -c mosquitto_sub_yq --wraps mosquitto_sub
+#+end_src
+** =mosquitto_sub_jq=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/mosquitto_sub_jq")
+  mosquitto_sub \
+      -F '{"topic": "%t",\n"body": %p}' \
+      "$@" |
+      while :; do
+          echo
+          jq
+      done
+#+end_src
+*** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/mosquitto_sub_jq.fish")
+  complete -c mosquitto_sub_jq --wraps mosquitto_sub
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
