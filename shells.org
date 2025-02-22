@@ -1276,7 +1276,7 @@ abbreviations for equivalent apt operations.
       if type --query tmp_func
           function (tmp_func)
               begin
-                  set -l container %
+                  set -l container (docker-compose config --services | fzf)
                   docker-compose rm -sf "$container"
                   docker-compose up -d "$container"
               end
