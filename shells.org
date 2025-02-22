@@ -1030,6 +1030,7 @@ Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src fish
   alias src_fish  'source ~/.config/fish/config.fish'
   alias term      'term & disown'
+  abbr stage      'ndir /tmp/stage-$USER'
   if command --quiet docker
       alias alpine    'docker run -it --rm --name alpine alpine'
       alias debian    'docker run -it --name debian debian:bookworm-slim'
