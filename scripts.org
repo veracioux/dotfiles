@@ -420,8 +420,19 @@ get better search matches.
   complete -c clipctl -f -a "status" -d "Show the current clipboard synchronization status"
   complete -c clipctl -f -a "tmp-disable" -d "Disable clipboard synchronization for the current shell pipeline; cat"
 #+end_src
-** =docker-compose=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/docker-compose")
+** =docker-compose=                                                  :wrapper:
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/docker-compose")
+  if grep -q 'down.*--volumes' <<<"$*"; then
+      echo 'Option --volumes used. Make sure this is the intended compose project'
+      echo -e "COMPOSE_PROJECT_NAME: \e[1;31m $COMPOSE_PROJECT_NAME\e[0m"
+      read -p "Are you sure? [y|N]: " -n 1 answer
+      if [ "$answer" != "y" ]; then
+          echo
+          echo "Aborting."
+          exit 1
+      fi
+  fi
+
   if [ "$(which -a docker-compose | uniq | wc -l)" -gt 1 ]; then
       alternative-command docker-compose "$@"
   else
