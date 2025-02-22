@@ -956,7 +956,14 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
 *** Keybindings
 #+begin_src elisp
   (with-eval-after-load 'lsp
-    (haris/evil-define-key-both lsp-mode-map (kbd "M-RET") #'lsp-execute-code-action))
+    ;; TODO: not working
+    (haris/evil-define-key-both lsp-mode-map (kbd "M-RET") 'lsp-execute-code-action)
+    (spacemacs/set-leader-keys-for-minor-mode
+      'lsp-mode
+      "FR" (defun haris/lsp-clear-workspace-folders ()
+             (interactive)
+             (mapcar (lambda (x) (lsp-workspace-folders-remove x))
+                     (lsp-session-folders (lsp-session))))))
 #+end_src
 ** DAP
 #+begin_src elisp
