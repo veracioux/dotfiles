@@ -389,6 +389,14 @@ This enables periodic cleanup:
     (makunbound 'haris/timer/clean-buffer-list))
   (setq haris/timer/clean-buffer-list (run-with-timer 1800 1800 #'clean-buffer-list))
 #+end_src
+*** Global bindings
+#+begin_src elisp
+  (global-set-key (kbd "C-+") 'text-scale-adjust)
+  (global-set-key (kbd "C--") 'text-scale-adjust)
+  (global-set-key (kbd "C-0") (defun haris//text-scale-reset ()
+                                (interactive)
+                                (text-scale-set 0)))
+#+end_src
 ** Functions
 #+begin_src elisp
   (defun haris/stage ()
