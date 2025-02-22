@@ -428,7 +428,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   set -gx _ZL_CD cd
 
   # tem
-  if type --quiet tem
+  if [ "$(type --type tem)" = "function" ]
       tem fish-init
   end
 
