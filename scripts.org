@@ -1043,6 +1043,53 @@ Get the OS type.
       sleep 2
   done
 #+end_src
+** =PR=
+Create a BitBucket PR.
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/PR")
+  uriEncode() {
+      tr -d '\n' | jq -sRr @uri
+  }
+
+  source_branch="$(git branch --show-current | tr -d '\n')"
+  source_branch_enc="$(uriEncode <<<"$source_branch")"
+  dest_branch="$(
+      {
+          git config init.defaultBranch
+          git branch | sed 's/^..//'
+      } | head -1
+  )"
+  dest_branch_enc="$(uriEncode <<<"$dest_branch")"
+  remote="$(git remote get-url upstream 2>/dev/null)"
+  if [ -z "$remote" ]; then
+      remote="$(git remote get-url origin)"
+  fi
+
+  if [ -z "$remote" ]; then
+      echo "Either upstream or origin remote must exist"
+  fi
+
+  if [[ ! "$remote" =~ .*bitbucket\.org.* ]]; then
+      echo "Only BitBucket is supported currently"
+      exit 1
+  fi
+
+  bitbucket_repo="$(
+      echo "$remote" |
+          sed  's_.*bitbucket\.org[:/]__' |
+          grep '^[^/]\+/[^/]\+' |
+          sed  's_\.git$__'
+  )"
+  url="https://bitbucket.org/$bitbucket_repo/pull-requests/new?source=$source_branch_enc&dest=$dest_branch_enc"
+
+  echo "Opening a PR in the browser..."
+
+  echo "Source branch: $source_branch"
+  echo "Destination branch: $dest_branch"
+  echo "BitBucket repo: $bitbucket_repo"
+  echo "PR URL: $url"
+
+  gtk-launch "$(xdg-settings get default-web-browser)" "$url"
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
