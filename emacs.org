@@ -1504,6 +1504,9 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
 ** Bindings
 Note: I override the =<escape>= binding for =company-active-map= for this mode
 specifically. I did that [[(company-active-map-escape-override)][here]], because I don't know a better way to do it.
+#+begin_src elisp
+  (define-key minibuffer-mode-map (kbd "M-P") 'counsel-minibuffer-history)
+#+end_src
 ** Ivy
 #+NAME: ivy
 #+begin_src elisp
@@ -1561,11 +1564,15 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
     (ivy-insert-current))
 
 
-  (define-key ivy-minibuffer-map (kbd "<backtab>") #'haris/ivy-insert-current)
-  (evil-define-key 'normal ivy-minibuffer-map (kbd "C-n") #'ivy-next-line)
-  (evil-define-key 'normal ivy-minibuffer-map (kbd "C-p") #'ivy-previous-line)
-  (evil-define-key 'normal ivy-minibuffer-map (kbd "gg")   #'ivy-beginning-of-buffer)
-  (evil-define-key 'normal ivy-minibuffer-map (kbd "G")   #'ivy-end-of-buffer)
+  (define-key ivy-minibuffer-map (kbd "<backtab>") 'haris/ivy-insert-current)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "C-n") 'ivy-next-line)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "C-p") 'ivy-previous-line)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "gg")  'ivy-beginning-of-buffer)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "G")   'ivy-end-of-buffer)
+  (evil-define-key 'normal ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
+
+  (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-immediate-done)
+  (define-key ivy-minibuffer-map (kbd "M-P") 'ivy-reverse-i-search)
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<ivy>>
