@@ -1978,7 +1978,7 @@ URLs (each on a new line) to display in this menu.
   }
 
   get_fish_cmd() {
-      echo "echo 'Running command: $*'"
+      echo "echo 'Running command:'; echo '$*'"
       echo "$*"
   }
 
@@ -2025,7 +2025,6 @@ URLs (each on a new line) to display in this menu.
           gvim "$0"
           ;;
   esac
-
 #+end_src
 ** Color
 #+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/color")
