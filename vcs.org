@@ -268,6 +268,8 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 #+begin_src gitconfig
   [diff "decrypt_rclone_conf"]
   	textconv = "rclone config show --config"
+  [diff "sqlite3"]
+    textconv = sh -c 'sqlite3 $0 .dump'
 #+end_src
 * Script aliases
 ** =bak=
