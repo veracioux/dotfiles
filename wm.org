@@ -95,15 +95,15 @@ These scripts are used by the other sections:
   set $mod              Mod4
 
   # Common sizes
-  set $resizeW0         resize set width 20
-  set $resizeH0         resize set            height 20
-  set $resize1          resize set width 710  height 600
-  set $resize2          resize set width 900  height 700
-  set $resize3          resize set width 1100 height 800
-  set $resize4          resize set width 1400 height 900
-  set $resize_devtools  resize set width 1400 height 600
-  set $resize_fullhd    resize set width 1920 height 1080
-  set $resize_term      resize set width 710
+  set $resizeW0         resize set width «dip(20)»px
+  set $resizeH0         resize set                     height «dip(20)»px
+  set $resize1          resize set width «dip(710)»px  height «dip(600)»px
+  set $resize2          resize set width «dip(900)»px  height «dip(700)»px
+  set $resize3          resize set width «dip(1100)»px height «dip(800)»px
+  set $resize4          resize set width «dip(1400)»px height «dip(900)»px
+  set $resize_devtools  resize set width «dip(1400)»px height «dip(600)»px
+  set $resize_fullhd    resize set width «dip(1920)»px height «dip(1080)»px
+  set $resize_term      resize set width «dip(710)»px
 
   # Prefix n stands for normal
   set $col_n_k #1e1e1e
@@ -1354,18 +1354,33 @@ I use picom as my compositor with the i3 window manager.
   # Do not fade destroyed ARGB windows with WM frame. Workaround of bugs in Openbox, Fluxbox, etc.
   no-fading-destroyed-argb = false
 #+end_src
-* Dependencies                                                         :deps:
-** i3
+* Appendix
+** Dependencies                                                       :deps:
+*** i3
 #+begin_src shell :tangle no
   sudo pacman -S i3status ttf-font-awesome
   paru -S dmenu-height autotiling i3-balance-workspace
 #+end_src
-** sway
+*** sway
 #+begin_src shell :tangle no
   sudo pacman -S sway
   paru -S swhkd-git
 #+end_src
-* Local variables                                                  :noexport:
+** Helper functions
+#+NAME: dip
+#+begin_src elisp :var value=100
+  (floor
+   (* value
+     (/
+      (let ((dpi
+             (shell-command-to-string
+              "xrdb -query | grep '^Xft.dpi' | cut -f2 | tr -d '\\n'")))
+        (if (string-empty-p dpi)
+            96
+          (string-to-number dpi)))
+      96.0)))
+#+end_src
+** Local variables                                                :noexport:
 #+NAME: eval-user-name
 #+begin_src elisp
   (user-login-name)
