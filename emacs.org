@@ -2633,6 +2633,10 @@ Remove Info mode annoying keybindings.
   (with-eval-after-load 'transient
     (setq transient-values-file "~/.emacs.d/transient/values.el"))
 #+end_src
+** dirvish
+#+begin_src elisp
+  (use-package dirvish :defer t)
+#+end_src
 ** Documentation
 #+begin_src elisp
   (use-package tldr :defer t)
