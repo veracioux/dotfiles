@@ -992,6 +992,11 @@ desired final content of the completion script.
   set -l source "$(bufls completion fish 2>/dev/null)"
   «completions/self-bootstrapping/common»
 #+end_src
+**** =buf=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/buf.fish")
+  set -l source "$(buf completion fish 2>/dev/null)"
+  «completions/self-bootstrapping/common»
+#+end_src
 **** =gh=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/gh.fish")
   set -l source "$(gh completion -s fish 2>/dev/null)"
