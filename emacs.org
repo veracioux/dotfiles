@@ -254,7 +254,8 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (set-language-environment "UTF-8")
   (modify-syntax-entry ?_ "w")
   (setq indent-guide-delay 0.1)
-
+  (setq tab-width 4
+        go-tab-width 4)
 #+end_src
 *** External tools
 #+begin_src elisp
