@@ -2761,7 +2761,9 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
       auto-completion-enable-help-tooltip 'manual
       auto-completion-enable-sort-by-usage nil ;; I configure this manually
       )
-     openai))
+     openai
+     whisper
+     llm-client))
 #+end_src
 ** Additional packages
 Packages installed with =use-package= should be added here as well. Otherwise
