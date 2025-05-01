@@ -432,7 +432,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   set -gx _ZL_CD cd
 
   # tem
-  if [ "$(type --type tem)" = "function" ]
+  if [ "$(type --type tem 2>/dev/null)" = "function" ]
       tem fish-init
   end
 
