@@ -406,7 +406,7 @@ get better search matches.
           alternative-command clipctl disable >/dev/null &
           wait
           cat
-          alternative-command clipctl "$(cat "$status_file")" >/dev/null
+          alternative-command clipctl "$(cat "$status_file" 2>/dev/null || echo "enable")" >/dev/null
       fi
   else
       echo "Invalid argument: $1"
