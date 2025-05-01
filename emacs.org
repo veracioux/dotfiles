@@ -429,6 +429,20 @@ This enables periodic cleanup:
        (point-max)
        "fifo")))
 #+end_src
+** Hooks
+#+begin_src elisp
+  (add-hook
+   'find-file-hook
+   (defun haris//auto-sudo-edit ()
+     ;; open as root
+     (when (and (not (file-writable-p buffer-file-name))
+                (y-or-n-p-with-timeout "File not writable. Open as root?" 3 nil))
+       (let ((original-buf (current-buffer)))
+         (spacemacs/sudo-edit)
+         (unless (equal (current-buffer) original-buf)
+           (let (kill-buffer-query-functions kill-buffer-hook)
+             (kill-buffer original-buf)))))))
+#+end_src
 ** Avy
 *** Try to make evil-easymotion work bidirectionally
 #+begin_src elisp
