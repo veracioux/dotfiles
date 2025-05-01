@@ -460,6 +460,7 @@ This enables periodic cleanup:
   (use-package dired-rsync :defer t)
   (use-package dired-rsync-transient :defer t)
   (straight-use-package '(dired-hacks :type git :host github :repo "Fuco1/dired-hacks"))
+  (use-package dired-toggle-sudo :defer t)
 #+end_src
 ** Interactive commands
 These are commands that I primarily intend to use interactively and directly,
@@ -2846,17 +2847,6 @@ Spacemacs would delete them every time on startup.
 ** Upgrading
 When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][spacemacs/ediff-dotfile-and-template]] to merge any upstream changes to the dotfile.
 * Appendix
-** Keys
-#+begin_src elisp
-  (condition-case err
-      (setq openai-key
-            (replace-regexp-in-string
-             "\n$" ""
-             (with-temp-buffer
-               (insert-file-contents "~/.local/share/haris/openai-api-key.txt")
-               (buffer-string))))
-    (error (message "WARNING: %s" err)))
-#+end_src
 ** Config check
 I use this variable to check if the config loaded correctly.
 #+NAME: haris/config-loaded-fine

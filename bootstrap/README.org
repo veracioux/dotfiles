@@ -33,7 +33,18 @@ A library of functions for easier tangling.
      (shell      . t)
      (python     . t)))
 #+end_src
-Custom functions and tweaks:
+** Keys
+#+begin_src elisp
+  (condition-case err
+      (setq openai-key
+            (replace-regexp-in-string
+             "\n$" ""
+             (with-temp-buffer
+               (insert-file-contents "~/.local/share/haris/openai-api-key.txt")
+               (buffer-string))))
+    (error (message "WARNING: %s" err)))
+#+end_src
+** Custom functions and tweaks
 #+begin_src elisp
   (defun haris/prevent-annoying-messages ()
     (require 'cl-lib)
