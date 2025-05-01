@@ -193,11 +193,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 * Tem
 #+begin_src shell :tangle (haris/tangle-home ".config/tem/config")
   [general]
-  repo_path = /home/haris/.local/share/tem/repo
-      /home/haris/.local/share/tem/tmp
-      /home/haris/proj/tem/repo
-      /home/haris/repo/src
-      /home/haris/repo/cheat
+  repo_path =
   editor = myemacs -c
 
   [ls]
