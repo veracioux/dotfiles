@@ -12,9 +12,15 @@
   }
 #+end_src
 * SSH
-#+begin_src ssh-config :tangle (haris/tangle-home ".ssh/conf.d/90-haris.conf")
-  AddKeysToAgent yes
-  IdentityFile ~/.ssh/main
+#+begin_src ssh-config :tangle (haris/tangle-home ".ssh/config")
+  Include conf.d/*.conf
+
+  Match all
+    AddKeysToAgent yes
+    IdentityFile ~/.ssh/main
+    IdentitiesOnly yes
+    PasswordAuthentication no
+    PubkeyAuthentication yes
 #+end_src
 * Dunst
 :PROPERTIES:
