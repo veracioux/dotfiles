@@ -2090,6 +2090,19 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
     (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-panel-complete)
     (spacemacs/set-leader-keys "oC" 'copilot-mode))
 #+end_src
+** Aidermacs
+#+begin_src elisp
+  (use-package aidermacs :defer t)
+  (setq aidermacs-default-model "openai/o3-mini")
+  (setq aidermacs-backend 'vterm)
+  (setq aidermacs-show-diff-after-change t)
+  ;; (setq aidermacs-architect-model "TODO")
+  ;; (setq aidermacs-editor-model "TODO")
+#+end_src
+*** Bindings
+#+begin_src elisp
+  (spacemacs/set-leader-keys "A" 'aidermacs-transient-menu)
+#+end_src
 * REPLs in Emacs
 ** Common settings
 #+begin_src elisp
