@@ -9,40 +9,45 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 :END:
 #+begin_src gitconfig
   [user]
-    email = harisgusic.dev@gmail.com
-    name = Haris Gušić
-    signingkey = 2333BDF9F505C46F2E3F5FDB0348E6D2D1D44A6D
+  	email = harisgusic.dev@gmail.com
+  	name = Haris Gušić
+  	signingkey = 2333BDF9F505C46F2E3F5FDB0348E6D2D1D44A6D
   [include]
-    path = ~/.local.gitconfig
+  	path = ~/.local.gitconfig
   [core]
-    autocrlf      = input
-    pager         = less -F -X
-    editor        = vim
-    whitespace    = trailing-space
-    filemode      = false
+  	autocrlf      = input
+  	pager         = less -F -X
+  	editor        = vim
+  	whitespace    = trailing-space
+  	filemode      = false
   	excludesfile  = ~/.global.gitignore # This file is tangled from ~/.haris/vcs.org
   [apply]
-    whitespace    = fix
+  	whitespace    = fix
   [format]
-    signOff = true
+  	signOff = true
   [init]
-    defaultBranch = main
+  	defaultBranch = main
   [commit]
-    gpgsign = true
+  	gpgsign = true
 
   [clone]
-    depth = 300
+  	depth = 300
 
   [push]
   	recurseSubmodules = check
   	autoSetupRemote = true
 
   [github]
-    user = veracioux
-
+  	user = veracioux
+#+end_src
+** Default remotes
+#+begin_src gitconfig
   # Configure branches with this as pushRemote to effectively block pushes
   [remote "null"]
   	url = /dev/null
+
+  [remote "self"]
+  	url = ./
 #+end_src
 ** Aliases
 *** General
