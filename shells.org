@@ -324,6 +324,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   # Ctrl+Alt+L
   # TODO: Add sol command installation instructions
   bind_all_modes \e\f 'commandline --replace (commandline | sol -b -s -a -jqobj)'
+
+  bind_all_modes \e. '_fish_ai_autocomplete_or_fix'
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions
@@ -415,6 +417,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   pymander/vfish
   brgmnn/fish-docker-compose
   oh-my-fish/plugin-pyenv@df70a41
+  Realiserad/fish-ai@v1.7.0
 #+end_src
 *** Initialization
 #+begin_src fish
@@ -458,6 +461,23 @@ on the plugin list above.
 #+begin_src shell :tangle (haris/tangle-deps "fish/plugins.sh")
   touch ~/.config/fish/{private,tmp}.fish
   fish -c "fisher update"
+#+end_src
+*** Fish AI
+#+begin_src conf :tangle (haris/tangle-home ".config/fish-ai.ini")
+  [fish-ai]
+  configuration = openai
+  debug = True
+  log = ~/.fish-ai/log.txt
+
+  [openai]
+  provider = openai
+  model = gpt-4o
+  api_key = «get-openai-key()»
+
+  [local-llama]
+  provider = self-hosted
+  model = phi3.5
+  server = http://localhost:11434/v1
 #+end_src
 ** Functions
 *** =whatis=
@@ -1496,6 +1516,11 @@ Code block that is evaluated in order to edit the ephemeral configuration file.
   (spacemacs/find-file-split
    (format "%s/ephemeral.config.fish"
            (getenv "XDG_RUNTIME_DIR" (selected-frame))))
+#+end_src
+*** =get-openai-key=
+#+NAME: get-openai-key
+#+begin_src elisp
+  openai-key
 #+end_src
 ** Dependencies                                                       :deps:
 #+begin_src text :tangle (haris/tangle-deps "shells.pacman")
