@@ -1850,7 +1850,7 @@ possibly benefit from a performance boost, in case =sh= happens to point to a mo
 lightweight shell.
 #+NAME: pull_desktop_apps
 #+begin_src shell
-  ls -1 $(echo "$XDG_DATA_DIRS" | tr ':' '\n')/applications/*.desktop |
+  ls -1 $(echo "$XDG_DATA_DIRS" | tr ':' '\n' | sed 's|$|/applications/*.desktop|') |
       sort | uniq |
       sed -E 's|.*/([^/]+)\.desktop$| \1|' | tee "$CACHE_FILE"
 #+end_src
