@@ -289,7 +289,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   # If notify-send can't communicate, it blocks. That's the reason for the timeout
   timeout 1s alternative-command notify-send "$@"
 #+end_src
-** =sudo=                                                            :wrapper:
+** =sudo=                                                          :wrapper:
 #+NAME: sudo
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/sudo")
   # Sudo but with a hook that sends a notification when the prompt is shown
@@ -313,7 +313,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   #!/usr/bin/env sh
   askpass "[sudo] password for $(getent passwd "$USER" | cut -d: -f1)" "SUDO password" "Please enter your password"
 #+end_src
-** =ssh=                                                             :wrapper:
+** =ssh=                                                           :wrapper:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/ssh")
   # This checks whether ssh is run via sshpass or perhaps some other tool that
   # assigns its own terminal to ssh.
@@ -339,42 +339,42 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   prompt="$(echo "$1" | sed 's/: $//')"
   askpass "$prompt" "SSH passphrase" "Please enter SSH passphrase"
 #+end_src
-** =alacritty=                                                       :wrapper:
+** =alacritty=                                                     :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty")
   alternative-command alacritty "$@"
   #+end_src
-** =alacritty-float=                                                 :wrapper:
+** =alacritty-float=                                               :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty-float")
   alacritty --class Alacritty,Float "$@"
 #+end_src
-** =sway=                                                            :wrapper:
+** =sway=                                                          :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/sway")
   export XDG_CURRENT_DESKTOP=Sway
   /usr/bin/sway --unsupported-gpu "$@"
 #+end_src
-** =xlock=                                                           :wrapper:
+** =xlock=                                                         :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xlock")
   pkill gpg-agent 2>/dev/null
   alternative-command xlock "$@"
 #+end_src
-** =vscode=                                                          :wrapper:
+** =vscode=                                                        :wrapper:
 The name =code= is a bit too generic. I need something more specific in order to
 get better search matches.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vscode")
   code "$@"
 #+end_src
-** =lnav=                                                            :wrapper:
+** =lnav=                                                          :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/lnav")
   export TERM=xterm-256color
 
   # alternative-command lnav "$@"
   /usr/bin/lnav "$@"
 #+end_src
-** =clipmenu=                                                        :wrapper:
+** =clipmenu=                                                      :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/clipmenu")
   alternative-command clipmenu "$@"
 #+end_src
-** =clipctl=                                                         :wrapper:
+** =clipctl=                                                       :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/clipctl")
   set -e
 
@@ -420,7 +420,7 @@ get better search matches.
   complete -c clipctl -f -a "status" -d "Show the current clipboard synchronization status"
   complete -c clipctl -f -a "tmp-disable" -d "Disable clipboard synchronization for the current shell pipeline; cat"
 #+end_src
-** =docker-compose=                                                  :wrapper:
+** =docker-compose=                                                :wrapper:
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/docker-compose")
   if grep -q 'down.*--volumes' <<<"$*"; then
       echo 'Option --volumes used. Make sure this is the intended compose project'
@@ -439,12 +439,12 @@ get better search matches.
       docker compose "$@"
   fi
 #+end_src
-** =ngrok=                                                           :wrapper:
+** =ngrok=                                                         :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/ngrok")
   export TERM=xterm-256color
   alternative-command ngrok "$@"
 #+end_src
-** =teams=                                                           :wrapper:
+** =teams=                                                         :wrapper:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/teams")
   flatpak_name="com.github.IsmaelMartinez.teams_for_linux"
 
@@ -2629,7 +2629,7 @@ Options:
       ~/.local/bin/notify-send 'Staging website' 'Status: alive'
   fi
 #+end_src
-** =vpn-toggle=                                                     :script:
+** =vpn-toggle=                                                       :script:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/vpn-toggle")
   restart_if_running() {
       if systemctl is-active --quiet "$1"; then
