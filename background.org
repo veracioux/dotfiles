@@ -109,7 +109,7 @@ This service updates the user's crontab when any of the custom crontab files cha
   Description=Crontab change listener and updater
 
   [Service]
-  ExecStart=<<eval-user-home()>>.local/bin/crontab-listen-update
+  ExecStart=<<eval-user-home()>>/.local/bin/crontab-listen-update
   Restart=on-failure
 
   [Install]
