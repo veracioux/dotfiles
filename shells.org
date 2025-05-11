@@ -272,6 +272,8 @@ This applies only to graphical sessions, the linux TTY is unaffected.
           commandline -f repaint
       end
 
+      bind_all_modes ctrl-shift-p __haris_toggle_private_mode
+      # For old fish versions
       bind_all_modes \cP __haris_toggle_private_mode
   end
 
