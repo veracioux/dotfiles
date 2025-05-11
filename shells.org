@@ -282,7 +282,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 *** Utility bindings
 #+begin_src fish
   # Copy the current contents of the command line
-  bind_all_modes \ec 'fish_clipboard_copy'
+  bind_all_modes \ec 'fish_clipboard_copy && notify-send "Copied to clipboard"'
 
   # Run the current command in bash
   bind_all_modes \eb __haris_run_in_bash
@@ -476,7 +476,7 @@ on the plugin list above.
   model = gpt-4o
   api_key = «get-openai-key()»
 
-  [local-llama]
+  [phi3.5]
   provider = self-hosted
   model = phi3.5
   server = http://localhost:11434/v1
