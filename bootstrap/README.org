@@ -44,6 +44,8 @@ A library of functions for easier tangling.
                (buffer-string))))
     (error (message "WARNING: %s" err)))
 #+end_src
+*** OpenAI key file                                          :configurable:
+To make your OpenAI key available to various AI tools, you can put it in [[~/.local/share/haris/openai-api-key.txt][this file]].
 ** Custom functions and tweaks
 #+begin_src elisp
   (defun haris/prevent-annoying-messages ()

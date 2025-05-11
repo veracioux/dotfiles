@@ -585,12 +585,18 @@ dmenu doesn't work.
 
   bindsym F9 mode $mode_audio
 #+end_src
-
-To modify the bluetooth device ID of the headphones, edit [[~/.local/lib/haris/bt-headphones-id][this file]].
-
+*** Bluetooth headphones ID                                  :configurable:
+To set the bluetooth device ID of the headphones, edit [[~/.local/lib/haris/bt-headphones-id][this file]]. The first
+non-comment line is used as the bluetooth ID, all other lines are ignored.
+Comments start with =#=.
+*** Helper scripts
 #+NAME: bluetoothctl-wrapper
 #+begin_src shell :tangle (haris/tangle-home ".local/lib/haris/bluetoothctl-wrapper") :tangle-mode (eval #o744)
   id_file=~/.local/lib/haris/bt-headphones-id
+
+  get_id() {
+      cat "$id_file" | grep -v '^$' | sed 's/#.*//' | head -1
+  }
 
   if [ ! -f "$id_file" ]; then
       ACTION="$(
@@ -603,7 +609,7 @@ To modify the bluetooth device ID of the headphones, edit [[~/.local/lib/haris/b
       exit 1
   fi
 
-  output="$(bluetoothctl "$1" "$(cat "$id_file" | head -1)")"
+  output="$(bluetoothctl "$1" "$(get_id)")"
 
   notify-send 'Status' "$output"
 #+end_src
@@ -955,7 +961,8 @@ seldom use that so it's fine.
 ** i3status
 *** Local configuration                                      :configurable:
 Make a symlink at [[elisp:(org-sbe "make-symlink-to-cpu-temperature-0")][~/.local/share/haris/local.cpu-temperature-0]], pointing to your
-machine-specific file that provides the CPU temperature to show.
+machine-specific file that provides the CPU temperature to show. (*You can click
+the link above to do this automatically, you will be prompted for the CPU temperature file*).
 *** Custom script
 #+begin_src python :tangle (haris/tangle-home ".config/i3status/custom-script.py") :tangle-mode (identity #o744)
   #!/usr/bin/env python

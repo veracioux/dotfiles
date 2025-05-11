@@ -1,6 +1,9 @@
 #+TITLE: Haris' Config
 #+SETUPFILE: .setup.org
 
+*NOTE*: Before using this configuration, please take a look at [[*Mandatory tweaks][Tweakable
+configs/Mandatory tweaks]] in order to set up your system correctly.
+
 Welcome. This is my personal dotfile repository. I use Arch Linux, so these
 dotfiles are customized to work there. I have also used a Macbook when
 professionally required, so most of the configs will work there too, but expect
@@ -281,3 +284,16 @@ This variable is hardly invented by me. But I use it heavily in scripts, most
 notably the =TERM=dumb= value. In general, if =TERM=dumb=, that is a hint to my
 scripts and utilities that graphical interaction is preferred over terminal
 interaction. The [[file:scripts.org::*=askpass=][askpass]] command behaves this way for example.
+* Tweakable configs                                            :configurable:
+This is a list of configs that you can tweak per deployment. They are not under
+version control. Some of them should be set up in order for things to work
+correctly, like the ID of your bluetooth headphones, etc.
+** Mandatory tweaks
+These tweaks are mandatory for all the features to work correctly. If you don't
+configure some of them, your system probably won't break but you will experience
+missing features.
+- [[file:bootstrap/README.org::*OpenAI key file][OpenAI key]]
+- [[file:wm.org::*Bluetooth headphones ID][Bluetooth headphones ID]]
+- [[file:wm.org::*Local configuration][CPU temperature file]]
+** Optional tweaks
+- [[file:shells.org::*Local and temporary configs][Local and temporary shell configs]]
