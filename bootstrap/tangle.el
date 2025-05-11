@@ -62,11 +62,14 @@ alternative dotfiles directory to '~/.haris'."
                             org-dotfiles-root
                             "\\.org$"
                             nil
-                            ;; Exclude hidden directories
+                            ;; Exclude hidden directories and different worktrees
                             (lambda (dir-name)
-                              (string-match
-                               "^[^\\.]"
-                               (file-name-nondirectory dir-name)))))))
+                              (and
+                               (string-match
+                                "^[^\\.]"
+                                (file-name-nondirectory dir-name))
+                               (not
+                                (string-match "^wt-" (file-name-nondirectory dir-name)))))))))
       (message "Tangling file: %s" file)
       (haris/tangle--file-non-interactively file)))
   (when to-destination
