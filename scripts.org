@@ -2711,11 +2711,20 @@ Options:
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/handle-low-bat")
   # Suspend when battery low
 
+  notify() {
+      timeout 0.4 notify-send "$@"
+  }
+
   if acpi | grep -qP '\s1?[0-9]%' && acpi | grep -q 'Discharging'; then
-      timeout 0.4 ~/.local/bin/notify-send 'Low battery' 'Suspending in 5s'
+      notify 'Low battery' 'Suspending in 5s'
       sleep 5s
-      systemctl suspend -i
+      systemctl suspend -i || doas systemctl suspend -i || notify --urgency critical 'Low battery' 'Failed to suspend. See journal of cronie.service for details.'
   fi
+#+end_src
+*** Dependencies                                                     :deps:
+#+begin_src text :tangle (haris/tangle-deps "handle-low-bat.pacman")
+  acpi
+  doas
 #+end_src
 ** =cronupd=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cronupd")
