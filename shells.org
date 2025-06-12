@@ -637,6 +637,15 @@ on the plugin list above.
           echo                     \t\t\t"Same format as for the sleep command. (default: 20m)"
           echo "  -s, --silent"      \t\t"Do not send a GUI notification when the command completes."
           echo "  -a, --attach"      \t\t"Immediately attach to the created tmux session"
+          echo "  -K, --kill-idle"     \t"Kill all idle background sessions"
+          return
+      end
+
+      if [ -n "$_flag_K" ]
+          # Kill all idle background sessions
+          for session in (tmux list-sessions -F '#{session_name}' | grep -E '^\[o].*\[IDLE]$')
+              tmux kill-session -t "$session"
+          end
           return
       end
 
@@ -655,7 +664,7 @@ on the plugin list above.
       <<o/background-task>>
       '
 
-      set -l tmux_session "$(echo "$__cmdline" | head -c20) [$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 5)]"
+      set -l tmux_session "[o] $(echo "$__cmdline" | head -c20) [$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 5)]"
 
       tmux new -d \
           -s "$tmux_session" \
@@ -690,6 +699,7 @@ Test the function by executing this code block:
     l/linger-period= \
     s/silent \
     a/attach \
+    K/kill-idle \
     -- $__o_args
 #+end_src
 **** Background task and follow-up shell
@@ -737,6 +747,8 @@ Note: This code block must not contain any apostrophes!
 
       rm -f "$notif_id_file"
   end
+
+  tmux rename-session "$tmux_session [IDLE]"
 
   if [ -z "$persist" ]
       # Start a timeout for the shell to close if the user does not perform any
