@@ -402,9 +402,9 @@ External bindings are served by sxhkd.
   XF86AudioMicMute
       pactl set-source-mute "$(pactl get-default-source)" toggle
   XF86MonBrightnessUp
-      brightnessctl set 5%+
+      brightnessctl set 1%+
   XF86MonBrightnessDown
-      brightnessctl set 5%-
+      brightnessctl set 1%-
 
   # Browser: switch to google search
   mod1 + i
