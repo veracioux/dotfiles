@@ -18,9 +18,10 @@
   Match all
     AddKeysToAgent yes
     IdentityFile ~/.ssh/main
-    IdentitiesOnly yes
-    PasswordAuthentication no
-    PubkeyAuthentication yes
+    RequestTTY yes
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 600
 #+end_src
 * Dunst
 :PROPERTIES:
