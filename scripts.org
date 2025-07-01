@@ -685,6 +685,15 @@ get better search matches.
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/cmd-with-notify.fish")
   complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
 #+end_src
+** =delayed-command=
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/delayed-command")
+  sleep "$1"
+  exec "${@:2}"
+#+end_src
+*** Completions
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/delayed-command.fish")
+  complete -c delayed-command -a '(complete -C "command ")'
+#+end_src
 ** =xpreset=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/xpreset")
   [ "$#" != 1 ] && exit 1
