@@ -801,6 +801,12 @@ Some custom keybindings are defined here as well.
 
   (setq projectile-indexing-method 'hybrid
         projectile-enable-caching t)
+
+  (setq projectile-ignored-project-function
+        (defun haris//projectile-ignored-project-function (project-root)
+          (string-match-p "^/usr/" project-root)
+          (string-match-p "\.pyenv/" project-root)
+          (string-match-p "\.local/" project-root)))
 #+end_src
 *** Default known projects
 #+begin_src elisp
