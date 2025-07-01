@@ -840,7 +840,7 @@ Some custom keybindings are defined here as well.
 #+end_src
 * Programming languages
 #+begin_src elisp
-  (add-hook 'prog-mode-hook 'spacemacs/toggle-fill-column-indicator)
+  (add-hook 'prog-mode-hook 'spacemacs/toggle-display-fill-column-indicator-on)
 #+end_src
 ** YAML
 #+begin_src elisp
@@ -864,7 +864,7 @@ Some custom keybindings are defined here as well.
       (add-hook hook 'spacemacs/toggle-indent-guide)
       (add-hook hook #'eldoc-mode 90)
       (add-hook hook #'yaml-pro-ts-mode 91)
-      (add-hook hook 'spacemacs/toggle-fill-column-indicator)
+      (add-hook hook 'spacemacs/toggle-display-fill-column-indicator-on)
       (add-hook hook
                 (lambda ()
                   (setq-local counsel-jq-command "yq")) 92)
