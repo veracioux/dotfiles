@@ -1098,6 +1098,10 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 #+begin_src text :tangle (haris/tangle-deps "emacs/angular.npm")
   @angular/language-service@next typescript @angular/language-server
 #+end_src
+** TailwindCSS
+#+begin_src elisp
+  (use-package lsp-tailwindcss)
+#+end_src
 ** Shells
 #+begin_src elisp
   (use-package company-shell)
