@@ -420,6 +420,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   brgmnn/fish-docker-compose
   oh-my-fish/plugin-pyenv@df70a41
   Realiserad/fish-ai@v1.7.0
+  rstacruz/fish-asdf@5869c1b
 #+end_src
 *** Initialization
 #+begin_src fish
