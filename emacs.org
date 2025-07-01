@@ -240,8 +240,8 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (add-hook 'prog-mode-hook #'auto-fill-mode)
 
   ;; Some packages prefer helm over ivy and don't provide a customization option.
-  (with-eval-after-load 'helm
-    (fmakunbound 'helm))
+  (eval-after-load 'helm
+    (lambda () (fmakunbound 'helm)))
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<global-settings>>
@@ -690,15 +690,15 @@ Some custom keybindings are defined here as well.
   (define-key haris/command-log-prefix-map (kbd "l") #'haris/command-log)
 
   ;; Misc
-  (with-eval-after-load 'go-translate
-    (spacemacs/set-leader-keys "ot" #'gt-do-translate))
-  (with-eval-after-load 'npm-mode
-    (spacemacs/set-leader-keys "on" npm-mode-command-keymap))
+  (eval-after-load 'go-translate
+    (lambda () (spacemacs/set-leader-keys "ot" #'gt-do-translate)))
+  (eval-after-load 'npm-mode
+    (lambda () (spacemacs/set-leader-keys "on" npm-mode-command-keymap)))
 
   ;; Git
   (setq haris/git-prefix-map (make-sparse-keymap))
-  (with-eval-after-load 'magit
-    (spacemacs/set-leader-keys "og" haris/git-prefix-map))
+  (eval-after-load 'magit
+    (lambda () (spacemacs/set-leader-keys "og" haris/git-prefix-map)))
   (define-key haris/git-prefix-map (kbd "c") 'magit-find-git-config-file)
 
   ;; Friendly descriptions
@@ -779,8 +779,8 @@ Some custom keybindings are defined here as well.
 #+end_src
 *** evil-surround
 #+begin_src elisp
-  (with-eval-after-load 'evil-surround
-    (add-to-list 'evil-surround-pairs-alist '(?$ . ("\"$(" . ")\""))))
+  (eval-after-load 'evil-surround
+    (lambda () (add-to-list 'evil-surround-pairs-alist '(?$ . ("\"$(" . ")\"")))))
 #+end_src
 *** Functions
 #+begin_src elisp
@@ -804,34 +804,35 @@ Some custom keybindings are defined here as well.
 #+end_src
 *** Default known projects
 #+begin_src elisp
-  (with-eval-after-load 'magit
-    (let*
-        ((projects (-filter
-                    'file-directory-p
-                    '("~/.haris/"
-                      "~/.emacs.d/"
-                      "~/.emacs.d/private/snippets/"
-                      "~/.emacs.d/private/themes/dracula/"
-                      "~/wiki/")))
-         (worktrees
-          (flatten-list
-           (mapcar
-            (lambda (proj)
-              (append
-               ;; Add all worktrees of the project's repo as projects
-               (let ((default-directory proj))
-                 (mapcar 'car (magit-list-worktrees))
-                 ;; In case it is not a git repo, worktrees would be nil, so add the
-                 ;; project itself
-                 (list proj))))
-            projects))))
-      ;; Add each project (+ its worktrees) to projectile-known-projects
-      (dolist (worktree worktrees)
-        (add-to-list 'projectile-known-projects worktree nil 'file-equal-p)
-        ;; Also create a .projectile file in case the directory exists and it is not
-        ;; a git repo
-        (when (and (file-exists-p worktree) (not (magit-git-repo-p worktree)))
-          (f-touch (f-join worktree ".projectile"))))))
+  (eval-after-load 'magit
+    (lambda ()
+      (let*
+          ((projects (-filter
+                      'file-directory-p
+                      '("~/.haris/"
+                        "~/.emacs.d/"
+                        "~/.emacs.d/private/snippets/"
+                        "~/.emacs.d/private/themes/dracula/"
+                        "~/wiki/")))
+           (worktrees
+            (flatten-list
+             (mapcar
+              (lambda (proj)
+                (append
+                 ;; Add all worktrees of the project's repo as projects
+                 (let ((default-directory proj))
+                   (mapcar 'car (magit-list-worktrees))
+                   ;; In case it is not a git repo, worktrees would be nil, so add the
+                   ;; project itself
+                   (list proj))))
+              projects))))
+        ;; Add each project (+ its worktrees) to projectile-known-projects
+        (dolist (worktree worktrees)
+          (add-to-list 'projectile-known-projects worktree nil 'file-equal-p)
+          ;; Also create a .projectile file in case the directory exists and it is not
+          ;; a git repo
+          (when (and (file-exists-p worktree) (not (magit-git-repo-p worktree)))
+            (f-touch (f-join worktree ".projectile")))))))
 #+end_src
 *** Keybindings
 #+begin_src elisp
@@ -947,43 +948,48 @@ Some custom keybindings are defined here as well.
 Some performance improvement settings depend on the power of your hardware. You
 can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. You can place them in your [[*Private config][private configuration]].
 #+begin_src elisp
-  (with-eval-after-load 'lsp
-    (setq lsp-idle-delay 0.1)
-    (setq lsp-keep-workspace-alive nil)
+  (eval-after-load 'lsp-mode
+    (lambda ()
+      (setq lsp-idle-delay 0.1)
+      (setq lsp-keep-workspace-alive nil)
 
-    ;; Diagnostic mode doesn't work well with flycheck
-    (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
+      ;; Diagnostic mode doesn't work well with flycheck
+      (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
 
-    (setq lsp-enable-on-type-formatting nil)
+      (setq lsp-enable-on-type-formatting nil)
 
-    ;; This prevents lsp from overriding my custom 'company-backends'
-    (setq lsp-completion-provider :none)
+      ;; This prevents lsp from overriding my custom 'company-backends'
+      (setq lsp-completion-provider :none)
 
-    (setq lsp-restart 'ignore)
+      (setq lsp-restart 'ignore)
 
-    (setq lsp-auto-execute-action nil)
-    (setq lsp-inlay-hint-enable t)
+      (setq lsp-auto-execute-action nil)
+      (setq lsp-inlay-hint-enable t)
 
-    ;; Prevents session persistence, which can cause performance issues
-    (setq lsp-session-file nil)
+      ;; Prevents session persistence, which can cause performance issues
+      (setq lsp-session-file nil)
 
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$"))
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$")))
 #+end_src
 *** Keybindings
 #+begin_src elisp
-  (with-eval-after-load 'lsp
-    ;; TODO: not working
-    (haris/evil-define-key-both lsp-mode-map (kbd "M-RET") 'lsp-execute-code-action)
-    (spacemacs/set-leader-keys-for-minor-mode
-      'lsp-mode
-      "FR" (defun haris/lsp-clear-workspace-folders ()
-             (interactive)
-             (mapcar (lambda (x) (lsp-workspace-folders-remove x))
-                     (lsp-session-folders (lsp-session))))))
+  (eval-after-load 'lsp-mode
+    (lambda ()
+      (haris/evil-define-key-both lsp-mode-map (kbd "M-RET") 'lsp-execute-code-action)
+      (spacemacs/set-leader-keys-for-minor-mode
+        'lsp-mode
+        "FR" (defun haris/lsp-clear-workspace-folders ()
+               (interactive)
+               (mapcar (lambda (x) (lsp-workspace-folders-remove x))
+                       (lsp-session-folders (lsp-session)))))))
 #+end_src
 ** DAP
 #+begin_src elisp
-  (setq dap-auto-show-output nil)
+  (eval-after-load 'dap-mode
+    (lambda ()
+      (setq dap-auto-show-output nil)
+      (add-hook 'dap-terminated-hook 'normal-mode 99)
+      (setq dap-ui-inspect-mode-hook (delq 'evilified-state dap-ui-inspect-mode-hook))))
 #+end_src
 ** TODO C/C++
 #+begin_src elisp
@@ -1028,8 +1034,9 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 #+end_src
 *** Bindings
 #+begin_src elisp
-  (with-eval-after-load 'lsp
-    (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance))
+  (eval-after-load 'lsp-mode
+    (lambda ()
+      (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)))
 #+end_src
 *** Dependencies                                                     :deps:
 #+begin_src shell :tangle (haris/tangle-deps "emacs/python.pacman")
@@ -1047,10 +1054,10 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
         js-indent-level 4
         js2-basic-offset 4)
 
-  (with-eval-after-load 'js (require 'dap-node))
-  (with-eval-after-load 'ts (require 'dap-node))
+  (eval-after-load 'js (lambda () (require 'dap-node)))
+  (eval-after-load 'ts (lambda () require 'dap-node))
 
-  (with-eval-after-load "npm-mode" (npm-global-mode t))
+  (eval-after-load "npm-mode" (lambda () (npm-global-mode t)))
 #+end_src
 ** Java
 #+begin_src elisp
@@ -1652,7 +1659,7 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
   (add-to-list 'org-export-backends 'md)
 
   ;; Enable org-modern-mode
-  (with-eval-after-load 'org (global-org-modern-mode))
+  (eval-after-load 'org (lambda () (global-org-modern-mode)))
 #+end_src
 ** Agenda
 #+begin_src elisp
@@ -1980,10 +1987,10 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 * AI
 ** ChatGPT
 #+begin_src elisp
-  (with-eval-after-load 'chatgpt
-    (setq chatgpt-model "gpt-4-turbo-preview"))
-  (with-eval-after-load 'codegpt
-    (setq codegpt-model "gpt-3.5-turbo-instruct"))
+  (eval-after-load 'chatgpt
+    (lambda () (setq chatgpt-model "gpt-4-turbo-preview")))
+  (eval-after-load 'codegpt
+    (lambda () (setq codegpt-model "gpt-3.5-turbo-instruct")))
   (setq chatgpt-window-prompt "")
   (setq chatgpt-display-method
         (lambda (buffer-or-name)
@@ -2042,42 +2049,43 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 *** Privacy enhancements
 #+begin_src elisp
-  (with-eval-after-load 'copilot
-    (advice-add
-     'copilot-mode
-     :around
-     (defun haris//advice/copilot-mode (orig-func &rest args)
-       "Checks if 'haris/allow-copilot' is true before running ORIG-FUNC."
-       (let* ((arg (car args))
-              (enabling (if (eq arg 'toggle) (not copilot-mode)
-                          (or
-                           (not (numberp arg))
-                           (not (< arg 0))))))
+  (eval-after-load 'copilot
+    (lambda ()
+      (advice-add
+       'copilot-mode
+       :around
+       (defun haris//advice/copilot-mode (orig-func &rest args)
+         "Checks if 'haris/allow-copilot' is true before running ORIG-FUNC."
+         (let* ((arg (car args))
+                (enabling (if (eq arg 'toggle) (not copilot-mode)
+                            (or
+                             (not (numberp arg))
+                             (not (< arg 0))))))
 
-         ;; If interactive and copilot is disallowed, prompt the user to allow it
-         (if (and (not haris/allow-copilot)
-                  (called-interactively-p 'any))
-             (when
-                 (yes-or-no-p
-                  "Copilot is disallowed. Do you want to allow it (buffer-locally)?")
-               (setq-local haris/allow-copilot t)))
+           ;; If interactive and copilot is disallowed, prompt the user to allow it
+           (if (and (not haris/allow-copilot)
+                    (called-interactively-p 'any))
+               (when
+                   (yes-or-no-p
+                    "Copilot is disallowed. Do you want to allow it (buffer-locally)?")
+                 (setq-local haris/allow-copilot t)))
 
-         ;; If copilot is allowed and enable was requested, enable it
-         ;; If disable is requested, disable it unconditionally
-         (if (or (not enabling)
-                 haris/allow-copilot)
-             (progn
-               (apply orig-func args)
-               ;; Notify the user if interactive
-               (when (called-interactively-p 'any)
-                 (message "%s Copilot in current buffer"
-                          (if enabling
-                              "Enabled"
-                            "Disabled"))))
-           (unless (called-interactively-p 'any)
-             (message
-              "Warning: Copilot is disallowed (haris/allow-copilot is nil in buffer %s)"
-              (buffer-name))))))))
+           ;; If copilot is allowed and enable was requested, enable it
+           ;; If disable is requested, disable it unconditionally
+           (if (or (not enabling)
+                   haris/allow-copilot)
+               (progn
+                 (apply orig-func args)
+                 ;; Notify the user if interactive
+                 (when (called-interactively-p 'any)
+                   (message "%s Copilot in current buffer"
+                            (if enabling
+                                "Enabled"
+                              "Disabled"))))
+             (unless (called-interactively-p 'any)
+               (message
+                "Warning: Copilot is disallowed (haris/allow-copilot is nil in buffer %s)"
+                (buffer-name)))))))))
 #+end_src
 **** Test                                                           :test:
 :PROPERTIES:
@@ -2102,16 +2110,17 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 *** Keybindings
 #+begin_src elisp
-  (with-eval-after-load 'copilot
-    (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-    (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-    (define-key copilot-completion-map (kbd "M-<backspace>") 'copilot-clear-overlay)
-    (define-key copilot-completion-map (kbd "M-l") 'copilot-accept-completion-by-word)
-    (define-key copilot-completion-map (kbd "M-j") 'copilot-accept-completion-by-line)
-    (define-key copilot-completion-map (kbd "M-n") 'copilot-next-completion)
-    (define-key copilot-completion-map (kbd "M-p") 'copilot-previous-completion)
-    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-panel-complete)
-    (spacemacs/set-leader-keys "oC" 'copilot-mode))
+  (eval-after-load 'copilot
+    (lambda ()
+      (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+      (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+      (define-key copilot-completion-map (kbd "M-<backspace>") 'copilot-clear-overlay)
+      (define-key copilot-completion-map (kbd "M-l") 'copilot-accept-completion-by-word)
+      (define-key copilot-completion-map (kbd "M-j") 'copilot-accept-completion-by-line)
+      (define-key copilot-completion-map (kbd "M-n") 'copilot-next-completion)
+      (define-key copilot-completion-map (kbd "M-p") 'copilot-previous-completion)
+      (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-panel-complete)
+      (spacemacs/set-leader-keys "oC" 'copilot-mode)))
 #+end_src
 ** Aidermacs
 #+begin_src elisp
@@ -2214,14 +2223,15 @@ and crashes of my default Emacs instance.
     (let ((vterm-clear-scrollback-when-clearing nil))
       (vterm-clear)))
 
-  (with-eval-after-load 'vterm
-    (haris/evil-define-key-both vterm-mode-map (kbd "C-l") #'haris/vterm-clear-keep-scrollback)
+  (eval-after-load 'vterm
+    (lambda ()
+      (haris/evil-define-key-both vterm-mode-map (kbd "C-l") #'haris/vterm-clear-keep-scrollback)
 
-    (evil-define-key 'normal vterm-mode-map      (kbd "0")     'evil-collection-vterm-first-non-blank)
-    (evil-define-key 'normal vterm-mode-map      (kbd "A")     'evil-append-line)
-    (evil-define-key 'normal vterm-mode-map      (kbd "M-TAB") 'other-window)
-    (evil-define-key 'normal vterm-mode-map      (kbd ",f")    'haris/vterm-toggle-freeze)
-    (evil-define-key 'normal vterm-copy-mode-map (kbd ",f")    'haris/vterm-toggle-freeze))
+      (evil-define-key 'normal vterm-mode-map      (kbd "0")     'evil-collection-vterm-first-non-blank)
+      (evil-define-key 'normal vterm-mode-map      (kbd "A")     'evil-append-line)
+      (evil-define-key 'normal vterm-mode-map      (kbd "M-TAB") 'other-window)
+      (evil-define-key 'normal vterm-mode-map      (kbd ",f")    'haris/vterm-toggle-freeze)
+      (evil-define-key 'normal vterm-copy-mode-map (kbd ",f")    'haris/vterm-toggle-freeze)))
 #+end_src
 *** Dependencies                                                     :deps:
 #+begin_src text :tangle (haris/tangle-deps "emacs/vterm.pacman")
@@ -2263,9 +2273,10 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
   (setq-default company-backends company-backends-text-mode)
 
   ;; Show popup even when the current text is the only candidate
-  (with-eval-after-load 'company
-    (setq company-frontends (delq 'company-pseudo-tooltip-unless-just-one-frontend company-frontends))
-    (add-to-list 'company-frontends 'company-pseudo-tooltip-frontend))
+  (eval-after-load 'company
+    (lambda ()
+      (setq company-frontends (delq 'company-pseudo-tooltip-unless-just-one-frontend company-frontends))
+      (add-to-list 'company-frontends 'company-pseudo-tooltip-frontend)))
 #+end_src
 *** company-dabbrev
 #+begin_src elisp
@@ -2449,10 +2460,11 @@ identify where exactly it is initialized by spacemacs, so I set it explicitly he
 #+end_src
 *** Bindings
 #+begin_src elisp
-  (with-eval-after-load 'company-posframe
+  (eval-after-load 'company-posframe
+    (lambda ()
     (define-key company-posframe-active-map (kbd "<f1>") nil)
     (define-key company-posframe-active-map (kbd "M-h")
-                #'company-posframe-quickhelp-toggle))
+                #'company-posframe-quickhelp-toggle)))
 
   ;; Additional trigger for company
   (define-key evil-insert-state-map (kbd "C-SPC") #'haris/company-toggle-tooltip)
@@ -2684,8 +2696,8 @@ Remove Info mode annoying keybindings.
 #+end_src
 ** transient
 #+begin_src elisp
-  (with-eval-after-load 'transient
-    (setq transient-values-file "~/.emacs.d/transient/values.el"))
+  (eval-after-load 'transient
+    (lambda () (setq transient-values-file "~/.emacs.d/transient/values.el")))
 #+end_src
 ** dirvish
 #+begin_src elisp
@@ -2696,14 +2708,15 @@ Remove Info mode annoying keybindings.
   (use-package tldr :defer t)
   (use-package devdocs-browser)
 
-  (with-eval-after-load 'devdocs-browser
-    (setq devdocs-browser-major-mode-docs-alist
-          (append
-           devdocs-browser-major-mode-docs-alist
-           '((typescript-mode "TypeScript")
-             (javascript-mode "JavaScript")
-             (java-mode "OpenJDK")
-             (org-mode "elisp")))))
+  (eval-after-load 'devdocs-browser
+    (lambda ()
+      (setq devdocs-browser-major-mode-docs-alist
+            (append
+             devdocs-browser-major-mode-docs-alist
+             '((typescript-mode "TypeScript")
+               (javascript-mode "JavaScript")
+               (java-mode "OpenJDK")
+               (org-mode "elisp"))))))
 #+end_src
 *** Keybindings
 #+begin_src elisp
