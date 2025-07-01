@@ -381,7 +381,7 @@ You can test the transforms by calling this:
           "^\\* docker .*\\*"
           ;; Docker compose command output buffers
           "^\\* .* docker-compose .*\\*"
-          (concat "^" (regexp-quote haris/custom-temp-buffer-name))))
+          ,(concat "^" (regexp-quote haris/custom-temp-buffer-name))))
 #+end_src
 This enables periodic cleanup:
 #+begin_src elisp
