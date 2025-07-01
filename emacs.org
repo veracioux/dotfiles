@@ -1937,6 +1937,22 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (require 'llm-openai)
   (setq magit-gptcommit-llm-provider (make-llm-openai :key openai-key))
   (magit-gptcommit-mode)
+  (with-eval-after-load 'magit-status
+    (when (not (boundp 'haris//gptcommit-status-buffer-setup-p))
+      (defvar haris//gptcommit-status-buffer-setup t
+        "Flag to indicate if the gptcommit status buffer setup has been done.")
+      (magit-gptcommit-status-buffer-setup)))
+
+  (setq haris/commit-prompt-default
+        (concat
+         magit-gptcommit-prompt-one-line
+         "\nIf the commit is larger, and it would add additional useful info, add two line breaks and a detailed description of the changes."))
+
+  (setq haris/commit-prompt-dotfiles
+        (concat
+         haris/commit-prompt-default
+         "\nMake sure that after label, you also include the resource name that the change applies to.
+  For example if it is emacs-related, add 'emacs: ' (without quotes). If multiple resources are affected, you can omit this."))
 #+end_src
 ** Custom transient commands
 #+begin_src elisp
