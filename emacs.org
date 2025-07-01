@@ -1949,11 +1949,9 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
              (magit-fetch-arguments))))
     (magit-git-fetch remote (cons (concat branch ":" branch) args)))
 
-  (add-hook 'magit-status-mode-hook
-            (lambda ()
-               (transient-append-suffix
-                 'magit-fetch "o"
-                 '(1 "O" "another, to local" haris/magit-fetch-to-local))))
+  (transient-append-suffix
+    'magit-fetch "o"
+    '(1 "O" "another, to local" haris/magit-fetch-to-local))
 #+end_src
 ** Bindings
 #+begin_src elisp
