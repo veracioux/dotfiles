@@ -1892,6 +1892,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; Loading it eagerly helps with proper initialization of hooks.
   ;; Magit is essential to my workflow so having it eagerly loaded is no tradeoff.
   (use-package magit)
+  (use-package magit-gptcommit)
 
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
         magit-diff-refine-hunk 'all
@@ -1930,6 +1931,12 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 
   (add-hook 'git-commit-mode-hook 'haris/git-commit/cd-to-worktree)
   (setq git-commit-major-mode 'haris/git-commit-major-mode)
+#+end_src
+*** AI
+#+begin_src elisp
+  (require 'llm-openai)
+  (setq magit-gptcommit-llm-provider (make-llm-openai :key openai-key))
+  (magit-gptcommit-mode)
 #+end_src
 ** Custom transient commands
 #+begin_src elisp
@@ -2104,6 +2111,10 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 *** Bindings
 #+begin_src elisp
   (spacemacs/set-leader-keys "A" 'aidermacs-transient-menu)
+#+end_src
+** Gptel
+#+begin_src elisp
+  (setq gptel-confirm-tool-calls t)
 #+end_src
 * REPLs in Emacs
 ** Common settings
@@ -2796,7 +2807,10 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
       )
      openai
      whisper
-     llm-client))
+     (llm-client
+      :variables
+      llm-client-enable-gptel t
+      llm-client-enable-ellama t)))
 #+end_src
 ** Additional packages
 Packages installed with =use-package= should be added here as well. Otherwise
