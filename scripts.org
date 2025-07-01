@@ -1116,14 +1116,21 @@ Create a BitBucket PR.
       tr -d '\n' | jq -sRr @uri
   }
 
-  source_branch="$(git branch --show-current | tr -d '\n')"
+  source_branch="$1"
+  dest_branch="$2"
+
+  if [ -z "$source_branch" ]; then
+      source_branch="$(git branch --show-current | tr -d '\n')"
+  fi
   source_branch_enc="$(uriEncode <<<"$source_branch")"
-  dest_branch="$(
-      {
-          git config init.defaultBranch
-          git branch | sed 's/^..//'
-      } | head -1
-  )"
+  if [ -z "$dest_branch" ]; then
+      dest_branch="$(
+          {
+              git config init.defaultBranch
+              git branch | sed 's/^..//'
+          } | head -1
+      )"
+  fi
   dest_branch_enc="$(uriEncode <<<"$dest_branch")"
   remote="$(git remote get-url upstream 2>/dev/null)"
   if [ -z "$remote" ]; then
