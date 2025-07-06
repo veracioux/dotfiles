@@ -546,7 +546,6 @@ dmenu doesn't work.
   bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org", mode default
   bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org", mode default
   bindsym Shift+t         exec --no-startup-id "dmenu_run todo", mode default
-  bindsym v               exec --no-startup-id "~/.config/i3/scripts/open-conversations", mode default
   bindsym a               exec --no-startup-id "myemacs-float ~/wiki/index.org", mode default
 
   bindsym Escape          mode default
@@ -554,27 +553,16 @@ dmenu doesn't work.
 
   bindsym $mod+Shift+o      mode $mode_org
 #+end_src
-*** Open conversations file
-#+HEADER: :tangle (haris/tangle-home ".config/i3/scripts/open-conversations")
-#+begin_src elisp :shebang "#!/usr/bin/env myemacs-load"
-  (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                     (display . ,(getenv "DISPLAY"))))
-    (find-file "~/wiki/conversations.org"))
-#+end_src
-#+NAME: open-conversations
-#+begin_src bash :tangle no
-  ~/.config/i3/scripts/open-conversations
-#+end_src
 ** Audio control menu
 #+NAME: audio-menu
 #+begin_src i3wm-config
   set $mode_audio      " [+] [-] [m]ute [t]est |   [c]onnect [d]isconnect |  [T]est"
 
   mode $mode_audio {
-  bindsym plus            exec --no-startup-id ~/.config/i3/scripts/mic-volume-up
-  bindsym minus           exec --no-startup-id ~/.config/i3/scripts/mic-volume-down
-  bindsym m               exec --no-startup-id ~/.config/i3/scripts/mic-mute-toggle; mode default
-  bindsym t               exec --no-startup-id ~/.config/i3/scripts/mic-test
+  bindsym plus            exec --no-startup-id <<scripts-dir>>/mic-volume-up
+  bindsym minus           exec --no-startup-id <<scripts-dir>>/mic-volume-down
+  bindsym m               exec --no-startup-id <<scripts-dir>>/mic-mute-toggle; mode default
+  bindsym t               exec --no-startup-id <<scripts-dir>>/mic-test
   bindsym c               exec --no-startup-id ~/.local/lib/haris/bluetoothctl-wrapper connect
   bindsym d               exec --no-startup-id ~/.local/lib/haris/bluetoothctl-wrapper disconnect
   bindsym Shift+t         exec --no-startup-id ~/.config/i3/scripts/speaker-test
@@ -655,208 +643,50 @@ A menu for managing notifications.
 
   bindsym $mod+Shift+n mode $mode_notif
 #+end_src
-** Talk menu
-Menu of utilities that allow me to talk to my computer.
+** Chat menu
+Menu of utilities that allow me to chat with my computer.
 #+begin_src i3wm-config
-  set $mode_talk       " Talk | [d]ictate | ChatGPT [s]peak [c]opy [b]rowser [k]ill [r]epeat"
+  set $mode_chat       " Chat | ChatGPT [c]hat [C]hoose"
 
-  mode $mode_talk {
-  bindsym d       exec <<o>> ~/.config/i3/scripts/dictate.sh, mode default
-  bindsym s       exec <<o>> ~/.config/i3/scripts/chatgpt.sh --speak, mode default
-  bindsym c       exec <<o>> ~/.config/i3/scripts/chatgpt.sh, mode default
-  bindsym b       exec auto-browser -P «eval-user-name()» "https://chat.openai.com/chat", \
-                  mode default
-  bindsym k       exec ~/.config/i3/scripts/kill-gpt.sh, mode default
-  bindsym r       exec <<o>> ~/.config/i3/scripts/gpt-repeat-action.sh
+  mode $mode_chat {
+  bindsym c       exec --no-startup-id <<scripts-dir>>/chatgpt.sh, mode default
+  bindsym Shift+c exec --no-startup-id <<scripts-dir>>/chatgpt.sh --choose, mode default
   bindsym Escape  mode default
   }
 
-  bindsym $mod+Shift+c mode $mode_talk
-#+end_src
-*** Helper alias
-#+NAME: o
-#+begin_src text
-  env HARIS_BACKGROUND_TASKS_SILENT=true o
+  bindsym $mod+Shift+c mode $mode_chat
 #+end_src
 *** Scripts
 :PROPERTIES:
 :header-args+: :tangle-mode (eval #o744)
 :END:
-If you are using a custom wrapper for =minigpt= (it has to be called =minigpt= as
-well) that automatically resolves the API key, you can create a marker file at
-[[~/.local/share/haris/minigpt-no-api-key-needed]]. The existence of this file will
-prevent the scripts from prompting the user for a password for =pass=.
-**** Dictate
-#+NAME: dictate.sh
-#+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/dictate.sh")
-  on_error() {
-      close_notification
-      notify-send "Dictation" "Dictation failed!" --urgency critical
-      restore_mute_state
-  }
-
-  «prelude-all»
-
-  id="$(notify-send "Dictation" "Started" --print-id)"
-
-  text="$(minigpt textify --copy)"
-  convert_to_org "$text" >>"$dest_file"
-
-  close_notification
-
-  notify-send "Dictation" "Dictation copied to clipboard"
-  restore_mute_state
-#+end_src
 **** ChatGPT
 #+NAME: chatgpt.sh
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/chatgpt.sh")
-  on_error() {
-      close_notification
-      notify-send "ChatGPT" "Processing failed!" --urgency critical
-      if declare -F restore_mute_state >/dev/null; then
-          restore_mute_state
+  query=''
+
+  if [ "$1" = '--choose' ]; then
+      choices="$(
+  cat <<'EOF'
+  gpt-4o: Great for most tasks
+  o3: Uses advanced reasoning
+  o4-mini: Fastest at advanced reasoning
+  o4-mini-high: Great at coding and visual reasoning
+  gpt-4.5: Good for writing and exploring ideas (Research Preview)
+  gpt-4.1: Great for quick coding and analysis
+  gpt-4.1-mini: Faster for everyday tasks
+  EOF
+  )"
+      choice="$(echo "$choices" | dmenu -l 10 | sed -e 's/:.*//' -e 's/\./-/g')"
+      if [ -z "$choice" ]; then
+          exit 1
       fi
-  }
-
-  if [ -z "$HARIS_GPT_STORED_PROMPT" ]; then
-      «prelude-all»
-      id="$(notify-send "ChatGPT" "Speak your mind" --print-id)"
-
-      text="$(minigpt textify)"
-
-      id="$(notify-send "ChatGPT" "$(echo -e "Prompt recorded:\n $text")" --print-id)"
-      restore_mute_state
-  else
-      «prelude-basic»
-
-      text="$HARIS_GPT_STORED_PROMPT"
-      id="$(notify-send "ChatGPT" "$(echo -e "Prompt:\n $text")" --print-id)"
+      query="?model=$choice"
   fi
 
-  response="$(echo "$text" | minigpt chat --copy)"
+  url="https://chatgpt.com/$query"
 
-  echo "-------"
-  echo "Prompt:"
-  echo "$text" | tee ~/.local/share/haris/gpt-last-prompt.txt
-  echo "-------"
-
-  printf "%q " "${BASH_SOURCE[0]}" "$@" > ~/.local/share/haris/gpt-last-cmd.txt
-
-  convert_to_org "$text" "$response" >>"$dest_file"
-
-  notify-send "ChatGPT" "Response copied to clipboard!"
-
-  if [ "$1" = "--speak" ]; then
-      echo "Refined response:"
-      refined_response="$(
-          {
-              echo "In the following text, remove all quotes to make it suitable for low quality text-to-speech software:"
-              echo "$response"
-          } | minigpt chat | tee /dev/stderr
-      )"
-      set +e
-      echo "$refined_response" \
-          | gtts-cli -f- \
-          | mpv --speed=1.2 -
-      sts="$?"
-      if [ "$sts" != 0 ] && [ "$(kill -l "$sts")" != "KILL" ]; then
-          set -e
-          echo "$refined_response" | bash -c festival festival --tts
-      fi
-      close_notification
-  fi
-#+end_src
-**** Repeat last action
-#+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/gpt-repeat-action.sh")
-  export HARIS_GPT_STORED_PROMPT="$(cat ~/.local/share/haris/gpt-last-prompt.txt)"
-  bash -c "$(cat ~/.local/share/haris/gpt-last-cmd.txt)"
-#+end_src
-**** Shared
-:PROPERTIES:
-:header-args+: :tangle no
-:END:
-#+NAME: prelude-basic
-#+begin_src bash
-  set -e
-  trap on_error ERR
-  if [ ! -e ~/.local/share/haris/minigpt-no-api-key-needed ]; then
-      export MINIGPT_API_KEY="$(pass show @openai/api-secret-key)"
-  fi
-  dest_file=~/wiki/conversations.org
-  close_notification() {
-      if [ -n "$id" ]; then
-          dunstify --close="$id"
-      fi
-  }
-  on_term() {
-      notify-send "GPT" "Successfully stopped"
-  }
-  echo "$$" > ~/.local/share/haris/gpt-pid.txt
-  «func:convert_to_org»
-#+end_src
-#+NAME: prelude-microphone
-#+begin_src bash
-  default_source="$(pactl get-default-source)"
-  mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes' || true)"
-  restore_mute_state() {
-      if [ -n "$mic_muted" ]; then pactl set-source-mute "$default_source" 1; fi
-  }
-
-  # Unmute the microphone
-  if [ -n "$mic_muted" ]; then
-      pactl set-source-mute "$default_source" 0
-      sleep 2s  # Wait for it to unmute
-  fi
-#+end_src
-#+NAME: prelude-all
-#+begin_src bash
-  <<prelude-basic>>
-  <<prelude-microphone>>
-#+end_src
-#+NAME: func:convert_to_org
-#+begin_src bash :tangle no
-  # Usage:
-  #   record_conversation PROMPT RESPONSE
-  #   record_conversation DICTATION
-  convert_to_org() {
-      local shell_options dest_file prompt response
-      shell_options="$-"
-      prompt="$1"
-      response="$2"
-      {
-          # Insert header
-          if [ -z "$response" ]; then
-              echo "# Dictation from $(date)"
-          else
-              echo "# Conversation from $(date)"
-          fi
-          # Insert prompt
-          if [ -n "$prompt" ]; then
-              echo "## User"
-              echo "$prompt"
-          fi
-          # Insert response
-          if [ -n "$response" ]; then
-              echo
-              echo "## Computer"
-              echo "$response"
-          fi
-      } | pandoc --from markdown --to org |
-          grep -vE '^(:PROPERTIES:|:CUSTOM_ID:|:END:)'
-  }
-#+end_src
-#+NAME: kill-gpt.sh
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/kill-gpt.sh")
-  file=~/.local/share/haris/gpt-pid.txt
-  pkill -P $(cat "$file")
-  echo > "$file"
-#+end_src
-*** Dependencies                                                     :deps:
-#+begin_src text :tangle (haris/tangle-deps "talk-menu.pacman")
-  festival pandoc mpv
-#+end_src
-#+begin_src text :tangle (haris/tangle-deps "talk-menu.pip")
-  minigpt gtts
+  auto-browser -P "$USER" "$url"
 #+end_src
 ** Screenshot menu
 #+begin_src i3wm-config
@@ -1374,6 +1204,7 @@ I use picom as my compositor with the i3 window manager.
   paru -S swhkd-git
 #+end_src
 ** Helper functions
+*** =dip=
 #+NAME: dip
 #+begin_src elisp :var value=100
   (floor
@@ -1387,11 +1218,23 @@ I use picom as my compositor with the i3 window manager.
           (string-to-number dpi)))
       96.0)))
 #+end_src
-** Local variables                                                :noexport:
+*** =eval-user-name=
 #+NAME: eval-user-name
 #+begin_src elisp
   (user-login-name)
 #+end_src
+** Helper aliases
+*** =o=
+#+NAME: o
+#+begin_src text
+  env HARIS_BACKGROUND_TASKS_SILENT=true o
+#+end_src
+*** =scripts-dir=
+#+NAME: scripts-dir
+#+begin_src text
+  ~/.config/i3/scripts
+#+end_src
+** Local variables                                                :noexport:
 # Local variables:
 # org-confirm-babel-evaluate: nil
 # End:
