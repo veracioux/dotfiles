@@ -1955,8 +1955,10 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 *** AI
 #+begin_src elisp
   (require 'llm-openai)
-  (setq magit-gptcommit-llm-provider (make-llm-openai :key openai-key))
-  (magit-gptcommit-mode)
+
+  (with-eval-after-load 'haris/ai
+    (setq magit-gptcommit-llm-provider haris/ai/model/default))
+
   (with-eval-after-load 'magit-status
     (when (not (boundp 'haris//gptcommit-status-buffer-setup-p))
       (defvar haris//gptcommit-status-buffer-setup t
