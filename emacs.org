@@ -1034,13 +1034,18 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 
   (setq python-shell-interpreter "ipython")
 
-  (setq lsp-pylsp-plugins-pylint-enabled t
-        lsp-pylsp-plugins-flake8-enabled nil
-        lsp-pyls-plugins-flake8-enabled  nil
-        lsp-diagnostics--flycheck-enabled t)
+  (setq
+   python-lsp-server 'pyright
+   lsp-pylsp-plugins-pylint-enabled t
+   lsp-pylsp-plugins-flake8-enabled nil
+   lsp-pyls-plugins-flake8-enabled  nil
+   lsp-diagnostics--flycheck-enabled t)
 
   ;; elpy
   (setq elpy-modules nil)
+
+  (with-eval-after-load 'pytest
+      (add-to-list 'pytest-project-root-files ".projectile"))
 #+end_src
 *** Bindings
 #+begin_src elisp
