@@ -70,9 +70,7 @@ unnecessary code.
     WantedBy=default.target
   #+end_src
 
-  *TODO*: It is planned that this config file be used, but it's not yet implemented.
-
-*** TODO Configuration loading
+*** Configuration loading
 The main generated user configuration file is [[~/.emacs.d/haris/root.el]]. This
 file is loaded by spacemacs and internally, it loads the other files based on
 the type of the purpose of the current emacs daemon (by reading the
@@ -1252,103 +1250,6 @@ Fix for empty image list (not sure if the fix works):
 #+begin_src elisp
   (use-package bluetooth :defer t)
 #+end_src
-** TODO Email
-:PROPERTIES:
-:header-args:elisp+: :tangle no
-:END:
-I use mu4e as my email client.
-#+begin_src elisp
-  ;; This is set to 't' to avoid mail syncing issues when using mbsync
-  (setq mu4e-change-filenames-when-moving t)
-
-  ;; Refresh mail using isync every M minutes
-  (setq mu4e-update-interval (let ((M 4)) (* M 60)))
-  (setq mu4e-get-mail-command "mbsync -a")
-  (setq mu4e-enable-async-operations t)
-
-  ;; Configure contexts
-  (setq mu4e-contexts
-        `(
-          ,(make-mu4e-context
-            :name "p-hgusic.pub@gmail.com"
-            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "hgusic.pub@gmail.com")))
-            :enter-func (lambda () (message "Entering context: hgusic.pub@gmail.com"))
-            :vars '((user-mail-address . "hgusic.pub@gmail.com")
-                    (user-full-name . "Haris Gusic")
-                    (mu4e-drafts-folder .     "/gmail/hgusic.pub/[Gmail]/Drafts")
-                    (mu4e-sent-folder   .     "/gmail/hgusic.pub/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder .     "/gmail/hgusic.pub/[Gmail]/All Mail")
-                    (mu4e-trash-folder  .     "/gmail/hgusic.pub/[Gmail]/Trash")
-                    (
-                     mu4e-maildir-shortcuts
-                     . (("/gmail/hgusic.pub/Inbox"             . ?i)
-                        ("/gmail/hgusic.pub/[Gmail]/Sent Mail" . ?s)
-                        ("/gmail/hgusic.pub/[Gmail]/Trash"     . ?t)
-                        ("/gmail/hgusic.pub/[Gmail]/Drafts"    . ?d)
-                        ("/gmail/hgusic.pub/[Gmail]/All Mail" . ?a)))))
-
-          ,(make-mu4e-context
-            :name "d-harisgusic.dev@gmail.com"
-            :match-func (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :to "harisgusic.dev@gmail.com")))
-            :enter-func (lambda () (message "Entering context: harisgusic.dev@gmail.com"))
-            :vars '((user-mail-address . "harisgusic.dev@gmail.com")
-                    (user-full-name . "Haris Gusic")
-                    (mu4e-drafts-folder .     "/gmail/harisgusic.dev/[Gmail]/Drafts")
-                    (mu4e-sent-folder   .     "/gmail/harisgusic.dev/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder .     "/gmail/harisgusic.dev/[Gmail]/All Mail")
-                    (mu4e-trash-folder  .     "/gmail/harisgusic.dev/[Gmail]/Trash")
-                    (
-                     mu4e-maildir-shortcuts
-                     . (("/gmail/harisgusic.dev/Inbox"             . ?i)
-                        ("/gmail/harisgusic.dev/[Gmail]/Sent Mail" . ?s)
-                        ("/gmail/harisgusic.dev/[Gmail]/Trash"     . ?t)
-                        ("/gmail/harisgusic.dev/[Gmail]/Drafts"    . ?d)
-                        ("/gmail/harisgusic.dev/[Gmail]/All Mail" . ?a)))))
-          ))
-
-  (setq mu4e-context-policy         'ask
-        mu4e-compose-context-policy 'ask)
-
-  (setq mu4e-org-support t)
-  ;; Enable org mode when composing messages
-  (setq mu4e-org-compose-support t)
-#+end_src
-*** Sending messages
-#+begin_src elisp
-  ;; Show completion for From and To headers
-  (setq mail-user-agent 'mu4e-user-agent)
-  (setq message-mail-alias-type 'ecomplete)
-
-  (add-hook 'message-setup-hook 'flyspell-mode)
-#+end_src
-*** TODO Notifications
-#+begin_src elisp
-  (use-package mu4e-alert :defer t)
-  (setq mu4e-enable-notifications t)
-  (mu4e-alert-set-default-style 'libnotify)
-#+end_src
-** TODO Slack
-slack-register-team automatically connects to slack. If I add it to the
-slack-mode-hook hook, it never connects. Investigate
-#+begin_src elisp
-  ;; (add-hook
-  ;;  'slack-mode-hook
-  ;;  (lambda ()
-  ;;    ;; Add slack teams here
-  ;;    (slack-register-team
-  ;;     :name "efektivnialtruismus"
-  ;;     :token (auth-source-pick-first-password
-  ;;             :host "efektivnialtruismus.slack.com"
-  ;;             :user "hgusic.pub@gmail.com")
-  ;;     :cookie (auth-source-pick-first-password
-  ;;              :host "efektivnialtruismus.slack.com"
-  ;;              :user "hgusic.pub@gmail.com^cookie")
-  ;;     :subscribed-channels '((main-announcements
-  ;;                             main-community-events
-  ;;                             main-opportunities
-  ;;                             main-random
-  ;;                             project-eahouse)))))
-#+end_src
 ** ERC
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
   (use-package erc)
@@ -2000,10 +1901,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 ** Bindings
 #+begin_src elisp
   (evil-define-key 'normal magit-section-mode-map (kbd "g h") #'magit-section-up)
-#+end_src
-** TODO GitHub                                                  :deprecated:
-#+begin_src elisp
-  (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
 #+end_src
 * AI
 #+begin_src elisp
