@@ -226,7 +226,7 @@ and some added mime type associations. To apply the changes, run:
 #+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
   [Default Applications]
   application/octet-stream=emacs.desktop;gvim.desktop;
-  application/pdf=sioyek.desktop;org.pwmt.zathura-pdf-mupdf.desktop;
+  application/pdf=org.pwmt.zathura-pdf-poppler.desktop;
   application/x-dxf=librecad.desktop;
   application/x-gnome-saved-search=nemo.desktop;
   inode/directory=alacritty-open.desktop;
