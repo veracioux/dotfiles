@@ -199,6 +199,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (setq gc-cons-threshold (* 500 1024 1024))
 
   (setq paradox-github-token t)
+  (auth-source-pass-enable)
 
   (setq image-auto-resize 'fit-width)
   (setq image-auto-resize-on-window-resize t)
@@ -212,7 +213,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
                 (defun haris//add-file-to-recentf ()
                   (recentf-add-file default-directory)))
       (add-to-list 'recentf-exclude "^/tmp/haris-pipe-")
-      (cl-delete-if (lambda (el) (string= el "~/.emacs.d/elpa/29.1/develop/"))
+      (cl-delete-if (lambda (el) (string-match "~/\\.emacs\\.d/elpa/[^/]+/develop" el))
                     recentf-exclude)))
   (setq winum-scope 'frame-local)
 
