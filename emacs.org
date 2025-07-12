@@ -2001,6 +2001,17 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (setq auth-sources '(password-store "~/.authinfo.dev.gpg" "~/.netrc.gpg"))
 #+end_src
 * AI
+#+begin_src elisp
+  (setq haris/ai/model/openai/o3-mini
+        (make-llm-openai :key openai-key :chat-model "o3-mini"))
+  (setq haris/ai/model/openai/o4-mini
+        (make-llm-openai :key openai-key :chat-model "o4-mini"))
+
+  (setq haris/ai/model/default/name "o3-mini")
+  (setq haris/ai/model/default (eval (intern (format "haris/ai/model/openai/%s" haris/ai/model/default/name))))
+
+  (provide 'haris/ai)
+#+end_src
 ** ChatGPT
 #+begin_src elisp
   (eval-after-load 'chatgpt
@@ -2141,7 +2152,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 ** Aidermacs
 #+begin_src elisp
   (use-package aidermacs :defer t)
-  (setq aidermacs-default-model "openai/o3-mini")
+  (setq aidermacs-default-model (concat "openai/" haris/ai/model/default/name))
   (setq aidermacs-backend 'vterm)
   (setq aidermacs-show-diff-after-change t)
   ;; (setq aidermacs-architect-model "TODO")
@@ -2154,6 +2165,13 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 ** Gptel
 #+begin_src elisp
   (setq gptel-confirm-tool-calls t)
+  (setq gptel-default-mode 'org-mode)
+#+end_src
+** Ellama
+#+begin_src elisp
+  (setopt ellama-providers
+          '(("openai/o3-mini" . (make-llm-openai :chat-model "o3-mini" :key openai-key))))
+  (setopt ellama-provider haris/ai/model/openai/o3-mini)
 #+end_src
 * REPLs in Emacs
 ** Common settings
