@@ -378,6 +378,7 @@ You can test the transforms by calling this:
           "^\\*straight-process\\*"
           "\\*which-key\\*"
           "^\\*xref\\*"
+          "\\*Customize Group:"
           ;; Docker command output buffers
           "^\\* docker .*\\*"
           ;; Docker compose command output buffers
