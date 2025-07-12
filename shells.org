@@ -197,6 +197,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+begin_src fish
   function __haris_notify_bg_task_done --on-event fish_postexec
       set -l _status "$status"
+      set -l cmdline $argv[1]
 
       [ -n "$HARIS_BACKGROUND_TASKS_SILENT" ] && return
       [ -n "$DISPLAY" ] || return
@@ -214,13 +215,11 @@ This applies only to graphical sessions, the linux TTY is unaffected.
               set exit_message "exited with $_status"
           end
           # Timeout is so the command doesn't hang when daemon is not running
-          timeout 0.8 notify-send (echo "Command "(history | tac | tail -n +"$__haris_history_count" 2>/dev/null)"" "$exit_message")
+          timeout 0.8 notify-send (echo "Command $cmdline" "$exit_message")
           if [ "$status" = "124" ]
               echo ERR: NOTIFICATION TIMED OUT
           end
       end
-
-      set -g __haris_history_count (history | wc -l)
   end
 #+end_src
 *** =edit_command_buffer_custom=
