@@ -22,6 +22,7 @@
     ControlMaster auto
     ControlPath ~/.ssh/sockets/%r@%h-%p
     ControlPersist 600
+    SetEnv TERM=xterm-256color
 #+end_src
 * Dunst
 :PROPERTIES:
