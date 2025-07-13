@@ -824,6 +824,18 @@ Note: This code block must not contain any apostrophes!
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/forever.fish")
   complete -c forever --wraps command --wraps builtin
 #+end_src
+*** =pdm=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/pdm.fish")
+  function pdm
+      set cmd $argv[1]
+
+      if test "$cmd" = "shell"
+          eval (pdm venv activate)
+      else
+          command pdm $argv
+      end
+  end
+#+end_src
 *** Worktree utilities
 **** =wt=
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/wt.fish")
