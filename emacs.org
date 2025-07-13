@@ -852,7 +852,7 @@ Some custom keybindings are defined here as well.
 #+end_src
 ** YAML
 #+begin_src elisp
-  (eval-after-load "yaml"
+  (eval-after-load 'yaml
     (defun haris//after-load/yaml ()
       (use-package yaml-pro)))
 
@@ -871,16 +871,18 @@ Some custom keybindings are defined here as well.
                   (require 'openapi-preview)))
       (add-hook hook 'spacemacs/toggle-indent-guide)
       (add-hook hook #'eldoc-mode 90)
-      (add-hook hook #'yaml-pro-ts-mode 91)
+      (with-eval-after-load 'yaml-pro
+          (add-hook hook 'yaml-pro-ts-mode 91))
       (add-hook hook 'spacemacs/toggle-display-fill-column-indicator-on)
       (add-hook hook
                 (lambda ()
                   (setq-local counsel-jq-command "yq")) 92)
       (add-hook hook #'lsp 94)))
 
-  (add-hook 'yaml-pro-ts-mode-hook
+  (with-eval-after-load 'yaml-pro
+   (add-hook 'yaml-pro-ts-mode-hook
             (lambda ()
-              (setq-local lsp-enable-imenu nil)))
+              (setq-local lsp-enable-imenu nil))))
 #+end_src
 *** OpenAPI
 #+begin_src elisp
@@ -896,7 +898,7 @@ Some custom keybindings are defined here as well.
 #+end_src
 *** Keybindings
 #+begin_src elisp
-  (eval-after-load "yaml"
+  (eval-after-load 'yaml-pro
     (lambda ()
       (evil-define-key 'normal yaml-mode-map (kbd "SPC j =")    'lsp-format-buffer)
 
