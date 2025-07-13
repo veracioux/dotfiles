@@ -177,6 +177,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
      :host github
      :repo "lastquestion/explain-pause-mode"))
   (use-package fontawesome :defer t)
+  (use-package direnv :config (direnv-mode))
 #+end_src
 *** Language modes
 #+begin_src elisp
