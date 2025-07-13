@@ -977,6 +977,46 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
 
       (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$")))
 #+end_src
+
+Use LSP indentation features when running =spacemacs/indent-region-or-buffer=, if
+they are available.
+#+begin_src elisp
+  (eval-after-load 'lsp-mode
+    (add-hook
+     'lsp-configure-hook
+     (defun haris//setup-format-function-for-lsp-buffer ()
+       ;; Record default indentation function
+       (when (not (boundp 'haris//default-indent-region-function))
+         (setq-local haris//default-indent-region-function indent-region-function))
+       ;; Set up a custom indent function that uses LSP formatting
+       (setq-local
+        indent-region-function
+        (defun haris//lsp-format-dwim-with-fallback (start end)
+          (condition-case nil
+              ;; Try lsp-format-region
+              (lsp-format-region start end)
+            ;; If it fails:
+            (error
+             ;; Check if the region is the whole buffer
+             (if (and (= start (point-min))
+                      (= end (point-max)))
+                 ;; If yes:
+                 (condition-case nil
+                     ;; Try lsp-format-buffer
+                     (lsp-format-buffer)
+                   ;; If this also fails:
+                   (error
+                    (let ((bound-func (key-binding (kbd ",=="))))
+                      ;; If a command is bound to ",=="
+                      (if bound-func
+                          ;; Run it
+                          (call-interactively bound-func)
+                        ;; Else: Use the default indent region function
+                        (funcall haris//default-indent-region-function start end)))))
+                   ;; Else: if region is not whole buffer
+                   ;; Use the default indent region function
+                   (funcall haris//default-indent-region-function start end)))))))))
+#+end_src
 *** Keybindings
 #+begin_src elisp
   (eval-after-load 'lsp-mode
