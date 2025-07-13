@@ -967,9 +967,6 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
 
       (setq lsp-enable-on-type-formatting nil)
 
-      ;; This prevents lsp from overriding my custom 'company-backends'
-      (setq lsp-completion-provider :none)
-
       (setq lsp-restart 'ignore)
 
       (setq lsp-auto-execute-action nil)
@@ -1044,7 +1041,14 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (setq elpy-modules nil)
 
   (with-eval-after-load 'pytest
-      (add-to-list 'pytest-project-root-files ".projectile"))
+    (add-to-list 'pytest-project-root-files ".projectile"))
+
+  ;; A single company-capf item in the company-backends list breaks snippets
+  ;; Replace it with (company-capf :with company-yasnippet)
+  (spacemacs|add-company-backends
+    :backends (company-capf :with company-yasnippet)
+    :modes python-mode)
+  (setq company-backends-python-mode (cl-delete 'company-capf company-backends-python-mode))
 #+end_src
 *** Bindings
 #+begin_src elisp
@@ -1109,33 +1113,6 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 ** TailwindCSS
 #+begin_src elisp
   (use-package lsp-tailwindcss)
-#+end_src
-** Shells
-#+begin_src elisp
-  (use-package company-shell)
-
-  (defun haris/enable--completions-in-shell-modes ()
-    (setq-local company-backends haris/company-backends-sh-mode))
-
-  (add-hook 'sh-base-mode-hook #'haris/enable--completions-in-shell-modes)
-  (add-hook 'fish-mode-hook #'haris/enable--completions-in-shell-modes)
-#+end_src
-*** Fish
-#+begin_src elisp
-  (straight-use-package
-   '(company-fish
-     :type git
-     :host github
-     :repo "CeleritasCelery/company-fish"))
-
-  (add-to-list 'spacemacs--indent-variable-alist '(fish-mode . fish-indent-offset))
-#+end_src
-** RST
-#+begin_src elisp
-  (defun haris/rst-heading () (interactive)
-         (evil-execute-macro 1 "\"yyyp^v$"))
-
-  (define-key evil-normal-state-map (kbd ", H") 'haris/rst-heading)
 #+end_src
 ** Dockerfile
 #+begin_src elisp
@@ -1761,11 +1738,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 ** Bindings
 #+begin_src elisp
-  ;; Make org-cycle work only in evil normal state, so it doesn't interfere with
-  ;; completion etc.
-  (define-key org-mode-map (kbd "TAB") nil t)
-  (evil-define-key 'normal org-mode-map (kbd "TAB")         'org-cycle)
-
   (evil-define-key 'normal org-mode-map (kbd ", S")         'org-attach-screenshot)
   (evil-define-key 'normal org-mode-map (kbd ", TAB")       'org-next-link)
   (evil-define-key 'normal org-mode-map (kbd ", <backtab>") 'org-previous-link)
@@ -1951,7 +1923,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 ** Copilot
 #+begin_src elisp
-  (use-package copilot)
+  (require 'copilot)
   (setq copilot-indent-offset-warning-disable t)
 
   (defvar haris/allow-copilot nil
@@ -2037,17 +2009,17 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 *** Keybindings
 #+begin_src elisp
-  (eval-after-load 'copilot
-    (lambda ()
-      (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-      (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-      (define-key copilot-completion-map (kbd "M-<backspace>") 'copilot-clear-overlay)
-      (define-key copilot-completion-map (kbd "M-l") 'copilot-accept-completion-by-word)
-      (define-key copilot-completion-map (kbd "M-j") 'copilot-accept-completion-by-line)
-      (define-key copilot-completion-map (kbd "M-n") 'copilot-next-completion)
-      (define-key copilot-completion-map (kbd "M-p") 'copilot-previous-completion)
-      (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-panel-complete)
-      (spacemacs/set-leader-keys "oC" 'copilot-mode)))
+  (with-eval-after-load 'copilot
+    (setq copilot-completion-map (make-keymap))
+    (define-key copilot-completion-map (kbd "M-<tab>") 'copilot-accept-completion)
+    (define-key copilot-completion-map (kbd "M-SPC") 'copilot-panel-complete)
+    (define-key copilot-completion-map (kbd "M-<backspace>") 'copilot-clear-overlay)
+    (define-key copilot-completion-map (kbd "M-l") 'copilot-accept-completion-by-word)
+    (define-key copilot-completion-map (kbd "M-l") 'copilot-accept-completion-by-word)
+    (define-key copilot-completion-map (kbd "M-j") 'copilot-accept-completion-by-line)
+    (define-key copilot-completion-map (kbd "M-n") 'copilot-next-completion)
+    (define-key copilot-completion-map (kbd "M-p") 'copilot-previous-completion)
+    (spacemacs/set-leader-keys "oC" 'copilot-mode))
 #+end_src
 ** Aidermacs
 #+begin_src elisp
@@ -2183,28 +2155,18 @@ and crashes of my default Emacs instance.
 Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
 ** Company
 #+begin_src elisp
-  (use-package company)
-  (use-package company-statistics)
-
+  (require 'company)
   (global-company-mode)
+
   (setq tab-always-indent t)
-  (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t)
   (setq completion-ignore-case t
         read-file-name-completion-ignore-case t
         read-buffer-completion-ignore-case t)
-  (setq company-tempo-expand t)
   ;; This should ideally be 0, but a non-zero value might help with performance
-  (setq company-idle-delay 0.05)
+  (setq company-async-redisplay-delay 0.2)
   (setq company-posframe-quickhelp-delay nil)
   (setq company-show-quick-access 'left)
-
-  (add-hook 'company-mode-hook #'company-statistics-mode)
-  (setq company-statistics-file (concat spacemacs-cache-directory
-                                        "company-statistics-cache.el"))
-
-  ;; Default backends for any new mode
-  (setq-default company-backends company-backends-text-mode)
 
   ;; Show popup even when the current text is the only candidate
   (eval-after-load 'company
@@ -2214,183 +2176,16 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
 #+end_src
 *** company-dabbrev
 #+begin_src elisp
-  (setq company-dabbrev-char-regexp "\\sw\\(?:-\\sw\\)*")
+  (setq company-dabbrev-char-regexp "\\sw\\(?:[-_]\\sw\\)*")
 #+end_src
-*** Functions
+*** TODO Functions
 #+begin_src elisp
-  (defun haris/company-disable-idle-popup ()
-    "Disable company idle tooltip"
-    (setq-local company-idle-delay nil))
-
-  (defun haris/company-enable-idle-popup ()
-    "Enable company idle tooltip"
-    (kill-local-variable 'company-idle-delay))
-
-  (defun haris/company-candidate-is-snippet-p (candidate)
-    (equal (get-text-property 0 'company-backend candidate)
-            'company-yasnippet))
-
-  (defun haris/company-sort-snippets-first (candidates)
-    "Sort candidates using backend company-yasnippet before other ones."
-    (sort candidates
-          (lambda (c1 c2)
-            (and
-             (haris/company-candidate-is-snippet-p c1)
-             (not
-              (haris/company-candidate-is-snippet-p c2))))))
-
-  (defun haris/company-sort-prefix-first (candidates)
-    "Sort CANDIDATES so that those starting with the typed prefix come first."
-    (let ((prefix (company-grab-symbol)))
-      (if prefix
-          (let ((prefix-regex (concat "^" (regexp-quote prefix))))
-            (sort candidates
-                  (lambda (c1 c2)
-                    (and (string-match prefix-regex c1)
-                         (not (string-match prefix-regex c2))))))
-        candidates)))
-
   (defun haris/company-toggle-tooltip ()
     (interactive)
     (cond
      ;; Tried company-tooltip-visible-p instead, but it doesn't work
      ((company--active-p) (company-cancel) t)
      ((company-manual-begin))))
-
-  (defun haris/company-sort-by-statistics-preserve-snippet-order (candidates)
-    "Wraps company-sort-by-statistics but preserves the relative order of snippet completions."
-    (let* ((old-score-calc company-statistics-score-calc)
-           (company-statistics-score-calc
-            (lambda (candidate)
-              (if (haris/company-candidate-is-snippet-p candidate)
-                  99999999
-                (funcall old-score-calc candidate)))))
-      (company-sort-by-statistics candidates)))
-
-  (defun haris/init-company-backends-for-mode (mode company-backends)
-    "Add a hook for MODE which initializes company backends for it.
-  The backends are taken from the variable haris/company-backends-MODE."
-    (let ((mode-hook-symbol (intern (format "%s-hook" mode)))
-          (init-func-symbol (intern
-                             (format "haris/init-company-backends-for-%s" mode)))
-          (backends-var-symbol (intern (format "haris/company-backends-%s" mode))))
-      (eval `(setq ,backends-var-symbol company-backends))
-      (defalias init-func-symbol
-        `(lambda ()
-           (setq-local company-backends ,backends-var-symbol))
-        (format "Initialize company-backends for %s" mode))
-      (add-hook mode-hook-symbol init-func-symbol 99)))
-#+end_src
-*** Backend configurations
-Most of these have been createdu using the default ones set up by Spacemacs [[(auto-completion)][auto-completion]] as the starting value.
-#+begin_src elisp
-  (setq haris/company-backends-default
-        '((company-files :with company-yasnippet)
-          (company-capf :with company-yasnippet)
-          (company-semantic company-dabbrev-code company-keywords company-ispell :with company-yasnippet)
-          (company-dabbrev :with company-yasnippet)))
-
-  (haris/init-company-backends-for-mode
-   'sh-mode
-   '(
-     (company-files :with company-yasnippet)
-     (;; This will only take effect in fish mode
-      company-fish-shell
-      company-shell-env
-      company-shell
-      company-capf
-      :with company-yasnippet)
-     (company-semantic
-      company-dabbrev-code
-      company-keywords
-      company-ispell
-      :with company-yasnippet)
-     (company-dabbrev :with company-yasnippet)))
-
-  (remove-hook 'org-mode-hook #'spacemacs//init-company-backends-org-mode)
-  (haris/init-company-backends-for-mode
-   'org-mode
-   '((company-files :with company-yasnippet)
-     (company-capf :with company-yasnippet)
-     (company-org-block
-      company-semantic
-      company-dabbrev-code
-      company-keywords
-      company-ispell
-      :with company-yasnippet)
-     (company-dabbrev :with company-yasnippet)))
-
-  (haris/init-company-backends-for-mode
-   'nginx-mode
-   '((company-files :with company-yasnippet)
-     (company-nginx
-      company-semantic
-      company-dabbrev-code
-      company-keywords
-      company-ispell
-      :with company-yasnippet)
-     (company-dabbrev :with company-yasnippet)))
-
-  (haris/init-company-backends-for-mode 'fundamental-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'text-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'yaml-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'yaml-ts-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'json-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'json-ts-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'java-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'java-ts-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'conf-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'python-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'inferior-python-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'sql-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'systemd-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'haris/git-commit-major-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'typescript-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'emacs-lisp-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'lisp-data-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'dockerfile-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'docker-compose-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'markdown-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'minibuffer-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'web-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'sgml-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'nxml-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'chatgpt-input-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'sql-interactive-mode haris/company-backends-default)
-  (haris/init-company-backends-for-mode 'nodejs-repl-mode haris/company-backends-default)
-
-  (haris/init-company-backends-for-mode
-   'sql-interactive-mode
-   '((company-files :with company-yasnippet)
-     ;; TODO: company-edbi seems to be useless
-     (company-edbi
-      company-semantic
-      company-dabbrev-code
-      company-keywords
-      company-ispell
-      :with company-yasnippet)
-     (company-dabbrev :with company-yasnippet)))
-#+end_src
-This variable is initialized too late, and we require it [[(company-backends-emacs-lisp-mode/usage)][here]]. I wasn't able to
-identify where exactly it is initialized by spacemacs, so I set it explicitly here.
-#+begin_src elisp
-  (setq company-backends-emacs-lisp-mode haris/company-backends-default)
-#+end_src
-*** Behavior overrides
-#+begin_src elisp
-  (setq company-transformers
-        '(haris/company-sort-by-statistics-preserve-snippet-order
-          company-sort-by-backend-importance
-          haris/company-sort-snippets-first
-          haris/company-sort-prefix-first))
-
-  (add-hook
-   'company-statistics-mode-hook
-   (lambda ()
-     "Remove company-sort-by-statistics element that was added automatically by company-statistics"
-     (setq company-transformers (delq 'company-sort-by-statistics company-transformers))))
-
-  (setq completion-styles '(basic partial-completion emacs22 initials substring flex))
 #+end_src
 *** Bindings
 #+begin_src elisp
@@ -2420,9 +2215,9 @@ other maps, so I define it here.
          (haris/company-toggle-tooltip)
        (evil-force-normal-state))))
 #+end_src
-*** Workarounds
-**** Posframe in minibuffer is making minibuffer lose focus
-Disabled posframe in [[(disable-posframe)][Spacemacs Layers]].
+# *** Workarounds
+# **** Posframe in minibuffer is making minibuffer lose focus
+# Disabled posframe in [[(disable-posframe)][Spacemacs Layers]].
 ** Yasnippet
 #+begin_src elisp
   (use-package yasnippet)
@@ -2453,46 +2248,6 @@ Disabled posframe in [[(disable-posframe)][Spacemacs Layers]].
 
   (define-key yas-keymap (kbd "M-n") #'yas-next-field)
   (define-key yas-keymap (kbd "M-p") #'yas-prev-field)
-#+end_src
-** The =TAB= key
-The TAB key is much abused. Keeping track of it in each minor mode separately is
-a nightmare. Therefore I unbind TAB in some keymaps so that it falls back to the
-TAB binding in the global keymap. This way, I can define the exact order of
-precedence of TAB-bound commands for all modes.
-#+begin_src elisp
-  (defun haris/handle-TAB-in-insert-mode (&optional alert)
-    "Handle the TAB key exactly the way I want to."
-    (interactive)
-    (setq alert command-log-mode)
-
-    (let ((last-fun nil))
-      (defun _ (fun &rest rest)
-        "Call the function normally, and record it to the last-fun variable."
-        (setq last-fun (append (list fun) rest))
-        (apply fun rest))
-
-      (cond
-       ;; If in an org table, try org-cycle
-       ((when (and (fboundp 'org-at-table-p) (org-at-table-p)) (or (_ 'org-cycle) t)))
-       ;; If company-mode is on, complete
-       ((when (and company-mode (company-tooltip-visible-p)) (_ 'company-complete-selection)))
-       ;; If org-mode is on, try org-cycle
-       ((when (eq major-mode 'org-mode)
-          (cond ((_ 'org-cycle))
-                ;; If there's nothing to cycle, go to next link
-                ((_ 'org-next-link)))))
-       ;; Default: indent
-       ((when (eq major-mode 'minibuffer-mode) (_ 'minibuffer-complete)))
-       ((_ 'indent-for-tab-command)))
-
-      (when alert
-        (alert (format "%s" last-fun)
-               :title "Command bound to pressed key:"))))
-
-  (define-key evil-insert-state-map (kbd "TAB") #'haris/handle-TAB-in-insert-mode)
-  ;; Add ivy-partial-or-done to ivy-minibuffer-map in insert mode so as to not be
-  ;; overridden by the above.
-  (evil-define-key 'insert ivy-minibuffer-map (kbd "TAB") #'ivy-partial-or-done)
 #+end_src
 * Info mode
 Remove Info mode annoying keybindings.
@@ -2760,12 +2515,14 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      (auto-completion ; (ref:auto-completion)
       :variables
       auto-completion-enable-snippets-in-popup t
-      auto-completion-use-company-posframe nil ; (ref:disable-posframe)
       auto-completion-return-key-behavior nil
       auto-completion-tab-key-behavior 'complete
       auto-completion-enable-help-tooltip 'manual
-      auto-completion-enable-sort-by-usage nil ;; I configure this manually
+      auto-completion-enable-sort-by-usage t
+      auto-completion-idle-delay 0.05
+      auto-completion-minimum-prefix-length 1
       )
+     github-copilot
      openai
      whisper
      (llm-client
