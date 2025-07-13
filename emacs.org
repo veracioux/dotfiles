@@ -1877,13 +1877,12 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 * AI
 #+begin_src elisp
-  (setq haris/ai/model/openai/o3-mini
-        (make-llm-openai :key openai-key :chat-model "o3-mini"))
-  (setq haris/ai/model/openai/o4-mini
-        (make-llm-openai :key openai-key :chat-model "o4-mini"))
+  (setq haris/ai/model/openai/o3-mini/creator
+        '(make-llm-openai :key openai-key :chat-model "o3-mini"))
+  (setq haris/ai/model/openai/o4-mini/creator
+        '(make-llm-openai :key openai-key :chat-model "o4-mini"))
 
-  (setq haris/ai/model/default/name "o3-mini")
-  (setq haris/ai/model/default (eval (intern (format "haris/ai/model/openai/%s" haris/ai/model/default/name))))
+  (setq haris/ai/model/openai/default/creator haris/ai/model/openai/o4-mini/creator)
 
   (provide 'haris/ai)
 #+end_src
@@ -2024,7 +2023,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 ** Aidermacs
 #+begin_src elisp
   (use-package aidermacs :defer t)
-  (setq aidermacs-default-model (concat "openai/" haris/ai/model/default/name))
+  (setq aidermacs-default-model "openai/o4-mini")
   (setq aidermacs-backend 'vterm)
   (setq aidermacs-show-diff-after-change t)
   ;; (setq aidermacs-architect-model "TODO")
@@ -2041,9 +2040,11 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 ** Ellama
 #+begin_src elisp
-  (setopt ellama-providers
-          '(("openai/o3-mini" . (make-llm-openai :chat-model "o3-mini" :key openai-key))))
-  (setopt ellama-provider haris/ai/model/openai/o3-mini)
+  (setopt
+   ellama-providers
+   `(("openai/o3-mini" . (,haris/ai/model/openai/o3-mini/creator))
+     ("openai/o4-mini" . (,haris/ai/model/openai/o4-mini/creator))))
+  (setopt ellama-provider (eval haris/ai/model/openai/default/creator))
 #+end_src
 * REPLs in Emacs
 ** Common settings

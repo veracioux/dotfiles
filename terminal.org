@@ -812,7 +812,7 @@ You have to generate an SSH key for the cointop SSH server:
 * Aider
 #+begin_src yaml :tangle (haris/tangle-home ".aider.conf.yml")
   openai-api-key: «get-openai-api-key()»
-  model: openai/o3-mini
+  model: openai/o4-mini
   auto-commits: false
   notifications: true
   watch-files: true
