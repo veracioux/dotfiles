@@ -1951,10 +1951,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 ** Copilot
 #+begin_src elisp
-  (straight-use-package '(copilot
-                          :type git
-                          :host github
-                          :repo "copilot-emacs/copilot.el"))
+  (use-package copilot)
   (setq copilot-indent-offset-warning-disable t)
 
   (defvar haris/allow-copilot nil
@@ -2844,6 +2841,11 @@ The private config is loaded from [[~/.emacs.d/haris/private.el]].
 #+begin_src elisp
   (let ((file "~/.emacs.d/haris/private.el"))
     (when (file-exists-p file) (load-file file)))
+#+end_src
+** Load custom variables
+#+begin_src elisp
+  (setq custom-file "~/.emacs.d/.cache/.custom-settings")
+  (load-file custom-file)
 #+end_src
 ** Local variables                                                :noexport:
 # Local Variables:
