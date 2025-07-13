@@ -646,11 +646,10 @@ A menu for managing notifications.
 ** Chat menu
 Menu of utilities that allow me to chat with my computer.
 #+begin_src i3wm-config
-  set $mode_chat       " Chat | ChatGPT [c]hat [C]hoose"
+  set $mode_chat       " Chat | ChatGPT [c]hat"
 
   mode $mode_chat {
   bindsym c       exec --no-startup-id <<scripts-dir>>/chatgpt.sh, mode default
-  bindsym Shift+c exec --no-startup-id <<scripts-dir>>/chatgpt.sh --choose, mode default
   bindsym Escape  mode default
   }
 
@@ -663,10 +662,7 @@ Menu of utilities that allow me to chat with my computer.
 **** ChatGPT
 #+NAME: chatgpt.sh
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/chatgpt.sh")
-  query=''
-
-  if [ "$1" = '--choose' ]; then
-      choices="$(
+  choices="$(
   cat <<'EOF'
   gpt-4o: Great for most tasks
   o3: Uses advanced reasoning
@@ -677,12 +673,11 @@ Menu of utilities that allow me to chat with my computer.
   gpt-4.1-mini: Faster for everyday tasks
   EOF
   )"
-      choice="$(echo "$choices" | dmenu -l 10 | sed -e 's/:.*//' -e 's/\./-/g')"
-      if [ -z "$choice" ]; then
-          exit 1
-      fi
-      query="?model=$choice"
+  choice="$(echo "$choices" | dmenu -l 10 | sed -e 's/:.*//' -e 's/\./-/g')"
+  if [ -z "$choice" ]; then
+      exit 1
   fi
+  query="?model=$choice"
 
   url="https://chatgpt.com/$query"
 
