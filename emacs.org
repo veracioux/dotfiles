@@ -2487,73 +2487,21 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
 ** Layers
 #+begin_src elisp :tangle (haris/tangle-home ".spacemacs-init.el")
   (setq-default
-   dotspacemacs-configuration-layers ; (ref:dotspacemacs-configuration-layers)
-   '(syntax-checking
-     multiple-cursors
-     octave
-     markdown
-     html
-     spacemacs-language
+   dotspacemacs-configuration-layers
+   '(
+     ;; Navigation and Project Management
      spacemacs-navigation
      spacemacs-project
+
+     ;; Basic text editing
+     syntax-checking
      (spacemacs-editing
       :variables
       vim-style-enable-undo-region t)
      spacemacs-editing-visual
-     spacemacs-org
-     search-engine
+     multiple-cursors
      spell-checking
-     major-modes
-     helpful
-     ivy
-     imenu-list
-     (lsp
-      :variables
-      lsp-headerline-breadcrumb-enable t
-      lsp-ui-sideline-show-symbol t
-      lsp-lens-enable t)
-     (c-c++ :variables c-c++-backend 'lsp-clangd c-c++-enable-clang-support t)
-     (cmake :variables cmake-backend 'lsp cmake-enable-cmake-ide-support t)
-     (python :variables python-formatter 'black python-backend 'lsp)
-     dap
-     vagrant
-     ;; elpy
-     ;; pythonp
-     ipython-notebook
-     emacs-lisp
-     shell
-     (shell-scripts :variables shell-scripts-backend 'lsp)
-     javascript
-     typescript
-     java
-     kotlin
-     go
-     prettier
-     vue
-     (yaml :variables yaml-enable-lsp t)
-     csv
-     rust
-     (docker :variables docker-dockerfile-backend 'lsp)
-     vagrant
-     translate
-     git
-     lua
-     (org :variables
-          org-enable-appear-support t
-          org-enable-transclusion-support t
-          org-enable-verb-support t)
-     restclient
-     slack
-     ;; mu4e
-     pass
-     sql
-     nginx
-     systemd
-     tmux
-     ;; eaf
-     ;; emms
-     debug
-     (auto-completion ; (ref:auto-completion)
+     (auto-completion
       :variables
       auto-completion-enable-snippets-in-popup t
       auto-completion-return-key-behavior nil
@@ -2561,15 +2509,91 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
       auto-completion-enable-help-tooltip 'manual
       auto-completion-enable-sort-by-usage t
       auto-completion-idle-delay 0.05
-      auto-completion-minimum-prefix-length 1
-      )
+      auto-completion-minimum-prefix-length 1)
+
+     ;; Organization and Note Taking
+     spacemacs-org
+     ;; ORG Extended Configurations
+     (org :variables
+          org-enable-appear-support t
+          org-enable-transclusion-support t
+          org-enable-verb-support t)
+     restclient
+
+     ;; Search and help
+     search-engine
+     helpful
+
+     ;; Tools and Utilities
+     ivy
+     imenu-list
+
+     ;; Programming and languages
+     (lsp
+      :variables
+      lsp-headerline-breadcrumb-enable t
+      lsp-ui-sideline-show-symbol t
+      lsp-lens-enable t)
+     (c-c++ :variables
+            c-c++-backend 'lsp-clangd
+            c-c++-enable-clang-support t)
+     (cmake :variables
+            cmake-backend 'lsp
+            cmake-enable-cmake-ide-support t)
+     (python :variables
+             python-formatter 'black
+             python-backend 'lsp)
+     (shell-scripts :variables
+                    shell-scripts-backend 'lsp)
+     (yaml :variables
+           yaml-enable-lsp t)
+     octave
+     javascript
+     typescript
+     java
+     kotlin
+     go
+     prettier
+     vue
+     csv
+     rust
+     lua
+     sql
+     nginx
+     systemd
+     emacs-lisp
+     major-mode
+     markdown
+     html
+
+     ;; Debugging Tools
+     dap
+     debug
+
+     ;; Virtualization and Cloud
+     vagrant
+     (docker :variables
+             docker-dockerfile-backend 'lsp)
+
+     ;; Communication and Collaboration
+     slack
+     git
+
+     ;; AI / LLM Integration
      github-copilot
      openai
      whisper
      (llm-client
       :variables
       llm-client-enable-gptel t
-      llm-client-enable-ellama t)))
+      llm-client-enable-ellama t)
+
+     ;; REPLs
+     ipython-notebook
+     shell
+
+     ;; Misc
+     tmux))
 #+end_src
 ** Additional packages
 Packages installed with =use-package= should be added here as well. Otherwise
