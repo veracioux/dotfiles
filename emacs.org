@@ -164,6 +164,25 @@ I use =straight= to clone some packages that are not available on =melpa=.
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
   <<package-init>>
 #+end_src
+** Workarounds
+In some version, calls to seq-empty-p started raising errors. This seems to
+solve it.
+#+begin_src elisp
+  (cl-defgeneric seq-empty-p (sequence)
+    "Return non-nil if the SEQUENCE is empty, nil otherwise."
+    (= 0 (seq-length sequence)))
+#+end_src
+Centaur tabs doesn't work properly with daemon mode. This fixes it:
+#+begin_src elisp
+  (add-hook
+   'window-selection-change-functions
+   (defun haris//fix-centaur-tabs (&rest arg)
+     (setq centaur-tabs-active-bar
+           (or centaur-tabs-active-bar
+               (centaur-tabs--make-xpm 'centaur-tabs-active-bar-face
+                                       2
+                                       centaur-tabs-bar-height)))))
+#+end_src
 ** Global packages
 #+begin_src elisp
   (use-package focus-autosave-mode :defer t)
@@ -256,6 +275,8 @@ I use =straight= to clone some packages that are not available on =melpa=.
   (setq indent-guide-delay 0.1)
   (setq tab-width 4
         go-tab-width 4)
+
+  (setq emacs-lisp-format-on-save nil)
 #+end_src
 *** External tools
 #+begin_src elisp
@@ -691,8 +712,6 @@ Some custom keybindings are defined here as well.
   (define-key haris/command-log-prefix-map (kbd "l") #'haris/command-log)
 
   ;; Misc
-  (eval-after-load 'go-translate
-    (lambda () (spacemacs/set-leader-keys "ot" #'gt-do-translate)))
   (eval-after-load 'npm-mode
     (lambda () (spacemacs/set-leader-keys "on" npm-mode-command-keymap)))
 
@@ -713,6 +732,11 @@ Some custom keybindings are defined here as well.
 #+end_src
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
   <<custom-global-map>>
+#+end_src
+*** Tabs
+#+begin_src elisp
+  (define-key evil-motion-state-map (kbd "g M-l") 'centaur-tabs-move-current-tab-to-right)
+  (define-key evil-motion-state-map (kbd "g M-h") 'centaur-tabs-move-current-tab-to-left)
 #+end_src
 *** Miscellaneous
 #+NAME: bindings-miscellaneous
@@ -811,8 +835,8 @@ Some custom keybindings are defined here as well.
 #+end_src
 *** Default known projects
 #+begin_src elisp
-  (eval-after-load 'magit
-    (lambda ()
+  (with-eval-after-load 'magit
+    (with-eval-after-load 'projectile
       (let*
           ((projects (-filter
                       'file-directory-p
@@ -981,41 +1005,41 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
 Use LSP indentation features when running =spacemacs/indent-region-or-buffer=, if
 they are available.
 #+begin_src elisp
-  (eval-after-load 'lsp-mode
-    (add-hook
-     'lsp-configure-hook
-     (defun haris//setup-format-function-for-lsp-buffer ()
-       ;; Record default indentation function
-       (when (not (boundp 'haris//default-indent-region-function))
-         (setq-local haris//default-indent-region-function indent-region-function))
-       ;; Set up a custom indent function that uses LSP formatting
-       (setq-local
-        indent-region-function
-        (defun haris//lsp-format-dwim-with-fallback (start end)
-          (condition-case nil
-              ;; Try lsp-format-region
-              (lsp-format-region start end)
-            ;; If it fails:
-            (error
-             ;; Check if the region is the whole buffer
-             (if (and (= start (point-min))
-                      (= end (point-max)))
-                 ;; If yes:
-                 (condition-case nil
-                     ;; Try lsp-format-buffer
-                     (lsp-format-buffer)
-                   ;; If this also fails:
-                   (error
-                    (let ((bound-func (key-binding (kbd ",=="))))
-                      ;; If a command is bound to ",=="
-                      (if bound-func
-                          ;; Run it
-                          (call-interactively bound-func)
-                        ;; Else: Use the default indent region function
-                        (funcall haris//default-indent-region-function start end)))))
-                   ;; Else: if region is not whole buffer
-                   ;; Use the default indent region function
-                   (funcall haris//default-indent-region-function start end)))))))))
+  ;; (eval-after-load 'lsp-mode
+  ;;   (add-hook
+  ;;    'lsp-configure-hook
+  ;;    (defun haris//setup-format-function-for-lsp-buffer ()
+  ;;      ;; Record default indentation function
+  ;;      (when (not (boundp 'haris//default-indent-region-function))
+  ;;        (setq-local haris//default-indent-region-function indent-region-function))
+  ;;      ;; Set up a custom indent function that uses LSP formatting
+  ;;      (setq-local
+  ;;       indent-region-function
+  ;;       (defun haris//lsp-format-dwim-with-fallback (start end)
+  ;;         (condition-case nil
+  ;;             ;; Try lsp-format-region
+  ;;             (lsp-format-region start end)
+  ;;           ;; If it fails:
+  ;;           (error
+  ;;            ;; Check if the region is the whole buffer
+  ;;            (if (and (= start (point-min))
+  ;;                     (= end (point-max)))
+  ;;                ;; If yes:
+  ;;                (condition-case nil
+  ;;                    ;; Try lsp-format-buffer
+  ;;                    (lsp-format-buffer)
+  ;;                  ;; If this also fails:
+  ;;                  (error
+  ;;                   (let ((bound-func (key-binding (kbd ",=="))))
+  ;;                     ;; If a command is bound to ",=="
+  ;;                     (if bound-func
+  ;;                         ;; Run it
+  ;;                         (call-interactively bound-func)
+  ;;                       ;; Else: Use the default indent region function
+  ;;                       (funcall haris//default-indent-region-function start end)))))
+  ;;                  ;; Else: if region is not whole buffer
+  ;;                  ;; Use the default indent region function
+  ;;                  (funcall haris//default-indent-region-function start end)))))))))
 #+end_src
 *** Keybindings
 #+begin_src elisp
@@ -1117,24 +1141,6 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 
   (eval-after-load "npm-mode" (lambda () (npm-global-mode t)))
 #+end_src
-** Java
-#+begin_src elisp
-  (use-package lsp-java)
-
-  (setq-default haris/java-lombok-jar-path nil)
-
-  (defun haris/modify-java-vmargs-in-lsp-java ()
-    (when (and lsp-mode (eq major-mode 'java-mode))
-      (add-to-list 'lsp-java-vmargs "-Xmx3G" t)
-      (add-to-list 'lsp-java-vmargs "-Xms512m" t)
-      (add-to-list 'lsp-java-vmargs  "-XX:+UseStringDeduplication" t)
-      ;; Add Lombok to the lsp server
-      (when haris/java-lombok-jar-path
-        (add-to-list 'lsp-java-vmargs
-                     (format "-javaagent:%s" haris/java-lombok-jar-path) t))))
-
-  (add-hook 'lsp-before-initialize-hook #'haris/modify-java-vmargs-in-lsp-java)
-#+end_src
 ** Web
 #+begin_src elisp
   (setq web-mode-markup-indent-offset 2
@@ -1166,13 +1172,14 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 #+begin_src elisp
   (add-to-list 'auto-mode-alist '("compose.*\.ya?ml$" . docker-compose-mode))
 
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection
-                                     '("docker-compose-langserver" "--stdio"))
-                    :activation-fn (lsp-activate-on "yaml")
-                    :priority 0
-                    :server-id 'compose-ls
-                    :major-modes '(docker-compose-mode)))
+  (with-eval-after-load 'lsp-mode
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection
+                                       '("docker-compose-langserver" "--stdio"))
+                      :activation-fn (lsp-activate-on "yaml")
+                      :priority 0
+                      :server-id 'compose-ls
+                      :major-modes '(docker-compose-mode))))
 #+end_src
 *** Dependencies                                                     :deps:
 #+begin_src text :tangle (haris/tangle-deps "emacs/docker-compose.npm")
@@ -1205,64 +1212,6 @@ Fix for empty image list (not sure if the fix works):
 #+begin_src elisp
   (use-package transient :defer t)
   (use-package docker-compose-mode :defer t)
-#+end_src
-** Go Translate
-#+begin_src elisp
-  (use-package go-translate)
-  (setq gt-taker-prompt 'buffer)
-  (setq gt-langs '(en es de bs tr cs))
-  (setq gt-buffer-render-follow-p t)
-  (setq gt-polyglot-p t)
-  (setq gt-taker-pick nil)
-
-  (setq gt-default-translator
-        (gt-translator
-         :engines (gt-google-engine)
-         :render (gt-buffer-render)))
-#+end_src
-*** Keybindings
-#+begin_src elisp
-  ;; Perform translation
-  (evil-define-key 'normal gt-buffer-prompt-map (kbd ",c") (kbd "C-c C-c"))
-  ;; Abort translation
-  (evil-define-key 'normal gt-buffer-prompt-map (kbd ",k") (kbd "C-c C-k"))
-
-  ;; Switch translator engine
-  (evil-define-key 'normal gt-buffer-prompt-map (kbd ",e") (kbd "C-c C-e"))
-  ;; Next language
-  (haris/evil-define-key-both gt-buffer-prompt-map (kbd "M-n") (kbd "C-c C-n"))
-  ;; Previous language
-  (haris/evil-define-key-both gt-buffer-prompt-map (kbd "M-p") (kbd "C-c C-p"))
-
-  ;; go-translate provides only a function for next, but not for prev
-  (defun haris/gt-buffer-render--cycle-prev (&optional ignore-rules)
-    (interactive "P")
-    (with-slots (target taker keep) gt-buffer-render-translator
-      (if (and (slot-boundp taker 'langs) (gt-functionp (oref taker langs)))
-          (user-error "Current taker not support cycle prev")
-        (let* ((curr gt-last-target)
-               (gt-skip-lang-rules-p ignore-rules)
-               (gt-ignore-target-history-p t)
-               (prev (gt-target taker gt-buffer-render-translator 'prev)))
-          (unless (equal prev curr)
-            (setf target prev keep t)
-            (gt-start gt-buffer-render-translator))))))
-
-  (add-hook
-   'gt-buffer-render-output-hook
-   (defun haris//gt-buffer-render-output-init-bindings () (interactive)
-          ;; Without this, the following keybindings don't take effect
-          (evil-normal-state)
-          (evil-define-key 'normal gt-buffer-render-local-map
-            (kbd "M-n") 'gt-buffer-render--cycle-next)
-          (evil-define-key 'normal gt-buffer-render-local-map
-            (kbd "M-p") 'haris/gt-buffer-render--cycle-prev)
-          (evil-define-key 'normal gt-buffer-render-local-map
-            (kbd "q") 'haris/force-kill-window)
-          (evil-define-key 'normal gt-buffer-render-local-map
-            (kbd "?") (defun haris/gt-buffer-render-help ()
-                        (interactive)
-                        (describe-keymap gt-buffer-render-local-map)))))
 #+end_src
 ** Bluetooth
 #+begin_src elisp
@@ -1595,9 +1544,6 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
 
   (add-to-list 'org-file-apps '("\\.x?html?\\'" . "firefox %s"))
   (add-to-list 'org-export-backends 'md)
-
-  ;; Enable org-modern-mode
-  (eval-after-load 'org (lambda () (global-org-modern-mode)))
 #+end_src
 ** Agenda
 #+begin_src elisp
@@ -1659,7 +1605,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; (add-to-list 'org-babel-load-languages '(async      . t))
   (add-to-list 'org-babel-load-languages '(verb       . t))
   (add-to-list 'org-babel-load-languages '(sql        . t))
-  (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
+  ;;(org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
 
   ;; This variable is by default unbound, and so causes an error whenever a code
   ;; block with ':session' is evaluated
@@ -1833,6 +1779,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; Magit is essential to my workflow so having it eagerly loaded is no tradeoff.
   (use-package magit)
   (use-package magit-gptcommit)
+  ;; For some reason the module is not loaded correctly unless I specify this
+  (require 'magit-gptcommit)
 
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
         magit-diff-refine-hunk 'all
@@ -1876,25 +1824,25 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   (require 'llm-openai)
 
-  (with-eval-after-load 'haris/ai
-    (setq magit-gptcommit-llm-provider haris/ai/model/default))
+  (with-eval-after-load 'magit-gptcommit
+    (with-eval-after-load 'haris/ai
+      (setq magit-gptcommit-llm-provider (eval haris/ai/model/openai/default/creator))
+      (setq haris/commit-prompt-default
+            (concat
+             magit-gptcommit-prompt-one-line
+             "\nIf the commit is larger, and it would add additional useful info, add two line breaks and a detailed description of the changes."))
 
-  (with-eval-after-load 'magit-status
-    (when (not (boundp 'haris//gptcommit-status-buffer-setup-p))
-      (defvar haris//gptcommit-status-buffer-setup t
-        "Flag to indicate if the gptcommit status buffer setup has been done.")
-      (magit-gptcommit-status-buffer-setup)))
-
-  (setq haris/commit-prompt-default
-        (concat
-         magit-gptcommit-prompt-one-line
-         "\nIf the commit is larger, and it would add additional useful info, add two line breaks and a detailed description of the changes."))
-
-  (setq haris/commit-prompt-dotfiles
-        (concat
-         haris/commit-prompt-default
-         "\nMake sure that after label, you also include the resource name that the change applies to.
+      (setq haris/commit-prompt-dotfiles
+            (concat
+             haris/commit-prompt-default
+             "\nMake sure that after label, you also include the resource name that the change applies to.
   For example if it is emacs-related, add 'emacs: ' (without quotes). If multiple resources are affected, you can omit this."))
+
+      (with-eval-after-load 'magit-status
+        (when (not (boundp 'haris//gptcommit-status-buffer-setup-p))
+          (defvar haris//gptcommit-status-buffer-setup t
+            "Flag to indicate if the gptcommit status buffer setup has been done.")
+          (magit-gptcommit-status-buffer-setup)))))
 #+end_src
 ** Custom transient commands
 #+begin_src elisp
@@ -2068,6 +2016,33 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (setq aidermacs-show-diff-after-change t)
   ;; (setq aidermacs-architect-model "TODO")
   ;; (setq aidermacs-editor-model "TODO")
+
+  (defun haris/mic-set-state (state)
+    "Set microphone to given STATE: 'muted' or 'unmuted'."
+    (shell-command
+     (format "pactl set-source-%s @DEFAULT_SOURCE@ 1"
+             (if (eq state 'muted)
+                 "mute"
+               "unmute"))))
+
+  (defun haris/mic-get-state ()
+    ;; Implement
+    (let ((state (shell-command-to-string "pactl get-source-mute @DEFAULT_SOURCE@")))
+      (if (string-match "yes" state)
+          'muted
+        'unmuted)))
+
+  ;; Add advice around aidermacs-send-voice, making it unmute mic using pactl before and restore after
+  (defadvice aidermacs-send-voice (before mic-unmute activate)
+    (setq haris//previous-mic-state (haris/mic-get-state))
+    (mic-unmute)
+    (add-hook 'aidermacs-after-send-hook #'mic-mute 'append))
+
+
+  (defadvice vterm-send-return (after mic-unmute activate)
+    (setq haris//previous-mic-state (haris/mic-get-state))
+    (mic-unmute)
+    (add-hook 'aidermacs-after-send-hook #'mic-mute 'append))
 #+end_src
 *** Bindings
 #+begin_src elisp
@@ -2492,8 +2467,10 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      ;; Navigation and Project Management
      spacemacs-navigation
      spacemacs-project
+     tabs
 
      ;; Basic text editing
+     spacemacs-language
      syntax-checking
      (spacemacs-editing
       :variables
@@ -2501,7 +2478,7 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      spacemacs-editing-visual
      multiple-cursors
      spell-checking
-     (auto-completion
+     (auto-completion ; (ref:auto-completion)
       :variables
       auto-completion-enable-snippets-in-popup t
       auto-completion-return-key-behavior nil
@@ -2529,6 +2506,7 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      imenu-list
 
      ;; Programming and languages
+     major-modes
      (lsp
       :variables
       lsp-headerline-breadcrumb-enable t
@@ -2562,7 +2540,6 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      nginx
      systemd
      emacs-lisp
-     major-mode
      markdown
      html
 
@@ -2593,6 +2570,7 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      shell
 
      ;; Misc
+     pass
      tmux))
 #+end_src
 ** Additional packages
