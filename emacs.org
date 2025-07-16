@@ -287,8 +287,6 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
   (setq shell-default-shell 'shell)
   (setq terminal-here-linux-terminal-command '("alacritty")
         terminal-here-mac-terminal-command   '("alacritty"))
-
-  (setq shell-file-name "bash")
 #+end_src
 *** Scrolling
 #+begin_src elisp
