@@ -1059,6 +1059,15 @@ they are available.
       (add-hook 'dap-terminated-hook 'normal-mode 99)
       (setq dap-ui-inspect-mode-hook (delq 'evilified-state dap-ui-inspect-mode-hook))))
 #+end_src
+Evilified state makes it a nightmare to edit files while debugging, so I remove
+it from all hooks.
+#+begin_src elisp
+  (dolist (hook '(dap-ui-breakpoints-ui-list-mode-hook
+                  dap-ui-inspect-mode-hook
+                  dap-ui-locals-mode-hook
+                  dap-ui-sessions-mode-hook))
+    (set hook (remove 'evil-evilified-state (eval hook))))
+#+end_src
 ** TODO C/C++
 #+begin_src elisp
   (setq c-default-style "bsd"
