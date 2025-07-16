@@ -1048,19 +1048,19 @@ Get the OS type.
 ** =docker-ls-context=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/docker-ls-context")
   tag="$(date +%s%3N | sha256sum | head -c 32)"
-  docker image build --tag "$tag" --no-cache -f - "$@" <<'EOF'
+  docker image build --tag "$tag" --no-cache -f - "$@" >&2 <<'EOF'
   «docker-ls-context/dockerfile»
   EOF
 
   docker run --rm "$tag"
-  docker rmi "$tag"
+  docker rmi "$tag" >&2
 #+end_src
 #+NAME: docker-ls-context/dockerfile
 #+begin_src dockerfile
   FROM busybox
   WORKDIR /workdir
   COPY . .
-  CMD find .
+  CMD find . | grep -v '^\.$'
 #+end_src
 ** =info=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/info")
