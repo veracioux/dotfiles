@@ -1062,11 +1062,12 @@ they are available.
 Evilified state makes it a nightmare to edit files while debugging, so I remove
 it from all hooks.
 #+begin_src elisp
-  (dolist (hook '(dap-ui-breakpoints-ui-list-mode-hook
+  (with-eval-after-load 'dap-mode
+   (dolist (hook '(dap-ui-breakpoints-ui-list-mode-hook
                   dap-ui-inspect-mode-hook
                   dap-ui-locals-mode-hook
                   dap-ui-sessions-mode-hook))
-    (set hook (remove 'evil-evilified-state (eval hook))))
+    (set hook (remove 'evil-evilified-state (eval hook)))))
 #+end_src
 ** TODO C/C++
 #+begin_src elisp
@@ -1123,6 +1124,11 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
     :backends (company-capf :with company-yasnippet)
     :modes python-mode)
   (setq company-backends-python-mode (cl-delete 'company-capf company-backends-python-mode))
+#+end_src
+*** Workarounds
+The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtualenv.
+#+begin_src elisp :tangle yes
+  (defalias 'dap-python--pyenv-executable-find 'executable-find)
 #+end_src
 *** Bindings
 #+begin_src elisp
