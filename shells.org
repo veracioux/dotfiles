@@ -1447,6 +1447,12 @@ abbreviations for equivalent apt operations.
   # VirtualBox
   conditional_abbr -g vb   'vboxmanage'
 #+end_src
+**** API Keys
+#+begin_src fish
+  abbr --position anywhere --set-cursor '$AK' '$(pass show %/api-key)'
+  abbr --position anywhere --set-cursor '$AKO' '$(pass show openai/api-key)'
+  abbr --position anywhere --set-cursor '$AKM' '$(pass show mistral/api-key)'
+#+end_src
 **** Discard helper function
 #+begin_src fish
   functions --erase conditional_abbr
