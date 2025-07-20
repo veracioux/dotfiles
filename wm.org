@@ -664,9 +664,9 @@ Menu of utilities that allow me to chat with my computer.
 #+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/chatgpt.sh")
   choices="$(
   cat <<'EOF'
+  o4-mini: Fastest at advanced reasoning
   gpt-4o: Great for most tasks
   o3: Uses advanced reasoning
-  o4-mini: Fastest at advanced reasoning
   o4-mini-high: Great at coding and visual reasoning
   gpt-4.5: Good for writing and exploring ideas (Research Preview)
   gpt-4.1: Great for quick coding and analysis
