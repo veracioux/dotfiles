@@ -835,6 +835,7 @@ Some custom keybindings are defined here as well.
 #+begin_src elisp
   (with-eval-after-load 'magit
     (with-eval-after-load 'projectile
+      (projectile-load-known-projects)
       (let*
           ((projects (-filter
                       'file-directory-p
