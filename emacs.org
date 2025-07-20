@@ -864,10 +864,17 @@ Some custom keybindings are defined here as well.
           (when (and (file-exists-p worktree) (not (magit-git-repo-p worktree)))
             (f-touch (f-join worktree ".projectile")))))))
 #+end_src
+*** Functions
+#+begin_src elisp
+  (defun haris/projectile-initialize-project (directory)
+    (interactive (list default-directory))
+    (f-touch (f-join directory ".projectile")))
+#+end_src
 *** Keybindings
 #+begin_src elisp
   ;; Provides better namespacing than the default spacemacs/projectile-shell-pop
   (define-key spacemacs-cmds (kbd "p '") 'multi-vterm-project)
+  (define-key spacemacs-cmds (kbd "p .") 'haris/projectile-initialize-project)
 #+end_src
 * Programming languages
 #+begin_src elisp
