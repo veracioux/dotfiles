@@ -1135,7 +1135,7 @@ verbosity of abbreviation definitions.
 **** Pacman commands
 I also sometimes use Ubuntu, but since I'm so used to pacman, I use the same
 abbreviations for equivalent apt operations.
-***** Guard
+***** [Guard]
 #+begin_src fish
   function _if_pacman_else
       if command --quiet pacman
@@ -1167,13 +1167,13 @@ abbreviations for equivalent apt operations.
   _abbr -g spr   (_if_pacman_else 'sudo pacman -R' 'sudo apt remove')
   _abbr -g sprq  (_if_pacman_else 'sudo pacman -R (pacman -Qdtq)' 'sudo apt autoremove')
 #+end_src
-***** End guard
+***** [End guard]
 #+begin_src fish
   end
   functions --erase _if_pacman_else
 #+end_src
 **** Systemd
-***** Guard
+***** [Guard]
 #+begin_src fish
   if command --quiet systemctl
 #+end_src
@@ -1206,7 +1206,7 @@ abbreviations for equivalent apt operations.
   _abbr -g dresu     'systemctl daemon-reload --user && systemctl restart  --user'
   _abbr -g ju        'journalctl --user -f -u'
 #+end_src
-***** End guard
+***** [End guard]
 #+begin_src fish
   end
 #+end_src
