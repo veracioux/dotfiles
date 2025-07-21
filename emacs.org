@@ -1061,11 +1061,11 @@ they are available.
 #+end_src
 ** DAP
 #+begin_src elisp
-  (eval-after-load 'dap-mode
-    (lambda ()
-      (setq dap-auto-show-output nil)
-      (add-hook 'dap-terminated-hook 'normal-mode 99)
-      (setq dap-ui-inspect-mode-hook (delq 'evilified-state dap-ui-inspect-mode-hook))))
+  (with-eval-after-load 'dap-mode
+    (setq dap-auto-show-output nil)
+    ;; Only way I found to disable the dap-ui-controls
+    (dap-ui-controls-mode -1)
+    (defalias 'dap-ui-controls-mode 'ignore))
 #+end_src
 Evilified state makes it a nightmare to edit files while debugging, so I remove
 it from all hooks.
