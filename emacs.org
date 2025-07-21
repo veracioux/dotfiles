@@ -1077,6 +1077,13 @@ it from all hooks.
                     dap-ui-sessions-mode-hook))
       (set hook (remove 'evil-evilified-state (eval hook)))))
 #+end_src
+*** Keybindings
+#+begin_src elisp
+  (with-eval-after-load 'dap-hydra
+    (eval '(defhydra+ dap-hydra ()
+             ("O" dap-go-to-output-buffer "Show output")
+             ("'" dap-ui-repl "Show REPL"))))
+#+end_src
 ** TODO C/C++
 #+begin_src elisp
   (setq c-default-style "bsd"
