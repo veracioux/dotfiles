@@ -2123,8 +2123,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   (setq vterm-max-scrollback 10000)
 
-  (setq vterm-exit-functions 'delete-frame)
-
   (defun haris/vterm-set-environment-windowid (&rest _)
     (setq
      vterm-environment
