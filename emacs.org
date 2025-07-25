@@ -883,9 +883,8 @@ Some custom keybindings are defined here as well.
 #+end_src
 ** YAML
 #+begin_src elisp
-  (eval-after-load 'yaml
-    (defun haris//after-load/yaml ()
-      (use-package yaml-pro)))
+  (with-eval-after-load 'yaml
+    (use-package yaml-pro :ensure t))
 
   ;; Use yaml-ts-mode instead of yaml-mode (it's faster), unless the mode is docker-compose-mode.
   (add-hook 'yaml-mode-hook
@@ -893,8 +892,7 @@ Some custom keybindings are defined here as well.
               (when (not (eq major-mode 'docker-compose-mode))
                 (yaml-ts-mode))))
 
-  (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook))
-        (hook))
+  (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook)))
     (dolist (hook hooks)
       (add-hook hook
                 (lambda ()
@@ -902,8 +900,6 @@ Some custom keybindings are defined here as well.
                   (require 'openapi-preview)))
       (add-hook hook 'spacemacs/toggle-indent-guide)
       (add-hook hook #'eldoc-mode 90)
-      (with-eval-after-load 'yaml-pro
-          (add-hook hook 'yaml-pro-ts-mode 91))
       (add-hook hook 'spacemacs/toggle-display-fill-column-indicator-on)
       (add-hook hook
                 (lambda ()
@@ -911,9 +907,13 @@ Some custom keybindings are defined here as well.
       (add-hook hook #'lsp 94)))
 
   (with-eval-after-load 'yaml-pro
-   (add-hook 'yaml-pro-ts-mode-hook
-            (lambda ()
-              (setq-local lsp-enable-imenu nil))))
+    (add-hook 'yaml-mode-hook 'yaml-pro-ts-mode 91)
+    (add-hook 'yaml-ts-mode-hook 'yaml-pro-ts-mode 91))
+
+  (with-eval-after-load 'yaml-pro
+    (add-hook 'yaml-pro-ts-mode-hook
+              (lambda ()
+                (setq-local lsp-enable-imenu nil))))
 #+end_src
 *** OpenAPI
 #+begin_src elisp
