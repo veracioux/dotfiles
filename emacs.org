@@ -988,25 +988,30 @@ Some custom keybindings are defined here as well.
 Some performance improvement settings depend on the power of your hardware. You
 can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. You can place them in your [[*Private config][private configuration]].
 #+begin_src elisp
-  (eval-after-load 'lsp-mode
-    (lambda ()
-      (setq lsp-idle-delay 0.1)
-      (setq lsp-keep-workspace-alive nil)
+  (straight-use-package
+   '(lsp-mode
+     :type git
+     :host github
+     :repo "veracioux/lsp-mode"))
 
-      ;; Diagnostic mode doesn't work well with flycheck
-      (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
+  (with-eval-after-load 'lsp-mode
+    (setq lsp-idle-delay 0.1)
+    (setq lsp-keep-workspace-alive nil)
 
-      (setq lsp-enable-on-type-formatting nil)
+    ;; Diagnostic mode doesn't work well with flycheck
+    (setq lsp-diagnostics-disabled-modes '(python-mode sh-mode))
 
-      (setq lsp-restart 'ignore)
+    (setq lsp-enable-on-type-formatting nil)
 
-      (setq lsp-auto-execute-action nil)
-      (setq lsp-inlay-hint-enable t)
+    (setq lsp-restart 'ignore)
 
-      ;; Prevents session persistence, which can cause performance issues
-      (setq lsp-session-file nil)
+    (setq lsp-auto-execute-action nil)
+    (setq lsp-inlay-hint-enable t)
 
-      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$")))
+    ;; Prevents session persistence, which can cause performance issues
+    (setq lsp-session-file nil)
+
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$"))
 #+end_src
 
 Use LSP indentation features when running =spacemacs/indent-region-or-buffer=, if
