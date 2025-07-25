@@ -875,6 +875,7 @@ Some custom keybindings are defined here as well.
   ;; Provides better namespacing than the default spacemacs/projectile-shell-pop
   (define-key spacemacs-cmds (kbd "p '") 'multi-vterm-project)
   (define-key spacemacs-cmds (kbd "p .") 'haris/projectile-initialize-project)
+  (define-key spacemacs-cmds (kbd "p s") 'projectile-save-project-buffers)
 #+end_src
 * Programming languages
 #+begin_src elisp
