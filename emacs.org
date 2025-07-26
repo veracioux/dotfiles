@@ -2545,7 +2545,8 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
       auto-completion-enable-help-tooltip 'manual
       auto-completion-enable-sort-by-usage t
       auto-completion-idle-delay 0.05
-      auto-completion-minimum-prefix-length 1)
+      auto-completion-minimum-prefix-length 1
+      auto-completion-use-company-posframe t)
 
      ;; Organization and Note Taking
      spacemacs-org
