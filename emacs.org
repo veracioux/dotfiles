@@ -2290,9 +2290,6 @@ other maps, so I define it here.
          (haris/company-toggle-tooltip)
        (evil-force-normal-state))))
 #+end_src
-# *** Workarounds
-# **** Posframe in minibuffer is making minibuffer lose focus
-# Disabled posframe in [[(disable-posframe)][Spacemacs Layers]].
 ** Yasnippet
 #+begin_src elisp
   (use-package yasnippet)
