@@ -1083,6 +1083,13 @@ it from all hooks.
                     dap-ui-sessions-mode-hook))
       (set hook (remove 'evil-evilified-state (eval hook)))))
 #+end_src
+When the debugger starts, it starts a few modes that mess up keybindings in
+insert mode. I disable those modes by aliasing them to =ignore=.
+#+begin_src elisp
+  (with-eval-after-load 'dap-ui
+    (defalias 'dap-ui-breakpoints-mode 'ignore)
+    (defalias 'dap-ui-sessions-mode 'ignore))
+#+end_src
 *** Keybindings
 #+begin_src elisp
   (with-eval-after-load 'dap-hydra
