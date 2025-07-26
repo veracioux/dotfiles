@@ -1586,12 +1586,20 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
         org-appear-autolinks                nil)
 
   ;; Misc variables
-  (setq org-download-screenshot-method      "flameshot gui --path screenshots/%s"
-        org-projectile-file                 "TODO.org"
-        org-projectile-per-project-filepath "TODO.org")
+  (setq org-download-screenshot-method      "flameshot gui --path screenshots/%s")
 
   (add-to-list 'org-file-apps '("\\.x?html?\\'" . "firefox %s"))
   (add-to-list 'org-export-backends 'md)
+
+  (setq org-project-capture-per-project-filepath
+        (lambda (project-path)
+          "Traverse the current path upward to find the first TODO.org file and
+  return its path relative to PROJECT-PATH"
+          (let ((dir (locate-dominating-file project-path "TODO.org")))
+            (if dir
+                (file-relative-name (expand-file-name "TODO.org" dir)
+                                    project-path)
+              "TODO.org"))))
 #+end_src
 ** Agenda
 #+begin_src elisp
