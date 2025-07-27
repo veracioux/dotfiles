@@ -1660,9 +1660,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
   picom_running="$(pgrep '^picom$' >/dev/null && echo true)"
   pkill '^picom$'
 
-  # Kill gpg-agent
-  pkill gpg-agent 2>/dev/null
-
   # Run xsecurelock, restarting at intervals in order to change the wallpaper
   xsecurelock &
   xsecurelock_pid="$!"
