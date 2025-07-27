@@ -1145,13 +1145,6 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 
   (with-eval-after-load 'pytest
     (add-to-list 'pytest-project-root-files ".projectile"))
-
-  ;; A single company-capf item in the company-backends list breaks snippets
-  ;; Replace it with (company-capf :with company-yasnippet)
-  (spacemacs|add-company-backends
-    :backends (company-capf :with company-yasnippet)
-    :modes python-mode)
-  (setq company-backends-python-mode (cl-delete 'company-capf company-backends-python-mode))
 #+end_src
 *** Workarounds
 The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtualenv.
@@ -1161,6 +1154,20 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
       (add-hook
        hook
        (lambda () (defalias 'dap-python--pyenv-executable-find 'executable-find)))))
+#+end_src
+**** Company backends
+=lsp-completion-mode= adds =company-capf= in front of the backends
+#+begin_src elisp
+  ;; Replace company-capf with (company-capf :with company-yasnippet)
+  (spacemacs|add-company-backends
+    :backends (company-capf :with company-yasnippet)
+    :modes python-mode)
+  (setq company-backends-python-mode (cl-delete 'company-capf company-backends-python-mode))
+
+  ;; Revert the mess created by the lsp-completion-mode function on each revert-buffer
+  (defun haris//python-fix-company-backends ()
+    (setq company-backends company-backends-python-mode))
+  (add-hook 'lsp-completion-mode-hook 'haris//python-fix-company-backends)
 #+end_src
 *** Bindings
 #+begin_src elisp
