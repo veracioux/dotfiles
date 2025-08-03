@@ -44,8 +44,6 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   function fish_prompt --description 'Write out the prompt'
       set -l last_pipestatus $pipestatus
 
-      set -l normal (set_color normal)
-
       # Color the prompt differently when we're root
       set -l color_cwd $fish_color_cwd
       set -l prefix
@@ -96,6 +94,7 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
                   (set_color brmagenta)       "$vcs_prompt"                \
                   (set_color brmagenta)       $prompt_status               \
                   (set_color white)           $sudo_privilege              \
+                  "    " (__haris_prompt_compose_status)                   \
                   (set_color yellow)          \n" $suffix "
 
       # These are needed because some apps (docker-compose) don't clean up properly
@@ -134,9 +133,10 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
       set_color normal
   end
 #+end_src
-**** =fish_right_prompt=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_right_prompt.fish")
-  function fish_right_prompt
+**** Helpers
+***** =__haris_prompt_compose_status=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_prompt_compose_status.fish")
+  function __haris_prompt_compose_status
       set_color yellow
       set -l any_content
       if [ -n "$WORKTREE" ]
