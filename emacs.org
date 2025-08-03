@@ -2100,17 +2100,17 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
           'muted
         'unmuted)))
 
-  ;; Add advice around aidermacs-send-voice, making it unmute mic using pactl before and restore after
-  (defadvice aidermacs-send-voice (before mic-unmute activate)
-    (setq haris//previous-mic-state (haris/mic-get-state))
-    (mic-unmute)
-    (add-hook 'aidermacs-after-send-hook #'mic-mute 'append))
+  ;; ;; Add advice around aidermacs-send-voice, making it unmute mic using pactl before and restore after
+  ;; (defadvice aidermacs-send-voice (before mic-unmute activate)
+  ;;   (setq haris//previous-mic-state (haris/mic-get-state))
+  ;;   (mic-unmute)
+  ;;   (add-hook 'aidermacs-after-send-hook #'mic-mute 'append))
 
 
-  (defadvice vterm-send-return (after mic-unmute activate)
-    (setq haris//previous-mic-state (haris/mic-get-state))
-    (mic-unmute)
-    (add-hook 'aidermacs-after-send-hook #'mic-mute 'append))
+  ;; (defadvice vterm-send-return (after mic-unmute activate)
+  ;;   (setq haris//previous-mic-state (haris/mic-get-state))
+  ;;   (mic-unmute)
+  ;;   (add-hook 'aidermacs-after-send-hook #'mic-mute 'append))
 #+end_src
 *** Bindings
 #+begin_src elisp
