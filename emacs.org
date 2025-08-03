@@ -1147,6 +1147,7 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
     (add-to-list 'pytest-project-root-files ".projectile"))
 #+end_src
 *** Workarounds
+**** DAP Pyenv
 The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtualenv.
 #+begin_src elisp
   (with-eval-after-load 'dap-mode
