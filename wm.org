@@ -646,10 +646,15 @@ A menu for managing notifications.
 ** Chat menu
 Menu of utilities that allow me to chat with my computer.
 #+begin_src i3wm-config
-  set $mode_chat       " Chat | ChatGPT [c]hat"
+  set $mode_chat       " Chat | Reasoning level [1] [2] [3] [4] [5] [c]hoose"
 
   mode $mode_chat {
-  bindsym c       exec --no-startup-id <<scripts-dir>>/chatgpt.sh, mode default
+  bindsym 1       exec --no-startup-id <<scripts-dir>>/llm.sh 1, mode default
+  bindsym 2       exec --no-startup-id <<scripts-dir>>/llm.sh 2, mode default
+  bindsym 3       exec --no-startup-id <<scripts-dir>>/llm.sh 3, mode default
+  bindsym 4       exec --no-startup-id <<scripts-dir>>/llm.sh 4, mode default
+  bindsym 5       exec --no-startup-id <<scripts-dir>>/llm.sh 5, mode default
+  bindsym c       exec --no-startup-id <<scripts-dir>>/llm.sh, mode default
   bindsym Escape  mode default
   }
 
@@ -659,13 +664,16 @@ Menu of utilities that allow me to chat with my computer.
 :PROPERTIES:
 :header-args+: :tangle-mode (eval #o744)
 :END:
-**** ChatGPT
-#+NAME: chatgpt.sh
-#+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/chatgpt.sh")
+**** =llm.sh=
+#+NAME: llm.sh
+#+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/llm.sh")
   choices="$(
   cat <<'EOF'
-  o4-mini: Fastest at advanced reasoning
+  gpt-5: Automatic thinking
+  gpt-5-instant: GPT-5 Fast
+  gpt-5-thinking: GPT-5 Thinking
   gpt-4o: Great for most tasks
+  o4-mini: Fastest at advanced reasoning
   o3: Uses advanced reasoning
   o4-mini-high: Great at coding and visual reasoning
   gpt-4.5: Good for writing and exploring ideas (Research Preview)
@@ -673,10 +681,29 @@ Menu of utilities that allow me to chat with my computer.
   gpt-4.1-mini: Faster for everyday tasks
   EOF
   )"
-  choice="$(echo "$choices" | dmenu -l 10 | sed -e 's/:.*//' -e 's/\./-/g')"
+
+  reasoning_level="$1"
+
+  if [ -n "$reasoning_level" ]; then
+      case "$1" in
+          "1")
+              choice=gpt-5-instant
+              ;;
+          "3")
+              choice=gpt-5
+              ;;
+          "5")
+              choice=gpt-5-thinking
+              ;;
+      esac
+  else
+      choice="$(echo "$choices" | dmenu -l 10 | sed -e 's/:.*//' -e 's/\./-/g')"
+  fi
+
   if [ -z "$choice" ]; then
       exit 1
   fi
+
   query="?model=$choice"
 
   url="https://chatgpt.com/$query"
