@@ -2116,32 +2116,9 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; (setq aidermacs-architect-model "TODO")
   ;; (setq aidermacs-editor-model "TODO")
 
-  (defun haris/mic-set-state (state)
-    "Set microphone to given STATE: 'muted' or 'unmuted'."
-    (shell-command
-     (format "pactl set-source-%s @DEFAULT_SOURCE@ 1"
-             (if (eq state 'muted)
-                 "mute"
-               "unmute"))))
-
-  (defun haris/mic-get-state ()
-    ;; Implement
-    (let ((state (shell-command-to-string "pactl get-source-mute @DEFAULT_SOURCE@")))
-      (if (string-match "yes" state)
-          'muted
-        'unmuted)))
-
-  ;; ;; Add advice around aidermacs-send-voice, making it unmute mic using pactl before and restore after
-  ;; (defadvice aidermacs-send-voice (before mic-unmute activate)
-  ;;   (setq haris//previous-mic-state (haris/mic-get-state))
-  ;;   (mic-unmute)
-  ;;   (add-hook 'aidermacs-after-send-hook #'mic-mute 'append))
-
-
-  ;; (defadvice vterm-send-return (after mic-unmute activate)
-  ;;   (setq haris//previous-mic-state (haris/mic-get-state))
-  ;;   (mic-unmute)
-  ;;   (add-hook 'aidermacs-after-send-hook #'mic-mute 'append))
+  ;; Add advice around aidermacs-send-voice, making it unmute mic using pactl before
+  (defadvice aidermacs-send-voice (before haris/mic-unmute activate)
+    (haris/mic-set-mute nil))
 #+end_src
 *** Bindings
 #+begin_src elisp
