@@ -1853,6 +1853,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (setq magit-repository-directories
         '(("~/.haris" . 0)
           ("~/proj" . 1)
+          ("~/proj/contrib" . 1)
           ("~/proj/drytoe" . 1)
           ("~" . 0)))
 
