@@ -1014,6 +1014,7 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
 
     (setq lsp-auto-execute-action nil)
     (setq lsp-inlay-hint-enable t)
+    (setq lsp-ui-doc-enable nil)
 
     ;; Prevents session persistence, which can cause performance issues
     (setq lsp-session-file nil)
@@ -1179,9 +1180,8 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
 #+end_src
 *** Bindings
 #+begin_src elisp
-  (eval-after-load 'lsp-mode
-    (lambda ()
-      (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance)))
+  (with-eval-after-load 'lsp-mode
+    (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance))
 #+end_src
 *** Dependencies                                                     :deps:
 #+begin_src shell :tangle (haris/tangle-deps "emacs/python.pacman")
