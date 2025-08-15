@@ -1164,20 +1164,6 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
        hook
        (lambda () (defalias 'dap-python--pyenv-executable-find 'executable-find)))))
 #+end_src
-**** Company backends
-=lsp-completion-mode= adds =company-capf= in front of the backends
-#+begin_src elisp
-  ;; Replace company-capf with (company-capf :with company-yasnippet)
-  (spacemacs|add-company-backends
-    :backends (company-capf :with company-yasnippet)
-    :modes python-mode)
-  (setq company-backends-python-mode (cl-delete 'company-capf company-backends-python-mode))
-
-  ;; Revert the mess created by the lsp-completion-mode function on each revert-buffer
-  (defun haris//python-fix-company-backends ()
-    (setq company-backends company-backends-python-mode))
-  (add-hook 'lsp-completion-mode-hook 'haris//python-fix-company-backends)
-#+end_src
 *** Bindings
 #+begin_src elisp
   (with-eval-after-load 'lsp-mode
@@ -2267,6 +2253,43 @@ Note: Some variables are configured in [[(auto-completion)][Spacemacs layers]].
     (lambda ()
       (setq company-frontends (delq 'company-pseudo-tooltip-unless-just-one-frontend company-frontends))
       (add-to-list 'company-frontends 'company-pseudo-tooltip-frontend)))
+#+end_src
+*** Company backends
+Company backend configuration when using spacemacs + lsp is a mess. For many
+modes the default backends are inadequate, so I override them on a case-by-case
+basis here.
+#+begin_src elisp
+  (setq
+   haris/modes-to-company-backends-alist
+   '((typescript-mode . (company-files
+                         company-emoji
+                         (company-capf :with company-yasnippet)
+                         company-keywords))
+     (python-mode . (company-files
+                     company-emoji
+                     (company-capf :with company-yasnippet)
+                     company-keywords))
+     (web-mode . (company-files
+                  company-emoji
+                  company-css
+                  (company-capf :with company-yasnippet)
+                  company-keywords))))
+#+end_src
+I update the company backends whenever the major mode changes.
+#+begin_src elisp
+  (add-hook 'change-major-mode-hook 'haris//fix-company-backends)
+#+end_src
+Since =lsp-completion-mode= also prepends a =company-capf= backend to the beginning,
+I call =haris//fix-company-backends= in its hook as well.
+#+begin_src elisp
+  (add-hook 'lsp-completion-mode-hook 'haris//fix-company-backends)
+#+end_src
+
+#+begin_src elisp
+  (defun haris//fix-company-backends ()
+    (let ((item (assoc major-mode haris/modes-to-company-backends-alist)))
+      (when item
+        (set (make-local-variable 'company-backends) (cdr item)))))
 #+end_src
 *** company-dabbrev
 #+begin_src elisp
