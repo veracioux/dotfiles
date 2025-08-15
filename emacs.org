@@ -2113,6 +2113,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (use-package aidermacs :defer t)
   (setq aidermacs-default-model "openai/o4-mini")
   (setq aidermacs-backend 'vterm)
+  (setq aidermacs-extra-args '("--no-check-update"))
+
   (setq aidermacs-show-diff-after-change t)
   ;; (setq aidermacs-architect-model "TODO")
   ;; (setq aidermacs-editor-model "TODO")
