@@ -1924,6 +1924,28 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
     'magit-fetch "o"
     '(1 "O" "another, to local" haris/magit-fetch-to-local))
 #+end_src
+** Repo list
+#+begin_src elisp
+  (with-eval-after-load 'magit-repos
+    (setq magit-repolist-columns
+          '(("Name" 25 magit-repolist-column-ident nil)
+            ("Version" 25 magit-repolist-column-version ((:sort magit-repolist-version<)))
+            ("B<U" 3 magit-repolist-column-unpulled-from-upstream
+             ((:right-align t) (:sort <)))
+            ("B>U" 3 magit-repolist-column-unpushed-to-upstream
+             ((:right-align t) (:sort <)))
+            ("B>U" 3 magit-repolist-column-unpushed-to-upstream
+             ((:right-align t) (:sort <)))
+            ("B<P" 3 magit-repolist-column-unpulled-from-pushremote
+             ((:right-align t) (:sort <)))
+            ("B>P" 3 magit-repolist-column-unpushed-to-pushremote
+             ((:right-align t) (:sort <)))
+            ("Path" 50 magit-repolist-column-path nil)
+            ("#B" 4 magit-repolist-column-branches nil)
+            ("Sts" 3 magit-repolist-column-flags nil)
+            ("Branch" 30 magit-repolist-column-branch nil))))
+#+end_src
+
 ** Bindings
 #+begin_src elisp
   (evil-define-key 'normal magit-section-mode-map (kbd "g h") #'magit-section-up)
