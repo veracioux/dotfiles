@@ -1775,7 +1775,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   (add-hook 'verb-response-body-mode-hook 'verb-toggle-show-headers)
 
-  (setq verb-json-use-mode 'json-ts-mode)
+  (setq verb-json-use-mode'json-ts-mode
+        verb-enable-ctrl-c-ctrl-c nil)
 
   (spacemacs/set-leader-keys-for-minor-mode
     'verb-response-body-mode
