@@ -1404,6 +1404,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g tb    'nc termbin.com 9999'
   conditional_abbr -g asc   'asciinema'
   conditional_abbr -g hk    'heroku'
+  conditional_abbr -g cu    'container-use'
   conditional_abbr -g mhc   'man http-codes'
   conditional_abbr -g rgh   'rg --hidden'
   conditional_abbr -g px    'ping x'
