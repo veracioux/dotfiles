@@ -2263,19 +2263,26 @@ basis here.
 #+begin_src elisp
   (setq
    haris/modes-to-company-backends-alist
-   '((typescript-mode . (company-files
+   (let* ((typescript-mode '(company-files
+                             company-emoji
+                             (company-capf :with company-yasnippet)
+                             company-keywords))
+          (python-mode '(company-files
                          company-emoji
                          (company-capf :with company-yasnippet)
                          company-keywords))
-     (python-mode . (company-files
-                     company-emoji
-                     (company-capf :with company-yasnippet)
-                     company-keywords))
-     (web-mode . (company-files
-                  company-emoji
-                  company-css
-                  (company-capf :with company-yasnippet)
-                  company-keywords))))
+          (web-mode '(company-files
+                      company-emoji
+                      (company-capf :with company-yasnippet)
+                      (company-css :with company-yasnippet)
+                      company-keywords))
+          (css-mode web-mode)
+          (scss-mode css-mode))
+     `((typescript-mode . ,typescript-mode)
+       (python-mode . ,python-mode)
+       (web-mode . ,web-mode)
+       (css-mode . ,css-mode)
+       (scss-mode . ,scss-mode))))
 #+end_src
 I update the company backends whenever the major mode changes.
 #+begin_src elisp
@@ -2286,7 +2293,40 @@ I call =haris//fix-company-backends= in its hook as well.
 #+begin_src elisp
   (add-hook 'lsp-completion-mode-hook 'haris//fix-company-backends)
 #+end_src
-
+Spacemacs also runs =spacemacs//init-company-<mode>= for some modes in certain
+hooks, setting =company-backends= to =company-backends-<mode>= or
+=company-backends-<mode>-raw=, so I update those variables as well to prevent
+spacemacs from conflicting with my custom behavior.
+#+begin_src elisp
+  (defvar haris//original-spacemacs-company-backends-alist nil
+    "Default copmany backends per mode as defined by spacemacs before I overrode them")
+#+end_src
+#+begin_src elisp
+  (dolist (item haris/modes-to-company-backends-alist)
+    (let* ((mode (car item))
+           (backends (cdr item))
+           (old-company-backends-sym
+            (intern (format "company-backends-%s" mode)))
+           (old-company-backends-raw-sym
+            (intern (format "company-backends-%s-raw" mode))))
+      ;; Update record of original values set by spacemacs so I can inspect them
+      ;; later for debugging purposes.
+      (when (not (assoc mode haris//original-spacemacs-company-backends-alist))
+        (add-to-list
+         'haris//original-spacemacs-company-backends-alist
+         (cons mode
+               (list (cons 'normal (if (boundp old-company-backends-sym)
+                                       (symbol-value old-company-backends-sym)
+                                     'unbound))
+                     (cons 'raw (if (boundp old-company-backends-raw-sym)
+                                    (symbol-value old-company-backends-raw-sym)
+                                  'unbound))))))
+      ;; Set company-backends-<mode>
+      (set old-company-backends-sym backends)
+      ;; Set company-backends-<mode>-raw
+      (set old-company-backends-raw-sym backends)))
+#+end_src
+**** Helper functions
 #+begin_src elisp
   (defun haris//fix-company-backends ()
     (let ((item (assoc major-mode haris/modes-to-company-backends-alist)))
