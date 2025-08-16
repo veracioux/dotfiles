@@ -2118,6 +2118,14 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   (spacemacs/set-leader-keys "A" 'aidermacs-transient-menu)
 #+end_src
+** Claude
+#+begin_src elisp
+  (use-package claude-code :defer t)
+#+end_src
+*** Bindings
+#+begin_src elisp
+  (spacemacs/set-leader-keys "#" 'claude-code-transient)
+#+end_src
 ** Gptel
 #+begin_src elisp
   (setq gptel-confirm-tool-calls t)
