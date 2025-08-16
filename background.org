@@ -76,10 +76,10 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   WantedBy=default.target
 #+end_src
 * Cron
-I define my main users cron jobs in files matching the glob =~/.haris/cron.d/crontab.*=.
+I define my main users cron jobs in files matching the glob =~/.cron.d/crontab.*=.
 ** Default cron jobs
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".haris/cron.d/crontab.50")
+:header-args+: :tangle (haris/tangle-home ".cron.d/crontab.50")
 :END:
 Modify PATH variable to match the normal environment's value:
 #+begin_src crontab
@@ -122,10 +122,10 @@ This service updates the user's crontab when any of the custom crontab files cha
       exit 1
   fi
 
-  mkdir -p ~/.haris/cron.d/
+  mkdir -p ~/.cron.d/
   while :; do
       content=''
-      for file in ~/.haris/cron.d/*; do
+      for file in ~/.cron.d/*; do
           echo "Read crontab file: $file"
           content="$(
               echo "$content"
@@ -141,7 +141,7 @@ This service updates the user's crontab when any of the custom crontab files cha
       echo "Resulting content of crontab:"
       crontab -l
       echo
-      inotifywait -e modify -e attrib -e create -e delete ~/.haris/cron.d/
+      inotifywait -e modify -e attrib -e create -e delete ~/.cron.d/
   done
 #+end_src
 * Helpers

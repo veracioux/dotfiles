@@ -2751,7 +2751,7 @@ Options:
 #+end_src
 ** =cronupd=
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/cronupd")
-  cat ~/.haris/cron.d/* | crontab -
+  cat ~/.cron.d/* | crontab -
   crontab -l
 #+end_src
 ** =fix-wifi=
