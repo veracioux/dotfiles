@@ -641,6 +641,12 @@ get better search matches.
       cat | sed 's:\s\+$::' ||\
           sed 's:\s\+$::' "$@"
 #+end_src
+** =trim=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/trim")
+  # Remove trailing newline from stdin
+
+  echo -n "$(cat)"
+#+end_src
 ** =adhoc=
 #+begin_src bash :tangle (haris/tangle-home ".local/bin/adhoc")
   # Create an ad-hoc file, edit it in $EDITOR and then print its path. If a '-'
