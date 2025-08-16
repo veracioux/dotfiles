@@ -2274,6 +2274,10 @@ basis here.
                          company-emoji
                          (company-capf :with company-yasnippet)
                          company-keywords))
+          (sh-mode '(company-files
+                     company-emoji
+                     (company-capf :with company-yasnippet)
+                     company-keywords))
           (web-mode '(company-files
                       company-emoji
                       (company-capf :with company-yasnippet)
@@ -2283,6 +2287,7 @@ basis here.
           (scss-mode css-mode))
      `((typescript-mode . ,typescript-mode)
        (python-mode . ,python-mode)
+       (sh-mode . ,sh-mode)
        (web-mode . ,web-mode)
        (css-mode . ,css-mode)
        (scss-mode . ,scss-mode))))
@@ -2300,7 +2305,7 @@ Spacemacs also runs =spacemacs//init-company-<mode>= for some modes in certain
 hooks, setting =company-backends= to =company-backends-<mode>= or
 =company-backends-<mode>-raw=, so I update those variables as well to prevent
 spacemacs from conflicting with my custom behavior.
-#+begin_src elisp
+#+begin_src elisp :eval no
   (defvar haris//original-spacemacs-company-backends-alist nil
     "Default copmany backends per mode as defined by spacemacs before I overrode them")
 #+end_src
