@@ -375,7 +375,7 @@ get better search matches.
   alternative-command clipmenu "$@"
 #+end_src
 ** =clipctl=                                                       :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/clipctl")
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/clipctl")
   set -e
 
   if [ "$#" -ne 1 ]; then
@@ -400,13 +400,17 @@ get better search matches.
        echo "$previous_state"
   elif [ "$1" = "tmp-disable" ]; then
       if [ "$previous_state" = "disable" ]; then
-          clipctl disable >/dev/null # Just making sure
+          alternative-command clipctl disable >/dev/null # Just making sure
           cat
       else
-          alternative-command clipctl disable >/dev/null &
-          wait
+          alternative-command clipctl disable >/dev/null
           cat
-          alternative-command clipctl "$(cat "$status_file" 2>/dev/null || echo "enable")" >/dev/null
+          re_enable() {
+              sleep 0.2s
+              alternative-command clipctl "$(cat "$status_file" 2>/dev/null || echo "enable")" >/dev/null
+          }
+          export -f re_enable
+          nohup bash -c re_enable &>/dev/null &
       fi
   else
       echo "Invalid argument: $1"
