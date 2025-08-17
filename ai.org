@@ -1,0 +1,300 @@
+#+TITLE: AI Tools
+#+SETUPFILE: .setup.org
+
+* Prompts
+** System prompt
+#+NAME: prompts/system
+#+begin_src text
+  You are a helpful assistant that can perform various tasks using different
+  tools. You are assisting me, a full-stack software engineer with a knack for
+  experimentation, using esoteric tools and a commitment to productivity, good
+  organization, documentation and overall code quality. I will use your help with
+  various projects I am working on, most notably my dotfiles repo.
+
+  «prompts/git-commit»
+
+  «prompts/workarounds/deprioritize-filesystem»
+#+end_src
+** Git commits
+#+NAME: prompts/git-commit
+#+begin_src text :tangle (haris/tangle-home ".ai/prompts/git-commit.md")
+  When making git commits, you will respect the following commit message format:
+  ```
+  [<TICKET-ID>:] <TYPE>: <SUBJECT>
+
+  [<BODY>]
+  ```
+
+  The <TICKET-ID> is optional and should only be included if there is a related
+  ticket in an issue tracker, e.g. Jira. You will determine if this is the case
+  by looking at the branch name. The <TYPE> should be one of the keywords from the
+  semantic commit message specification.
+  An additional rule you should follow:
+  - If there are user-facing changes, you MUST use either feat or fix
+  - In other cases, use your best judgement for which one fits best
+
+  The <SUBJECT> should be a short description of the change, ideally no more than
+  50 characters. It should be written in the imperative mood, as if giving a
+  command. The subject should describe the intent of the change, not a verbatim description
+  of the change itself - that can be glanced
+
+  If a change is an intermediate step (i.e. the project is not yet in a
+  working/testable state), preferably append [skip ci] to the commit message.
+
+  Use <BODY> sparingly, only when you need to explain the change in more detail
+  and the subject does not suffice.
+#+end_src
+** Workarounds
+#+NAME: prompts/workarounds/deprioritize-filesystem
+#+begin_src text
+  If you are asked to describe commands or shell functions, try
+  custom-shell-interaction first. Only if that fails to yield results, you can
+  inspect the filesystem.
+#+end_src
+* MCP Host configuration
+#+begin_src yaml :tangle (haris/tangle-home ".mcphost.yml")
+  mcpServers:
+    «mcpServers/custom-shell-interaction»
+    «mcpServers/git»
+    «mcpServers/filesystem»
+    «mcpServers/playwright»
+  model: openai:gpt-5
+  provider-api-key: «get-api-key(provider="openai")»
+  system-prompt: |
+    «prompts/system»
+#+end_src
+* Claude Code configuration
+Execute the following block in order to add all MCP servers to Claude code.
+#+NAME: claude/configure
+#+begin_src elisp :tangle no
+  (haris/tangle-dest '(4))
+  (let* ((config-file (expand-file-name "~/.mcphost.yml"))
+         (content (with-temp-buffer
+                    (insert-file-contents config-file)
+                    (buffer-string)))
+         (data (yaml-parse-string content :object-type 'alist))
+         (servers (alist-get 'mcpServers data)))
+    (dolist (entry servers)
+      (let* ((server (symbol-name (car entry)))
+             (info (cdr entry))
+             (json-str (json-encode info)))
+        ;; Remove the server if it exists, then add it using its JSON representation
+        (dolist
+            (args (list
+                   (list "mcp" "remove" "--scope" "user" server)
+                   (list "mcp" "add-json" "--scope" "user" server "--" json-str)))
+          (message "Running command: %s"
+                   (mapconcat 'identity (append '("claude") args) " "))
+          (apply 'call-process
+                 "claude" nil "*claude-mcp-add-json*" nil
+                 args)))))
+#+end_src
+* MCP Servers
+** Git
+#+NAME: mcpServers/git
+#+begin_src yaml
+  git:
+    type: stdio
+    command: uvx
+    args:
+      - mcp-server-git
+    allowedTools:
+      - git_status
+      - git_diff_unstaged
+      - git_diff_staged
+      - git_diff
+      - git_commit
+      - git_add
+      - git_log
+      - git_create_branch
+      - git_checkout
+      - git_show
+      - git_init
+      - git_branch
+#+end_src
+** Filesystem
+#+NAME: mcpServers/filesystem
+#+begin_src yaml
+  filesystem:
+    type: stdio
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - --volume
+      - «eval-user-home()»/.haris/:/allowed-directories/dotfiles
+      - --user
+      - «eval-uid:gid()»
+      - mcp/filesystem
+      - /allowed-directories
+    allowedTools:
+      - read_text_file
+      - read_media_file
+      - read_multiple_files
+      - create_directory
+      - list_directory
+      - move_file
+      - search_files
+      - get_file_info
+      - list_allowed_directories
+#+end_src
+** Playwright MCP
+#+NAME: mcpServers/playwright
+#+begin_src yaml
+  playwright:
+    type: stdio
+    command: npx
+    args:
+      - '@playwright/mcp@latest'
+      - --browser
+      - firefox
+#+end_src
+** Custom
+*** Custom shell interaction
+**** Code
+#+begin_src python :tangle (haris/tangle-home ".ai/custom-mcp/custom_shell_interaction.py")
+  from typing import Literal
+  from mcp.server.fastmcp import FastMCP
+  import subprocess
+  import shutil
+
+  server = FastMCP()
+
+  runnable_commands: list[str] = [
+      "myemacs",
+      "notify-send",
+  ]
+
+
+  @server.tool()
+  def list_runnable_commands():
+      return runnable_commands
+
+
+  @server.tool()
+  def list_all_fish_commands():
+      return subprocess.run(["fish", "-c", "complete -C' '"], check=True, capture_output=True).stdout.decode("utf-8").splitlines()
+
+
+  @server.tool("describe_command")
+  def describe_command(
+          name: str, is_shell_function: bool, shell: Literal["bash", "fish", None]
+  ):
+      run = lambda args: subprocess.run(
+          (
+              ,*((shell, "-c") if shell else ()),
+              ,*args,
+          ),
+          check=False,
+          stdout=subprocess.PIPE,
+          stderr=subprocess.STDOUT,
+      )
+
+      output = ""
+
+      # Print --help
+      if name in runnable_commands:
+          output += f"Output of `{name} --help`:\n"
+          output += run([name, "--help"]).stdout.decode("utf-8")
+
+      # Print manpage
+      output += f"Output of `man {name}`:\n"
+      output += run([f"man {name}"]).stdout.decode("utf-8")
+
+      # Print output of `help {name}`
+      if shell not in ("fish", None):
+          output += run(["help", name]).stdout.decode("utf-8")
+
+      # For fish functions, print the type (which includes the definition)
+      if shell == "fish":
+          output += run([f"type {name}"]).stdout.decode("utf-8")
+
+      # If it is a small custom utility script, often I don't bother to write any
+      # help. To heuristically determine if it is such a script, we check if the
+      # size is small.
+      if shutil.which(name) is not None and shutil.getsize(shutil.which(name)) < 15000:
+          output += "The content of the script is:\n"
+          output += subprocess.run(["catcmd", name], check=True, capture_output=True).stdout.decode("utf-8")
+
+      return output
+
+  @server.tool()
+  def run_command(command: str, args: list[str]):
+      if command not in runnable_commands:
+          raise Exception("Command is not whitelisted")
+
+      # sanitize arguments for some commands
+      if command == "myemacs":
+          args = args[:1]
+
+      return subprocess.run([command, *args], check=True)
+
+
+  # @server.tool(
+  #     description="Run an arbitrary script in the given shell. Internally, the script will be opened in an editor where the user can accept/decline/edit it."
+  # )
+  # def run_arbitrary_script(script: str, shell: Literal["bash", "fish"]):
+  #     if shell not in ["bash", "fish"]:
+  #         raise Exception("Unsupported shell")
+
+  #     # Open the script in an editor
+  #     editor = subprocess.run(
+  #         ["visual-editor"],
+  #         input=script.encode(),
+  #         capture_output=True,
+  #         check=True,
+  #         text=True,
+  #     )
+
+  #     if editor.returncode != 0:
+  #         raise Exception("Script editing was cancelled or failed")
+
+  #     # Run the edited script
+  #     return subprocess.run([shell, "-c", editor.stdout], check=True)
+
+  if __name__ == '__main__':
+      server.run()
+#+end_src
+**** YAML configuration
+#+NAME: mcpServers/custom-shell-interaction
+#+begin_src yaml
+  custom-shell-interaction:
+    type: stdio
+    command: python3
+    args:
+      - «eval-user-home()»/.ai/custom-mcp/custom_shell_interaction.py
+    timeout: 2000
+#+end_src
+**** Test
+Eval the following code block:
+#+CALL: inspector(server="custom-shell-interaction")
+* Appendix
+*** Helper functions
+**** =get-api-key=
+#+NAME: get-api-key
+#+begin_src shell :var provider="openai"
+  pass show "$provider"/api-key | trim
+#+end_src
+**** =eval-user-home=
+#+NAME: eval-user-home
+#+begin_src elisp
+  (expand-file-name "~")
+#+end_src
+**** =eval-uid:gid=
+#+NAME: eval-uid:gid
+#+begin_src elisp
+  (format "%d:%d" (user-uid) (group-gid))
+#+end_src
+**** =inspector=
+#+NAME: inspector
+#+begin_src bash :var server=""
+  npx @modelcontextprotocol/inspector \
+      --config <(yq <~/.mcphost.yml)  \
+      --transport stdio                \
+      --server "$server"
+#+end_src
+** Local variables
+# Local Variables:
+# eval: (setq org-confirm-babel-evaluate nil)
+# End:
