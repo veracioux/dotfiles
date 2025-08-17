@@ -207,6 +207,7 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
   (use-package systemd :defer t)
   (use-package ssh-config-mode :defer t)
   (use-package crontab-mode :defer t)
+  (use-package lark-mode :defer t)
 #+end_src
 ** Global settings
 #+NAME: global-settings
