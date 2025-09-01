@@ -1854,10 +1854,12 @@ Create a Xephyr session for the current user that tries to mimic a regular
       "Quickmenu")
           run_script quickmenu ;;
       # The rest: aliases and regular commands
-      *)
+      ,*)
           if [ -n "$is_dotdesktop_app" ]; then
               # If the choice is an x.desktop app, launch it
-              o gtk-launch "$choice"
+              # DO NOT USE the `o` command here, because it kills the process
+              # after linger-period
+              gtk-launch "$choice"
               exit
           fi
           # Fallback, if the entry matches none of the above, just run the command
