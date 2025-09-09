@@ -1159,10 +1159,11 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
 The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtualenv.
 #+begin_src elisp
   (with-eval-after-load 'dap-mode
-    (dolist (hook '(dap-session-created-hook dap-session-changed-hook))
-      (add-hook
-       hook
-       (lambda () (defalias 'dap-python--pyenv-executable-find 'executable-find)))))
+    (with-eval-after-load 'dap-python
+      (dolist (hook '(dap-session-created-hook dap-session-changed-hook))
+        (add-hook
+         hook
+         (lambda () (defalias 'dap-python--pyenv-executable-find 'executable-find))))))
 #+end_src
 *** Bindings
 #+begin_src elisp
