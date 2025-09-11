@@ -1946,7 +1946,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 
       (with-eval-after-load 'magit-status
         (when (not (boundp 'haris//gptcommit-status-buffer-setup-p))
-          (defvar haris//gptcommit-status-buffer-setup t
+          (defvar haris//gptcommit-status-buffer-setup-p t
             "Flag to indicate if the gptcommit status buffer setup has been done.")
           (magit-gptcommit-status-buffer-setup)))))
 #+end_src
