@@ -2308,6 +2308,7 @@ basis here.
        (sh-mode . ,common)
        (yaml-mode . ,common)
        (yaml-ts-mode . ,common)
+       (sql-interactive-mode . ,common)
        (web-mode . ,web-mode)
        (css-mode . ,web-mode)
        (scss-mode . ,web-mode))))
