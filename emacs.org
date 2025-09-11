@@ -2294,31 +2294,23 @@ basis here.
 #+begin_src elisp
   (setq
    haris/modes-to-company-backends-alist
-   (let* ((typescript-mode '(company-files
-                             company-emoji
-                             (company-capf :with company-yasnippet)
-                             company-keywords))
-          (python-mode '(company-files
-                         company-emoji
-                         (company-capf :with company-yasnippet)
-                         company-keywords))
-          (sh-mode '(company-files
-                     company-emoji
-                     (company-capf :with company-yasnippet)
-                     company-keywords))
+   (let* ((common '(company-files
+                    company-emoji
+                    (company-capf :with company-yasnippet)
+                    company-keywords))
           (web-mode '(company-files
                       company-emoji
                       (company-capf :with company-yasnippet)
                       (company-css :with company-yasnippet)
-                      company-keywords))
-          (css-mode web-mode)
-          (scss-mode css-mode))
-     `((typescript-mode . ,typescript-mode)
-       (python-mode . ,python-mode)
-       (sh-mode . ,sh-mode)
+                      company-keywords)))
+     `((typescript-mode . ,common)
+       (python-mode . ,common)
+       (sh-mode . ,common)
+       (yaml-mode . ,common)
+       (yaml-ts-mode . ,common)
        (web-mode . ,web-mode)
-       (css-mode . ,css-mode)
-       (scss-mode . ,scss-mode))))
+       (css-mode . ,web-mode)
+       (scss-mode . ,web-mode))))
 #+end_src
 I update the company backends whenever the major mode changes.
 #+begin_src elisp
@@ -2335,7 +2327,7 @@ hooks, setting =company-backends= to =company-backends-<mode>= or
 spacemacs from conflicting with my custom behavior.
 #+begin_src elisp :eval no
   (defvar haris//original-spacemacs-company-backends-alist nil
-    "Default copmany backends per mode as defined by spacemacs before I overrode them")
+    "Default company backends per mode as defined by spacemacs before I overrode them")
 #+end_src
 #+begin_src elisp
   (dolist (item haris/modes-to-company-backends-alist)
