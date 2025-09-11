@@ -2155,6 +2155,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   (setq gptel-confirm-tool-calls t)
   (setq gptel-default-mode 'org-mode)
+  (setq gptel-api-key openai-key)
 #+end_src
 ** Ellama
 #+begin_src elisp
