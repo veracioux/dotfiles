@@ -64,6 +64,11 @@
     «prompts/system»
 #+end_src
 * Claude Code configuration
+#+begin_src json :tangle (haris/tangle-home ".claude/settings.json")
+  {
+    "apiKeyHelper": "pass show anthropic/api-key | trim"
+  }
+#+end_src
 Execute the following block in order to add all MCP servers to Claude code.
 #+NAME: claude/configure
 #+begin_src elisp :tangle no
