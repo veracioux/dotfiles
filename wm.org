@@ -706,7 +706,7 @@ Menu of utilities that allow me to chat with my computer.
 
   query="?model=$choice"
 
-  url="https://chatgpt.com/$query"
+  url="https://chatgpt.com$query"
 
   auto-browser -P "$USER" "$url"
 #+end_src
