@@ -27,7 +27,7 @@
 
   The <TICKET-ID> is optional and should only be included if there is a related
   ticket in an issue tracker, e.g. Jira. You will determine if this is the case
-  by looking at the branch name. The <TYPE> should be one of the keywords from the
+  by looking at the branch name if available. The <TYPE> should be one of the keywords from the
   semantic commit message specification.
   An additional rule you should follow:
   - If there are user-facing changes, you MUST use either feat or fix
@@ -36,13 +36,38 @@
   The <SUBJECT> should be a short description of the change, ideally no more than
   50 characters. It should be written in the imperative mood, as if giving a
   command. The subject should describe the intent of the change, not a verbatim description
-  of the change itself - that can be glanced
+  of the change itself - that can be glanced from the diff.
 
   If a change is an intermediate step (i.e. the project is not yet in a
   working/testable state), preferably append [skip ci] to the commit message.
 
   Use <BODY> sparingly, only when you need to explain the change in more detail
   and the subject does not suffice.
+
+  Now write the commit message.
+#+end_src
+** Git commits for dotfiles repo
+#+NAME: prompts/git-commit/dotfiles
+#+begin_src text :tangle (haris/tangle-home ".ai/prompts/git-commit-dotfiles.md")
+  «prompts/git-commit»
+
+  One additional rule:
+
+  - Make sure that before <TYPE>, you also include the <RESOURCE_NAME> that the
+    change applies to. This is usually the name before suffix of the ORG file
+    that was changed, e.g. for emacs.org you would use 'emacs: ' (without quotes).
+    If multiple resources are affected, you can choose a common narrative for the change.
+
+    Examples:
+    ```
+    refactor: shells: Surround meta section headings with brackets
+    feat: shells: fish: Add abbreviation 'l1'
+    fix: emacs: Fix dap-mode pet peeves
+    feat: vcs: Add alias tra='commit --amend --no-edit --reset-author
+    feat: emacs: Add haris/projectile-initialize-project bound to "SPC p ."
+    fix: emacs: Load projects before adding fixed ones
+    feat: shells: fish: Add api-key-related abbreviations
+    ```
 #+end_src
 ** Workarounds
 #+NAME: prompts/workarounds/deprioritize-filesystem
@@ -51,7 +76,8 @@
   custom-shell-interaction first. Only if that fails to yield results, you can
   inspect the filesystem.
 #+end_src
-* MCP Host configuration
+* Host configurations
+** mcphost
 #+begin_src yaml :tangle (haris/tangle-home ".mcphost.yml")
   mcpServers:
     «mcpServers/custom-shell-interaction»
@@ -63,7 +89,7 @@
   system-prompt: |
     «prompts/system»
 #+end_src
-* Claude Code configuration
+** Claude Code
 #+begin_src json :tangle (haris/tangle-home ".claude/settings.json")
   {
     "apiKeyHelper": "pass show anthropic/api-key | trim"
