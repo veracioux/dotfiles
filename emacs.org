@@ -1241,6 +1241,24 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
 #+begin_src text :tangle (haris/tangle-deps "emacs/docker-compose.npm")
   docker-compose-langserver
 #+end_src
+** CircleCI
+#+begin_src elisp
+  (defcustom haris/lsp-circleci-schema-path
+    "UNDEFINED"
+    "The schema.json path for circleci-yaml-language-server"
+    :type '(string))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection
+    (lsp-stdio-connection
+     `("circleci-yaml-language-server"
+       "-stdio"
+       "-schema"
+       ,haris/lsp-circleci-schema-path))
+    :activation-fn (lsp-activate-on "yaml")
+    :server-id 'circleci-ls))
+#+end_src
 ** SQL
 #+begin_src elisp
   (setq sql-capitalize-keywords t)
