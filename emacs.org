@@ -726,6 +726,9 @@ Some custom keybindings are defined here as well.
     (lambda () (spacemacs/set-leader-keys "og" haris/git-prefix-map)))
   (define-key haris/git-prefix-map (kbd "c") 'magit-find-git-config-file)
 
+  ;; Misc
+  (spacemacs/set-leader-keys "*" 'gptel-menu)
+
   ;; Friendly descriptions
   (which-key-add-key-based-replacements
     "SPC o b" "Buffer manipulation"
