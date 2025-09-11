@@ -17,7 +17,7 @@
 #+end_src
 ** Git commits
 #+NAME: prompts/git-commit
-#+begin_src text :tangle (haris/tangle-home ".ai/prompts/git-commit.md")
+#+begin_src markdown :tangle (haris/tangle-home ".ai/prompts/git-commit.md")
   When making git commits, you will respect the following commit message format:
   ```
   [<TICKET-ID>:] <TYPE>: <SUBJECT>
@@ -43,6 +43,62 @@
 
   Use <BODY> sparingly, only when you need to explain the change in more detail
   and the subject does not suffice.
+
+  Examples:
+  - Branch: feature/ABC-1234-add-login-endpoint
+    Commit message:
+    ```
+    ABC-1234: feat: Add endpoint /v1/auth/login
+
+    - Authenticate users using JWT token
+    - Document in OpenAPI spec
+
+    Payload:
+      {
+        "username": "string",
+        "password": "string"
+      }
+    ```
+  - Unspecified branch
+    Commit message:
+    ```
+    refactor: Correct typo in code comment
+    ```
+    This is a simple commit, so no body is needed.
+  - Branch: bugfix/DE-56-fix-unconfigured-integrations
+    Commit message:
+    ```
+    DE-56: fix: Handle unconfigured integrations gracefully
+
+    - Add mutex to prevent desynchronized access where config could be null
+    - Add unit test to cover this case
+    ```
+  - Branch: docs/update-contributing-guidelines
+    Commit message:
+    ```
+    docs: Update contributing guidelines
+    ```
+  - Unspecified branch
+    Commit message:
+    ```
+    feat: Add prototype data collector [skip ci]
+
+    - Use Kafka for ingress
+    - Store data in-memory
+    - Persistence is WIP
+    ```
+    This is an intermediate step that is not yet ready for testing, so it is marked with `[skip ci]`.
+
+  - Unspecified branch
+    Single function added
+    Commit message:
+    ```
+    feat: Add function filterByActivity
+
+    The function filters a list of devices by their last activity timestamp.
+    ```
+    If the name of the function is short and self-explanatory, prefer using the name
+    instead of a natural language description of the function in the subject.
 
   Now write the commit message.
 #+end_src
