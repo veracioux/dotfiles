@@ -1,8 +1,8 @@
 # Dockerfile for generating config files from the literate dotfiles
 
-FROM alpine:3.14
+FROM alpine:3.22
 
-RUN apk add --no-cache emacs
+RUN apk add --no-cache emacs emacs-nox
 RUN adduser -D user
 
 COPY bootstrap/entrypoint.sh /tmp/entrypoint.sh
