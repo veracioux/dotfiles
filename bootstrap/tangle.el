@@ -1,4 +1,7 @@
+(require 'use-package)
 (require 'ob-tangle)
+
+(use-package yaml :ensure t :defer nil)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -74,6 +77,18 @@ alternative dotfiles directory to '~/.haris'."
       (haris/tangle--file-non-interactively file)))
   (when to-destination
     (shell-command (concat "rsync -rvu --keep-dirlinks " (haris/tangle-home) " ~/"))))
+
+(defun haris/org-babel-expand-noweb-references (block-name)
+  "Expand noweb references in the org-babel code block named BLOCK-NAME
+in the current buffer."
+  (interactive "sBlock name: ")
+  (save-excursion
+    (let ((marker (org-babel-find-named-block block-name)))
+      (unless marker
+        (error "No block named %s found" block-name))
+      (goto-char marker)
+      (let* ((info (org-babel-get-src-block-info 'light)))
+        (org-babel-expand-noweb-references info)))))
 
 (defun org-babel-noweb-wrap (&optional regexp)
   (rx-to-string

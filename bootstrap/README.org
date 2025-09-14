@@ -24,8 +24,12 @@ Run with =--help= to see detailed usage.
 :header-args:elisp+: :tangle (haris/tangle-home ".haris/bootstrap/tangle.el")
 :END:
 A library of functions for easier tangling.
+** Prerequisites
 #+begin_src elisp
+  (require 'use-package)
   (require 'ob-tangle)
+
+  (use-package yaml :ensure t :defer nil)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -107,6 +111,18 @@ To make your OpenAI key available to various AI tools, you can put it in [[~/.lo
         (haris/tangle--file-non-interactively file)))
     (when to-destination
       (shell-command (concat "rsync -rvu --keep-dirlinks " (haris/tangle-home) " ~/"))))
+
+  (defun haris/org-babel-expand-noweb-references (block-name)
+    "Expand noweb references in the org-babel code block named BLOCK-NAME
+  in the current buffer."
+    (interactive "sBlock name: ")
+    (save-excursion
+      (let ((marker (org-babel-find-named-block block-name)))
+        (unless marker
+          (error "No block named %s found" block-name))
+        (goto-char marker)
+        (let* ((info (org-babel-get-src-block-info 'light)))
+          (org-babel-expand-noweb-references info)))))
 #+end_src
 The normal =<<...>>= syntax for noweb references breaks shell blocks. So I allow
 =«...»= as an alternative syntax to prevent that.

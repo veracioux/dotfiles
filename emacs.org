@@ -1777,20 +1777,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
             (replace-regexp-in-string deps-dir-re "~/" _file))
         nil)))
 #+end_src
-*** Functions
-#+begin_src elisp
-  (defun haris/org-babel-expand-noweb-references (block-name)
-    "Expand noweb references in the org-babel code block named BLOCK-NAME
-  in the current buffer."
-    (interactive "sBlock name: ")
-    (save-excursion
-      (let ((marker (org-babel-find-named-block block-name)))
-        (unless marker
-          (error "No block named %s found" block-name))
-        (goto-char marker)
-        (let* ((info (org-babel-get-src-block-info 'light)))
-          (org-babel-expand-noweb-references info)))))
-#+end_src
 ** LaTeX preview
 #+begin_src elisp
   (setq org-preview-latex-default-process        'dvisvgm)
