@@ -1662,8 +1662,8 @@ Takes too long to load.
                    ("fishfun"   . "src fish :tangle (haris/tangle-deps \".config/fish/functions/TODO\")")
                    ("fishcomp"  . "src fish :tangle (haris/tangle-deps \".config/fish/completions/TODO\")")
                    ("dep"       . "src shell :tangle (haris/tangle-deps \"TODO\")")
-                   ("sht"       . "src shell :tangle (haris/tangle-home \"TODO\")")
-                   ("elt"       . "src elisp :tangle (haris/tangle-home \"TODO\")")
+                   ("st"        . "src shell :tangle (haris/tangle-home \"TODO\")")
+                   ("et"        . "src elisp :tangle (haris/tangle-home \"TODO\")")
                    ("sh"        . "src elisp :tangle (haris/tangle-home \"TODO\")")
                    ("st"        . "src :tangle (haris/tangle-home \"TODO\")")
                    ("rest"      . "src restclient")))
@@ -2311,7 +2311,12 @@ basis here.
                       company-emoji
                       (company-capf :with company-yasnippet)
                       (company-css :with company-yasnippet)
-                      company-keywords)))
+                      company-keywords))
+          (org-mode '(company-files
+                      company-emoji
+                      (company-capf company-org-block :with company-yasnippet)
+                      company-keywords
+                      company-dabbrev)))
      `((text-mode . ,common)
        (typescript-mode . ,common)
        (python-mode . ,common)
@@ -2321,7 +2326,8 @@ basis here.
        (sql-interactive-mode . ,common)
        (web-mode . ,web-mode)
        (css-mode . ,web-mode)
-       (scss-mode . ,web-mode))))
+       (scss-mode . ,web-mode)
+       (org-mode . ,org-mode))))
 #+end_src
 I update the company backends whenever the major mode changes.
 #+begin_src elisp
