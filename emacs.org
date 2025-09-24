@@ -2305,11 +2305,11 @@ basis here.
    haris/modes-to-company-backends-alist
    (let* ((common '(company-files
                     company-emoji
-                    (company-capf :with company-yasnippet)
+                    (company-capf company-dabbrev :with company-yasnippet)
                     company-keywords))
           (web-mode '(company-files
                       company-emoji
-                      (company-capf :with company-yasnippet)
+                      (company-capf company-dabbrev :with company-yasnippet)
                       (company-css :with company-yasnippet)
                       company-keywords))
           (org-mode '(company-files
@@ -2324,6 +2324,7 @@ basis here.
        (yaml-mode . ,common)
        (yaml-ts-mode . ,common)
        (sql-interactive-mode . ,common)
+       (sql-mode . ,common)
        (web-mode . ,web-mode)
        (css-mode . ,web-mode)
        (scss-mode . ,web-mode)
