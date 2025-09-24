@@ -1371,11 +1371,14 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g s     'sudo'
   conditional_abbr -g py    'python'
   conditional_abbr -g ipy   'ipython'
+
   conditional_abbr -g copy  'fish_clipboard_copy'
-  conditional_abbr -g Copy  'tee /dev/tty | fish_clipboard_copy'
-  conditional_abbr -g C     'tee /dev/tty | fish_clipboard_copy'
+  conditional_abbr -g Tcopy 'tee /dev/tty | fish_clipboard_copy'
+  conditional_abbr -g TC    'tee /dev/tty | fish_clipboard_copy'
   conditional_abbr -g CC    'clipctl tmp-disable | fish_clipboard_copy'
+  conditional_abbr -g TCC   'tee /dev/tty | clipctl tmp-disable | fish_clipboard_copy'
   conditional_abbr -g paste 'xsel -b -o'
+
   conditional_abbr -g oct   'octave'
   conditional_abbr -g octb  'OCTAVE_BASIC=true command octave'
   conditional_abbr -g va    'vagrant'
@@ -1408,6 +1411,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g bt    'bluetoothctl'
   conditional_abbr -g sshk  'ssh-copy-id -i ~/.ssh/%'
   conditional_abbr -g sshkm 'ssh-copy-id -i ~/.ssh/main.pub'
+  conditional_abbr -g SSHFS 'sshfs -o uid=(id -u),gid=(id -g),idmap=user,reconnect,ServerAliveInterval=1'
   _abbr            -g ek    'sudo etckeeper'
 
   if [ "$TERM" != "linux" ]
@@ -1423,6 +1427,7 @@ abbreviations for equivalent apt operations.
   _abbr            -g ..    'cd ../%'
   _abbr            -g ...   'cd ../../%'
   _abbr            -g l1    'ls -1'
+  _abbr            -g T     'tee /dev/tty'
 #+end_src
 **** Google cloud
 #+begin_src fish
