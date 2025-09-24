@@ -1194,6 +1194,25 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
 
   (eval-after-load "npm-mode" (lambda () (npm-global-mode t)))
 #+end_src
+*** Unit Testing
+#+begin_src elisp
+  (use-package jest-test-mode :ensure t)
+
+  (add-hook 'typescript-mode-hook 'jest-test-mode)
+
+  (spacemacs/set-leader-keys-for-minor-mode
+    'jest-test-mode
+    "tb" 'jest-test-run)
+  (spacemacs/set-leader-keys-for-minor-mode
+    'jest-test-mode
+    "tt" 'jest-test-run-at-point)
+  (spacemacs/set-leader-keys-for-minor-mode
+    'jest-test-mode
+    "tl" 'jest-test-rerun-test)
+  (spacemacs/set-leader-keys-for-minor-mode
+    'jest-test-mode
+    "ta" 'jest-test-run-all-tests)
+#+end_src
 ** Web
 #+begin_src elisp
   (setq web-mode-markup-indent-offset 2
