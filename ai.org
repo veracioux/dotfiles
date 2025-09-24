@@ -100,6 +100,11 @@
     If the name of the function is short and self-explanatory, prefer using the name
     instead of a natural language description of the function in the subject.
 
+  Miscellaneous other examples
+  ```
+  feat: Add HARDCODED_REPORTING_INTERVALS_MILLIS with 'D5-00-01'
+  ```
+
   Now write the commit message.
 #+end_src
 ** Git commits for dotfiles repo
