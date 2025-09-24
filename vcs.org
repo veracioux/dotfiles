@@ -223,6 +223,9 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   [url "git@github.com:"]
     insteadOf = ghg:
 
+  [url "file://«eval-user-home()»/"]
+  	insteadOf = mnt:
+
   [url "git@veracioux.me:"]
     insteadOf = me:
 
@@ -347,7 +350,6 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 
   GIT_COMMITTER_DATE="$1" git commit --amend --no-edit --date "$1"
 #+end_src
-
 * GitHub CLI
 #+begin_src yaml :tangle (haris/tangle-home ".config/gh/config.yml")
   git_protocol: ssh
@@ -377,3 +379,14 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   username = Haris Gušić <harisgusic.dev@gmail.com>
 
 #+end_src
+* Appendix
+** Helper code blocks
+*** =eval-user-home=
+#+NAME: eval-user-home
+#+begin_src elisp
+  (expand-file-name "~")
+#+end_src
+** Local variables
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:
