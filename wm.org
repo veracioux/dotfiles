@@ -672,6 +672,7 @@ Menu of utilities that allow me to chat with my computer.
   gpt-5: Automatic thinking
   gpt-5-instant: GPT-5 Fast
   gpt-5-thinking: GPT-5 Thinking
+  gpt-5-t-mini: GPT-5 Thinking mini
   gpt-4o: Great for most tasks
   o4-mini: Fastest at advanced reasoning
   o3: Uses advanced reasoning
@@ -691,6 +692,9 @@ Menu of utilities that allow me to chat with my computer.
               ;;
           "3")
               choice=gpt-5
+              ;;
+          "4")
+              choice=gpt-5-t-mini
               ;;
           "5")
               choice=gpt-5-thinking
