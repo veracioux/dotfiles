@@ -410,7 +410,6 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/fish_plugins")
   jorgebucaran/fisher
   edc/bass
-  oh-my-fish/plugin-pj
   PatrickF1/fzf.fish
   jorgebucaran/nvm.fish
   evanlucas/fish-kubectl-completions
@@ -423,9 +422,6 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+end_src
 *** Initialization
 #+begin_src fish
-  # pj plugin
-  set -g PROJECT_PATHS ~/proj ~/proj/drytoe
-
   # z.lua
   set _ZL_CMD z
   if type --quiet lua && [ -f /usr/share/z.lua/z.lua ]
