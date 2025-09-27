@@ -168,13 +168,7 @@ To use it, when starting Aider, run the following command:
   /run mcpm-aider toolprompt
 #+end_src
 
-mcpm-aider uses Claude Desktop configuration, so I configure it here:
-
-#+begin_src json :tangle (haris/tangle-home ".config/claude/claude_desktop_config.json")
-  {
-    "mcpServers": «compact-json(block-name="mcpServers/all/json")»
-  }
-#+end_src
+mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop configuration]].
 * MCP Servers
 ** Git
 #+NAME: mcpServers/git
@@ -233,124 +227,6 @@ mcpm-aider uses Claude Desktop configuration, so I configure it here:
     - --browser
     - firefox
 #+end_src
-** Custom
-*** Custom shell interaction
-**** Code
-#+begin_src python :tangle (haris/tangle-home ".ai/custom-mcp/custom_shell_interaction.py")
-  from typing import Literal
-  from mcp.server.fastmcp import FastMCP
-  import subprocess
-  import shutil
-
-  server = FastMCP()
-
-  runnable_commands: list[str] = [
-      "myemacs",
-      "notify-send",
-  ]
-
-
-  @server.tool()
-  def list_runnable_commands():
-      return runnable_commands
-
-
-  @server.tool()
-  def list_all_fish_commands():
-      return subprocess.run(["fish", "-c", "complete -C' '"], check=True, capture_output=True).stdout.decode("utf-8").splitlines()
-
-
-  @server.tool("describe_command")
-  def describe_command(
-          name: str, is_shell_function: bool, shell: Literal["bash", "fish", None]
-  ):
-      run = lambda args: subprocess.run(
-          (
-              ,*((shell, "-c") if shell else ()),
-              ,*args,
-          ),
-          check=False,
-          stdout=subprocess.PIPE,
-          stderr=subprocess.STDOUT,
-      )
-
-      output = ""
-
-      # Print --help
-      if name in runnable_commands:
-          output += f"Output of `{name} --help`:\n"
-          output += run([name, "--help"]).stdout.decode("utf-8")
-
-      # Print manpage
-      output += f"Output of `man {name}`:\n"
-      output += run([f"man {name}"]).stdout.decode("utf-8")
-
-      # Print output of `help {name}`
-      if shell not in ("fish", None):
-          output += run(["help", name]).stdout.decode("utf-8")
-
-      # For fish functions, print the type (which includes the definition)
-      if shell == "fish":
-          output += run([f"type {name}"]).stdout.decode("utf-8")
-
-      # If it is a small custom utility script, often I don't bother to write any
-      # help. To heuristically determine if it is such a script, we check if the
-      # size is small.
-      if shutil.which(name) is not None and shutil.getsize(shutil.which(name)) < 15000:
-          output += "The content of the script is:\n"
-          output += subprocess.run(["catcmd", name], check=True, capture_output=True).stdout.decode("utf-8")
-
-      return output
-
-  @server.tool()
-  def run_command(command: str, args: list[str]):
-      if command not in runnable_commands:
-          raise Exception("Command is not whitelisted")
-
-      # sanitize arguments for some commands
-      if command == "myemacs":
-          args = args[:1]
-
-      return subprocess.run([command, *args], check=True)
-
-
-  # @server.tool(
-  #     description="Run an arbitrary script in the given shell. Internally, the script will be opened in an editor where the user can accept/decline/edit it."
-  # )
-  # def run_arbitrary_script(script: str, shell: Literal["bash", "fish"]):
-  #     if shell not in ["bash", "fish"]:
-  #         raise Exception("Unsupported shell")
-
-  #     # Open the script in an editor
-  #     editor = subprocess.run(
-  #         ["visual-editor"],
-  #         input=script.encode(),
-  #         capture_output=True,
-  #         check=True,
-  #         text=True,
-  #     )
-
-  #     if editor.returncode != 0:
-  #         raise Exception("Script editing was cancelled or failed")
-
-  #     # Run the edited script
-  #     return subprocess.run([shell, "-c", editor.stdout], check=True)
-
-  if __name__ == '__main__':
-      server.run()
-#+end_src
-**** YAML configuration
-#+NAME: mcpServers/custom-shell-interaction
-#+begin_src yaml
-  type: stdio
-  command: python3
-  args:
-    - «eval-user-home()»/.ai/custom-mcp/custom_shell_interaction.py
-  timeout: 2000
-#+end_src
-**** Test
-Eval the following code block:
-#+CALL: inspector(server="custom-shell-interaction")
 * Appendix
 *** Helper functions
 **** =get-api-key=
@@ -376,42 +252,10 @@ Eval the following code block:
       --transport stdio                \
       --server "$server"
 #+end_src
-**** =yaml-to-json=
-Takes code block named =block-name=, expands all noweb references, and converts it from YAML to JSON.
-#+NAME: yaml-to-json
-#+begin_src elisp :var block-name="" :var pretty="no"
-  (let ((expanded (haris/org-babel-expand-noweb-references block-name)))
-    (let ((json-object-type 'hash-table)
-          (json-array-type 'vector)
-          (json-false nil)
-          (json-true t))
-      (with-temp-buffer
-        (insert (json-encode (yaml-parse-string expanded)))
-        (when (string= pretty "yes")
-          (json-pretty-print (point-min) (point-max)))
-        (buffer-string))))
-#+end_src
 **** =get-openai-api-key=
 #+NAME: get-openai-api-key
 #+begin_src elisp :tangle no
   (when (boundp 'openai-key) openai-key)
-#+end_src
-**** =compact-json=
-#+NAME: compact-json
-#+begin_src elisp :var block-name=""
-  (json-encode (json-read-from-string (haris/org-babel-expand-noweb-references block-name)))
-#+end_src
-*** Reusable code blocks
-**** All mcpServers (JSON)
-JSON block that combines all MCP servers into a single =mcpServers= object.
-#+NAME: mcpServers/all/json
-#+begin_src json
-  {
-    "filesystem": «yaml-to-json(block-name="mcpServers/filesystem")»,
-    "git": «yaml-to-json(block-name="mcpServers/git")»,
-    "playwright": «yaml-to-json(block-name="mcpServers/playwright")»,
-    "custom-shell-interaction": «yaml-to-json(block-name="mcpServers/custom-shell-interaction")»
-  }
 #+end_src
 ** Local variables
 # Local Variables:
