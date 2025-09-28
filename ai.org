@@ -169,6 +169,36 @@ To use it, when starting Aider, run the following command:
 #+end_src
 
 mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop configuration]].
+** OpenCode
+#+begin_src jsonc :tangle (haris/tangle-home ".config/opencode/opencode.json")
+  {
+    "$schema": "https://opencode.ai/config.json",
+    "model": "openai/gpt-5"
+  }
+#+end_src
+*** Agents
+**** Simple
+#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/simple.md")
+  ---
+  description: Follows simple instructions
+  model: google/gemini-2.5-flash
+  permission:
+    write: "deny"
+    edit: "deny"
+    bash:
+      "*": ask
+      "myemacs-float *": allow
+  ---
+  Follows simple instructions.
+#+end_src
+*** Custom commands
+**** Edit file
+#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/command/e.md")
+  ---
+  agent: simple
+  ---
+  Run the command `myemacs-float $ARGUMENTS`, removing the @ symbol from the arguments.
+#+end_src
 * MCP Servers
 ** Git
 #+NAME: mcpServers/git
