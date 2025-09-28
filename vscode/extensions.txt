@@ -1,0 +1,13 @@
+anthropic.claude-code
+bodil.file-browser
+bungcip.better-toml
+dracula-theme.theme-dracula
+jacobdufault.fuzzy-search
+kahole.magit
+rust-lang.rust-analyzer
+saoudrizwan.claude-dev
+sst-dev.opencode
+vadimcn.vscode-lldb
+vscodevim.vim
+vspacecode.vspacecode
+vspacecode.whichkey
