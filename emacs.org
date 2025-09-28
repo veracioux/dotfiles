@@ -1268,16 +1268,17 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
     "The schema.json path for circleci-yaml-language-server"
     :type '(string))
 
-  (lsp-register-client
-   (make-lsp-client
-    :new-connection
-    (lsp-stdio-connection
-     `("circleci-yaml-language-server"
-       "-stdio"
-       "-schema"
-       ,haris/lsp-circleci-schema-path))
-    :activation-fn (lsp-activate-on "yaml")
-    :server-id 'circleci-ls))
+  (with-eval-after-load 'lsp-mode
+    (lsp-register-client
+     (make-lsp-client
+      :new-connection
+      (lsp-stdio-connection
+       `("circleci-yaml-language-server"
+         "-stdio"
+         "-schema"
+         ,haris/lsp-circleci-schema-path))
+      :activation-fn (lsp-activate-on "yaml")
+      :server-id 'circleci-ls)))
 #+end_src
 ** SQL
 #+begin_src elisp
@@ -1604,7 +1605,7 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
   (defun haris/org-mode-visual-fill ()
     (setq visual-fill-column-width        90
           visual-fill-column-center-text  t)
-    (visual-fill-column-mode 1))
+    (visual-line-fill-column-mode 1))
 
   (defun haris/org-babel-goto-tangle-file ()
     "Go to the file that the code block at point tangles to. If there is an
