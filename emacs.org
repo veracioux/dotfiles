@@ -1845,7 +1845,9 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (define-key spacemacs-org-src-mode-map (kbd "bT")
               'haris/org-src-tangle-dest)
 
-  (spacemacs/set-leader-keys-for-minor-mode 'org-mode "l" #'lsp-org)
+  (spacemacs/set-leader-keys-for-minor-mode 'org-mode
+    "l" 'lsp-org
+    "=" 'visual-line-fill-column-mode)
   (spacemacs/set-leader-keys-for-minor-mode 'org-src-mode "l" #'lsp)
 #+end_src
 *** Helper functions
