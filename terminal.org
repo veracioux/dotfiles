@@ -5,139 +5,109 @@ A collection of configs for my terminal(s) and terminal apps.
 
 * Alacritty
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".config/alacritty/alacritty.yml")
+:header-args+: :tangle (haris/tangle-home ".config/alacritty/alacritty.toml")
 :END:
 If you are viewing this on Linux, you can find the config reference [[file:/usr/share/doc/alacritty/example/alacritty.yml][here]].
 ** General
-#+begin_src yaml
-  shell:
-    program: fish
-  scrolling:
-    history: 100000  # Unfortunately, this is a hard limit in alacritty
-  selection:
-    save_to_clipboard: true
-  hints:
-    alphabet: "jfkdls;ahgurieowpq"
-    enabled:
-      - regex: "(mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
-                [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
-        command: xdg-open
-        post_processing: true
-        mouse:
-          enabled: true
-          mods: None
-        binding:
-          key: F
-          mods: Control
+#+begin_src toml
+  terminal.shell.program = "fish"
+  scrolling.history = 100000  # Unfortunately, this is a hard limit in alacritty
+  selection.save_to_clipboard = true
+
+  [hints]
+  alphabet = "jfkdls;ahgurieowpq"
+
+  [[hints.enabled]]
+  regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`\\\\]+"
+  hyperlinks = true
+  command = "xdg-open"
+  post_processing = true
+  mouse = { enabled = true, mods = "None" }
+  binding = { key = "F", mods = "Control" }
 #+end_src
 ** Appearance
-#+begin_src yaml
-  window:
-    padding:
-      x: 4
-      y: 4
+#+begin_src toml
+  [window]
+  padding.x = 4
+  padding.y = 4
 
-  font:
-    # The normal (roman) font face to use.
-    normal:
-      family: Ubuntu Mono
-      style: Regular
+  [font.normal]
+  family = "Ubuntu Mono"
+  style = "Regular"
 
-    # The bold font face
-    bold:
-      family: Ubuntu Mono
-      style: Bold
+  [font.bold]
+  family = "Ubuntu Mono"
+  style = "Bold"
 
-    # The italic font face
-    italic:
-      family: Ubuntu Mono
-      style: Italic
+  [font.italic]
+  family = "Ubuntu Mono"
+  style = "Italic"
 
-  colors:
-    # Default colors
-    primary:
-      background: '#1e1e1e'
-      foreground: '#d2dcf9'
+  [colors.primary]
+  background = "#1e1e1e"
+  foreground = "#d2dcf9"
 
-    # Normal colors
-    normal:
-      black:      '#1e1e1e'
-      red:        '#ff5555'
-      green:      '#54d1bc'
-      yellow:     '#f2b374'
-      blue:       '#6980fa'
-      magenta:    '#d098ff'
-      cyan:       '#8cceff' # TODO Change to something darker
-      white:      '#92aab7'
+  [colors.normal]
+  black   = "#1e1e1e"
+  red     = "#ff5555"
+  green   = "#54d1bc"
+  yellow  = "#f2b374"
+  blue    = "#6980fa"
+  magenta = "#d098ff"
+  cyan    = "#8cceff"  # TODO Change to something darker
+  white   = "#92aab7"
 
-    # Bright colors
-    bright:
-      black:      '#6b746b'
-      red:        '#ff8c8c'
-      green:      '#98eb98'
-      yellow:     '#e0d97b'
-      blue:       '#99a3ff'
-      magenta:    '#f298c3'
-      cyan:       '#a6d9ff'
-      white:      '#dddddd'
+  [colors.bright]
+  black   = "#6b746b"
+  red     = "#ff8c8c"
+  green   = "#98eb98"
+  yellow  = "#e0d97b"
+  blue    = "#99a3ff"
+  magenta = "#f298c3"
+  cyan    = "#a6d9ff"
+  white   = "#dddddd"
 
-    indexed_colors:
-      - { index: 16, color: '0x303030' }
-      - { index: 17, color: '0x993333' }
-      - { index: 18, color: '0x28594e' }
-      - { index: 19, color: '0x522d59' }
-      - { index: 20, color: '0x182466' }
-      - { index: 21, color: '0x522d59' }
-      - { index: 22, color: '0xff0000' }
-      - { index: 23, color: '0xff0000' }
+  [colors]
+  indexed_colors = [
+    { index = 16, color = "0x303030" },
+    { index = 17, color = "0x993333" },
+    { index = 18, color = "0x28594e" },
+    { index = 19, color = "0x522d59" },
+    { index = 20, color = "0x182466" },
+    { index = 21, color = "0x522d59" },
+    { index = 22, color = "0xff0000" },
+    { index = 23, color = "0xff0000" },
+  ]
 
-    hints:
-      start:
-        foreground: '#ff8c8c'
-        background: '#000000'
+  [colors.hints.start]
+  foreground = "#ff8c8c"
+  background = "#000000"
 #+end_src
 ** Key bindings
-#+begin_src yaml
-  key_bindings:
-    - { key: U,     mods: Alt,        action: ScrollPageUp,     mode: ~AppCursor }
-    - { key: D,     mods: Alt,        action: ScrollPageDown,   mode: ~AppCursor }
-    - { key: J,     mods: Alt,        action: ScrollLineDown,   mode: ~AppCursor }
-    - { key: K,     mods: Alt,        action: ScrollLineUp,     mode: ~AppCursor }
-    - { key: H,     mods: Alt,        chars: "\x1b[D"                            }
-    - { key: L,     mods: Alt,        chars: "\x1b[C"                            }
-    - { key: T,     mods: Alt,        action: SpawnNewInstance, mode: ~AppCursor }
-    - key: G
-      mods: Alt|Shift
-      command:
-        program: sh
-        args: [ "-c", "tmux new -d magit" ]
-      mode: ~AppCursor
-    - key: P
-      mods: Alt|Shift
-      command:
-        program: "sh"
-        args: [ "-c", "passmenu -l 10 && xdotool key Ctrl+Shift+V Return"]
-      mode: ~AppCursor
-    # Since I use F9 for WM bindings, I need a way to pass F9 to terminal apps
-    - key: F9
-      mods: Alt
-      chars: "\e[20~"
-
-    # These allow me to use Ctrl + N/P to navigate the command history in shells
-    # where I can't make custom bindings (e.g. in docker containers)
-    - { key: P,     mods: Control,  chars: "\x1b[A",          mode: ~AppCursor }
-    - { key: N,     mods: Control,  chars: "\x1b[B",          mode: ~AppCursor }
-    # Same thing, but better matches my Emacs muscle memory
-    - { key: P,     mods: Alt,      chars: "\x1b[A",          mode: ~AppCursor }
-    - { key: N,     mods: Alt,      chars: "\x1b[B",          mode: ~AppCursor }
-    # Vi mode in the terminal
-    - { key: Space, mods: Control,  action: ToggleViMode,     mode: ~AppCursor }
-    - { key: Key4,  mods: Shift,    action: Last,             mode: Vi }
-    - { key: Key4,                  action: Last,             mode: Vi }
-    - { key: N,                     action: SearchPrevious,   mode: Vi|~Search }
-    - { key: N,     mods: Shift,    action: SearchNext,       mode: Vi|~Search }
-    # Alt+X deletes current character
-    - { key: X,     mods: Alt,      chars: "\x1b[3~",         mode: ~AppCursor }
+#+begin_src toml
+  [keyboard]
+  bindings = [
+    { key = "U", mods = "Alt", action = "ScrollPageUp", mode = "~AppCursor" },
+    { key = "D", mods = "Alt", action = "ScrollPageDown", mode = "~AppCursor" },
+    { key = "J", mods = "Alt", action = "ScrollLineDown", mode = "~AppCursor" },
+    { key = "K", mods = "Alt", action = "ScrollLineUp", mode = "~AppCursor" },
+    { key = "H", mods = "Alt", chars = "\u001b[D" },
+    { key = "L", mods = "Alt", chars = "\u001b[C" },
+    { key = "T", mods = "Alt", action = "SpawnNewInstance", mode = "~AppCursor" },
+    { key = "G", mods = "Alt|Shift", command = { program = "sh", args = ["-c", "tmux new -d magit"] }, mode = "~AppCursor" },
+    { key = "P", mods = "Alt|Shift", command = { program = "sh", args = ["-c", "passmenu -l 10 && xdotool key Ctrl+Shift+V Return"] }, mode = "~AppCursor" },
+    { key = "F9", mods = "Alt", chars = "\\e[20~" },
+    { key = "P", mods = "Control", chars = "\u001b[A", mode = "~AppCursor" },
+    { key = "N", mods = "Control", chars = "\u001b[B", mode = "~AppCursor" },
+    { key = "P", mods = "Alt", chars = "\u001b[A", mode = "~AppCursor" },
+    { key = "N", mods = "Alt", chars = "\u001b[B", mode = "~AppCursor" },
+    { key = "Space", mods = "Control", action = "ToggleViMode", mode = "~AppCursor" },
+    { key = "Key4", mods = "Shift", action = "Last", mode = "Vi" },
+    { key = "Key4", action = "Last", mode = "Vi" },
+    { key = "N", action = "SearchPrevious", mode = "Vi|~Search" },
+    { key = "N", mods = "Shift", action = "SearchNext", mode = "Vi|~Search" },
+    { key = "X", mods = "Alt", chars = "\u001b[3~", mode = "~AppCursor" },
+  ]
 #+end_src
 * Tuterm
 #+begin_src shell :tangle (haris/tangle-home ".config/tuterm/config.sh")
