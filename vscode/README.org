@@ -1,0 +1,20 @@
+#+TITLE: VS Code (OSS) configuration
+#+SETUPFILE: ../setup.org
+
+* Extensions
+** Dump
+#+begin_src shell
+  code-oss --list-extensions > extensions.txt
+#+end_src
+* Bootstrap
+** Symlinks
+#+begin_src shell
+  src="$(pwd)"
+  cd ~/.config/Code\ -\ OSS
+  ln -s "$src"/settings.json ~/.config/Code\ -\ OSS/User/settings.json
+  ln -s "$src"/keybindings.json ~/.config/Code\ -\ OSS/User/keybindings.json
+#+end_src
+** Extensions
+#+begin_src shell
+  xargs -n 1 code-oss --install-extension < extensions.txt
+#+end_src

@@ -993,8 +993,12 @@ Completions for the functions defined in [[Functions]].
   complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
 #+end_src
 *** =otp=
-#+begin_src shell :tangle (haris/tangle-home ".config/fish/completions/otp.fish")
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/otp.fish")
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
+#+end_src
+*** =vscode=
+#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/vscode.fish")
+  complete -c vscode --wraps code
 #+end_src
 *** Self-bootstrapping
 Some commands provide a =completion= subcommand (maybe under a slightly different
