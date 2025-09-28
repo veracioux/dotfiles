@@ -1,6 +1,12 @@
 {
     "vim.easymotion": true,
     "vim.useSystemClipboard": true,
+    "vim.handleKeys": {
+        "<C-b>": false,
+        "<C-j>": false,
+        "<C-q>": false,
+        "<C-k>": false
+    },
     "vim.normalModeKeyBindingsNonRecursive": [
         {
             "before": [
@@ -61,5 +67,13 @@
             ]
         }
     ],
-    "workbench.colorTheme": "Dracula Theme"
+    "workbench.colorTheme": "Dracula Theme",
+    "debug.toolBarLocation": "hidden",
+    "terminal.integrated.defaultProfile.linux": "fish",
+    "terminal.integrated.profiles.linux": {
+        "fish": {
+            "path": "/usr/bin/env",
+            "args": ["fish"]
+        }
+    }
 }
