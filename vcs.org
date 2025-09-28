@@ -17,7 +17,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   [core]
   	autocrlf      = input
   	pager         = less -F -X
-  	editor        = vim
+  	editor        = nvim
   	whitespace    = trailing-space
   	filemode      = false
   	excludesfile  = ~/.global.gitignore # This file is tangled from ~/.haris/vcs.org
