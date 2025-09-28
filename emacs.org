@@ -1186,8 +1186,7 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
   (use-package npm-mode :ensure t)
 
   (setq javascript-indent-level 4
-        js-indent-level 4
-        js2-basic-offset 4)
+        js-indent-level 4)
 
   (eval-after-load 'js (lambda () (require 'dap-node)))
   (eval-after-load 'ts (lambda () require 'dap-node))
@@ -1219,7 +1218,6 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
         web-mode-css-indent-offset 2
         web-mode-code-indent-offset 2
         css-indent-offset 2)
-  (require 'js2-mode)
 #+end_src
 *** CSS
 #+begin_src elisp
