@@ -173,7 +173,11 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
 #+begin_src jsonc :tangle (haris/tangle-home ".config/opencode/opencode.json")
   {
     "$schema": "https://opencode.ai/config.json",
-    "model": "openai/gpt-5"
+    "model": "openai/o4-mini",
+    "instructions": [
+      "README.org",
+      "README.md"
+    ]
   }
 #+end_src
 *** Agents
@@ -190,6 +194,18 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
       "myemacs-float *": allow
   ---
   Follows simple instructions.
+#+end_src
+**** Teacher
+#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/teacher.md")
+  ---
+  description: Can teach and explain concepts
+  model: anthropic/claude-3-5-haiku-latest
+  permission:
+    write: deny
+    edit: deny
+    bash: deny
+  ---
+  Can teach and explain concepts.
 #+end_src
 *** Custom commands
 **** Edit file
