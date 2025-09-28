@@ -28,8 +28,12 @@ A library of functions for easier tangling.
 #+begin_src elisp
   (require 'use-package)
   (require 'ob-tangle)
+  (require 'package)
 
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
   (use-package yaml :ensure t :defer nil)
+  (use-package password-store :ensure t :defer nil)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
