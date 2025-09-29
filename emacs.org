@@ -2345,6 +2345,7 @@ basis here.
        (yaml-ts-mode . ,common)
        (sql-interactive-mode . ,common)
        (sql-mode . ,common)
+       (json-mode . ,common)
        (web-mode . ,web-mode)
        (css-mode . ,web-mode)
        (scss-mode . ,web-mode)
