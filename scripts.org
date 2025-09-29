@@ -1207,6 +1207,27 @@ Create a BitBucket PR.
 #+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/mosquitto_sub_jq.fish")
   complete -c mosquitto_sub_jq --wraps mosquitto_sub
 #+end_src
+** =@gh=
+Clone a Github repo using the given URL (HTTPS or SSH) and execute the given
+command there.
+#+begin_src bash :tangle (haris/tangle-home ".local/bin/@gh")
+  if [ "$#" -lt 3 ]; then
+      echo "Usage: @gh REPO_URL [BRANCH_OR_COMMIT] COMMAND [ARGS...]"
+      exit 1
+  fi
+
+  mkdir -p ~/.cache/haris/tmp-{commits,repos}
+  (cd ~/.cache/haris/tmp-commits && git init --bare &>/dev/null)
+
+  tmpdir="$(mktemp -d ~/.cache/haris/tmp-repos/XXXXXXXX)"
+  git clone --reference ~/.cache/haris/tmp-commits --depth 1 --no-checkout "$1" "$tmpdir"
+  cd "$tmpdir" || exit 1
+  git fetch origin "$2"
+  git checkout FETCH_HEAD
+  shift 2
+  "$@"
+  rm -rf "$tmpdir"
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
