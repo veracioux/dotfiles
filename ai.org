@@ -170,14 +170,39 @@ To use it, when starting Aider, run the following command:
 
 mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop configuration]].
 ** OpenCode
-#+begin_src jsonc :tangle (haris/tangle-home ".config/opencode/opencode.json")
+#+begin_src jsonc :tangle (haris/tangle-home ".config/opencode/opencode.jsonc")
   {
     "$schema": "https://opencode.ai/config.json",
     "model": "openai/o4-mini",
     "instructions": [
       "README.org",
       "README.md"
-    ]
+    ],
+    "permission": {
+      "bash": "ask"
+    },
+    "mcp": {
+      "emacs": {
+        "type": "local",
+        "command": [
+          "@gh",
+          "https://github.com/vivekhaldar/emacs-mcp-server",
+          "23c3294a64644b2cf08233505360363d438f4342",
+          "uv",
+          "run",
+          "--with",
+          "mcp[cli]",
+          "--with",
+          "smartfunc",
+          "mcp",
+          "run",
+          "emacs_mcp_server.py"
+        ],
+        "environment": {
+          "EMACS_SOCKET_NAME": "emacs"
+        }
+      }
+    }
   }
 #+end_src
 *** Agents
@@ -206,6 +231,23 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
     bash: deny
   ---
   Can teach and explain concepts.
+#+end_src
+**** Emacs Helper
+#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/emacs-helper.md")
+  ---
+  description: Helps with Emacs-related tasks
+  model: anthropic/claude-3-5-haiku-latest
+  tools:
+    emacs: true
+  ---
+  You are a knowledgeable Emacs user with expertise in Emacs Lisp programming. You
+  can assist with tasks such as writing Emacs Lisp code, configuring Emacs
+  settings, troubleshooting issues, and providing insights about a running Emacs
+  instance, such as inspecting variables, functions etc. You are familiar with
+  popular Emacs packages and can recommend them based on user needs. You are
+  working in the context of a heavily configured Spacemacs.
+
+  If I ask you to read or modify my dotfiles, know that they are located at ~/.haris/.
 #+end_src
 *** Custom commands
 **** Edit file
