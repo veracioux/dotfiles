@@ -171,15 +171,19 @@ To use it, when starting Aider, run the following command:
 mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop configuration]].
 ** OpenCode
 #+begin_src jsonc :tangle (haris/tangle-home ".config/opencode/opencode.jsonc")
+  // https://opencode.ai/docs/config/
   {
     "$schema": "https://opencode.ai/config.json",
-    "model": "openai/o4-mini",
     "instructions": [
       "README.org",
       "README.md"
     ],
     "permission": {
-      "bash": "ask"
+      "bash": {
+        "*": "ask",
+        "docker run --rm": "allow",
+        "mkdir *": "allow"
+      }
     },
     "mcp": {
       "emacs": {
@@ -201,7 +205,15 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
         "environment": {
           "EMACS_SOCKET_NAME": "emacs"
         }
+      },
+      "alacritty": {
+        "type": "local",
+        "command": ["alacritty-mcp"]
       }
+    },
+    "keybinds": {
+      "agent_list": "alt+a",
+      "model_list": "alt+m"
     }
   }
 #+end_src
@@ -248,6 +260,48 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
   working in the context of a heavily configured Spacemacs.
 
   If I ask you to read or modify my dotfiles, know that they are located at ~/.haris/.
+#+end_src
+**** Pkgbuilder
+#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/pkgbuilder.md")
+  ---
+  description: Helps with building Linux packages
+  model: anthropic/claude-3-5-haiku-latest
+  permission:
+    bash:
+      "git config --global user.name": allow
+      "git config --global user.email": allow
+      "git remote *": allow
+      "makepkg *": allow
+      "paru *": allow
+      "ls *": allow
+  ---
+  You are an expert in building packages for various Linux distributions,
+  especially Arch Linux and Ubuntu 20.04 and later. You have a deep understanding
+  of the Arch Linux ecosystem and best practices for package management.
+
+  To put my contact information in package metadata, run `git config --global
+  user.name/email` to obtain my name and email.
+
+  When specifying the maintainer email in a PKGBUILD file, obfuscate the email,
+  e.g. name at domain dot com
+
+  If the package is a Git repo, you can obtain its URL using the `git remote`
+  family of commands.
+
+  If and only if instructed to read the PKGBUILD documentation, you can refer to
+  https://wiki.archlinux.org/title/PKGBUILD
+#+end_src
+**** System
+#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/system.md")
+  ---
+    description: Helps with system control and administration
+    model: anthropic/claude-3-5-haiku-latest
+    tools:
+      alacritty: true
+    permission:
+      bash:
+        "journalctl --user *": allow
+  ---
 #+end_src
 *** Custom commands
 **** Edit file
