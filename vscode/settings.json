@@ -27,6 +27,14 @@
                     "args": "m"
                 }
             ]
+        },
+        {
+            "before": ["v", "v"],
+            "after": ["V"]
+        },
+        {
+            "before": ["V"],
+            "after": ["v", "$"]
         }
     ],
     "vim.visualModeKeyBindingsNonRecursive": [
