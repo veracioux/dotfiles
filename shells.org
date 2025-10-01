@@ -1205,6 +1205,8 @@ abbreviations for equivalent apt operations.
   _abbr -g resu      'systemctl restart  --user'
   _abbr -g dresu     'systemctl daemon-reload --user && systemctl restart  --user'
   _abbr -g ju        'journalctl --user -f -u'
+
+  _abbr -g jue       'journalctl --user -f -u emacs'
 #+end_src
 ***** [End guard]
 #+begin_src fish
