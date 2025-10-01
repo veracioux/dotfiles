@@ -1,9 +1,16 @@
 anthropic.claude-code
 bodil.file-browser
 bungcip.better-toml
+cweijan.dbclient-jdbc
+cweijan.vscode-redis-client
 dracula-theme.theme-dracula
 jacobdufault.fuzzy-search
 kahole.magit
+mongodb.mongodb-vscode
+ms-python.debugpy
+ms-python.python
+ms-python.vscode-pylance
+ms-python.vscode-python-envs
 rust-lang.rust-analyzer
 saoudrizwan.claude-dev
 sst-dev.opencode
@@ -11,6 +18,3 @@ vadimcn.vscode-lldb
 vscodevim.vim
 vspacecode.vspacecode
 vspacecode.whichkey
-cweijan.dbclient-jdbc
-cweijan.vscode-redis-client
-mongodb.mongodb-vscode

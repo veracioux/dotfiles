@@ -75,5 +75,8 @@
             "path": "/usr/bin/env",
             "args": ["fish"]
         }
-    }
+    },
+    "mdb.mcp.server": "enabled",
+    "mdb.sendTelemetry": false,
+    "mdb.confirmRunAll": false
 }
