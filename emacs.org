@@ -245,7 +245,6 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
         (setq haris/prepended-path "yes")
         (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))))
 
-  ;; TODO whatever this does
   (add-hook 'text-mode-hook #'auto-fill-mode)
   (add-hook 'prog-mode-hook #'auto-fill-mode)
 
@@ -1115,32 +1114,6 @@ insert mode. I disable those modes by aliasing them to =ignore=.
              ("O" dap-go-to-output-buffer "Show output")
              ("'" dap-ui-repl "Show REPL"))))
 #+end_src
-** TODO C/C++
-#+begin_src elisp
-  (setq c-default-style "bsd"
-        c-basic-offset 4)
-
-  (add-hook 'c-mode-hook    (lambda () (setq tab-width 4)))
-  (add-hook 'c++-mode-hook  (lambda () (setq tab-width 4)))
-#+end_src
-*** CMake
-#+begin_src elisp
-  (defun haris/cmake-info () (interactive)
-         (info-display-manual "cmake")
-         (Info-top-node))
-  (defun haris/cmake-help () (interactive)
-         (split-window-right-and-focus)
-         (let ((symbol (cmake-symbol-at-point)))
-           (haris/cmake-info)
-           (Info-menu symbol)))
-
-  (evil-define-key 'normal cmake-mode-map (kbd ",hc") 'haris/cmake-info)
-  (evil-define-key 'normal cmake-mode-map (kbd ",hh") 'haris/cmake-help)
-#+end_src
-*** Dependencies                                                     :deps:
-#+begin_src text :tangle (haris/tangle-deps "emacs/c-c++.pip")
-  cmake-language-server
-#+end_src
 ** Python
 Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
 #+begin_src elisp
@@ -1361,8 +1334,6 @@ Fix for empty image list (not sure if the fix works):
 
   (evil-define-key  'motion erc-list-menu-mode-map  (kbd "RET")   nil)
   (evil-define-key  'normal erc-list-menu-mode-map  (kbd "RET")   nil)
-  ;; TODO shadowed by evil binding, don't know how to fix
-  ;; (evil-define-key  'normal erc-list-menu-mode-map  (kbd ",j")   'erc-list-join)
 #+end_src
 *** Theme tweak
 #+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
