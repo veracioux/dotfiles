@@ -1816,15 +1816,16 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 ** Verb
 #+begin_src elisp
-  (add-hook 'verb-response-body-mode-hook 'verb-toggle-show-headers)
+  (with-eval-after-load 'verb
+    (add-hook 'verb-response-body-mode-hook 'verb-toggle-show-headers)
 
-  (setq verb-json-use-mode'json-ts-mode
-        verb-enable-ctrl-c-ctrl-c nil
-        verb-enable-log nil)
+    (setq verb-json-use-mode 'json-ts-mode
+          verb-enable-ctrl-c-ctrl-c nil
+          verb-enable-log nil)
 
-  (spacemacs/set-leader-keys-for-minor-mode
-    'verb-response-body-mode
-    "rs" #'verb-show-request)
+    (spacemacs/set-leader-keys-for-minor-mode
+      'verb-response-body-mode
+      "rs" #'verb-show-request))
 #+end_src
 ** Restclient
 #+begin_src elisp
