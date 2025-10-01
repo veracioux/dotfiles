@@ -789,6 +789,7 @@ You have to generate an SSH key for the cointop SSH server:
 
   api-key:
     - gemini=«get-gemini-api-key()»
+    - anthropic=«get-anthropic-api-key()»
 #+end_src
 * Appendix
 ** Helper code                                                     :noexport:
@@ -806,6 +807,11 @@ You have to generate an SSH key for the cointop SSH server:
 #+NAME: get-gemini-api-key
 #+begin_src elisp :tangle no
   (password-store-get "gemini/api-key")
+#+end_src
+*** =get-anthropic-api-key=
+#+NAME: get-gemini-api-key
+#+begin_src elisp :tangle no
+  (password-store-get "anthropic/api-key")
 #+end_src
 ** Local variables
 # Local Variables:
