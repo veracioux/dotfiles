@@ -194,7 +194,9 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
       "bash": {
         "*": "ask",
         "docker run --rm": "allow",
-        "mkdir *": "allow"
+        "mkdir *": "allow",
+        "git log *": "allow",
+        "rg *": "allow",
       }
     },
     "mcp": {
