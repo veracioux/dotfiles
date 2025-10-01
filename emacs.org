@@ -1166,7 +1166,8 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
   (use-package npm-mode :ensure t)
 
   (setq javascript-indent-level 4
-        js-indent-level 4)
+        js-indent-level 4
+        lsp-javascript-suggest-complete-js-docs t)
 
   (eval-after-load 'js (lambda () (require 'dap-node)))
   (eval-after-load 'ts (lambda () require 'dap-node))
