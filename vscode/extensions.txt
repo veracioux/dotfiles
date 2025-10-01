@@ -11,3 +11,6 @@ vadimcn.vscode-lldb
 vscodevim.vim
 vspacecode.vspacecode
 vspacecode.whichkey
+cweijan.dbclient-jdbc
+cweijan.vscode-redis-client
+mongodb.mongodb-vscode
