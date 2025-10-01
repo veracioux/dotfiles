@@ -226,6 +226,9 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   [url "file://«eval-user-home()»/"]
   	insteadOf = mnt:
 
+  [url "file://«eval-user-home()»/proj/"]
+  	insteadOf = proj:
+
   [url "git@veracioux.me:"]
     insteadOf = me:
 
