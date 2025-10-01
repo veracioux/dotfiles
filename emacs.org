@@ -225,7 +225,7 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
   (setq evil-want-keybinding nil)
   (setq uniquify-buffer-name-style 'forward)
   (setq frame-title-format "%b"
-        dotspacemacs-frame-title-format nil)
+        dotspacemacs-frame-title-format "%b")
   (eval-after-load "recentf"
     (defun haris//after-load/recentf ()
       (add-hook 'dired-after-readin-hook
