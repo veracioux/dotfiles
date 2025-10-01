@@ -150,7 +150,7 @@
     playwright:
       «mcpServers/playwright»
   model: openai:gpt-5
-  provider-api-key: «get-api-key(provider="openai")»
+  provider-api-key: «get-api-key("openai")»
   system-prompt: |
     «prompts/system»
 #+end_src
@@ -161,6 +161,18 @@
   }
 #+end_src
 ** Aider
+#+begin_src yaml :tangle (haris/tangle-home ".aider.conf.yml")
+  model: openai/o4-mini
+  auto-commits: false
+  notifications: true
+  watch-files: true
+
+  api-key:
+    - openai=«get-api-key("openai")»
+    - gemini=«get-api-key("gemini")»
+    - anthropic=«get-api-key("anthropic")»
+#+end_src
+*** MCP
 Aider doesn't support MCP yet, so I use [[https://github.com/lutzleonhardt/mcpm-aider][mcpm-aider]].
 
 To use it, when starting Aider, run the following command:
