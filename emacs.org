@@ -857,11 +857,16 @@ Some custom keybindings are defined here as well.
       (let*
           ((projects (-filter
                       'file-directory-p
-                      '("~/.haris/"
-                        "~/.emacs.d/"
-                        "~/.emacs.d/private/snippets/"
-                        "~/.emacs.d/private/themes/dracula/"
-                        "~/wiki/")))
+                      (append
+                       (remove
+                        "~/proj/contrib/"
+                        (file-expand-wildcards "~/proj/*/"))
+                       (file-expand-wildcards "~/proj/contrib/*/")
+                       '("~/.haris/"
+                         "~/.emacs.d/"
+                         "~/.emacs.d/private/snippets/"
+                         "~/.emacs.d/private/themes/dracula/"
+                         "~/wiki/"))))
            (worktrees
             (flatten-list
              (mapcar
