@@ -237,16 +237,7 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
   (setq winum-scope 'frame-local)
 
   (add-to-list 'image-types 'svg)
-  ;; Enable clipboard in the terminal
-  (use-package xclip)
-  ;; Using xclip instead makes emacsclient hang
-  (setq xclip-method 'xsel)
-  (setq xclip-program "xsel")
-  (xclip-mode)
   (setq warning-minimum-level :emergency)
-
-  ;; Handle URLs as files
-  (url-handler-mode)
 
   (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
   (if (not (boundp 'haris/prepended-path))
@@ -363,7 +354,17 @@ You can test the transforms by calling this:
 #+begin_src elisp :tangle no
   (make-lock-file-name (buffer-file-name))
 #+end_src
-*** Auto-revert mode
+*** Global modes
+**** xclip
+#+begin_src elisp
+  ;; Enable clipboard in the terminal
+  (use-package xclip)
+  ;; Using xclip instead makes emacsclient hang
+  (setq xclip-method 'xsel)
+  (setq xclip-program "xsel")
+  (xclip-mode)
+#+end_src
+**** Auto-revert mode
 #+begin_src elisp
   (global-auto-revert-mode t)
   (setq auto-revert-verbose t
@@ -375,6 +376,13 @@ You can test the transforms by calling this:
         ;; An example where this can be observed is when an org-mode code block
         ;; is tangled and the target file is open in another buffer.
         auto-revert-interval 0.2)
+#+end_src
+**** Miscellaneous
+#+begin_src elisp
+  ;; Handle URLs as files
+  (url-handler-mode)
+
+  (centaur-tabs-mode)
 #+end_src
 *** Buffer cleanup
 #+begin_src elisp
