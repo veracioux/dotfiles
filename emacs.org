@@ -1006,12 +1006,6 @@ Some custom keybindings are defined here as well.
 Some performance improvement settings depend on the power of your hardware. You
 can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. You can place them in your [[*Private config][private configuration]].
 #+begin_src elisp
-  (straight-use-package
-   '(lsp-mode
-     :type git
-     :host github
-     :repo "veracioux/lsp-mode"))
-
   (with-eval-after-load 'lsp-mode
     (setq lsp-idle-delay 0.1)
     (setq lsp-keep-workspace-alive nil)
@@ -2833,7 +2827,9 @@ Spacemacs would delete them every time on startup.
      accent
      sqlite3
      company-shell
-     company-statistics))
+     company-statistics
+     (lsp-mode :location (recipe :fetcher github
+                                 :repo "veracioux/lsp-mode"))))
 #+end_src
 ** Upgrading
 When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][spacemacs/ediff-dotfile-and-template]] to merge any upstream changes to the dotfile.
