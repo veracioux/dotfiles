@@ -2847,6 +2847,10 @@ them if the current PC setup is the one they are intended for.
 #+begin_src shell :tangle (haris/tangle-home ".local/bin/pycharm")
   pycharm-professional
 #+end_src
+*** =code-oss=
+#+begin_src shell :tangle (haris/tangle-home ".local/bin/code-oss")
+  code "$@"
+#+end_src
 * Helper code
 These scripts are used as snippets or noweb references within this org file.
 ** =find-alt-cmd(name)=
