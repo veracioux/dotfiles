@@ -268,7 +268,7 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
 
   (setq emacs-lisp-format-on-save nil)
 #+end_src
-*** External tools
+*** External tool integrations
 #+begin_src elisp
   (setq browse-url-generic-program (executable-find "firefox"))
   (setq dotspacemacs-search-tools '("rg" "grep"))
@@ -276,7 +276,8 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
   ;; Ways to spawn shells from within Emacs
   (setq shell-default-shell 'shell)
   (setq terminal-here-linux-terminal-command '("alacritty")
-        terminal-here-mac-terminal-command   '("alacritty"))
+        terminal-here-mac-terminal-command   '("alacritty")
+        terminal-here-command-flag "-e")
 #+end_src
 *** Scrolling
 #+begin_src elisp
@@ -1546,8 +1547,40 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
     "Exactly the same as ivy-insert-current, but made interactive."
     (interactive)
     (ivy-insert-current))
-
-
+#+end_src
+*** Custom actions
+I extend the Ivy actions for some commands.
+#+begin_src elisp
+  (with-eval-after-load 'counsel-projectile
+    (ivy-add-actions
+     'counsel-projectile-switch-project
+     '(("'"
+        (lambda (project)
+          (let ((default-directory project))
+            (multi-vterm-project)))
+        "open terminal in project")
+       ("\""
+        (lambda (project)
+          (let ((default-directory project))
+            (terminal-here)))
+        "open terminal in project")
+       ;; Prompts for a command, then runs multi-vterm-project and the command in it
+       ("!"  ;; prompt for a cmd, then open vterm + run it
+        (lambda (project)
+          (let* ((default-directory project)
+                 (cmd (read-shell-command "Run in vterm: ")))
+            (multi-vterm-project)
+            (vterm-send-string cmd)
+            (vterm-send-return)))
+        "run a command in project vterm")
+       ("a" ;; "a" stands for AI
+        (lambda (project)
+          (let ((default-directory project))
+            (terminal-here '("fish" "-C" "opencode"))))
+        "open opencode in project"))))
+#+end_src
+*** Bindings
+#+begin_src elisp
   (define-key ivy-minibuffer-map (kbd "<backtab>") 'haris/ivy-insert-current)
   (evil-define-key 'normal ivy-minibuffer-map (kbd "C-n") 'ivy-next-line)
   (evil-define-key 'normal ivy-minibuffer-map (kbd "C-p") 'ivy-previous-line)
