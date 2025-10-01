@@ -1935,7 +1935,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 
   (with-eval-after-load 'magit-gptcommit
     (with-eval-after-load 'haris/ai
-      (setq magit-gptcommit-llm-provider (eval haris/ai/model/openai/default/creator))
+      (setq magit-gptcommit-llm-provider (eval haris/ai/model/claude/sonnet-4.5/creator))
       (setq haris/commit-prompt-default
             (concat
              "THE FILE DIFFS:\n```\n%s\n```\n\n"
@@ -2001,12 +2001,14 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 * AI
 #+begin_src elisp
+  (require 'llm-claude)
+
   (setq haris/ai/model/openai/o3-mini/creator
         '(make-llm-openai :key openai-key :chat-model "o3-mini"))
   (setq haris/ai/model/openai/o4-mini/creator
         '(make-llm-openai :key openai-key :chat-model "o4-mini"))
-
-  (setq haris/ai/model/openai/default/creator haris/ai/model/openai/o4-mini/creator)
+  (setq haris/ai/model/claude/sonnet-4.5/creator
+        '(make-llm-claude :key anthropic-key :chat-model "claude-sonnet-4-5-20250929"))
 
   (provide 'haris/ai)
 #+end_src
@@ -2188,7 +2190,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
    ellama-providers
    `(("openai/o3-mini" . (,haris/ai/model/openai/o3-mini/creator))
      ("openai/o4-mini" . (,haris/ai/model/openai/o4-mini/creator))))
-  (setopt ellama-provider (eval haris/ai/model/openai/default/creator))
+  (setopt ellama-provider (eval haris/ai/model/openai/o4-mini/creator))
 #+end_src
 * REPLs in Emacs
 ** Common settings

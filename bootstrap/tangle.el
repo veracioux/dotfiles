@@ -14,12 +14,11 @@
    (python     . t)))
 
 (condition-case err
-    (setq openai-key
-          (replace-regexp-in-string
-           "\n$" ""
-           (with-temp-buffer
-             (insert-file-contents "~/.local/share/haris/openai-api-key.txt")
-             (buffer-string))))
+    (progn
+      (setq openai-key
+            (password-store-get "openai/api-key"))
+      (setq anthropic-key
+            (password-store-get "anthropic/api-key")))
   (error (message "WARNING: %s" err)))
 
 (defun haris/prevent-annoying-messages ()
