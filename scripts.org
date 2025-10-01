@@ -1805,7 +1805,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
       echo "Octave"           # Launch octave in emacs
       echo " Python"         # Launch python interpreter in emacs
       echo " GPG"           # GPG addresses
-      echo " OTP"            # Generate OTP for selected service
       echo " Books"         # Pick a book to read
       echo " IRC"           # Open emacs client for IRC
       echo "Quickmenu"        # Menu to quickly revisit recent activity
@@ -1866,8 +1865,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
           epython -c ;;
       "GPG")
           run_script gpg ;;
-      "OTP")
-          run_script otp ;;
       "Books")
           run_script books ;;
       "IRC")
@@ -2468,24 +2465,6 @@ URLs (each on a new line) to display in this menu.
   choice="$(echo "$entries" | dmenu -l $n -p 'GPG:')"
 
   echo "$choice" | awk '{print $1}' | xsel -b
-#+end_src
-** OTP
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/otp")
-  # Select an app and copy its OTP to clipboard
-
-  cd ~
-
-  entries="$(
-      fd 'otp-secret.gpg' .password-store -x echo {//} \
-          | sed 's:^\.password-store/\?::'
-  )"
-
-  choice="$(echo "$entries" | dmenu -l 10 -p 'OTP:')"
-
-  [ -z "$choice" ] && exit 1
-
-  otp "$choice" | xsel -b -t 30000
-  notify-send "OTP" "Saved to clipboard"
 #+end_src
 ** Books
 #+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/books")
