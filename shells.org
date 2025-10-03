@@ -1063,8 +1063,6 @@ Note: =~/.bashrc= is sourced by fish as well.
   } 2>/dev/null
 
   export SHELL='fish'
-  export MPD_HOST="localhost"
-  export MPD_PORT="6601"
 
   if ! [[ "$PATH" =~ ~/\.local/bin ]]; then
       export PATH=~/.local/bin:"$PATH"
