@@ -1624,11 +1624,8 @@ I extend the Ivy actions for some commands.
     (visual-line-fill-column-mode 1))
 
   (defun haris/org-babel-goto-tangle-file ()
-    "Go to the file that the code block at point tangles to. If there is an
-  interactive prefix argument, open the final destination (production) file."
-    (let ((file (if current-prefix-arg
-                    (haris/extract-tangle-final-dest)
-                  (haris/extract-tangle-dest))))
+    "Go to the file that the code block at point tangles to."
+    (let ((file (haris/extract-tangle-dest)))
       (when file (find-file file))))
 
   (add-hook 'org-mode-hook 'org-appear-mode)
@@ -1704,14 +1701,6 @@ Takes too long to load.
          :test (lambda (a b) (string= (car a) (car b)))))
 #+end_src
 ** Babel
-I tangle my configs from various org files into their respective destination
-files. But, sometimes I perform a tangle without wanting to overwrite my live
-configuration. One reason for this is that I have a (WIP) github workflow that I
-use to generate the configs from my org files. That is why code blocks in my
-literal configs use temporary "staging" destinations. So, whenever I run
-=(org-babel-tangle)=, the files are output into =/tmp/tangle-<username>= or
-=/tmp/dependencies-<username>= (varies by code block). Then, if I want to apply
-those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+begin_src elisp
   ;; (use-package ob-async :defer t)
 
@@ -1728,19 +1717,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   ;; This variable is by default unbound, and so causes an error whenever a code
   ;; block with ':session' is evaluated
   (setq org-babel-prompt-command "")
-
-  (defun haris/tangle-dest (&optional prefix-arg)
-    "Tangle block(s) to their final destinations. If a code block has the
-  temporary staging destination as their :tangle argument, it will be tangled to
-  the production destination under ~/ as well."
-    (interactive "P")
-    (let ((tangle-home (haris/tangle-home)))
-      (delete-directory tangle-home t)
-      (org-transclusion-add-all)
-      (org-babel-tangle prefix-arg)
-      (shell-command (concat "rsync -ru --keep-dirlinks " tangle-home " ~/"))))
-
-  (evil-define-key 'normal org-mode-map (kbd ",bT") 'haris/tangle-dest)
 #+end_src
 *** org-src buffer
 #+begin_src elisp
@@ -1799,17 +1775,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
       (if (and tangle-arg (not (string= "no" tangle-arg)))
           tangle-arg)))
 
-  (defun haris/extract-tangle-final-dest ()
-    "Extract the tangle destination of the current code block. If the destination
-  is defined in terms of (haris/tangle-home), then the final destination under
-  ~/ is returned."
-    (let* ((dest (haris/extract-tangle-dest)))
-      (if dest
-          (let* ((home-dir-re (concat "^" (regexp-quote (haris/tangle-home))))
-                 (deps-dir-re (concat "^" (regexp-quote (haris/tangle-deps ""))))
-                 (_file (replace-regexp-in-string home-dir-re "~/" dest)))
-            (replace-regexp-in-string deps-dir-re "~/" _file))
-        nil)))
+
 #+end_src
 ** LaTeX preview
 #+begin_src elisp
@@ -1890,10 +1856,10 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
     "Tangle the target code block while inside the org-src buffer"
     (interactive)
     (org-edit-src-save)
-    (org-src-do-at-code-block
-     ;; Prefix arg '(16) makes it tangle only the code blocks related to the same
-     ;; file as the code block that is being edited in the current org-src buffer.
-     (haris/tangle-dest '(16))))
+     (org-src-do-at-code-block
+      ;; Prefix arg '(16) makes it tangle only the code blocks related to the same
+      ;; file as the code block that is being edited in the current org-src buffer.
+      (org-babel-tangle '(16))))
 #+end_src
 * Git
 #+begin_src elisp

@@ -51,11 +51,8 @@ If you would like to do things in a more supervised manner, follow the
 [[file:bootstrap/README.org][bootstrap]] instructions.
 
 Once you have set everything up, any changes you make to the org-mode dotfiles
-will need to be applied to the live configs by calling =haris/tangle-dest=. There
-are also emacs key bindings for this, which you can inspect yourself. Note that
-merely calling =org-babel-tangle= will just tangle the files to a temporary
-location at =/tmp/tangle-$USER= (useful for inspecting changes before applying
-them to your home directory).
+ will be applied directly to your live configs when you call =org-babel-tangle=.
+ There are also emacs key bindings for this, which you can inspect yourself.
 * Installing dependencies
 Most of my org-mode dotfiles have various *Dependencies* sections with code blocks
 tangled to =/tmp/dependencies-$USER/...=, grouped by package manager that is

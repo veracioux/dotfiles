@@ -437,13 +437,7 @@ Not sure if they have any effect.
   buku-git bukubrow
 #+end_src
 * Local variables
-#+NAME: load
-#+begin_src elisp
-  (setq-local script (lambda (name) (format ".config/tridactyl/scripts/%s" name)))
-#+end_src
-
 # Local Variables:
 # org-confirm-babel-evaluate: nil
-# eval: (org-sbe "load")
-# eval: (setq-local main-profile-dir (format  "~/%s.mozilla/firefox/%s"  (user-login-name))))
+# eval: (setq-local main-profile-dir (format  "~/.mozilla/firefox/%s"  (user-login-name))))
 # End:

@@ -35,8 +35,6 @@
   "Prefix 'subpath' with the directory where dependency install scripts are tangled"
   (concat "/tmp/dependencies-" (user-login-name) "/" subpath))
 
-
-
 (defun haris/tangle--file-non-interactively (file)
   "Tangle a file non-interactively, disabling all evaluation prompts including
 buffer-local variables."
@@ -48,17 +46,11 @@ buffer-local variables."
       (org-babel-tangle)
       (kill-buffer buffer))))
 
-(defun haris/tangle-all (&optional to-destination &key dotfiles-dir)
-  "Tangle all my dotfiles.
-
-By default the files are tangled into a temporary location that can be obtained
-using (haris/tangle-home).
-
-Optional argument TO-DESTINATION can be used to tangle the files directly to the
-home directory. Keyword argument DOTFILES-DIR can be used to specify an
+(defun haris/tangle-all (&key dotfiles-dir)
+"Tangle all my dotfiles.
+Keyword argument DOTFILES-DIR can be used to specify an
 alternative dotfiles directory to '~/.haris'."
   (interactive)
-  (when to-destination (delete-directory (haris/tangle-home) t))
   (let ((org-dotfiles-root (or dotfiles-dir "~/.haris")))
     (dolist (file (cl-delete-if
                    (lambda (x) (string-match-p "^\\.#" x))
@@ -75,9 +67,7 @@ alternative dotfiles directory to '~/.haris'."
                                (not
                                 (string-match "^wt-" (file-name-nondirectory dir-name)))))))))
       (message "Tangling file: %s" file)
-      (haris/tangle--file-non-interactively file)))
-  (when to-destination
-    (shell-command (concat "rsync -rvu --keep-dirlinks " (haris/tangle-home) " ~/"))))
+      (haris/tangle--file-non-interactively file))))
 
 (defun haris/org-babel-expand-noweb-references (block-name)
   "Expand noweb references in the org-babel code block named BLOCK-NAME

@@ -29,7 +29,7 @@ i3/sway session:
 
 #+NAME: tangle-and-apply
 #+begin_src emacs-lisp :tangle no :results none :var wm="i3"
-  (haris/tangle-dest)
+  (org-babel-tangle)
   (shell-command (format "%s-msg -t command restart" wm))
   (call-process "pkill" nil 0 nil "-u" (user-login-name) "sxhkd")
   (run-with-timer
