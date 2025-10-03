@@ -1246,6 +1246,8 @@ abbreviations for equivalent apt operations.
   _abbr -g dcp    "$__haris_docker container prune"
   _abbr -g dci    "$__haris_docker container inspect"
 
+  _abbr -g dp     "$__haris_docker ps --format 'table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Names}}'"
+
   _abbr -g dv     "$__haris_docker volume"
   _abbr -g dvl    "$__haris_docker volume ls"
   _abbr -g dvc    "$__haris_docker volume create"
@@ -1323,7 +1325,7 @@ abbreviations for equivalent apt operations.
       _abbr -g Dbash  'docker-compose exec -it % bash'
       _abbr -g Denv   'docker-compose exec -i % env'
       _abbr -g Denvr  'docker-compose run --rm -i % env'
-      _abbr -g Dp     'export COMPOSE_PROFILES=%'
+      _abbr -g Dp     'docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Names}}"'
       _abbr -g DP     'export COMPOSE_PROJECT_NAME=%'
 
       # Restart using rm + up
