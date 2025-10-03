@@ -314,6 +314,9 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
     tools:
       alacritty: true
     permission:
+      read: ask
+      edit: ask
+      write: ask
       bash:
         "journalctl --user *": allow
   ---
