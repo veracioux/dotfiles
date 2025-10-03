@@ -96,6 +96,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
     { key = "T", mods = "Alt", action = "SpawnNewInstance", mode = "~AppCursor" },
     { key = "G", mods = "Alt|Shift", command = { program = "sh", args = ["-c", "tmux new -d magit"] }, mode = "~AppCursor" },
     { key = "P", mods = "Alt|Shift", command = { program = "sh", args = ["-c", "passmenu -l 10 && xdotool key Ctrl+Shift+V Return"] }, mode = "~AppCursor" },
+    { key = "E", mods = "Alt|Shift", command = { program = "myemacs-float", args = ["."] } },
     { key = "F9", mods = "Alt", chars = "\\e[20~" },
     { key = "P", mods = "Control", chars = "\u001b[A", mode = "~AppCursor" },
     { key = "N", mods = "Control", chars = "\u001b[B", mode = "~AppCursor" },
