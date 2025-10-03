@@ -1125,9 +1125,6 @@ insert mode. I disable those modes by aliasing them to =ignore=.
 ** Python
 Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
 #+begin_src elisp
-  (use-package auto-virtualenv)
-  (auto-virtualenv-setup)
-
   (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
 
   (setq python-shell-interpreter "ipython")
