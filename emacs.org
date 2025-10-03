@@ -217,6 +217,9 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
   ;; 500 MB
   (setq gc-cons-threshold (* 500 1024 1024))
 
+  ;; Increase savehist autosave interval to reduce lag (10 minutes)
+  (setq spacemacs-savehist-autosave-idle-interval 600)
+
   (setq paradox-github-token t)
   (auth-source-pass-enable)
 
@@ -1029,7 +1032,11 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
     ;; Prevents session persistence, which can cause performance issues
     (setq lsp-session-file nil)
 
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$"))
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$")
+
+    ;; Reduce lsp-ui-sideline frequency to improve performance
+    (with-eval-after-load 'lsp-ui-sideline
+      (setq lsp-ui-sideline-delay 1.0)))
 #+end_src
 
 Use LSP indentation features when running =spacemacs/indent-region-or-buffer=, if
@@ -2743,7 +2750,8 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
             cmake-enable-cmake-ide-support t)
      (python :variables
              python-formatter 'black
-             python-backend 'lsp)
+             python-backend 'lsp
+             python-auto-set-local-pyenv-version 'on-project-switch)
      (shell-scripts :variables
                     shell-scripts-backend 'lsp)
      (yaml :variables
