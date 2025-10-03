@@ -21,7 +21,7 @@ Run with =--help= to see detailed usage.
 
 * Tangle elisp library
 :PROPERTIES:
-:header-args:elisp+: :tangle (haris/tangle-home ".haris/bootstrap/tangle.el")
+:header-args:elisp+: :tangle ~/.haris/bootstrap/tangle.el
 :END:
 A library of functions for easier tangling.
 ** Prerequisites

@@ -1,6 +1,6 @@
 #+TITLE: Window Manager Config
 #+SETUPFILE: .setup.org
-#+PROPERTY: header-args:i3wm-config+ :tangle (haris/tangle-home ".config/i3/config")
+#+PROPERTY: header-args:i3wm-config+ :tangle ~/.config/i3/config
 #+begin_src i3wm-config :exports none :mkdirp yes
   # -*- mode: emacs-lisp-mode; -*- vim: filetype=i3 shiftwidth=2
 #+end_src
@@ -47,19 +47,19 @@ i3/sway session:
 
 These scripts are used by the other sections:
 #+NAME: mic-volume-up
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-up")
+#+begin_src shell :tangle ~/.config/i3/scripts/mic-volume-up
   pactl set-source-volume "$(pactl get-default-source)" +5%
 #+end_src
 #+NAME: mic-volume-down
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-volume-down")
+#+begin_src shell :tangle ~/.config/i3/scripts/mic-volume-down
   pactl set-source-volume "$(pactl get-default-source)" -5%
 #+end_src
 #+NAME: mic-mute-toggle
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-mute-toggle")
+#+begin_src shell :tangle ~/.config/i3/scripts/mic-mute-toggle
   pactl set-source-mute "$(pactl get-default-source)" toggle
 #+end_src
 #+NAME: mic-test
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/mic-test")
+#+begin_src shell :tangle ~/.config/i3/scripts/mic-test
   default_source="$(pactl get-default-source)"
   default_sink="$(pactl get-default-sink)"
   mic_muted="$(pactl get-source-mute "$default_source" | grep 'Mute: yes')"
@@ -76,7 +76,7 @@ These scripts are used by the other sections:
   [ -n "$sink_muted" ] && pactl set-sink-mute "$default_sink" 1
 #+end_src
 #+NAME: speaker-test
-#+begin_src shell :tangle (haris/tangle-home ".config/i3/scripts/speaker-test")
+#+begin_src shell :tangle ~/.config/i3/scripts/speaker-test
   default_sink="$(pactl get-default-sink)"
   sink_muted="$(pactl get-sink-mute "$default_sink" | grep 'Mute: yes')"
 
@@ -132,7 +132,7 @@ These scripts are used by the other sections:
   # Bright magenta with transparency for bar separator
   set $col_a_m #f298c377
 #+end_src
-#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+#+begin_src i3wm-config :tangle ~/.config/sway/config
   <<variables>>
 #+end_src
 * Visuals
@@ -160,7 +160,7 @@ Shared between i3 and sway:
   client.focused_inactive $col_n_b  $col_b_b  $col_n_k  $col_n_m  $col_b_k
   client.urgent           $col_n_y  $col_n_y  $col_n_k  $col_n_y  $col_n_y
 #+end_src
-#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+#+begin_src i3wm-config :tangle ~/.config/sway/config
   <<visuals>>
 #+end_src
 * Behavior
@@ -170,7 +170,7 @@ Shared between i3 and sway:
   for_window [instance="Float" class="Alacritty"] floating enable
 #+end_src
 * X config
-#+begin_src conf-xdefaults :tangle (haris/tangle-home ".Xresources"))
+#+begin_src conf-xdefaults :tangle ~/.Xresources)
   ,*.*.font: Ubuntu Mono
 #+end_src
 * Start-up
@@ -182,13 +182,13 @@ Since i3 is used under X server, it needs to be launched within [[~/.xinitrc]].
 There are three =.xinitrc= configuration presets, that I switch between using
 [[file:scripts.org::*=xpreset=][xpreset]]. The default one is defined here (you can change it if you want):
 #+NAME: xinitrc-default
-#+begin_src shell :tangle (haris/tangle-home ".xinitrc")
+#+begin_src shell :tangle ~/.xinitrc
   <<xinitrc-i3>>
 #+end_src
 
 Here are the configs you can choose from:
 #+NAME: xinitrc-i3
-#+begin_src shell :tangle (haris/tangle-home ".xinitrc-i3")
+#+begin_src shell :tangle ~/.xinitrc-i3
   . ~/.xinitrc.common
 
   dunst &                                       # Notification daemon
@@ -203,7 +203,7 @@ Here are the configs you can choose from:
   exec i3                                       # Window manager
 #+end_src
 #+NAME: xinitrc-gnome
-#+begin_src shell :tangle (haris/tangle-home ".xinitrc-gnome")
+#+begin_src shell :tangle ~/.xinitrc-gnome
   . ~/.xinitrc.common
 
   export DESKTOP_SESSION_TYPE=x11
@@ -211,14 +211,14 @@ Here are the configs you can choose from:
   exec gnome-session
 #+end_src
 #+NAME: xinitrc-plasma
-#+begin_src shell :tangle (haris/tangle-home ".xinitrc-plasma")
+#+begin_src shell :tangle ~/.xinitrc-plasma
   . ~/.xinitrc.common
 
   export DESKTOP_SESSION=plasma
   exec dbus-launch startplasma-x11
 #+end_src
 #+NAME: xinitrc-xfce4
-#+begin_src shell :tangle (haris/tangle-home ".xinitrc-xfce4")
+#+begin_src shell :tangle ~/.xinitrc-xfce4
   . ~/.xinitrc.common
 
   startxfce4
@@ -226,7 +226,7 @@ Here are the configs you can choose from:
 The following is shared by all presets. It also contains configuration specific
 to the laptop I currently use. Please change to suit your needs.
 #+NAME: xinitrc-common
-#+begin_src shell :tangle (haris/tangle-home ".xinitrc.common")
+#+begin_src shell :tangle ~/.xinitrc.common
   export DBUS_SESSION_BUS_ADDRESS=unix:path="$XDG_RUNTIME_DIR"/bus
 
   dbus-update-activation-environment --systemd --all  # Fixes dbus problems with i3
@@ -254,7 +254,7 @@ configuration reload procedure:
   set $refresh_i3status killall -SIGUSR1 i3status
 #+end_src
 ** sway start-up
-#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+#+begin_src i3wm-config :tangle ~/.config/sway/config
   # TODO debug this
   # exec swhks
   # exec pkexec swhkd --debug | tee /tmp/swhkd.log
@@ -265,7 +265,7 @@ configuration reload procedure:
 #+end_src
 Please verify that the correct device-specific config is chosen. Otherwise
 change it according to your preference:
-#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+#+begin_src i3wm-config :tangle ~/.config/sway/config
   <<dell-g15-sway>>
 #+end_src
 ** System-specific setups
@@ -300,7 +300,7 @@ change it according to your preference:
 Only a core set of keybindings whose behavior is coupled to i3 are defined in
 the i3 config. All the other bindings are provided by an external program -
 sxhkd on X and swhkd on Wayland. See [[*Start-up][Start-up]]. These bindings can be found [[*External bindings][here]].
-#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+#+begin_src i3wm-config :tangle ~/.config/sway/config
   exec --no-startup-id swhks
 #+end_src
 ** Default mode bindings
@@ -344,12 +344,12 @@ These bindings are available in the default mode, i.e. when no submenu is active
   bindsym $mod+Shift+plus   resize grow   height  20;
   bindsym $mod+Shift+minus  resize shrink height  20;
 #+end_src
-#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+#+begin_src i3wm-config :tangle ~/.config/sway/config
   <<general-bindings>>
 #+end_src
 ** External bindings
 External bindings are served by sxhkd.
-#+begin_src sxhkdrc :tangle (haris/tangle-home ".config/sxhkd/sxhkdrc")
+#+begin_src sxhkdrc :tangle ~/.config/sxhkd/sxhkdrc
   # Lock screen
   mod4 + ctrl + l
       xset s activate
@@ -577,7 +577,7 @@ non-comment line is used as the bluetooth ID, all other lines are ignored.
 Comments start with =#=.
 *** Helper scripts
 #+NAME: bluetoothctl-wrapper
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/haris/bluetoothctl-wrapper") :tangle-mode (eval #o744)
+#+begin_src shell :tangle ~/.local/lib/haris/bluetoothctl-wrapper :tangle-mode (eval #o744)
   id_file=~/.local/lib/haris/bt-headphones-id
 
   get_id() {
@@ -664,7 +664,7 @@ Menu of utilities that allow me to chat with my computer.
 :END:
 **** =llm.sh=
 #+NAME: llm.sh
-#+begin_src bash :tangle (haris/tangle-home ".config/i3/scripts/llm.sh")
+#+begin_src bash :tangle ~/.config/i3/scripts/llm.sh
   choices="$(
   cat <<'EOF'
   gpt-5: Automatic thinking
@@ -771,7 +771,7 @@ Menu of utilities that allow me to chat with my computer.
   bindsym $mod+p            workspace prev
   bindsym $mod+Tab          workspace back_and_forth
 #+end_src
-#+begin_src i3wm-config :tangle (haris/tangle-home ".config/sway/config")
+#+begin_src i3wm-config :tangle ~/.config/sway/config
   <<workspaces>>
 #+end_src
 ** Workaround for Emacs
@@ -818,7 +818,7 @@ Make a symlink at [[elisp:(org-sbe "make-symlink-to-cpu-temperature-0")][~/.loca
 machine-specific file that provides the CPU temperature to show. (*You can click
 the link above to do this automatically, you will be prompted for the CPU temperature file*).
 *** Custom script
-#+begin_src python :tangle (haris/tangle-home ".config/i3status/custom-script.py") :tangle-mode (identity #o744)
+#+begin_src python :tangle ~/.config/i3status/custom-script.py :tangle-mode (identity #o744)
   #!/usr/bin/env python
 
   # -*- coding: utf-8 -*-
@@ -930,7 +930,7 @@ the link above to do this automatically, you will be prompted for the CPU temper
 #+end_src
 *** Configuration
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".config/i3status/config")
+:header-args+: :tangle ~/.config/i3status/config
 :END:
 #+begin_src conf :exports none :mkdirp yes
   # -*- mode: emacs-lisp-mode; -*- vim: filetype=conf shiftwidth=2
@@ -1123,7 +1123,7 @@ the link above to do this automatically, you will be prompted for the CPU temper
 #+end_src
 * Compositor
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".config/picom.conf")
+:header-args+: :tangle ~/.config/picom.conf
 :END:
 I use picom as my compositor with the i3 window manager.
 ** General

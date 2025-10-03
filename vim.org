@@ -1,6 +1,6 @@
 #+TITLE: Vim Config
 #+SETUPFILE: .setup.org
-#+PROPERTY: header-args+ :tangle (haris/tangle-home ".vimrc")
+#+PROPERTY: header-args+ :tangle ~/.vimrc
 
 I actually use neovim, but I have it aliased to =vim= in my shell config. For the
 graphical version, I don't use gvim but instead I have created a [[file:scripts.org::*=gvim=][wrapper]] called
@@ -88,7 +88,7 @@ the setup script as well!.*
   augroup END
 #+end_src
 * Theme
-#+begin_src vimrc :tangle (haris/tangle-home ".vim/colors/customtheme.vim")
+#+begin_src vimrc :tangle ~/.vim/colors/customtheme.vim
   " Remove all existing highlighting and set the defaults.
   hi clear
 
@@ -195,7 +195,7 @@ the setup script as well!.*
   " vim: tw=95 cc=96
 #+end_src
 * Neovim
-#+begin_src vimrc :tangle (haris/tangle-home ".config/nvim/init.vim")
+#+begin_src vimrc :tangle ~/.config/nvim/init.vim
   source ~/.vimrc
 
   set inccommand=split
@@ -256,7 +256,7 @@ the setup script as well!.*
 #+end_src
 * File types
 ** rst
-#+begin_src vimrc :tangle (haris/tangle-home ".vim/ftplugin/rst.vim")
+#+begin_src vimrc :tangle ~/.vim/ftplugin/rst.vim
   setlocal shiftwidth=3
   setlocal tabstop=3
 #+end_src

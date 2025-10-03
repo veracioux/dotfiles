@@ -4,7 +4,7 @@
 Configs for various REPL-style programs I use.
 
 * Python/IPython
-#+begin_src python :tangle (haris/tangle-home ".startup.py")
+#+begin_src python :tangle ~/.startup.py
   import os
   import sys
   import subprocess as sp
@@ -16,7 +16,7 @@ Configs for various REPL-style programs I use.
   ls = lambda path=".": print(sp.run(["ls", *os.listdir(path)]).stdout)
 #+end_src
 * Octave
-#+begin_src octave :tangle (haris/tangle-home ".octaverc")
+#+begin_src octave :tangle ~/.octaverc
   % These commandline arguments shall make the rest of this file skipped
   if any(strcmp(argv(), '--eval')) && ~any(strcmp(argv(), '--persist'))
     return
@@ -56,6 +56,6 @@ Configs for various REPL-style programs I use.
   source ~/.octaverc.private
 #+end_src
 * Inputrc
-#+begin_src fundamental :tangle (haris/tangle-home ".inputrc")
+#+begin_src fundamental :tangle ~/.inputrc
   set editing-mode vi
 #+end_src

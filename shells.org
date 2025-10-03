@@ -1,6 +1,6 @@
 #+TITLE: Shell Config
 #+SETUPFILE: .setup.org
-#+PROPERTY: header-args:fish+ :tangle (haris/tangle-home ".config/fish/config.fish")
+#+PROPERTY: header-args:fish+ :tangle ~/.config/fish/config.fish
 
 - *dash* as the system shell (because it's faster)
 - *fish* as my interactive shell
@@ -46,7 +46,7 @@ run it on the =fish_preexec= event if it wasn't run before.
 #+end_src
 ** Behavior overrides
 *** =fish_prompt=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_prompt.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/fish_prompt.fish
   function fish_prompt --description 'Write out the prompt'
       set -l last_pipestatus $pipestatus
 
@@ -113,7 +113,7 @@ run it on the =fish_preexec= event if it wasn't run before.
   end
 #+end_src
 **** =fish_mode_prompt=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/fish_mode_prompt.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/fish_mode_prompt.fish
   function fish_mode_prompt
       if [ -z "$EMACS_VTERM_PATH" ]
           switch $fish_bind_mode
@@ -141,7 +141,7 @@ run it on the =fish_preexec= event if it wasn't run before.
 #+end_src
 **** Helpers
 ***** =__haris_prompt_compose_status=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_prompt_compose_status.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_prompt_compose_status.fish
   function __haris_prompt_compose_status
       set_color yellow
       set -l any_content
@@ -231,7 +231,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   end
 #+end_src
 *** =edit_command_buffer_custom=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/edit_command_buffer_custom.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/edit_command_buffer_custom.fish
   set -l actual_editor
   if which emacs >/dev/null
       set actual_editor emacs
@@ -246,9 +246,9 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+end_src
 ** Bindings
 :PROPERTIES:
-:header-args:fish+: :tangle (haris/tangle-home ".config/fish/functions/fish_user_key_bindings.fish")
+:header-args:fish+: :tangle ~/.config/fish/functions/fish_user_key_bindings.fish
 :END:
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/bind_all_modes.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/bind_all_modes.fish
   function bind_all_modes
       for mode in (bind --list-modes)
           bind -M "$mode" $argv
@@ -339,7 +339,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+end_src
 **** Helper functions
 ***** =__haris_run_in_bash=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_run_in_bash.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_run_in_bash.fish
   function __haris_run_in_bash
       set -l cmd (commandline -b)
       echo
@@ -349,7 +349,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   end
 #+end_src
 ***** =__haris_cmdline_prepend=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_cmdline_prepend.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_cmdline_prepend.fish
   function __haris_cmdline_prepend
       commandline --cursor 0
       commandline --insert "$argv "
@@ -357,13 +357,13 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   end
 #+end_src
 ***** =__haris_show_man=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_show_man.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_show_man.fish
   function __haris_show_man
       eman (commandline --current-process --tokenize | grep -v '^sudo$' | head -1)
   end
 #+end_src
 ***** =__haris_cmdline_append_or_toggle=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_cmdline_append_or_toggle.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_cmdline_append_or_toggle.fish
   function __haris_cmdline_append_or_toggle -a text
       if [ (commandline -o | tail -1) = "$text" ]
           commandline -r (commandline | string replace -r -- "\s+$text\s*\$" '')
@@ -374,13 +374,13 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   end
 #+end_src
 ***** =__haris_test_eval=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_test_eval.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_test_eval.fish
   function __haris_test_eval
       eval "$(adhoc - (mktemp -t XXXXXXXX.fish) 2>/dev/null)"
   end
 #+end_src
 ***** =__haris_copy_cmdline_and_output=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_copy_cmdline_and_output.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_copy_cmdline_and_output.fish
   function __haris_copy_cmdline_and_output
       set -l commandline "$(commandline)"
 
@@ -415,7 +415,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   set -U fish_color_end               yellow
 #+end_src
 ** Plugins
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/fish_plugins")
+#+begin_src fish :tangle ~/.config/fish/fish_plugins
   jorgebucaran/fisher
   edc/bass
   PatrickF1/fzf.fish
@@ -469,7 +469,7 @@ on the plugin list above.
   fish -c "fisher update"
 #+end_src
 *** Fish AI
-#+begin_src conf :tangle (haris/tangle-home ".config/fish-ai.ini")
+#+begin_src conf :tangle ~/.config/fish-ai.ini
   [fish-ai]
   configuration = openai
   debug = True
@@ -487,7 +487,7 @@ on the plugin list above.
 #+end_src
 ** Functions
 *** =whatis=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/whatis.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/whatis.fish
   function whatis --wraps type --description "Print what something is, regardless of type" --argument-names what
       type "$what"
       if [ "$(type --type "$what")" = 'file' ]
@@ -496,17 +496,17 @@ on the plugin list above.
   end
 #+end_src
 *** =ndir=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/ndir.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/ndir.fish
   # Create a new dir and cd
   function ndir;  mkdir -p "$argv"; cd "$argv"; end
 #+end_src
 *** =1=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/1.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/1.fish
   # Print first argument
   function 1; echo $argv[1]; end
 #+end_src
 *** =a=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/a.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/a.fish
   # Run z through fzf
   function a
       z -l $argv | read -z choices
@@ -517,12 +517,12 @@ on the plugin list above.
   end
 #+end_src
 *** =open=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/open.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/open.fish
   # Open a GUI app and disown
   function open; for file in $argv; o xdg-open "$file"; end; end
 #+end_src
 *** =imount=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/imount.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/imount.fish
   # Wrapper around imount script so I can cd to the mount directory
   function imount
       command imount $argv
@@ -530,17 +530,17 @@ on the plugin list above.
   end
 #+end_src
 *** =vh=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/vh.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/vh.fish
   # Vim help
   function vh; vim -c ":h $argv | only"; end
 #+end_src
 *** =copypath=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/copypath.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/copypath.fish
   # Save the path of the argument to the clipboard
   function copypath; realpath $argv | xsel -b; end
 #+end_src
 *** =ls=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/ls.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/ls.fish
   # When you ls, save the argument so you can quickly cd to that folder.
   # It's not fool-proof, but it works in most situations and it's safe.
   function ls
@@ -554,21 +554,21 @@ on the plugin list above.
   end
 #+end_src
 *** =cdls=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/cdls.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/cdls.fish
   # cd the last directory you have ls-ed
   function cdls
       [ -n "$__last_ls_arg" ] && cd "$__last_ls_arg"
   end
 #+end_src
 *** =vils=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/vils.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/vils.fish
   # vim the last file you have ls-ed
   function vils
       [ -n "$__last_ls_arg" ] && vim "$__last_ls_arg"
   end
 #+end_src
 *** =chbg=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/chbg.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/chbg.fish
   function chbg
       set -l path (
           ls 2>/dev/null \
@@ -583,7 +583,7 @@ on the plugin list above.
   end
 #+end_src
 **** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/chbg.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/chbg.fish
   complete --command chbg --no-files --arguments="(
       begin
           ls -1 2>/dev/null ~/.local/share/backgrounds
@@ -595,7 +595,7 @@ on the plugin list above.
   )"
 #+end_src
 *** =vicmd=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/vicmd.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/vicmd.fish
   function vicmd
       set -l file (fcmd "$argv");
       if [ -f "$file" ]
@@ -613,7 +613,7 @@ on the plugin list above.
 #+end_src
 *** =o=
 #+NAME: o
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/o.fish") :eval no
+#+begin_src fish :tangle ~/.config/fish/functions/o.fish :eval no
   # Run a command and disown. Put it into a tmux session. Notify the user when done.
   # Persist a shell for a small time so the user can follow up on the command. If
   # the user doesn't follow up within 20 minutes, the background shell will exit
@@ -775,11 +775,11 @@ Note: This code block must not contain any apostrophes!
   __haris_reproduce_status_code
 #+end_src
 **** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/o.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/o.fish
   complete -c o --wraps command
 #+end_src
 *** =enved=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/enved.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/enved.fish
   function enved --argument envvar --description "Edit an environment variable by name"
       set tmp (mktemp /tmp/envvar-XXXXXXXXX)
       bass echo \$"$envvar" > "$tmp"
@@ -789,13 +789,13 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 *** =funcat=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/funcat.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/funcat.fish
   function funcat
       type $argv[1] | sed '1,3d;$d' | fish_indent
   end
 #+end_src
 *** =^=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/^.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/^.fish
   function '^' -d "cd to the first directory in the hierarchy by specified name" -a name
       pushd "$PWD"
       while [ "$PWD" != "/" ]
@@ -812,11 +812,11 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 **** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/^.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/^.fish
   complete -c '^' -a '(pwd | tr "/" "\n")' -f
 #+end_src
 *** =forever=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/forever.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/forever.fish
   function forever
       while :
           $argv
@@ -825,11 +825,11 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 **** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/forever.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/forever.fish
   complete -c forever --wraps command --wraps builtin
 #+end_src
 *** =pdm=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/pdm.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/pdm.fish
   function pdm
       set cmd $argv[1]
 
@@ -842,7 +842,7 @@ Note: This code block must not contain any apostrophes!
 #+end_src
 *** Worktree utilities
 **** =wt=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/wt.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/wt.fish
   function wt --argument-names wt_index subpath
       if [ (count $argv) = 1 ] && ! string match -qr '^[0-9]+$' "$wt_index"
           set subpath $wt_index
@@ -865,7 +865,7 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 ***** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/__haris_complete_wt.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_complete_wt.fish
   function __haris_complete_wt
       set -l args (commandline -op)
 
@@ -894,11 +894,11 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/wt.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/wt.fish
   complete -c wt -fk -a '(__haris_complete_wt)'
 #+end_src
 **** =wt_setup_compose=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/wt_setup_compose.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/wt_setup_compose.fish
   function wt_setup_compose --argument-names project worktree_index
       begin [ -z "$project" ] || [ -z "$worktree_index" ]; end && echo "Usage: wt_setup_compose PROJECT WORKTREE_INDEX" && return 1
 
@@ -931,7 +931,7 @@ Note: This code block must not contain any apostrophes!
   function rmcmd;  set -l file (fcmd "$argv"); rm "$file";                              end
 #+end_src
 **** =eman=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/eman.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/eman.fish
   function eman
       if [ -n "$DISPLAY" ] && emacsclient -s emacs --eval nil >/dev/null 2>&1
           command eman $argv
@@ -941,7 +941,7 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 **** =tmp_func=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/tmp_func.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/tmp_func.fish
   if type --query uuidgen
       function tmp_func
           set -g __haris_latest_tmp_func_name "__tmp_func_$(uuidgen | tr '-' '_')"
@@ -950,7 +950,7 @@ Note: This code block must not contain any apostrophes!
   end
 #+end_src
 ***** =tmp_func_consume_content=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/tmp_func_consume_content.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/tmp_func_consume_content.fish
   if type --query tmp_func
       function tmp_func_consume_content
           funcat "$__haris_latest_tmp_func_name"
@@ -961,7 +961,7 @@ Note: This code block must not contain any apostrophes!
 ** Completions
 Function(s) that will be used by many completions.
 Completions for the functions defined in [[Functions]].
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/no_positional_args.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/no_positional_args.fish
   # Return success if the command line contains no positional arguments
   function no_positional_args
       set -l -- args    (commandline -po)         # cmdline broken up into list
@@ -985,27 +985,27 @@ Completions for the functions defined in [[Functions]].
   end
 #+end_src
 *** =snip=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/snip.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/snip.fish
   complete -c snip -f -a \
       "(pushd ~/.vim/snips; command ls | sed 's_\(.*\)\.snippets_\1_g'; popd)"
 #+end_src
 *** =adhoc=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/adhoc.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/adhoc.fish
   complete -c adhoc -f \
       -a "(complete -C'adsfadadflasdjflasdflnasdflasdu /tmp/adhoc-files/' | string replace /tmp/adhoc-files/ \"\")"
 #+end_src
 *** =pass=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/pass.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/pass.fish
   source /usr/share/fish/vendor_completions.d/pass.fish
   complete -c pass -a 'add' -n "no_positional_args"
   complete -c pass -a '(complete -C "pass show ")' -f -n '__fish_seen_subcommand_from add'
 #+end_src
 *** =otp=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/otp.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/otp.fish
     complete -c otp -a '(fd "otp-secret.gpg" ~/.password-store -x echo {//} | sed "s:^.*/\.password-store/\?::")' -f
 #+end_src
 *** =vscode=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/vscode.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/vscode.fish
   complete -c vscode --wraps code
 #+end_src
 *** Self-bootstrapping
@@ -1022,17 +1022,17 @@ desired final content of the completion script.
   echo "$source" | tee "$(status filename)" | source
 #+end_src
 **** =bufls=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/bufls.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/bufls.fish
   set -l source "$(bufls completion fish 2>/dev/null)"
   «completions/self-bootstrapping/common»
 #+end_src
 **** =buf=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/buf.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/buf.fish
   set -l source "$(buf completion fish 2>/dev/null)"
   «completions/self-bootstrapping/common»
 #+end_src
 **** =gh=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/gh.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/gh.fish
   set -l source "$(gh completion -s fish 2>/dev/null)"
   «completions/self-bootstrapping/common»
 #+end_src
@@ -1049,7 +1049,7 @@ desired final content of the completion script.
 #+end_src
 * Bash
 Note: =~/.bashrc= is sourced by fish as well.
-#+begin_src bash :tangle (haris/tangle-home ".bashrc")
+#+begin_src bash :tangle ~/.bashrc
   PS1='\[\e[1;36m\]\u\[\e[1;31m\]@\[\e[1;34m\]\h \[\e[1;32m\]\W \[\e[1;31m\]\$ \[\e[0;32m\]\[\e[0m\]'
 
   # Shell options
@@ -1072,7 +1072,7 @@ Note: =~/.bashrc= is sourced by fish as well.
 #+end_src
 * Aliases
 ** Posix Sh
-#+begin_src shell :tangle (haris/tangle-home ".profile")
+#+begin_src shell :tangle ~/.profile
   if which startx >/dev/null; then
       alias x='startx'
   fi
@@ -1097,7 +1097,7 @@ Note: =~/.bashrc= is sourced by fish as well.
   function vfd --wraps fd; vim (fd $argv); end
 #+end_src
 **** =dragon=
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/functions/dragon.fish")
+#+begin_src fish :tangle ~/.config/fish/functions/dragon.fish
   function dragon --wraps dragon-drop --wraps dragon-drag-and-drop
       if contains -- --help $argv
           command dragon --help
@@ -1492,7 +1492,7 @@ abbreviations for equivalent apt operations.
   end
 #+end_src
 * Environment
-#+begin_src conf :tangle (haris/tangle-home ".config/environment.d/90-haris.conf")
+#+begin_src conf :tangle ~/.config/environment.d/90-haris.conf
   # Clipmenu
   # (ref:CM_DIR)
   CM_DIR=$HOME/.local/share/haris/clipmenu
@@ -1500,12 +1500,12 @@ abbreviations for equivalent apt operations.
   VAGRANT_HOME=/usr/local/share/haris/vagrant
 #+end_src
 Make the environment variables available for shells as well:
-#+begin_src shell :tangle (haris/tangle-home ".profile")
+#+begin_src shell :tangle ~/.profile
   eval "$(cat ~/.config/environment.d/90-haris.conf | grep -vP '^\s*#' | sed 's/^/export /')"
 #+end_src
 * .profile
 :PROPERTIES:
-:header-args:shell+: :tangle (haris/tangle-home ".profile")
+:header-args:shell+: :tangle ~/.profile
 :END:
 ** Local configuration                                        :configurable:
 ** Executable paths

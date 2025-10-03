@@ -9,7 +9,7 @@ Enable all the background services with:
 #+end_src
 ** Systemd target for all background services
 Note: [[*Clipmenud][Clipmenud]] is started by [[file:wm.org::(clipmenud)][startx]] to ensure a graphical session exists.
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/haris-background.target")
+#+begin_src systemd :tangle ~/.config/systemd/user/haris-background.target
   [Unit]
   Description=Background services
   Wants=crontab-listen-update.service
@@ -26,7 +26,7 @@ Note: [[*Clipmenud][Clipmenud]] is started by [[file:wm.org::(clipmenud)][startx
 #+end_src
 * Clipmenud
 NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DIR)][here]].
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/clipmenud.service")
+#+begin_src systemd :tangle ~/.config/systemd/user/clipmenud.service
   [Unit]
   Description=Clipboard daemon
 
@@ -40,7 +40,7 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   WantedBy=default.target
 #+end_src
 * Jira Branch Transformer
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/jira-branch-transformer.service")
+#+begin_src systemd :tangle ~/.config/systemd/user/jira-branch-transformer.service
   [Unit]
   Description=Jira Branch Transformer
 
@@ -51,7 +51,7 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   WantedBy=default.target
 #+end_src
 ** Executable
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/jira-branch-transformer")
+#+begin_src bash :tangle ~/.local/bin/jira-branch-transformer
   while :; do
       echo "Scanning clipboard..."
       cb="$(timeout 1s xsel -bo)"
@@ -63,7 +63,7 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   done
 #+end_src
 * VPN Notifier
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/vpn-notifier.service")
+#+begin_src systemd :tangle ~/.config/systemd/user/vpn-notifier.service
   [Unit]
   Description=VPN notifier
 
@@ -79,7 +79,7 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
 I define my main users cron jobs in files matching the glob =~/.cron.d/crontab.*=.
 ** Default cron jobs
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".cron.d/crontab.50")
+:header-args+: :tangle ~/.cron.d/crontab.50
 :END:
 Modify PATH variable to match the normal environment's value:
 #+begin_src crontab
@@ -104,7 +104,7 @@ Modify PATH variable to match the normal environment's value:
 #+end_src
 ** Listen/update service                                           :service:
 This service updates the user's crontab when any of the custom crontab files change.
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/crontab-listen-update.service")
+#+begin_src systemd :tangle ~/.config/systemd/user/crontab-listen-update.service
   [Unit]
   Description=Crontab change listener and updater
 
@@ -116,7 +116,7 @@ This service updates the user's crontab when any of the custom crontab files cha
   WantedBy=default.target
 #+end_src
 *** Executable
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/crontab-listen-update")
+#+begin_src shell :tangle ~/.local/bin/crontab-listen-update
   if ! which inotifywait 2>/dev/null; then
       echo "ERROR: inotifywait is not installed. Aborting."
       exit 1

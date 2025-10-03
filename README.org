@@ -215,7 +215,7 @@ initializing a new setup meant to use my dotfiles, from scratch.
 #+end_src
 * Default applications
 :PROPERTIES:
-:header-args:conf+: :tangle (haris/tangle-home ".config/mimeapps.list")
+:header-args:conf+: :tangle ~/.config/mimeapps.list
 :END:
 Here you can find a mapping of mime types to default applications that I use,
 and some added mime type associations. To apply the changes, run:
@@ -223,7 +223,7 @@ and some added mime type associations. To apply the changes, run:
   update-desktop-database ~/.local/share/applications
 #+end_src
 ** Default applications
-#+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
+#+begin_src conf :tangle ~/.config/mimeapps.list
   [Default Applications]
   application/octet-stream=emacs.desktop;gvim.desktop;
   application/pdf=org.pwmt.zathura-pdf-poppler.desktop;
@@ -267,7 +267,7 @@ and some added mime type associations. To apply the changes, run:
   x-scheme-handler/viber=viber.desktop;
 #+end_src
 ** Added associations
-#+begin_src conf :tangle (haris/tangle-home ".config/mimeapps.list")
+#+begin_src conf :tangle ~/.config/mimeapps.list
   [Added Associations]
   application/octet-stream=gvim.desktop;
   application/x-bibtex=gvim.desktop;

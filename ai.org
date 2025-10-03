@@ -17,7 +17,7 @@
 #+end_src
 ** Git commits
 #+NAME: prompts/git-commit
-#+begin_src markdown :tangle (haris/tangle-home ".ai/prompts/git-commit.md")
+#+begin_src markdown :tangle ~/.ai/prompts/git-commit.md
   When making git commits, you will respect the following commit message format:
   ```
   [<TICKET-ID>:] <TYPE>: <SUBJECT>
@@ -109,7 +109,7 @@
 #+end_src
 ** Git commits for dotfiles repo
 #+NAME: prompts/git-commit/dotfiles
-#+begin_src text :tangle (haris/tangle-home ".ai/prompts/git-commit-dotfiles.md")
+#+begin_src text :tangle ~/.ai/prompts/git-commit-dotfiles.md
   «prompts/git-commit»
 
   One additional rule:
@@ -139,7 +139,7 @@
 #+end_src
 * Host configurations
 ** mcphost
-#+begin_src yaml :tangle (haris/tangle-home ".mcphost.yml")
+#+begin_src yaml :tangle ~/.mcphost.yml
   mcpServers:
     custom-shell-interaction:
       «mcpServers/custom-shell-interaction»
@@ -155,13 +155,13 @@
     «prompts/system»
 #+end_src
 ** Claude Code
-#+begin_src json :tangle (haris/tangle-home ".claude/settings.json")
+#+begin_src json :tangle ~/.claude/settings.json
   {
     "apiKeyHelper": "pass show anthropic/api-key | trim"
   }
 #+end_src
 ** Aider
-#+begin_src yaml :tangle (haris/tangle-home ".aider.conf.yml")
+#+begin_src yaml :tangle ~/.aider.conf.yml
   model: openai/o4-mini
   auto-commits: false
   notifications: true
@@ -182,7 +182,7 @@ To use it, when starting Aider, run the following command:
 
 mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop configuration]].
 ** OpenCode
-#+begin_src jsonc :tangle (haris/tangle-home ".config/opencode/opencode.jsonc")
+#+begin_src jsonc :tangle ~/.config/opencode/opencode.jsonc
   // https://opencode.ai/docs/config/
   {
     "$schema": "https://opencode.ai/config.json",
@@ -234,7 +234,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
 #+end_src
 *** Agents
 **** Simple
-#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/simple.md")
+#+begin_src markdown :tangle ~/.config/opencode/agent/simple.md
   ---
   description: Follows simple instructions
   model: google/gemini-2.5-flash
@@ -248,7 +248,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
   Follows simple instructions.
 #+end_src
 **** Teacher
-#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/teacher.md")
+#+begin_src markdown :tangle ~/.config/opencode/agent/teacher.md
   ---
   description: Can teach and explain concepts
   model: anthropic/claude-3-5-haiku-latest
@@ -260,7 +260,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
   Can teach and explain concepts.
 #+end_src
 **** Emacs Helper
-#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/emacs-helper.md")
+#+begin_src markdown :tangle ~/.config/opencode/agent/emacs-helper.md
   ---
   description: Helps with Emacs-related tasks
   model: anthropic/claude-3-5-haiku-latest
@@ -277,7 +277,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
   If I ask you to read or modify my dotfiles, know that they are located at ~/.haris/.
 #+end_src
 **** Pkgbuilder
-#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/pkgbuilder.md")
+#+begin_src markdown :tangle ~/.config/opencode/agent/pkgbuilder.md
   ---
   description: Helps with building Linux packages
   model: anthropic/claude-3-5-haiku-latest
@@ -307,7 +307,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
   https://wiki.archlinux.org/title/PKGBUILD
 #+end_src
 **** System
-#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/system.md")
+#+begin_src markdown :tangle ~/.config/opencode/agent/system.md
   ---
     description: Helps with system control and administration
     model: anthropic/claude-3-5-haiku-latest
@@ -322,7 +322,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
   ---
 #+end_src
 **** Linter
-#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/agent/linter.md")
+#+begin_src markdown :tangle ~/.config/opencode/agent/linter.md
   ---
   description: Helps with code linting and formatting
   permission:
@@ -366,7 +366,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
 #+end_src
 *** Custom commands
 **** Edit file
-#+begin_src markdown :tangle (haris/tangle-home ".config/opencode/command/e.md")
+#+begin_src markdown :tangle ~/.config/opencode/command/e.md
   ---
   agent: simple
   ---

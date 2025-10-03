@@ -2,7 +2,7 @@
 #+SETUPFILE: .setup.org
 
 * Zathura
-#+begin_src shell :tangle (haris/tangle-home ".config/zathura/zathurarc")
+#+begin_src shell :tangle ~/.config/zathura/zathurarc
   set selection-clipboard clipboard
 
   set default-bg "#1e1e1e"
@@ -42,7 +42,7 @@
   map <M-f> exec "zathura %"
 #+end_src
 * Sioyek
-#+begin_src conf :tangle (haris/tangle-home ".config/sioyek/keys_user.config")
+#+begin_src conf :tangle ~/.config/sioyek/keys_user.config
   move_left l
   move_right h
 
@@ -68,7 +68,7 @@
 *** 2.0
 Note that the quotes are required here!
 #+NAME: gtk-settings-2.0
-#+begin_src conf :tangle (haris/tangle-home ".gtkrc-2.0")
+#+begin_src conf :tangle ~/.gtkrc-2.0
   gtk-primary-button-warps-slider = 0
   gtk-toolbar-style = 3
   gtk-menu-images = 1
@@ -83,7 +83,7 @@ Note that the quotes are required here!
 *** 3.0
 Some settings in GTK 3.0 don't work if we quote their values.
 #+NAME: gtk-settings-3.0
-#+begin_src conf :tangle (haris/tangle-home ".config/gtk-3.0/settings.ini")
+#+begin_src conf :tangle ~/.config/gtk-3.0/settings.ini
   [Settings]
   <<gtk-settings-2.0>>
   gtk-theme-name = Dracula
@@ -93,13 +93,13 @@ Some settings in GTK 3.0 don't work if we quote their values.
   gtk-decoration-layout = icon:minimize,maximize,close
 #+end_src
 *** 4.0
-#+begin_src conf :tangle (haris/tangle-home ".config/gtk-4.0/settings.ini")
+#+begin_src conf :tangle ~/.config/gtk-4.0/settings.ini
   <<gtk-settings-3.0>>
 #+end_src
 ** File dialog bookmarks
 Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
 =Alt+<number>=, where indexing starts from 1, and =Alt+0= chooses the 10th item.
-#+begin_src conf :tangle (haris/tangle-home ".config/gtk-3.0/bookmarks")
+#+begin_src conf :tangle ~/.config/gtk-3.0/bookmarks
   file://<<eval-user-home()>>/proj projects
   file://<<eval-user-home()>>/src src
   file://<<eval-user-home()>>/tmp ~/tmp
@@ -112,7 +112,7 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   file:///tmp/stage-<<eval-user-name()>> stage
 #+end_src
 * Flameshot
-#+begin_src conf :tangle (haris/tangle-home ".config/flameshot/flameshot.ini")
+#+begin_src conf :tangle ~/.config/flameshot/flameshot.ini
   [General]
   allowMultipleGuiInstances=false
   autoCloseIdleDaemon=true
@@ -171,14 +171,14 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   TYPE_UNDO=U
 #+end_src
 * Mpv
-#+begin_src conf :tangle (haris/tangle-home ".config/mpv/mpv.conf")
+#+begin_src conf :tangle ~/.config/mpv/mpv.conf
   audio-device=pulse
   osd-fractions=yes
   ytdl-format=bestvideo[height<=?720]+bestaudio/best
   title=${path}
   hwdec=auto
 #+end_src
-#+begin_src conf :tangle (haris/tangle-home ".config/mpv/input.conf")
+#+begin_src conf :tangle ~/.config/mpv/input.conf
   # Panning
   Alt+LEFT add video-pan-x +.01
   Alt+h add video-pan-x +.01
@@ -205,7 +205,7 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   l seek +0.5 exact
 #+end_src
 * VirtualBox
-#+begin_src xml :tangle (haris/tangle-home ".config/VirtualBox/VirtualBox.xml")
+#+begin_src xml :tangle ~/.config/VirtualBox/VirtualBox.xml
   <?xml version="1.0"?>
   <VirtualBox xmlns="http://www.virtualbox.org/" version="1.12-linux">
     <Global>
@@ -227,7 +227,7 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   </VirtualBox>
 #+end_src
 * Dconf
-#+begin_src conf :tangle (haris/tangle-home ".config/dconf/settings.ini")
+#+begin_src conf :tangle ~/.config/dconf/settings.ini
   [org/gnome/desktop/peripherals/touchpad]
   natural-scroll=false
   send-events='enabled'
@@ -252,20 +252,20 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   NoDisplay=true
 #+end_src
 ** Emacs
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/emacs.desktop")
+#+begin_src desktop :tangle ~/.local/share/applications/emacs.desktop
   <<desktop-base>>
   Exec=myemacs -c
   Name=Emacs
   MimeType=text/plain;text/markdown;text/org;application/x-bibtex;application/x-octet-stream;
 #+end_src
 ** VS Code
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/vscode.desktop")
+#+begin_src desktop :tangle ~/.local/share/applications/vscode.desktop
   <<desktop-base>>
   Exec=code
   Name=VSCode
 #+end_src
 ** alacritty-open
-#+begin_src desktop :tangle (haris/tangle-home ".local/share/applications/alacritty-open.desktop")
+#+begin_src desktop :tangle ~/.local/share/applications/alacritty-open.desktop
   <<desktop-base>>
   Exec=alacritty --working-directory %U
   MimeType=inode/directory

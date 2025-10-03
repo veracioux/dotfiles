@@ -2,7 +2,7 @@
 #+SETUPFILE: .setup.org
 
 * Docker
-#+begin_src json :tangle (haris/tangle-home ".docker/config.json")
+#+begin_src json :tangle ~/.docker/config.json
   {
     "experimental": "enabled",
     "credsStore": "pass",
@@ -12,7 +12,7 @@
   }
 #+end_src
 * SSH
-#+begin_src ssh-config :tangle (haris/tangle-home ".ssh/config")
+#+begin_src ssh-config :tangle ~/.ssh/config
   Include conf.d/*.conf
 
   Match all
@@ -26,7 +26,7 @@
 #+end_src
 * Dunst
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".config/dunst/dunstrc")
+:header-args+: :tangle ~/.config/dunst/dunstrc
 :END:
 #+begin_src conf
   # vim: ft=cfg
@@ -123,6 +123,6 @@ I'm not sure if this file is actually used by rsync.
   __pycache__/
 #+end_src
 * IdeaVim
-#+begin_src vimrc :tangle (haris/tangle-home ".ideavimrc")
+#+begin_src vimrc :tangle ~/.ideavimrc
   set surround
 #+end_src

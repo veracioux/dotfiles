@@ -35,9 +35,7 @@
   "Prefix 'subpath' with the directory where dependency install scripts are tangled"
   (concat "/tmp/dependencies-" (user-login-name) "/" subpath))
 
-(defun haris/tangle-home (&optional subpath)
-  "Prefix 'subpath' with the directory that is used as staging for /home/haris when tangling"
-  (concat "/tmp/tangle-" (user-login-name) "/" subpath))
+
 
 (defun haris/tangle--file-non-interactively (file)
   "Tangle a file non-interactively, disabling all evaluation prompts including

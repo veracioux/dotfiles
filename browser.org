@@ -58,7 +58,7 @@ All my browser preferences that I don't need to keep secret go here.
   // Show search bar in <select> dropdown
   user_pref("dom.forms.selectSearch", true);
 #+end_src
-#+begin_src javascript :tangle (haris/tangle-home ".mozilla/firefox/ext/user.js") :noweb yes
+#+begin_src javascript :tangle ~/.mozilla/firefox/ext/user.js :noweb yes
   <<user.js>>
 #+end_src
 * CSS customizations
@@ -135,7 +135,7 @@ All my browser preferences that I don't need to keep secret go here.
       color: var(--mycolor-brmagenta);
   }
 #+end_src
-#+begin_src css :tangle (haris/tangle-home ".mozilla/firefox/ext/chrome/userChrome.css")
+#+begin_src css :tangle ~/.mozilla/firefox/ext/chrome/userChrome.css
   @import url("«main-profile-dir()»/chrome/userChrome.css");
 #+end_src
 #+NAME: main-profile-dir
@@ -160,7 +160,7 @@ so I move it to the top-right corner.
 #+end_src
 * Tridactyl
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".config/tridactyl/tridactylrc")
+:header-args+: :tangle ~/.config/tridactyl/tridactylrc
 :END:
 I try to use Vim mode everywhere - including my web browser. For this I use the
 Tridactyl extension.
@@ -242,7 +242,7 @@ press the exit hatch keys.
 
 This code block is that blank page, and is tangled to the appropriate location:
 #+NAME: blank-html
-#+begin_src html :tangle (haris/tangle-home ".local/share/haris/blank.html")
+#+begin_src html :tangle ~/.local/share/haris/blank.html
 #+end_src
 
 #+NAME: username
@@ -251,7 +251,7 @@ This code block is that blank page, and is tangled to the appropriate location:
 #+end_src
 ** Custom theme
 :PROPERTIES:
-:header-args:css+: :tangle (haris/tangle-home ".config/tridactyl/themes/custom.css")
+:header-args:css+: :tangle ~/.config/tridactyl/themes/custom.css
 :END:
 *** Color definitions
 #+begin_src css
@@ -445,5 +445,5 @@ Not sure if they have any effect.
 # Local Variables:
 # org-confirm-babel-evaluate: nil
 # eval: (org-sbe "load")
-# eval: (setq-local main-profile-dir (format  "%s.mozilla/firefox/%s" (haris/tangle-home) (user-login-name))))
+# eval: (setq-local main-profile-dir (format  "~/%s.mozilla/firefox/%s"  (user-login-name))))
 # End:

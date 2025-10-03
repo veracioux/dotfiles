@@ -21,7 +21,7 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
 
 * Wrappers around existing commands
 ** =git=                                                             :wrapper:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/git")
+#+begin_src bash :tangle ~/.local/bin/git
   git() {
       alternative-command git "$@"
   }
@@ -39,7 +39,7 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
   fi
 #+end_src
 ** =rm=                                                              :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/rm")
+#+begin_src shell :tangle ~/.local/bin/rm
   for arg in "$@"; do
       [ ! -e "$arg" ] && continue
       arg="$(realpath "$arg")"
@@ -55,7 +55,7 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
 #+end_src
 ** =pass=                                                            :wrapper:
 This is a wrapper around GNU =pass=.
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/pass")
+#+begin_src bash :tangle ~/.local/bin/pass
   shopt -s expand_aliases
 
   # TODO: Use alternative-command instead
@@ -79,7 +79,7 @@ This is a wrapper around GNU =pass=.
 ** =passmenu=                                                        :wrapper:
 This is a wrapper around =passmenu=, trying to use =passmenu-otp= if present,
 otherwise falling back to the default =passmenu=.
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/passmenu")
+#+begin_src bash :tangle ~/.local/bin/passmenu
   if command -v passmenu-otp >/dev/null; then
       passmenu-otp "$@"
   else
@@ -90,18 +90,18 @@ otherwise falling back to the default =passmenu=.
 Note: This depends on my custom build of dmenu with the height patch applied.
 The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+NAME: dmenu
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/dmenu")
+#+begin_src shell :tangle ~/.local/bin/dmenu
   alternative-command dmenu -b -f -i -h 25 \
       -nb '#1e1e1e' -nf '#dddddd' -sb '#99a3ff' -sf '#1e1e1e' \
       -fn 'Ubuntu Mono-12' \
       "$@"
 #+end_src
 ** =ipython=                                                         :wrapper:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/ipython")
+#+begin_src bash :tangle ~/.local/bin/ipython
   /usr/bin/ipython "$@" -i -- "$PYTHONSTARTUP"
 #+end_src
 ** =gvim=                                                            :wrapper:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/gvim")
+#+begin_src bash :tangle ~/.local/bin/gvim
   # Fake gvim which will just launch a terminal with neovim in it
 
   for arg in "$@"; do
@@ -128,15 +128,15 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   fi
 #+end_src
 ** =redshift=                                                        :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/redshift")
+#+begin_src shell :tangle ~/.local/bin/redshift
   /usr/bin/redshift -l 43.84:18.35
 #+end_src
 ** =firefox=                                                         :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/firefox")
+#+begin_src shell :tangle ~/.local/bin/firefox
   /usr/bin/firefox $(printarg --new-tab "$@" | uniq)
 #+end_src
 ** =myemacs=                                                         :wrapper:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/myemacs")
+#+begin_src bash :tangle ~/.local/bin/myemacs
   # Run emacsclient in the terminal, unless the -c option is given, which will
   # open the GUI.
   # - Also enables proper color support.
@@ -261,7 +261,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   fi
 #+end_src
 *** Helper program
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/haris/emacs-alternate-editor")
+#+begin_src bash :tangle ~/.local/lib/haris/emacs-alternate-editor
   is_running() {
       emacsclient --no-wait --socket-name emacs --eval '(ignore)' >/dev/null 2>&1
   }
@@ -274,16 +274,16 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   notify-send --print-id --replace-id="$id" "Emacs" "Daemon ready"
 #+end_src
 *** Shell completion
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/myemacs.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/myemacs.fish
   complete -c myemacs --wraps emacsclient
   complete -c myemacs --long "wait" --description "Override --no-wait if it would otherwise be in effect"
 #+end_src
 ** =myemacs-float=                                                 :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/myemacs-float")
+#+begin_src shell :tangle ~/.local/bin/myemacs-float
   myemacs -c --frame-parameters='(quote (name . "EmacsFloat"))' "$@"
 #+end_src
 ** =notify-send=                                                   :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/notify-send")
+#+begin_src shell :tangle ~/.local/bin/notify-send
   export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/<<eval-real-uid()>>/bus"
 
   # If notify-send can't communicate, it blocks. That's the reason for the timeout
@@ -291,7 +291,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =sudo=                                                          :wrapper:
 #+NAME: sudo
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/sudo")
+#+begin_src bash :tangle ~/.local/bin/sudo
   # Sudo but with a hook that sends a notification when the prompt is shown
 
   # TODO: Not robust enough. What if the wrapped command itself accepts a --stdin flag?
@@ -314,7 +314,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   askpass "[sudo] password for $(getent passwd "$USER" | cut -d: -f1)" "SUDO password" "Please enter your password"
 #+end_src
 ** =ssh=                                                           :wrapper:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/ssh")
+#+begin_src bash :tangle ~/.local/bin/ssh
   # This checks whether ssh is run via sshpass or perhaps some other tool that
   # assigns its own terminal to ssh.
   is_tty_available() {
@@ -340,42 +340,42 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   askpass "$prompt" "SSH passphrase" "Please enter SSH passphrase"
 #+end_src
 ** =alacritty=                                                     :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty")
+#+begin_src shell :tangle ~/.local/bin/alacritty
   alternative-command alacritty "$@"
   #+end_src
 ** =alacritty-float=                                               :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/alacritty-float")
+#+begin_src shell :tangle ~/.local/bin/alacritty-float
   alacritty --class Alacritty,Float "$@"
 #+end_src
 ** =sway=                                                          :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/sway")
+#+begin_src shell :tangle ~/.local/bin/sway
   export XDG_CURRENT_DESKTOP=Sway
   /usr/bin/sway --unsupported-gpu "$@"
 #+end_src
 ** =xlock=                                                         :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/xlock")
+#+begin_src shell :tangle ~/.local/bin/xlock
   pkill gpg-agent 2>/dev/null
   alternative-command xlock "$@"
 #+end_src
 ** =vscode=                                                        :wrapper:
 The name =code= is a bit too generic. I need something more specific in order to
 get better search matches.
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/vscode")
+#+begin_src shell :tangle ~/.local/bin/vscode
   code "$@"
 #+end_src
 ** =lnav=                                                          :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/lnav")
+#+begin_src shell :tangle ~/.local/bin/lnav
   export TERM=xterm-256color
 
   # alternative-command lnav "$@"
   /usr/bin/lnav "$@"
 #+end_src
 ** =clipmenu=                                                      :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/clipmenu")
+#+begin_src shell :tangle ~/.local/bin/clipmenu
   alternative-command clipmenu "$@"
 #+end_src
 ** =clipctl=                                                       :wrapper:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/clipctl")
+#+begin_src bash :tangle ~/.local/bin/clipctl
   set -e
 
   if [ "$#" -ne 1 ]; then
@@ -418,14 +418,14 @@ get better search matches.
   fi
 #+end_src
 *** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/clipctl.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/clipctl.fish
   complete -c clipctl -f -a "enable" -d "Enable clipboard synchronization"
   complete -c clipctl -f -a "disable" -d "Disable clipboard synchronization"
   complete -c clipctl -f -a "status" -d "Show the current clipboard synchronization status"
   complete -c clipctl -f -a "tmp-disable" -d "Disable clipboard synchronization for the current shell pipeline; cat"
 #+end_src
 ** =docker-compose=                                                :wrapper:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/docker-compose")
+#+begin_src bash :tangle ~/.local/bin/docker-compose
   if grep -q 'down.*--volumes' <<<"$*"; then
       echo 'Option --volumes used. Make sure this is the intended compose project'
       echo -e "COMPOSE_PROJECT_NAME: \e[1;31m $COMPOSE_PROJECT_NAME\e[0m"
@@ -444,12 +444,12 @@ get better search matches.
   fi
 #+end_src
 ** =ngrok=                                                         :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/ngrok")
+#+begin_src shell :tangle ~/.local/bin/ngrok
   export TERM=xterm-256color
   alternative-command ngrok "$@"
 #+end_src
 ** =teams=                                                         :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/teams")
+#+begin_src shell :tangle ~/.local/bin/teams
   flatpak_name="com.github.IsmaelMartinez.teams_for_linux"
 
   if [ "$(which -a teams | uniq | wc -l)" -gt 1 ]; then
@@ -464,7 +464,7 @@ get better search matches.
   fi
 #+end_src
 ** =yarn=                                                          :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/yarn")
+#+begin_src shell :tangle ~/.local/bin/yarn
   if [ "$(which -a yarn | uniq | wc -l)" -gt 1 ]; then
       alternative-command yarn "$@"
   else
@@ -472,22 +472,22 @@ get better search matches.
   fi
 #+end_src
 ** =iredis=                                                        :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/iredis")
+#+begin_src shell :tangle ~/.local/bin/iredis
   export PAGER=cat
   alternative-command iredis "$@"
 #+end_src
 ** =VirtualBox=                                                    :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/VirtualBox")
+#+begin_src shell :tangle ~/.local/bin/VirtualBox
   export QT_QPA_PLATFORMTHEME=qt
   alternative-command VirtualBox "$@"
 #+end_src
 ** =screenkey=                                                     :wrapper:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/screenkey")
+#+begin_src shell :tangle ~/.local/bin/screenkey
   alternative-command screenkey --bg-color "#99a3ff" --font-color "#1e1e1e" "$@"
 #+end_src
 * Utilities
 ** =visual-editor=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/visual-editor")
+#+begin_src shell :tangle ~/.local/bin/visual-editor
   if xprop -id "$WINDOWID" | grep -q _NET_WM_STATE_FULLSCREEN; then
       myemacs --wait "$@"
   elif which myemacs-float >/dev/null; then
@@ -497,7 +497,7 @@ get better search matches.
   fi
 #+end_src
 ** =editor=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/editor")
+#+begin_src shell :tangle ~/.local/bin/editor
   exists() {
       which "$1" >/dev/null
   }
@@ -512,13 +512,13 @@ get better search matches.
   fi
 #+end_src
 ** =abspath=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/abspath")
+#+begin_src bash :tangle ~/.local/bin/abspath
   pushd "$(dirname "$1")" >/dev/null
   echo "$PWD/$(basename "$1")"
   popd >/dev/null
 #+end_src
 ** =askpass=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/askpass")
+#+begin_src bash :tangle ~/.local/bin/askpass
   # Usage: askpass [PROMPT] [WINDOW_TITLE] [NOTIFICATION]
 
   prompt="$1"
@@ -547,21 +547,21 @@ get better search matches.
   fi
 #+end_src
 ** =askpass-gui=                                                    :script:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/askpass-gui")
+#+begin_src bash :tangle ~/.local/bin/askpass-gui
   TERM=dumb askpass "$@"
 #+end_src
 ** =chx=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/chx")
+#+begin_src shell :tangle ~/.local/bin/chx
   chmod u+x "$@"
 #+end_src
 ** =diffgpg=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/diffgpg")
+#+begin_src bash :tangle ~/.local/bin/diffgpg
   # Compare the contents of two GPG encrypted files
 
   diff <(gpg --decrypt --output - "$1") <(gpg --decrypt --output - "$2") "${@:3}"
 #+end_src
 ** =diffpiped=                                                      :script:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/diffpiped")
+#+begin_src bash :tangle ~/.local/bin/diffpiped
   # Diff two files named $1 and $2, piped through a command given as the remaining
   # arguments.
 
@@ -596,21 +596,21 @@ get better search matches.
   diffpiped --strip-trailing-cr <(echo -e "a\nb") <(echo -e "a\nB") sed 's/a/A/g'
 #+end_src
 ** =fcmd=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/fcmd")
+#+begin_src bash :tangle ~/.local/bin/fcmd
   type "$@" 2>/dev/null | awk '{print $3}'
   exit "${PIPESTATUS[0]}"
 #+end_src
 ** =lscf=
 Parses the contents of the [[*=cf=][cf]] script to obtain all the configurations that can
 be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/lscf")
+#+begin_src shell :tangle ~/.local/bin/lscf
   for f in ~/.haris/*.org; do
       basename "$f"
   done
   cat $(fcmd cf) | sed -n 's/\s*\([^\*]\+\)).*/\1/p'
 #+end_src
 ** =ls-wallpapers=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/ls-wallpapers")
+#+begin_src bash :tangle ~/.local/bin/ls-wallpapers
   lookup_dirs=(
       ~/.local/share/wallpapers
       ~/.local/share/backgrounds
@@ -623,7 +623,7 @@ be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
   fd . "${lookup_dirs[@]}" 2>/dev/null
 #+end_src
 ** =n=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/n")
+#+begin_src shell :tangle ~/.local/bin/n
   # Print n of the received arguments, where n=$1
 
   [ "$#" = 0 ] && exit 1
@@ -633,12 +633,12 @@ be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
   printarg $(printarg "${@}" | head -"$num")
 #+end_src
 ** =printarg=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/printarg")
+#+begin_src bash :tangle ~/.local/bin/printarg
   # Print commandline arguments passed to this function each on its own line
   printf "%q\n" "$@"
 #+end_src
 ** =rmws=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/rmws")
+#+begin_src shell :tangle ~/.local/bin/rmws
   # Remove whitespace from a file (or stdin if input is from a pipe) and write the
   # output to stdout (or rewrite the file if the -i option is given)
 
@@ -647,13 +647,13 @@ be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
           sed 's:\s\+$::' "$@"
 #+end_src
 ** =trim=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/trim")
+#+begin_src shell :tangle ~/.local/bin/trim
   # Remove trailing newline from stdin
 
   echo -n "$(cat)"
 #+end_src
 ** =adhoc=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/adhoc")
+#+begin_src bash :tangle ~/.local/bin/adhoc
   # Create an ad-hoc file, edit it in $EDITOR and then print its path. If a '-'
   # argument is given, the file contents are printed instead of its path.
 
@@ -684,7 +684,7 @@ be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
   fi
 #+end_src
 ** =cmd-with-notify=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/cmd-with-notify")
+#+begin_src shell :tangle ~/.local/bin/cmd-with-notify
   if [ "$TERM" = "linux" ]; then
       "$@"
       exit
@@ -697,31 +697,31 @@ be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
   exit $err
 #+end_src
 *** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/cmd-with-notify.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/cmd-with-notify.fish
   complete --command cmd-with-notify -f -a '(complete -C(commandline -cp | sed "s:\S\+::"))'
 #+end_src
 ** =delayed-command=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/delayed-command")
+#+begin_src bash :tangle ~/.local/bin/delayed-command
   sleep "$1"
   exec "${@:2}"
 #+end_src
 *** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/delayed-command.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/delayed-command.fish
   complete -c delayed-command -a '(complete -C "command ")'
 #+end_src
 ** =xpreset=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/xpreset")
+#+begin_src shell :tangle ~/.local/bin/xpreset
   [ "$#" != 1 ] && exit 1
 
   ln -sf .xinitrc-"$1" ~/.xinitrc
 #+end_src
 *** Fish completions
 #+HEADER: :tangle-mode (identity #o644)
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/xpreset.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/xpreset.fish
   complete -c xpreset -f -a "(pushd ~; ls .xinitrc-* | string replace .xinitrc- ''; popd)"
 #+end_src
 ** =xrandr-toggle=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr-toggle")
+#+begin_src shell :tangle ~/.local/bin/xrandr-toggle
   n="$(xrandr --listmonitors | head -1 | awk '{print $NF}')"
 
   [ "$n" = 1 ] && {\
@@ -737,14 +737,14 @@ be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
   feh --bg-fill .wallpaper
 #+end_src
 ** =xrandr2=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/xrandr2")
+#+begin_src shell :tangle ~/.local/bin/xrandr2
   # Wrapper for xrandr command with some options applied based on my current
   # monitor configuration
 
   xrandr --output HDMI-1-0 "$@" --pos 1920x1080
 #+end_src
 ** =pipetest=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/pipetest")
+#+begin_src bash :tangle ~/.local/bin/pipetest
   # Create three tmux panes:
   # - A SOURCE text file opened in vim
   # - A SCRIPT file opened in vim
@@ -910,7 +910,7 @@ them as code blocks here for better readability.
 #+end_src
 *** TODO consider extracting this script into its own project
 ** =auto-browser=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/auto-browser")
+#+begin_src bash :tangle ~/.local/bin/auto-browser
   browser='firefox -P «eval-user-name()»'
   # If a firefox window is currently active, open the link in the active window
   if xprop -id "$(xdotool getactivewindow)" | grep -qi 'firefox'; then
@@ -927,20 +927,20 @@ them as code blocks here for better readability.
   xdotool xorg-xprop
 #+end_src
 ** =alternative-command=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/alternative-command")
+#+begin_src bash :tangle ~/.local/bin/alternative-command
   cmd="$(which -a "$1" | uniq | sed -n 2p)"
 
   exec "$cmd" "${@:2}"
 #+end_src
 ** =curltb=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/curltb")
+#+begin_src shell :tangle ~/.local/bin/curltb
   # Get https://termbin.com/<TERMBIN_BLOB> using curl
   # Usage: curltb TERMBIN_BLOB [CURL_OPTIONS]
 
   curl https://termbin.com/"$1" "${@:2}"
 #+end_src
 ** =colortest=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/colortest")
+#+begin_src bash :tangle ~/.local/bin/colortest
   # Print out all 256 colors in the terminals
 
   f=0
@@ -965,7 +965,7 @@ shebang for elisp scripts.
 *NOTE:* It must be implemented in such a convoluted way as a shell script, because
 process management in emacs is shit.
 #+NAME: myemacs-load
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/myemacs-load") :eval no
+#+begin_src bash :tangle ~/.local/bin/myemacs-load :eval no
   tmpfile="$(mktemp)"
   cat >"$tmpfile" <<'EOF_c478eee3'
     <<stringify-arg-to-eval-option>>
@@ -1010,27 +1010,27 @@ last statement, and remove it from the output by piping to =sed=.
 #+end_src
 ** =o=
 Wrapper command around the equivalent [[file:shells.org::*=o=][fish function]].
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/o")
+#+begin_src bash :tangle ~/.local/bin/o
   fish -C "o $(printf "%q " "$@")"
 #+end_src
 ** =get-os-type=
 Get the OS type.
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/get-os-type")
+#+begin_src shell :tangle ~/.local/bin/get-os-type
   cat /etc/lsb-release 2>/dev/null | grep -q 'Ubuntu'     && echo 'ubuntu' && exit
   cat /etc/os-release  2>/dev/null | grep -q 'Arch Linux' && echo 'arch'   && exit
   echo 'Unsupported OS' >&2
   exit 1
 #+end_src
 ** =urlencode=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/urlencode")
+#+begin_src bash :tangle ~/.local/bin/urlencode
   python -c 'import urllib.parse as p; print(p.quote(input()))'
 #+end_src
 ** =urldecode=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/urldecode")
+#+begin_src bash :tangle ~/.local/bin/urldecode
   python -c 'import urllib.parse as p; print(p.unquote(input()))'
 #+end_src
 ** =fifo=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/fifo")
+#+begin_src shell :tangle ~/.local/bin/fifo
   mkfifo /tmp/fifo 2>/dev/null
 
   session_exists() {
@@ -1055,13 +1055,13 @@ Get the OS type.
   fi
 #+end_src
 ** =get-random-unused-port=                                         :script:
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/get-random-unused-port")
+#+begin_src bash :tangle ~/.local/bin/get-random-unused-port
   # This piece of magic was generated by ChatGPT. Don't try to understand it, just
   # accept it.
   comm -23 <(seq 49152 65535 | sort) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
 #+end_src
 ** =docker-ls-context=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/docker-ls-context")
+#+begin_src bash :tangle ~/.local/bin/docker-ls-context
   tag="$(date +%s%3N | sha256sum | head -c 32)"
   docker image build --tag "$tag" --no-cache -f - "$@" >&2 <<'EOF'
   «docker-ls-context/dockerfile»
@@ -1078,13 +1078,13 @@ Get the OS type.
   CMD find . | grep -v '^\.$'
 #+end_src
 ** =info=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/info")
+#+begin_src bash :tangle ~/.local/bin/info
   echo -ne "\033[1;32m" >&2
   echo "$@" >&2
   echo -ne "\033[0m" >&2
 #+end_src
 ** =debug=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/debug")
+#+begin_src bash :tangle ~/.local/bin/debug
   echo -ne "\033[1;33m" >&2
   bash -c 'printf "%q " "$@"' -s "$@" >&2
   echo >&2
@@ -1093,7 +1093,7 @@ Get the OS type.
   "$@"
 #+end_src
 ** =dragon=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/dragon")
+#+begin_src bash :tangle ~/.local/bin/dragon
   set -- --on-top --thumb-size 32 "$@"
 
   if which dragon-drag-and-drop &>/dev/null; then
@@ -1105,20 +1105,20 @@ Get the OS type.
   fi
 #+end_src
 ** =tee-notify=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/tee-notify")
+#+begin_src shell :tangle ~/.local/bin/tee-notify
   content="$(cat)"
   notify-send "tee-notify" "$content"
   echo "$content"
 #+end_src
 ** =get-cert=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/get-cert")
+#+begin_src shell :tangle ~/.local/bin/get-cert
   {
       timeout 0.5 openssl s_client -connect "$1" -showcerts 2>/dev/null
       true
   } | awk '/^-----BEGIN CERTIFICATE-----$/,/^-----END CERTIFICATE-----$/'
 #+end_src
 ** =forever=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/forever")
+#+begin_src shell :tangle ~/.local/bin/forever
   while :; do
       command "$@"
       sleep 2
@@ -1126,7 +1126,7 @@ Get the OS type.
 #+end_src
 ** =PR=
 Create a BitBucket PR.
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/PR")
+#+begin_src bash :tangle ~/.local/bin/PR
   uriEncode() {
       tr -d '\n' | jq -sRr @uri
   }
@@ -1179,7 +1179,7 @@ Create a BitBucket PR.
   gtk-launch "$(xdg-settings get default-web-browser)" "$url"
 #+end_src
 ** =mosquitto_sub_yq=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/mosquitto_sub_yq")
+#+begin_src bash :tangle ~/.local/bin/mosquitto_sub_yq
   mosquitto_sub \
       -F '{"topic": "%t",\n"body": %p}' \
       "$@" |
@@ -1190,11 +1190,11 @@ Create a BitBucket PR.
       done
 #+end_src
 *** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/mosquitto_sub_yq.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/mosquitto_sub_yq.fish
   complete -c mosquitto_sub_yq --wraps mosquitto_sub
 #+end_src
 ** =mosquitto_sub_jq=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/mosquitto_sub_jq")
+#+begin_src bash :tangle ~/.local/bin/mosquitto_sub_jq
   mosquitto_sub \
       -F '{"topic": "%t",\n"body": %p}' \
       "$@" |
@@ -1204,13 +1204,13 @@ Create a BitBucket PR.
       done
 #+end_src
 *** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/mosquitto_sub_jq.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/mosquitto_sub_jq.fish
   complete -c mosquitto_sub_jq --wraps mosquitto_sub
 #+end_src
 ** =@gh=
 Clone a Github repo using the given URL (HTTPS or SSH) and execute the given
 command there.
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/@gh")
+#+begin_src bash :tangle ~/.local/bin/@gh
   if [ "$#" -lt 3 ]; then
       echo "Usage: @gh REPO_URL [BRANCH_OR_COMMIT] COMMAND [ARGS...]"
       exit 1
@@ -1232,7 +1232,7 @@ command there.
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
 ** =cf=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/cf")
+#+begin_src shell :tangle ~/.local/bin/cf
   # Look up a configuration file by its user-friendly alias.
 
   # Note: This script is statically parsed by lscf. Keep its structure intact.
@@ -1281,25 +1281,25 @@ are designed to be easily integrated into dmenu scripts.
   done
 #+end_src
 ** =elisp=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/elisp")
+#+begin_src shell :tangle ~/.local/bin/elisp
   # Run an elisp interpreter through emacs
   <<add-create-frame-option-if-term-dumb>>
   myemacs --eval "(ielm)" "$@"
 #+end_src
 ** =eoctave=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/eoctave")
+#+begin_src shell :tangle ~/.local/bin/eoctave
   # Run octave interpreter through emacs
   <<add-create-frame-option-if-term-dumb>>
   myemacs --eval "(progn (run-octave) (delete-other-windows))" "$@"
 #+end_src
 ** =epython=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/epython")
+#+begin_src shell :tangle ~/.local/bin/epython
   # Run a python interpreter through emacs
   <<add-create-frame-option-if-term-dumb>>
   myemacs --eval "(progn (call-interactively 'run-python) (delete-other-windows))" "$@"
 #+end_src
 ** =eterm=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/eterm")
+#+begin_src shell :tangle ~/.local/bin/eterm
   # Run an emacs-hosted terminal via vterm
   <<add-create-frame-option-if-term-dumb>>
   myemacs --socket-name=vterm --eval '(multi-vterm)' "$@"
@@ -1307,7 +1307,7 @@ are designed to be easily integrated into dmenu scripts.
 ** =eman=
 #+NAME: eman
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle (haris/tangle-home ".local/bin/eman")
+#+begin_src elisp :tangle ~/.local/bin/eman
   (with-selected-frame (make-frame `((name . "EmacsMan")
                                      (display . ,(getenv "DISPLAY"))
                                      (environment . ,process-environment)))
@@ -1328,13 +1328,13 @@ are designed to be easily integrated into dmenu scripts.
 #+CALL: eman(argv='("git"))
 #+CALL: eman(argv='("emacs"))
 *** Completions
-#+begin_src fish :tangle (haris/tangle-home ".config/fish/completions/eman.fish")
+#+begin_src fish :tangle ~/.config/fish/completions/eman.fish
   complete -c eman --wraps man
 #+end_src
 ** =etranslate=
 #+NAME: etranslate
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle (haris/tangle-home ".local/bin/etranslate")
+#+begin_src elisp :tangle ~/.local/bin/etranslate
   (with-selected-frame (make-frame `((name . "EmacsFloat")
                                      (display . ,(getenv "DISPLAY"))
                                      (environment . ,process-environment)))
@@ -1349,7 +1349,7 @@ are designed to be easily integrated into dmenu scripts.
 *** Helper script
 This script prints the contents of the clipboard
 #+NAME: etranslate/get-selection
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/haris/etranslate-helper")
+#+begin_src bash :tangle ~/.local/lib/haris/etranslate-helper
   # In order to get the time when the selection happened I use a timestamp
   # reported by xclip and to get the current time I use a timestamp reported by
   # xsel. I have no idea what these timestamps are relative to, but I have
@@ -1382,7 +1382,7 @@ This script prints the contents of the clipboard
   fi
 #+end_src
 ** =erc=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/erc")
+#+begin_src shell :tangle ~/.local/bin/erc
   # Open emacs and run ERC in it
 
   <<add-create-frame-option-if-term-dumb>>
@@ -1392,7 +1392,7 @@ This script prints the contents of the clipboard
 #+end_src
 ** =edocker=
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle (haris/tangle-home ".local/bin/edocker")
+#+begin_src elisp :tangle ~/.local/bin/edocker
   (let ((dir default-directory))
     (with-selected-frame (make-frame `((name . "EmacsFloat")
                                        (display . ,(getenv "DISPLAY"))
@@ -1403,7 +1403,7 @@ This script prints the contents of the clipboard
 #+end_src
 ** =edocker-compose=
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle (haris/tangle-home ".local/bin/edocker-compose")
+#+begin_src elisp :tangle ~/.local/bin/edocker-compose
   (let ((dir default-directory))
     (with-selected-frame (make-frame `((name . "EmacsFloat")
                                        (display . ,(getenv "DISPLAY"))
@@ -1417,17 +1417,17 @@ This script prints the contents of the clipboard
       (run-with-timer 0.3 nil 'docker-compose)))
 #+end_src
 ** =ebluetooth=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/ebluetooth")
+#+begin_src shell :tangle ~/.local/bin/ebluetooth
   myemacs-float -c --eval '(bluetooth-list-devices)'
 #+end_src
 ** =proced=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/proced")
+#+begin_src shell :tangle ~/.local/bin/proced
   <<add-create-frame-option-if-term-dumb>>
   myemacs-float --eval '(progn (proced) (delete-other-windows))' "$@"
 #+end_src
 ** =magit=
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle (haris/tangle-home ".local/bin/magit")
+#+begin_src elisp :tangle ~/.local/bin/magit
   (let ((dir default-directory))
     (with-selected-frame (make-frame `((name . "EmacsFloat")
                                        (display . ,(getenv "DISPLAY"))
@@ -1436,7 +1436,7 @@ This script prints the contents of the clipboard
         (magit-status))))
 #+end_src
 ** =qr=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/qr")
+#+begin_src bash :tangle ~/.local/bin/qr
   # Copy, show or open the argument based on its content
   copy_or_show_or_open() {
       notify-send 'QR Code:' "$@"
@@ -1465,7 +1465,7 @@ This script prints the contents of the clipboard
 #+end_src
 ** =rb=
 # TODO: linux-only
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/rb")
+#+begin_src shell :tangle ~/.local/bin/rb
   # One-time reboot into selected OS
 
   set -e # Quit if any command fails
@@ -1488,19 +1488,19 @@ This script prints the contents of the clipboard
   fi
 #+end_src
 ** =vimdiff=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/vimdiff")
+#+begin_src shell :tangle ~/.local/bin/vimdiff
   # Like regular vimdiff, but in nvim
 
   nvim -d "$@"
 #+end_src
 ** =vicc=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/vicc")
+#+begin_src shell :tangle ~/.local/bin/vicc
   # Find and open in vim a header file from the default include path
 
   vim "$(echo "#include <$1>" | cpp -H 2>&1 >/dev/null | head -1 | sed 's/^. //')"
 #+end_src
 ** =vipydoc=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/vipydoc")
+#+begin_src shell :tangle ~/.local/bin/vipydoc
   # Open alacritty with pydoc in it
   # - All arguments are passed to pydoc
   # - Alacritty window class tracks those defined in my i3 config
@@ -1508,7 +1508,7 @@ This script prints the contents of the clipboard
   alacritty --class Alacritty,Float -e fish -C "pydoc $*" &
 #+end_src
 ** =rgf=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/rgf")
+#+begin_src shell :tangle ~/.local/bin/rgf
   # Run rg and fzf to search through file contents and jump to a file
 
   where="$1"
@@ -1517,7 +1517,7 @@ This script prints the contents of the clipboard
   rg --column --line-number --no-heading --color=always --smart-case . | fzf --ansi
 #+end_src
 ** =otp=
-#+begin_src python :tangle (haris/tangle-home ".local/bin/otp")
+#+begin_src python :tangle ~/.local/bin/otp
   import shlex
   import subprocess
 
@@ -1568,7 +1568,7 @@ This script prints the contents of the clipboard
   dryparse
 #+end_src
 ** =imount=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/imount")
+#+begin_src bash :tangle ~/.local/bin/imount
   # List of all blocks
   listing="$(lsblk --list -o PATH,LABEL)"
 
@@ -1625,7 +1625,7 @@ This script prints the contents of the clipboard
   chmod a+rw /tmp/imount_directory
 #+end_src
 ** =kbind=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/kbind")
+#+begin_src bash :tangle ~/.local/bin/kbind
   # Temporarily bind keys
 
   pkill -f '^sxhkd\.tmp '
@@ -1637,7 +1637,7 @@ This script prints the contents of the clipboard
 ** =xpeek=
 Create a Xephyr session for the current user that tries to mimic a regular
 =startx= session as closely as possible.
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/xpeek")
+#+begin_src bash :tangle ~/.local/bin/xpeek
   # Option variables
   host_display="$DISPLAY"
   display=1"$(id -u "$USER")"
@@ -1662,7 +1662,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
       done
 #+end_src
 ** =lock-screen=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/lock-screen")
+#+begin_src bash :tangle ~/.local/bin/lock-screen
   # Custom configuration
   HARIS_WALLPAPER_CHANGE=true
   HARIS_WALLPAPER_CHANGE_INTERVAL_SEC=60
@@ -1738,7 +1738,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
 #+end_src
 * Dmenu
 ** Main entrypoint (=dmenu_run=)
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/dmenu_run")
+#+begin_src bash :tangle ~/.local/bin/dmenu_run
   export HARIS_CALLER_IS_DMENU=true
   CACHE_FILE=~/.cache/haris/desktop-apps.txt
   mkdir -p "$(dirname "$CACHE_FILE")"
@@ -1900,7 +1900,7 @@ Open a website in Firefox. Suggests bookmarks managed by buku, but you can input
 any URL. To suggest additional URLs, you can create the script
 [[~/.local/lib/haris/custom/dmenu/open.sh]], which should print a list of additional
 URLs (each on a new line) to display in this menu.
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/open")
+#+begin_src shell :tangle ~/.local/lib/dmenu/open
   edit=" Edit..."
   sync=" Sync..."
 
@@ -1971,7 +1971,7 @@ URLs (each on a new line) to display in this menu.
   fi
 #+end_src
 ** Todo
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/todo")
+#+begin_src bash :tangle ~/.local/lib/dmenu/todo
   edit=" Edit..."
   lookup="$(
     ls ~/proj/*/TODO.org \
@@ -1999,7 +1999,7 @@ URLs (each on a new line) to display in this menu.
   fi
 #+end_src
 ** Pacman
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/pacman")
+#+begin_src shell :tangle ~/.local/lib/dmenu/pacman
   install=" Install..."
   about=" About..."
   remove=" Remove..."
@@ -2068,7 +2068,7 @@ URLs (each on a new line) to display in this menu.
   esac
 #+end_src
 ** Color
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/color")
+#+begin_src bash :tangle ~/.local/lib/dmenu/color
   declare -A colors
 
   colors[',k black']='         #1e1e1e'
@@ -2112,7 +2112,7 @@ URLs (each on a new line) to display in this menu.
   echo -n "${colors["$choice_filtered"]}" | sed 's_[^ ]* *\(.*\)_\1_' | xsel -b
 #+end_src
 ** Unicode
-#+begin_src python :tangle (haris/tangle-home ".local/lib/dmenu/unicode")
+#+begin_src python :tangle ~/.local/lib/dmenu/unicode
   # Choose a font-awesome icon from dmenu and copy it
 
   from urllib.request import urlopen
@@ -2206,7 +2206,7 @@ URLs (each on a new line) to display in this menu.
       copy_to_clipboard(choice.split(' ')[0])
 #+end_src
 ** Kill Process
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/pkill")
+#+begin_src shell :tangle ~/.local/lib/dmenu/pkill
   choice="$(ps -A -o comm --no-headers | dmenu)"
 
   [ -z "$choice" ] && exit
@@ -2218,7 +2218,7 @@ URLs (each on a new line) to display in this menu.
   [ "$choice" = " Yes, kill $process" ] && pkill "$process"
 #+end_src
 ** Config
-#+begin_src python :tangle (haris/tangle-home ".local/lib/dmenu/config")
+#+begin_src python :tangle ~/.local/lib/dmenu/config
   from subprocess import run, PIPE
   import os
   import os.path
@@ -2285,7 +2285,7 @@ URLs (each on a new line) to display in this menu.
       sys.exit()
 #+end_src
 ** System
-#+begin_src shell :tangle (haris/tangle-home ".local/lib/dmenu/system")
+#+begin_src shell :tangle ~/.local/lib/dmenu/system
   choice="$(echo "Suspend\nSuspend & Lock\nShutdown\nReboot..." | dmenu)"
 
   # No choice, bye-bye
@@ -2324,7 +2324,7 @@ URLs (each on a new line) to display in this menu.
   fi
 #+end_src
 ** Services
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/services")
+#+begin_src bash :tangle ~/.local/lib/dmenu/services
   # Unicode glyphs
   started=""
   stopped=""
@@ -2447,7 +2447,7 @@ URLs (each on a new line) to display in this menu.
   fi
 #+end_src
 ** GPG
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/gpg")
+#+begin_src bash :tangle ~/.local/lib/dmenu/gpg
   # Get list of all public keys
   keylist=($(gpg --list-public-keys Haris | grep '^\s' | sed 's/^\s*//g'))
 
@@ -2467,7 +2467,7 @@ URLs (each on a new line) to display in this menu.
   echo "$choice" | awk '{print $1}' | xsel -b
 #+end_src
 ** Books
-#+begin_src bash :tangle (haris/tangle-home ".local/lib/dmenu/books")
+#+begin_src bash :tangle ~/.local/lib/dmenu/books
   cd ~/data/literature
 
   choice="$(fd --type file '' | dmenu -l 10 -p 'Book:')"
@@ -2504,13 +2504,13 @@ The quickmenu script is optional and must be provided separately at
 #+end_src
 * System maintenance
 ** =pacman-update-mirrorlist=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/pacman-update-mirrorlist")
+#+begin_src shell :tangle ~/.local/bin/pacman-update-mirrorlist
   # Update /etc/pacman.d/mirrorlist using reflector
 
   sudo reflector --sort rate --save /etc/pacman.d/mirrorlist
 #+end_src
 ** =texclean=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/texclean")
+#+begin_src bash :tangle ~/.local/bin/texclean
   # Array of extensions
   extarray=($(sed -e '/^#/d' -e '/^$/d' ~/templates/latex/ignored_files))
 
@@ -2524,7 +2524,7 @@ The quickmenu script is optional and must be provided separately at
   exit
 #+end_src
 ** =springclean=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/springclean")
+#+begin_src shell :tangle ~/.local/bin/springclean
   docker system prune
   docker volume prune
 
@@ -2538,7 +2538,7 @@ The quickmenu script is optional and must be provided separately at
   paccache -vuk0 -r
 #+end_src
 ** =createhome=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/createhome")
+#+begin_src bash :tangle ~/.local/bin/createhome
   # Top level home directory
   dirs=(
       src
@@ -2568,7 +2568,7 @@ The quickmenu script is optional and must be provided separately at
   mkdir -p "${dirs[@]}"
 #+end_src
 ** =cleanhome=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/cleanhome")
+#+begin_src shell :tangle ~/.local/bin/cleanhome
   # Clean home of directories like Downloads, Documents, regularly created by who
   # knows.
 
@@ -2576,7 +2576,7 @@ The quickmenu script is optional and must be provided separately at
         ~/Templates ~/Public ~/'VirtualBox VMs' ~/mpv_slicing.log
 #+end_src
 ** =cleantex=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/cleantex")
+#+begin_src bash :tangle ~/.local/bin/cleantex
   # A script to clean tex build files
 
   shopt -s globstar
@@ -2587,12 +2587,12 @@ The quickmenu script is optional and must be provided separately at
 #+end_src
 ** =tangle=
 #+NAME: tangle
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle")
+#+begin_src shell :tangle ~/.local/bin/tangle
   ~/.haris/bootstrap/tangle.sh "$@"
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
 also tangle it to a standalone destination that I also keep under version control.
-#+begin_src elisp :tangle (haris/tangle-home ".haris/bootstrap/tangle.sh") :tangle-mode (identity #o755)
+#+begin_src elisp :tangle ~/.haris/bootstrap/tangle.sh :tangle-mode (identity #o755)
   #!/usr/bin/env -S emacs --script
 
   (load-file (format "%s/tangle.el" (file-name-directory load-file-name)))
@@ -2604,12 +2604,12 @@ also tangle it to a standalone destination that I also keep under version contro
 #+end_src
 ** =tangle-all=
 #+NAME: tangle-all
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/tangle-all")
+#+begin_src shell :tangle ~/.local/bin/tangle-all
   ~/.haris/bootstrap/tangle-all.sh "$@"
 #+end_src
 Because this script is needed for bootstrapping my dotfiles on a new system, I
 also tangle it to a standalone destination that I also keep under version control.
-#+begin_src elisp :tangle (haris/tangle-home ".haris/bootstrap/tangle-all.sh") :tangle-mode (identity #o755)
+#+begin_src elisp :tangle ~/.haris/bootstrap/tangle-all.sh :tangle-mode (identity #o755)
   #!/usr/bin/env -S emacs --script
 
   ;; Tangle all my dotfiles. If --dest is used, then the files are tangled to
@@ -2635,7 +2635,7 @@ Usage: website-healthcheck [--ignore-success]
 
 Options:
   --notify-success  Show a notification even if the website status is 'alive'
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/website-healthcheck")
+#+begin_src shell :tangle ~/.local/bin/website-healthcheck
   notify_success="$([ "$1" = "--notify-success" ] && echo true)"
 
   prod_status="$(curl -L https://veracioux.me/status)"
@@ -2653,7 +2653,7 @@ Options:
   fi
 #+end_src
 ** =vpn-toggle=                                                       :script:
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/vpn-toggle")
+#+begin_src shell :tangle ~/.local/bin/vpn-toggle
   restart_if_running() {
       if systemctl is-active --quiet "$1"; then
           sudo systemctl restart "$1"
@@ -2673,7 +2673,7 @@ Options:
   systemctl kill --user vpn-notifier --signal=SIGUSR1
 #+end_src
 ** =vpn-notifier=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/vpn-notifier")
+#+begin_src bash :tangle ~/.local/bin/vpn-notifier
   # Interval at which queries to ipinfo.io are performed periodically
   default_requery_interval_sec=60
   requery_time_after_sigusr1=5s
@@ -2723,15 +2723,15 @@ Options:
 #+end_src
 * Miscellaneous
 ** =term=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/term")
+#+begin_src bash :tangle ~/.local/bin/term
   alacritty --working-directory "$PWD" "$@"
 #+end_src
 ** =aurvote=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/aurvote")
+#+begin_src shell :tangle ~/.local/bin/aurvote
   ssh aur@aur.archlinux.org vote "$@"
 #+end_src
 ** =handle-low-bat=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/handle-low-bat")
+#+begin_src shell :tangle ~/.local/bin/handle-low-bat
   # Suspend when battery low
 
   notify() {
@@ -2750,17 +2750,17 @@ Options:
   doas
 #+end_src
 ** =cronupd=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/cronupd")
+#+begin_src shell :tangle ~/.local/bin/cronupd
   cat ~/.cron.d/* | crontab -
   crontab -l
 #+end_src
 ** =fix-wifi=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/fix-wifi")
+#+begin_src shell :tangle ~/.local/bin/fix-wifi
   sudo rfkill block wifi && sudo rfkill unblock wifi
 #+end_src
 ** =guirun=
 Open a GUI window in the correct workspace.
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/guirun")
+#+begin_src bash :tangle ~/.local/bin/guirun
   # This roundabout way is because i3-msg exec can't handle commas in arguments
 
   script="$(mktemp)"
@@ -2771,12 +2771,12 @@ Open a GUI window in the correct workspace.
   rm -f "$script"
 #+end_src
 ** =snip=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/snip")
+#+begin_src bash :tangle ~/.local/bin/snip
   nvim ~/.vim/snips/"$1".snippets
 #+end_src
 ** =renice-emacs=
 Modify niceness of emacs processes to give them higher priority.
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/renice-emacs")
+#+begin_src shell :tangle ~/.local/bin/renice-emacs
   for pid in $(pgrep emacs); do
       /usr/bin/renice -n -15 "$pid"
   done
@@ -2793,11 +2793,11 @@ I want to be able to enable/disable each of those individually. That's why I
 keep each in a separate config file. And, for each I run a separate process so I
 can conveniently stop/restart each by name.
 *** =sxhkd.private=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/sxhkd.private")
+#+begin_src bash :tangle ~/.local/bin/sxhkd.private
   exec -a sxhkd.private sxhkd -c ~/.private.sxhkdrc "$@"
 #+end_src
 *** =sxhkd.tmp=
-#+begin_src bash :tangle (haris/tangle-home ".local/bin/sxhkd.tmp")
+#+begin_src bash :tangle ~/.local/bin/sxhkd.tmp
   exec -a sxhkd.tmp sxhkd -c ~/.tmp.sxhkdrc "$@"
 #+end_src
 * Adapters
@@ -2810,24 +2810,24 @@ By default, the adapters are archived. In order to enable them, simply unarchive
 them if the current PC setup is the one they are intended for.
 ** Ubuntu                                                          :ARCHIVE:
 *** =fd=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/fd")
+#+begin_src shell :tangle ~/.local/bin/fd
   fdfind "$@"
 #+end_src
 *** =passmenu=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/passmenu")
+#+begin_src shell :tangle ~/.local/bin/passmenu
   /usr/share/doc/pass/examples/dmenu/passmenu "$@"
 #+end_src
 *** =ipython=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/ipython")
+#+begin_src shell :tangle ~/.local/bin/ipython
   # Some platforms don't provide ipython as a symlink/wrapper to ipython3
   ipython3 "$@"
 #+end_src
 *** =pycharm=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/pycharm")
+#+begin_src shell :tangle ~/.local/bin/pycharm
   pycharm-professional
 #+end_src
 *** =code-oss=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/code-oss")
+#+begin_src shell :tangle ~/.local/bin/code-oss
   code "$@"
 #+end_src
 * Helper code

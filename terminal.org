@@ -5,7 +5,7 @@ A collection of configs for my terminal(s) and terminal apps.
 
 * Alacritty
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".config/alacritty/alacritty.toml")
+:header-args+: :tangle ~/.config/alacritty/alacritty.toml
 :END:
 If you are viewing this on Linux, you can find the config reference [[file:/usr/share/doc/alacritty/example/alacritty.yml][here]].
 ** General
@@ -111,7 +111,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   ]
 #+end_src
 * Tuterm
-#+begin_src shell :tangle (haris/tangle-home ".config/tuterm/config.sh")
+#+begin_src shell :tangle ~/.config/tuterm/config.sh
   TUTERM_SHELL='fish'
 
   prompt() {
@@ -119,7 +119,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   }
 #+end_src
 * Tmux
-#+begin_src shell :tangle (haris/tangle-home ".tmux.conf") :shebang ""
+#+begin_src shell :tangle ~/.tmux.conf :shebang ""
   set -g status off
   set -g default-command /usr/bin/fish
   set -g mouse off
@@ -141,13 +141,13 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   set -g terminal-overrides '*:smcup@:rmcup@'
 #+end_src
 * Screen
-#+begin_src conf :tangle (haris/tangle-home ".screenrc")
+#+begin_src conf :tangle ~/.screenrc
   bindkey ^X quit
   termcapinfo * ti@:te@
   term screen-256color
 #+end_src
 * Cheat
-#+begin_src yaml :tangle (haris/tangle-home ".config/cheat/conf.yml")
+#+begin_src yaml :tangle ~/.config/cheat/conf.yml
   colorize: true
   style: monokai
   pager: less -FRX
@@ -162,7 +162,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
       readonly: false
 #+end_src
 * Tem
-#+begin_src shell :tangle (haris/tangle-home ".config/tem/config")
+#+begin_src shell :tangle ~/.config/tem/config
   [general]
   repo_path =
   editor = myemacs -c
@@ -186,9 +186,9 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 #+end_src
 * Vifm
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".config/vifm/vifmrc")
+:header-args+: :tangle ~/.config/vifm/vifmrc
 :END:
-#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+#+begin_src vimrc :tangle ~/.config/vifm/vifmrc
   " vim: filetype=vifm
 
   set vicmd=nvim
@@ -228,7 +228,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   set statusline='  Hint: %z%= %A %10u:%-7g %15s %20d  '
 #+end_src
 ** Marks
-#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+#+begin_src vimrc :tangle ~/.config/vifm/vifmrc
   " :mark mark /full/directory/path [filename]
   mark h ~/
   mark p ~/proj
@@ -239,7 +239,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   mark T ~/tmp
 #+end_src
 ** Custom commands
-#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+#+begin_src vimrc :tangle ~/.config/vifm/vifmrc
   command! df df -h %m 2> /dev/null
   command! diff vim -d %f %F
   command! zip zip -r %f.zip %f
@@ -252,7 +252,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   command! fork :!term -e fish -C "vifm %d:p %D:p" &
 #+end_src
 ** File types
-#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+#+begin_src vimrc :tangle ~/.config/vifm/vifmrc
   " Web
   filextype *.html,*.htm
   \ {Open with firefox}
@@ -373,14 +373,14 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   " fileviewer *[^/] pygmentize -O style=monokai -f console256 -g
 #+end_src
 ** Config persistence
-#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+#+begin_src vimrc :tangle ~/.config/vifm/vifmrc
   " What should be saved automatically between vifm sessions.  Drop "savedirs"
   " value if you don't want vifm to remember last visited directories for you.
   set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
   \phistory,fhistory,dirstack,registers,bookmarks,bmarks
 #+end_src
 ** Key bindings
-#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+#+begin_src vimrc :tangle ~/.config/vifm/vifmrc
   " Start shell in current directory
   nnoremap s :shell<cr>
 
@@ -443,7 +443,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   nnoremap <space>w :set wrap!<cr>
 #+end_src
 ** Theme
-#+begin_src vimrc :tangle (haris/tangle-home ".config/vifm/vifmrc")
+#+begin_src vimrc :tangle ~/.config/vifm/vifmrc
   " vim: filetype=vifm :
 
   hi clear
@@ -465,7 +465,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   hi Fifo         cterm=none              ctermfg=3       ctermbg=none
 #+end_src
 * Dialog
-#+begin_src python :tangle (haris/tangle-home ".dialogrc")
+#+begin_src python :tangle ~/.dialogrc
   aspect                      = 0
   separate_widget             = ""
   tab_len                     = 1
@@ -512,13 +512,13 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 #+end_src
 * Translate shell
 ** Main
-#+begin_src lisp :tangle (haris/tangle-home ".config/translate-shell/init.trans")
+#+begin_src lisp :tangle ~/.config/translate-shell/init.trans
   {
   :theme "custom.trans"
   }
 #+end_src
 ** Color scheme
-#+begin_src lisp :tangle (haris/tangle-home ".config/translate-shell/custom.trans")
+#+begin_src lisp :tangle ~/.config/translate-shell/custom.trans
   {
   :translate-shell "0.9.0"
 
@@ -577,7 +577,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 
 * Cointop
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".config/cointop/config.toml")
+:header-args+: :tangle ~/.config/cointop/config.toml
 :END:
 #+begin_src toml
   currency = "USD"
@@ -684,7 +684,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
 #+end_src
 ** Daemon
 This server runs in the background and listens for price changes and notifies me accordingly.
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/cointop.service")
+#+begin_src systemd :tangle ~/.config/systemd/user/cointop.service
   [Unit]
   Description=Cointop daemon
 
@@ -702,7 +702,7 @@ You have to generate an SSH key for the cointop SSH server:
   ssh-keygen -t ssh-ed25519 -f ~/.ssh/cointop-server -N ''
 #+end_src
 * Ticker
-#+begin_src yaml :tangle (haris/tangle-home ".ticker.yml")
+#+begin_src yaml :tangle ~/.ticker.yml
   # ~/.ticker.yaml
   show-summary: true
   show-tags: true
@@ -721,7 +721,7 @@ You have to generate an SSH key for the cointop SSH server:
     - ESTC
 #+end_src
 ** Ticker stock portfolio
-#+begin_src yaml :tangle (haris/tangle-home ".ticker.yml")
+#+begin_src yaml :tangle ~/.ticker.yml
   lots:
     - symbol: "ABNB"
       quantity: 35.0
@@ -737,7 +737,7 @@ You have to generate an SSH key for the cointop SSH server:
 # ---
 * Tickrs
 [[https://github.com/tarkah/tickrs/wiki/Config-file][Config file reference]]
-#+begin_src yaml :tangle (haris/tangle-home ".config/tickrs/config.yml")
+#+begin_src yaml :tangle ~/.config/tickrs/config.yml
   symbols:
     - SPY
     - AMD

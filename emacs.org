@@ -1,6 +1,6 @@
 #+TITLE: Emacs Config
 #+SETUPFILE: .setup.org
-#+PROPERTY: header-args:elisp+ :tangle (haris/tangle-home ".emacs.d/haris/default.el")
+#+PROPERTY: header-args:elisp+ :tangle ~/.emacs.d/haris/default.el
 #+begin_src elisp :exports none
   ;; -*- mode: emacs-lisp; -*- vim: ft=lisp sw=2
 #+end_src
@@ -50,7 +50,7 @@ unnecessary code.
   - Configuration file :: =~/.emacs.d/default.el=
 
   #+NAME: emacs.service
-  #+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/emacs.service") :exports none
+  #+begin_src systemd :tangle ~/.config/systemd/user/emacs.service :exports none
     [Unit]
     Description=Emacs text editor
     Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
@@ -74,7 +74,7 @@ The main generated user configuration file is [[~/.emacs.d/haris/root.el]]. This
 file is loaded by spacemacs and internally, it loads the other files based on
 the type of the purpose of the current emacs daemon (by reading the
 =server-name= variable). This is the config file:
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
+#+begin_src elisp :tangle ~/.emacs.d/haris/root.el
   (load-file (cond ((and (boundp 'server-name) (equal server-name "irc"))
                     "~/.emacs.d/haris/irc.el")
                    ("~/.emacs.d/haris/default.el")))
@@ -82,7 +82,7 @@ the type of the purpose of the current emacs daemon (by reading the
 * General
 ** Setup
 :PROPERTIES:
-:header-args:bash+: :tangle (haris/tangle-home ".haris-setup/setup-emacs.sh")
+:header-args:bash+: :tangle ~/.haris-setup/setup-emacs.sh
 :END:
 Run this script in order to perform a first-time setup of Emacs: [[~/.haris-setup/setup-emacs.sh]].
 
@@ -160,7 +160,7 @@ I use =straight= to clone some packages that are not available on =melpa=.
   ;; (setq use-package-defaults (assq-delete-all ':straight use-package-defaults))
   (setq use-package-always-ensure t)
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<package-init>>
 #+end_src
 ** Workarounds
@@ -255,7 +255,7 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
   (eval-after-load 'helm
     (lambda () (fmakunbound 'helm)))
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<global-settings>>
 #+end_src
 *** Editor settings
@@ -654,7 +654,7 @@ Note: there is also spacemacs' builtin =SPC "= that opens a terminal in-place.
 
   (defalias 'spacemacs/default-pop-shell 'spacemacs/shell-pop-multivterm)
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<spacemacs-like-bindings>>
 #+end_src
 *** Consistent vim-like bindings
@@ -683,7 +683,7 @@ Some custom keybindings are defined here as well.
 
   (setq dotspacemacs-distinguish-gui-tab t)
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<consistent-vim-bindings>>
 #+end_src
 *** Ielm
@@ -708,7 +708,7 @@ Some custom keybindings are defined here as well.
 
   (evil-define-key 'insert ielm-map (kbd "RET") #'haris/ielm-insert-mode-return)
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<ielm>>
 #+end_src
 *** Custom global map
@@ -749,7 +749,7 @@ Some custom keybindings are defined here as well.
     "SPC o n" "NPM"
     "SPC o g" "Git")
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el
   <<custom-global-map>>
 #+end_src
 *** Tabs
@@ -781,7 +781,7 @@ Some custom keybindings are defined here as well.
                                             (interactive)
                                             (counsel-shell-history)))
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<bindings-miscellaneous>>
 #+end_src
 ** Evil
@@ -1299,7 +1299,7 @@ Fix for empty image list (not sure if the fix works):
   (use-package bluetooth :defer t)
 #+end_src
 ** ERC
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el
   (use-package erc)
   (setq erc-server "irc.libera.chat"
         erc-nick "veracioux"
@@ -1321,7 +1321,7 @@ Fix for empty image list (not sure if the fix works):
   (erc-notifications-mode t)
 #+end_src
 *** Keybindings
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el
   (defun haris/erc-quit-channel () (interactive)
          (erc-part-from-channel ""))
   (defun haris/euirc () (interactive)
@@ -1342,7 +1342,7 @@ Fix for empty image list (not sure if the fix works):
   (evil-define-key  'normal erc-list-menu-mode-map  (kbd "RET")   nil)
 #+end_src
 *** Theme tweak
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el")
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el
   (setq erc-track-faces-priority-list
         '(erc-error-face
           erc-notice-face
@@ -1360,7 +1360,7 @@ Fix for empty image list (not sure if the fix works):
 #+end_src
 *** Systemd service
 #+NAME: irc.service
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/irc.service")
+#+begin_src systemd :tangle ~/.config/systemd/user/irc.service
   [Unit]
   Description=Emacs daemon for IRC chat
   Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
@@ -1595,7 +1595,7 @@ I extend the Ivy actions for some commands.
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-immediate-done)
   (define-key ivy-minibuffer-map (kbd "M-P") 'ivy-reverse-i-search)
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<ivy>>
 #+end_src
 ** Imenu
@@ -2226,7 +2226,7 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
   (evil-define-key 'insert comint-mode-map (kbd "C-k") 'comint-previous-prompt)
   (evil-define-key 'insert comint-mode-map (kbd "C-j") 'comint-next-prompt)
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<comint>>
 #+end_src
 ** Vterm
@@ -2274,7 +2274,7 @@ directly, it is overriden by the Spacemacs shell layer.
 I sometimes use Emacs as my terminal emulator. For that I need additional
 stability, so I run a separate daemon for that, which is unaffected by blockage
 and crashes of my default Emacs instance.
-#+begin_src systemd :tangle (haris/tangle-home ".config/systemd/user/vterm.service")
+#+begin_src systemd :tangle ~/.config/systemd/user/vterm.service
   [Unit]
   Description=Emacs daemon for Vterm
 
@@ -2508,7 +2508,7 @@ Remove Info mode annoying keybindings.
   (evil-define-key 'normal Info-mode-map (kbd "C-p")  'Info-backward-node)
   (evil-define-key 'normal Info-mode-map (kbd "C-n")  'Info-forward-node)
 #+end_src
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/irc.el") :exports none
+#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el :exports none
   <<info>>
 #+end_src
 * Miscellaneous
@@ -2562,7 +2562,7 @@ Remove Info mode annoying keybindings.
                   (accent-menu))))
 #+end_src
 ** Ibuffer
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
+#+begin_src elisp :tangle ~/.emacs.d/haris/root.el
   (define-key ibuffer-mode-map (kbd "j") 'evil-next-line)
   (define-key ibuffer-mode-map (kbd "k") 'evil-previous-line)
 #+end_src
@@ -2694,7 +2694,7 @@ file, I advise it with a custom function:
 #+end_src
 The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]]. This file is in turn loaded from [[~/.spacemacs]].
 ** Layers
-#+begin_src elisp :tangle (haris/tangle-home ".spacemacs-init.el")
+#+begin_src elisp :tangle ~/.spacemacs-init.el
   (setq-default
    dotspacemacs-configuration-layers
    '(
@@ -2812,7 +2812,7 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
 ** Additional packages
 Packages installed with =use-package= should be added here as well. Otherwise
 Spacemacs would delete them every time on startup.
-#+begin_src elisp :tangle (haris/tangle-home ".spacemacs-init.el")
+#+begin_src elisp :tangle ~/.spacemacs-init.el
   (setq-default
    dotspacemacs-additional-packages
    '(
@@ -2863,7 +2863,7 @@ When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][sp
 ** Config check
 I use this variable (and function) to check if the config loaded correctly.
 #+NAME: haris/config-loaded-fine
-#+begin_src elisp :tangle (haris/tangle-home ".emacs.d/haris/root.el")
+#+begin_src elisp :tangle ~/.emacs.d/haris/root.el
   (setq haris/config-loaded-fine (current-time-string))
   (defun ---haris/config-loaded-fine ()
     (interactive)

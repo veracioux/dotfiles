@@ -5,7 +5,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 
 * Main config
 :PROPERTIES:
-:header-args+: :tangle (haris/tangle-home ".gitconfig")
+:header-args+: :tangle ~/.gitconfig
 :END:
 #+begin_src gitconfig
   [user]
@@ -272,7 +272,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
     remoteBranch  = brightgreen bold
 #+end_src
 ** Global file exclusions
-#+begin_src gitignore :tangle (haris/tangle-home ".global.gitignore")
+#+begin_src gitignore :tangle ~/.global.gitignore
   .projectile
   .wt*/
   wt*/
@@ -288,7 +288,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 #+end_src
 * Script aliases
 ** =bak=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/git-bak") :tangle-mode (eval #o744)
+#+begin_src shell :tangle ~/.local/bin/git-bak :tangle-mode (eval #o744)
   #!/usr/bin/env sh
 
   # Create a branch backup-<branchname> which is an exact copy of <branchname>
@@ -300,7 +300,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   git checkout "$branch"
 #+end_src
 ** =remaster=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/git-remaster") :tangle-mode (eval #o744)
+#+begin_src shell :tangle ~/.local/bin/git-remaster :tangle-mode (eval #o744)
   #!/usr/bin/env bash
 
   # Reset the local trunk branch to its remote counterpart
@@ -348,13 +348,13 @@ My config for version control systems I use (overwhelmingly git + GitHub).
 #+end_src
 
 ** =redate=
-#+begin_src shell :tangle (haris/tangle-home ".local/bin/git-redate") :tangle-mode (eval #o744)
+#+begin_src shell :tangle ~/.local/bin/git-redate :tangle-mode (eval #o744)
   #!/usr/bin/env sh
 
   GIT_COMMITTER_DATE="$1" git commit --amend --no-edit --date "$1"
 #+end_src
 * GitHub CLI
-#+begin_src yaml :tangle (haris/tangle-home ".config/gh/config.yml")
+#+begin_src yaml :tangle ~/.config/gh/config.yml
   git_protocol: ssh
   prompt: enabled
   pager:
@@ -369,7 +369,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
       co: pr checkout
 #+end_src
 * Mercury (hg)
-#+begin_src conf :tangle (haris/tangle-home ".hgrc")
+#+begin_src conf :tangle ~/.hgrc
   [alias]
   s = status
   a = add
