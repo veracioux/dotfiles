@@ -24,19 +24,25 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   # Disable path shortening
   set fish_prompt_pwd_dir_length 0
 
-  if type --quiet bass
-      # I'm setting HOME to prevent errors when running inside tuterm
-      HOME="/home/$USER" bass source ~/.bashrc # Load bash's config
-      if status is-login
-          bass source ~/.profile
-      end
-  end
-
   set -gx MANPATH  ":$__fish_data_dir/man"      # Add fish manpages to MANPATH
   set -gx MANWIDTH 80
   set -gx EDITOR 'editor'
   set -gx VISUAL 'visual-editor'
   set -gx PAGER 'less'
+#+end_src
+I use the =bass= plugin to reuse =~/.bashrc=. That has a slight startup cost, so I
+run it on the =fish_preexec= event if it wasn't run before.
+#+begin_src fish
+  function __haris_source_bashrc --on-event fish_preexec
+      if type --quiet bass
+          # I'm setting HOME to prevent errors when running inside tuterm
+          HOME="/home/$USER" bass source ~/.bashrc # Load bash's config
+          if status is-login
+              bass source ~/.profile
+          end
+      end
+      functions --erase __haris_source_bashrc
+  end
 #+end_src
 ** Behavior overrides
 *** =fish_prompt=
