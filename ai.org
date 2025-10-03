@@ -357,6 +357,8 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
 
   Before a thread of linting fixes, check the linting stats before and after your changes,
   and inform the user of the change.
+
+  DO NOT DISABLE LINTING RULES GLOBALLY BEFORE ASKING THE USER.
 #+end_src
 *** Custom commands
 **** Edit file
