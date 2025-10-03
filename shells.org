@@ -220,10 +220,12 @@ This applies only to graphical sessions, the linux TTY is unaffected.
           else
               set exit_message "exited with $_status"
           end
-          # Timeout is so the command doesn't hang when daemon is not running
-          timeout 0.8 notify-send (echo "Command $cmdline" "$exit_message")
-          if [ "$status" = "124" ]
-              echo ERR: NOTIFICATION TIMED OUT
+          if [ -z "$EMACS_VTERM_PATH" ]
+              # Timeout is so the command doesn't hang when daemon is not running
+              timeout 0.8 notify-send (echo "Command $cmdline" "$exit_message")
+              if [ "$status" = "124" ]
+                  echo ERR: NOTIFICATION TIMED OUT
+              end
           end
       end
   end

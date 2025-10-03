@@ -2214,7 +2214,6 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 ** Common settings
 #+begin_src elisp
   (add-hook 'comint-mode-hook #'smartparens-mode)
-  (add-hook 'vterm-mode-hook #'smartparens-mode)
   (add-hook 'eshell-mode-hook #'smartparens-mode)
 #+end_src
 ** Comint
@@ -2235,7 +2234,8 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 #+end_src
 ** Vterm
 #+begin_src elisp
-  (setq vterm-max-scrollback 10000)
+  (setq vterm-max-scrollback 10000
+        vterm-timer-delay nil)
 
   (defun haris/vterm-set-environment-windowid (&rest _)
     (setq
@@ -2255,6 +2255,14 @@ those files to my live config under =~/=, I can call =(haris/tangle-dest)=.
 
   (defalias 'haris/vterm-toggle-freeze 'vterm-copy-mode
     "Freeze/unfreeze the output of the current vterm buffer")
+
+  ;; Disable performance-impacting modes in vterm
+  (add-hook 'vterm-mode-hook
+            (lambda ()
+              (smartparens-mode -1)
+              (yas-minor-mode -1)
+              (company-mode -1)
+              (org-indent-mode -1)))
 #+end_src
 *** Line wrapping workaround
 Vterm doesn't automatically re-wrap truncated lines when the terminal width
