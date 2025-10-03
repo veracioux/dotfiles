@@ -4,7 +4,7 @@
 * Extensions
 ** Dump
 #+begin_src shell
-  code-oss --list-extensions > extensions.txt
+  code-oss --list-extensions --show-versions | sort > extensions.txt
 #+end_src
 * Bootstrap
 ** Symlinks
