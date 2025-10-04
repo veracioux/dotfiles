@@ -36,9 +36,9 @@ i3/sway session:
    1 nil
    (lambda ()
      (let ((default-directory "~/"))
-       (call-process "sxhkd" nil 0 nil)
-       (if (locate-file "sxhkd.private" exec-path)
-           (call-process "sxhkd.private" nil 0 nil)))))
+       (call-process "fish" nil 0 nil "-c" "sxhkd & disown")
+       (if (locate-file exec-path "sxhkd.private")
+           (call-process "fish" nil 0 nil "-c" "sxhkd.private & disown")))))
 #+end_src
 * Helper scripts and local variables
 :PROPERTIES:
