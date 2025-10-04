@@ -2233,6 +2233,7 @@ URLs (each on a new line) to display in this menu.
   # ┃ Additional entries and customization ┃
   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   entries = (
+      ' AI...\n' +
       ' Edit...\n' +
       ' ' + entries.replace('\n', '\n ') +
       'dmenu\n dmenu ' +
@@ -2280,6 +2281,8 @@ URLs (each on a new line) to display in this menu.
                  (evil-ex-nohiglight))
       '''
       run(["myemacs-float", "--eval", EVAL])
+  elif choice == 'AI...':
+      run(["alacritty-float", "-e", "fish", "-C", "cd ~/.haris && opencode"])
   else:
       run("fish -c 'ecf {}'".format(choice), shell=True)
       sys.exit()
