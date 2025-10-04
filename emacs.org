@@ -2824,7 +2824,9 @@ Spacemacs would delete them every time on startup.
      company-shell
      company-statistics
      (lsp-mode :location (recipe :fetcher github
-                                 :repo "veracioux/lsp-mode"))))
+                                 :repo "veracioux/lsp-mode"
+                                 :files ("*.el" "clients/*.el"
+                                         (:exclude (".dir-locals.el")))))))
 #+end_src
 ** Upgrading
 When upgrading Spacemacs, run [[elisp:(spacemacs/ediff-dotfile-and-template)][spacemacs/ediff-dotfile-and-template]] to merge any upstream changes to the dotfile.
