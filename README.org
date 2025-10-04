@@ -294,3 +294,10 @@ missing features.
 - [[file:wm.org::*Local configuration][CPU temperature file]]
 ** Optional tweaks
 - [[file:shells.org::*Local and temporary configs][Local and temporary shell configs]]
+* Miscellaneous
+** Ignored files
+*** rg
+#+begin_src text :tangle ~/.rgignore
+  # Development worktrees
+  wt*/
+#+end_src
