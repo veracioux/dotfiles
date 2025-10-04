@@ -460,13 +460,6 @@ This enables periodic cleanup:
        (point-min)
        (point-max)
        "fifo")))
-
-  (defun haris/mic-set-mute (state)
-    "Set microphone's mute state to t or nil."
-    (cl-check-type state booleanp)
-    (shell-command
-     (format "pactl set-source-mute @DEFAULT_SOURCE@ %d"
-             (if (eq state t) 1 0))))
 #+end_src
 ** Hooks
 #+begin_src elisp
@@ -2140,12 +2133,6 @@ Takes too long to load.
   (setq aidermacs-extra-args '("--no-check-update"))
 
   (setq aidermacs-show-diff-after-change t)
-  ;; (setq aidermacs-architect-model "TODO")
-  ;; (setq aidermacs-editor-model "TODO")
-
-  ;; Add advice around aidermacs-send-voice, making it unmute mic using pactl before
-  (defadvice aidermacs-send-voice (before haris/mic-unmute activate)
-    (haris/mic-set-mute nil))
 #+end_src
 *** Bindings
 #+begin_src elisp
