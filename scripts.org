@@ -1216,13 +1216,20 @@ command there.
       exit 1
   fi
 
+  ref="$2"
+
   mkdir -p ~/.cache/haris/tmp-{commits,repos}
   (cd ~/.cache/haris/tmp-commits && git init --bare &>/dev/null)
 
-  tmpdir="$(mktemp -d ~/.cache/haris/tmp-repos/XXXXXXXX)"
-  git clone --reference ~/.cache/haris/tmp-commits --depth 1 --no-checkout "$1" "$tmpdir"
-  cd "$tmpdir" || exit 1
-  git fetch origin "$2"
+  dest=~/.cache/haris/tmp-repos/"$(echo "$1" | sed 's|[:/]|_|g')_$ref"
+
+  git clone \
+      --reference ~/.cache/haris/tmp-commits \
+      --depth 1 --no-checkout "$1" "$dest" 2> \
+      >(sed -E 's/fatal: (destination path)/info: \1/g' >&2)
+
+  cd "$dest" || exit 1
+  git fetch origin "$ref"
   git checkout FETCH_HEAD
   shift 2
   "$@"
