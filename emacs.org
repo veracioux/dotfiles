@@ -1917,6 +1917,7 @@ Takes too long to load.
     (setq-local default-directory (magit-toplevel)))
 
   (add-hook 'git-commit-mode-hook 'haris/git-commit/cd-to-worktree)
+  (add-hook 'git-commit-mode-hook (lambda () (setq fill-column 72)))
   (setq git-commit-major-mode 'haris/git-commit-major-mode)
 #+end_src
 *** AI
