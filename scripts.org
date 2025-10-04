@@ -2289,7 +2289,7 @@ URLs (each on a new line) to display in this menu.
       '''
       run(["myemacs-float", "--eval", EVAL])
   elif choice == 'AI...':
-      run(["alacritty-float", "-e", "fish", "-C", "cd ~/.haris && opencode"])
+      run(["alacritty-float", "-e", "fish", "-C", "cd ~/.haris && opencode --agent build"])
   else:
       run("fish -c 'ecf {}'".format(choice), shell=True)
       sys.exit()
