@@ -198,7 +198,13 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
         "mkdir *": "allow",
         "git log *": "allow",
         "rg *": "allow",
+        "sudo *": "deny",
+        "sudo -k *": "ask"
       }
+    },
+    "tools": {
+      "emacs*": false,
+      "alacritty*": false
     },
     "mcp": {
       "emacs": {
@@ -265,7 +271,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
   description: Helps with Emacs-related tasks
   model: anthropic/claude-3-5-haiku-latest
   tools:
-    emacs: true
+    emacs_execute_emacs_lisp_code: true
   ---
   You are a knowledgeable Emacs user with expertise in Emacs Lisp programming. You
   can assist with tasks such as writing Emacs Lisp code, configuring Emacs
@@ -312,7 +318,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
     description: Helps with system control and administration
     model: anthropic/claude-3-5-haiku-latest
     tools:
-      alacritty: true
+      "alacritty*": true
     permission:
       read: ask
       edit: ask
@@ -434,7 +440,7 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
 *** Helper functions
 **** =get-api-key=
 #+NAME: get-api-key
-#+begin_src shell :var provider="openai"
+#+begin_src bash :var provider="openai"
   pass show "$provider"/api-key | trim
 #+end_src
 **** =eval-user-home=
@@ -454,11 +460,6 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
       --config <(yq <~/.mcphost.yml)  \
       --transport stdio                \
       --server "$server"
-#+end_src
-**** =get-openai-api-key=
-#+NAME: get-openai-api-key
-#+begin_src elisp :tangle no
-  (when (boundp 'openai-key) openai-key)
 #+end_src
 ** Local variables
 # Local Variables:
