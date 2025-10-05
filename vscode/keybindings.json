@@ -174,5 +174,63 @@
 		"key": "ctrl+p",
 		"command": "list.focusUp",
 		"when": "referenceSearchVisible"
+	},
+	{
+		"key": "alt+tab",
+		"command": "editor.action.inlineSuggest.commit",
+		"when": "inlineSuggestionVisible"
+	},
+    {
+		"key": "tab",
+		"command": "-editor.action.inlineSuggest.commit"
+	},
+	{
+		"key": "ctrl+p",
+		"command": "-workbench.action.quickOpen"
+	},
+	{
+		"key": "alt+1",
+		"command": "intellisense-hotkeys.select1",
+		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+2",
+		"command": "intellisense-hotkeys.select2",
+		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+3",
+		"command": "intellisense-hotkeys.select3",
+		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+4",
+		"command": "intellisense-hotkeys.select4",
+		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+5",
+		"command": "intellisense-hotkeys.select5",
+		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+6",
+		"command": "intellisense-hotkeys.select6",
+		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+7",
+		"command": "intellisense-hotkeys.select7",
+		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+8",
+		"command": "intellisense-hotkeys.select8",
+		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+9",
+		"command": "intellisense-hotkeys.select9",
+		"when": "suggestWidgetVisible"
 	}
 ]

@@ -502,9 +502,9 @@ without binding them to any keys.
     "Open a file or directory in VSCode."
     (interactive (list (buffer-file-name)))
     (start-process
-     "code-oss" nil
+     "code" nil
      "fish" "-c"
-     (format "o code-oss --wait --new-window %s &"
+     (format "o code --wait --new-window %s &"
              (shell-quote-argument (expand-file-name file)))))
 #+end_src
 *** Commands from local shell scripts
