@@ -86,5 +86,7 @@
     },
     "mdb.mcp.server": "enabled",
     "mdb.sendTelemetry": false,
-    "mdb.confirmRunAll": false
+    "mdb.confirmRunAll": false,
+    "editor.smoothScrolling": true,
+    "editor.inertialScroll": true
 }
