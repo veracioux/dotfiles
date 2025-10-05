@@ -108,6 +108,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
     { key = "N", action = "SearchPrevious", mode = "Vi|~Search" },
     { key = "N", mods = "Shift", action = "SearchNext", mode = "Vi|~Search" },
     { key = "X", mods = "Alt", chars = "\u001b[3~", mode = "~AppCursor" },
+    { key = "V", mods = "Alt", command = { program = "code", args = ["."] } },
   ]
 #+end_src
 * Tuterm
