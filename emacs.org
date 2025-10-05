@@ -567,21 +567,6 @@ command there (without any arguments).
                     ;; No prefix arg - run without CLI arguments
                     (run-with-timer 0.6 nil (eval `(lambda () (funcall ,run-command))))))))))
         _commands))))
-
-  (defun haris/remove-hook ()
-    "Find the surrounding add-hook form and revert its effects."
-    (interactive)
-    (let* ((sexp (save-excursion
-                   (search-backward
-                    (if (eq (symbol-at-point) 'add-hook)
-                        "("
-                      "(add-hook"))
-                   (sexp-at-point))))
-      (setcar sexp 'remove-hook)
-      (message "%s" sexp)
-      (eval
-       ;; Remove DEPTH argument, if any
-       (cl-remove-if #'numberp sexp))))
 #+end_src
 ** Bindings
 #+begin_src elisp
@@ -1157,12 +1142,6 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
    lsp-pylsp-plugins-flake8-enabled nil
    lsp-pyls-plugins-flake8-enabled  nil
    lsp-diagnostics--flycheck-enabled t)
-
-  ;; elpy
-  (setq elpy-modules nil)
-
-  (with-eval-after-load 'pytest
-    (add-to-list 'pytest-project-root-files ".projectile"))
 #+end_src
 *** Workarounds
 **** DAP Pyenv
