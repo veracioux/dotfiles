@@ -114,7 +114,7 @@
 
   One additional rule:
 
-  - Make sure that before <TYPE>, you also include the <RESOURCE_NAME> that the
+  - Make sure that after <TYPE>, you also include the <RESOURCE_NAME> that the
     change applies to. This is usually the name before suffix of the ORG file
     that was changed, e.g. for emacs.org you would use 'emacs: ' (without quotes).
     If multiple resources are affected, you can choose a common narrative for the change.
