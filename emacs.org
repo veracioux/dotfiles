@@ -1135,7 +1135,6 @@ Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-la
   (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
 
   (setq python-shell-interpreter "ipython")
-
   (setq
    python-lsp-server 'pyright
    lsp-pylsp-plugins-pylint-enabled t
@@ -1153,6 +1152,11 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
         (add-hook
          hook
          (lambda () (defalias 'dap-python--pyenv-executable-find 'executable-find))))))
+#+end_src
+**** PET Mode
+This is unbearably slow.
+#+begin_src emacs-lisp :tangle yes
+  (remove-hook 'python-base-mode-hook 'pet-mode)
 #+end_src
 *** Bindings
 #+begin_src elisp
@@ -1775,8 +1779,6 @@ Takes too long to load.
            (tangle-arg (alist-get :tangle args)))
       (if (and tangle-arg (not (string= "no" tangle-arg)))
           tangle-arg)))
-
-
 #+end_src
 ** LaTeX preview
 #+begin_src elisp
