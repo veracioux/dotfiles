@@ -855,6 +855,13 @@ Some custom keybindings are defined here as well.
           (string-match-p "^/usr/" project-root)
           (string-match-p "\.pyenv/" project-root)
           (string-match-p "\.local/" project-root)))
+
+  (setq projectile-project-root-functions
+        '(projectile-root-local
+          projectile-root-top-down
+          projectile-root-marked
+          projectile-root-bottom-up
+          projectile-root-top-down-recurring))
 #+end_src
 *** Default known projects
 #+begin_src elisp
