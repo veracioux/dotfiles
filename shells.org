@@ -100,6 +100,7 @@ run it on the =fish_preexec= event if it wasn't run before.
                   (set_color brmagenta)       "$vcs_prompt"                \
                   (set_color brmagenta)       $prompt_status               \
                   (set_color white)           $sudo_privilege              \
+                  "  $(basename (tty))"                                  \
                   "    " (__haris_prompt_compose_status)                   \
                   (set_color yellow)          \n" $suffix "
 
