@@ -105,8 +105,8 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
     { key = "Space", mods = "Control", action = "ToggleViMode", mode = "~AppCursor" },
     { key = "Key4", mods = "Shift", action = "Last", mode = "Vi" },
     { key = "Key4", action = "Last", mode = "Vi" },
-    { key = "N", action = "SearchPrevious", mode = "Vi|~Search" },
-    { key = "N", mods = "Shift", action = "SearchNext", mode = "Vi|~Search" },
+    { key = "N", action = "SearchNext", mode = "Vi|~Search" },
+    { key = "N", mods = "Shift", action = "SearchPrevious", mode = "Vi|~Search" },
     { key = "X", mods = "Alt", chars = "\u001b[3~", mode = "~AppCursor" },
     { key = "V", mods = "Alt", command = { program = "code", args = ["."] } },
   ]
