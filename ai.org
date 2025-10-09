@@ -137,23 +137,7 @@
   custom-shell-interaction first. Only if that fails to yield results, you can
   inspect the filesystem.
 #+end_src
-* Host configurations
-** mcphost
-#+begin_src yaml :tangle ~/.mcphost.yml
-  mcpServers:
-    custom-shell-interaction:
-      «mcpServers/custom-shell-interaction»
-    git:
-      «mcpServers/git»
-    filesystem:
-      «mcpServers/filesystem»
-    playwright:
-      «mcpServers/playwright»
-  model: openai:gpt-5
-  provider-api-key: «get-api-key("openai")»
-  system-prompt: |
-    «prompts/system»
-#+end_src
+* CLI tools
 ** Claude Code
 #+begin_src json :tangle ~/.claude/settings.json
   {
@@ -172,15 +156,6 @@
     - gemini=«get-api-key("gemini")»
     - anthropic=«get-api-key("anthropic")»
 #+end_src
-*** MCP
-Aider doesn't support MCP yet, so I use [[https://github.com/lutzleonhardt/mcpm-aider][mcpm-aider]].
-
-To use it, when starting Aider, run the following command:
-#+begin_src text
-  /run mcpm-aider toolprompt
-#+end_src
-
-mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop configuration]].
 ** OpenCode
 #+begin_src jsonc :tangle ~/.config/opencode/opencode.jsonc
   // https://opencode.ai/docs/config/
@@ -208,6 +183,13 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
       "alacritty*": false
     },
     "mcp": {
+      "voice": {
+        "type": "local",
+        "command": ["uvx", "voice-mode"],
+        "environment": {
+          "OPENAI_API_KEY": "«get-api-key("openai")»"
+        }
+      },
       "emacs": {
         "type": "local",
         "command": [
@@ -379,63 +361,23 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
   ---
   Run the command `myemacs-float $ARGUMENTS`, removing the @ symbol from the arguments.
 #+end_src
-* MCP Servers
-** Git
-#+NAME: mcpServers/git
-#+begin_src yaml
-  type: stdio
-  command: uvx
-  args:
-    - mcp-server-git
-  allowedTools:
-    - git_status
-    - git_diff_unstaged
-    - git_diff_staged
-    - git_diff
-    - git_commit
-    - git_add
-    - git_log
-    - git_create_branch
-    - git_checkout
-    - git_show
-    - git_init
-    - git_branch
+**** Voice
+#+begin_src markdown :tangle ~/.config/opencode/command/voice.md
+  ---
+  tools:
+    "*": false
+    "voice_converse": true
+  permission:
+    "*": deny
+  ---
+  Start a voice conversation using voice mode MCP tool. You will start the conversation by saying just "Hello" AND NOTHING ELSE.
 #+end_src
-** Filesystem
-#+NAME: mcpServers/filesystem
-#+begin_src yaml
-  type: stdio
-  command: docker
-  args:
-    - run
-    - -i
-    - --rm
-    - --volume
-    - «eval-user-home()»/.haris/:/allowed-directories/dotfiles
-    - --user
-    - «eval-uid:gid()»
-    - mcp/filesystem
-    - /allowed-directories
-  allowedTools:
-    - read_text_file
-    - read_media_file
-    - read_multiple_files
-    - create_directory
-    - list_directory
-    - move_file
-    - search_files
-    - get_file_info
-    - list_allowed_directories
-#+end_src
-** Playwright MCP
-#+NAME: mcpServers/playwright
-#+begin_src yaml
-  type: stdio
-  command: npx
-  args:
-    - '@playwright/mcp@latest'
-    - --browser
-    - firefox
+**** MCP
+#+begin_src markdown :tangle ~/.config/opencode/command/mcp.md
+  ---
+  description: List available MCP tools
+  ---
+  List all MCP tools that are currently available to you.
 #+end_src
 * Appendix
 *** Helper functions
@@ -443,24 +385,6 @@ mcpm-aider uses [[~/.config/claude/claude_desktop_config.json][Claude Desktop co
 #+NAME: get-api-key
 #+begin_src bash :var provider="openai"
   pass show "$provider"/api-key | trim
-#+end_src
-**** =eval-user-home=
-#+NAME: eval-user-home
-#+begin_src elisp
-  (expand-file-name "~")
-#+end_src
-**** =eval-uid:gid=
-#+NAME: eval-uid:gid
-#+begin_src elisp
-  (format "%d:%d" (user-uid) (group-gid))
-#+end_src
-**** =inspector=
-#+NAME: inspector
-#+begin_src bash :var server=""
-  npx @modelcontextprotocol/inspector \
-      --config <(yq <~/.mcphost.yml)  \
-      --transport stdio                \
-      --server "$server"
 #+end_src
 ** Local variables
 # Local Variables:
