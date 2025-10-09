@@ -232,5 +232,13 @@
 		"key": "alt+9",
 		"command": "intellisense-hotkeys.select9",
 		"when": "suggestWidgetVisible"
+	},
+	{
+		"key": "alt+shift+e",
+		"command": "workbench.action.terminal.sendSequence",
+		"args": {
+			"text": "myemacs -c ${file}\u000D"
+		},
+		"when": "editorTextFocus"
 	}
 ]
