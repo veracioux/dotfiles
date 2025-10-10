@@ -235,9 +235,39 @@
 	},
 	{
 		"key": "alt+shift+e",
-		"command": "workbench.action.terminal.sendSequence",
+		"command": "extension.multiCommand.execute",
 		"args": {
-			"text": "myemacs -c ${file}\u000D"
+			"sequence": [
+				"workbench.action.terminal.new",
+				{
+					"command": "workbench.action.terminal.sendSequence",
+					"args": {
+						"text": "myemacs -c ${file} & disown\u000D"
+					}
+				},
+				"workbench.action.terminal.kill",
+				"workbench.action.closePanel"
+			],
+			"interval": 100
+		},
+		"when": "editorTextFocus"
+	},
+	{
+		"key": "alt+shift+t",
+		"command": "extension.multiCommand.execute",
+		"args": {
+			"sequence": [
+				"workbench.action.terminal.new",
+				{
+					"command": "workbench.action.terminal.sendSequence",
+					"args": {
+						"text": "cd ${fileDirname} && alacritty & disown\u000D"
+					}
+				},
+				"workbench.action.terminal.kill",
+				"workbench.action.closePanel"
+			],
+			"interval": 100
 		},
 		"when": "editorTextFocus"
 	}
