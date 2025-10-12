@@ -428,16 +428,10 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   oh-my-fish/plugin-pyenv@df70a41
   Realiserad/fish-ai@v1.7.0
   rstacruz/fish-asdf@5869c1b
+  jethrokuan/z
 #+end_src
 *** Initialization
 #+begin_src fish
-  # z.lua
-  set _ZL_CMD z
-  if type --quiet lua && [ -f /usr/share/z.lua/z.lua ]
-      lua /usr/share/z.lua/z.lua --init fish | source
-  end
-  set -gx _ZL_CD cd
-
   # tem
   if [ "$(type --type tem 2>/dev/null)" = "function" ]
       tem fish-init
