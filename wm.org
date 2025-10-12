@@ -166,7 +166,8 @@ Shared between i3 and sway:
 * Behavior
 #+begin_src i3wm-config
   focus_follows_mouse no
-  popup_during_fullscreen leave_fullscreen
+  focus_wrapping no
+  popup_during_fullscreen all
   for_window [instance="Float" class="Alacritty"] floating enable
 #+end_src
 * X config
