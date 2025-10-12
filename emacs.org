@@ -1174,6 +1174,12 @@ PET mode is unbearably slow.
   (with-eval-after-load 'lsp-mode
     (evil-define-key 'normal lsp-mode-map (kbd ",GG") 'lsp-ui-doc-glance))
 #+end_src
+By default, python-pytest-mode activates only =compilation-minor-mode=, but I also
+want bindings (link following etc) from =compilation-mode-map= to be available.
+#+begin_src elisp
+  (add-hook 'python-pytest-finished-hook
+            (lambda () (use-local-map compilation-mode-map)))
+#+end_src
 *** Dependencies                                                     :deps:
 #+begin_src shell :tangle (haris/tangle-deps "emacs/python.pacman")
   python-lsp-server flake8 python-typing_extensions python-lsp-black python-pylint
