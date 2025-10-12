@@ -485,6 +485,17 @@ get better search matches.
 #+begin_src shell :tangle ~/.local/bin/screenkey
   alternative-command screenkey --bg-color "#99a3ff" --font-color "#1e1e1e" "$@"
 #+end_src
+** =fzf=                                                           :wrapper:
+#+begin_src shell :tangle ~/.local/bin/fzf
+  alternative-command fzf --layout=reverse "$@"
+#+end_src
+** =opencode=                                                      :wrapper:
+#+begin_src shell :tangle ~/.local/bin/opencode
+  if [ "$(pwd)" = ~ ]; then
+      cd ~/.empty/
+  fi
+  alternative-command opencode "$@"
+#+end_src
 * Utilities
 ** =visual-editor=
 #+begin_src shell :tangle ~/.local/bin/visual-editor
