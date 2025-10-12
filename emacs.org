@@ -827,7 +827,7 @@ Some custom keybindings are defined here as well.
 #+begin_src elisp
   (setq projectile-require-project-root nil)
   (setq projectile-auto-discover nil)
-  (setq projectile-track-known-projects-automatically t)
+  (setq projectile-track-known-projects-automatically nil)
   (setq projectile-git-ignored-command "git ls-files -zcoi -X=.gitignore")
 
   (setq projectile-ignored-projects '("~/"))
