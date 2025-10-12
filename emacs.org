@@ -1163,9 +1163,11 @@ The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtua
          (lambda () (defalias 'dap-python--pyenv-executable-find 'executable-find))))))
 #+end_src
 **** PET Mode
-This is unbearably slow.
+PET mode is unbearably slow.
 #+begin_src emacs-lisp :tangle yes
-  (remove-hook 'python-base-mode-hook 'pet-mode)
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (remove-hook 'python-base-mode-hook 'pet-mode)))
 #+end_src
 *** Bindings
 #+begin_src elisp
