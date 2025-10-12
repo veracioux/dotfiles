@@ -841,12 +841,21 @@ Some custom keybindings are defined here as well.
           (string-match-p "\.pyenv/" project-root)
           (string-match-p "\.local/" project-root)))
 
+  (defun haris/projectile-project-root-function (dir)
+    "Find project root by checking for projectile-known-projects or .projectile
+  file first, then fall back to .git directory."
+    (or
+     ;; First: dominating directory in projectile-known-projects or with .projectile
+     (locate-dominating-file
+      dir
+      (lambda (d)
+        (or (member d projectile-known-projects)
+            (file-exists-p (expand-file-name ".projectile" d)))))
+     ;; Second: dominating directory with .git
+     (locate-dominating-file dir ".git")))
+
   (setq projectile-project-root-functions
-        '(projectile-root-local
-          projectile-root-top-down
-          projectile-root-marked
-          projectile-root-bottom-up
-          projectile-root-top-down-recurring))
+        '(haris/projectile-project-root-function))
 #+end_src
 *** Default known projects
 #+begin_src elisp
