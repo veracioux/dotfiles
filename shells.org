@@ -1381,6 +1381,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g py    'python'
   conditional_abbr -g ipy   'ipython'
   conditional_abbr -g oc    'opencode'
+  _abbr            -g OC    "cd /tmp/stage-$USER; bun ~/proj/contrib/opencode/packages/opencode/src/index.ts"
 
   conditional_abbr -g copy  'fish_clipboard_copy'
   conditional_abbr -g Tcopy 'tee /dev/tty | fish_clipboard_copy'
