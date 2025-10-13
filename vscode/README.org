@@ -4,7 +4,10 @@
 * Extensions
 ** Dump
 #+begin_src shell
-  code --list-extensions --show-versions | sort > extensions.txt
+  {
+      code --list-extensions --show-versions
+      cat extensions.txt
+  } | sponge | sort | uniq > extensions.txt
 #+end_src
 * Bootstrap
 ** Symlinks
