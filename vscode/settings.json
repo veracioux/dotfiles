@@ -87,6 +87,16 @@
     "mdb.mcp.server": "enabled",
     "mdb.sendTelemetry": false,
     "mdb.confirmRunAll": false,
+    "redhat.telemetry.enabled": false,
+    "database-client.autoSync": true,
+    "github.copilot.nextEditSuggestions.enabled": true,
     "editor.smoothScrolling": true,
-    "editor.inertialScroll": true
+    "editor.inertialScroll": true,
+    "mesonbuild.downloadLanguageServer": true,
+    "files.exclude": {
+        "wt*": true
+    },
+    "search.exclude": {
+        "wt*": true
+    }
 }
