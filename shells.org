@@ -426,7 +426,6 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   pymander/vfish
   brgmnn/fish-docker-compose
   oh-my-fish/plugin-pyenv@df70a41
-  Realiserad/fish-ai@v1.7.0
   rstacruz/fish-asdf@5869c1b
   jethrokuan/z
 #+end_src
@@ -462,23 +461,6 @@ on the plugin list above.
 #+begin_src shell :tangle (haris/tangle-deps "fish/plugins.sh")
   touch ~/.config/fish/{private,tmp}.fish
   fish -c "fisher update"
-#+end_src
-*** Fish AI
-#+begin_src conf :tangle ~/.config/fish-ai.ini
-  [fish-ai]
-  configuration = openai
-  debug = True
-  log = ~/.fish-ai/log.txt
-
-  [openai]
-  provider = openai
-  model = gpt-4o
-  api_key = «get-openai-key()»
-
-  [phi3.5]
-  provider = self-hosted
-  model = phi3.5
-  server = http://localhost:11434/v1
 #+end_src
 ** Functions
 *** =whatis=
