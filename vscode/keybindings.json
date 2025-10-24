@@ -178,7 +178,7 @@
 	{
 		"key": "alt+tab",
 		"command": "editor.action.inlineSuggest.commit",
-		"when": "inlineSuggestionVisible"
+		"when": "editorTextFocus"
 	},
     {
 		"key": "tab",
@@ -248,7 +248,7 @@
 				"workbench.action.terminal.kill",
 				"workbench.action.closePanel"
 			],
-			"interval": 100
+			"interval": 200
 		},
 		"when": "editorTextFocus"
 	},
@@ -267,7 +267,7 @@
 				"workbench.action.terminal.kill",
 				"workbench.action.closePanel"
 			],
-			"interval": 100
+			"interval": 200
 		},
 		"when": "editorTextFocus"
 	}
