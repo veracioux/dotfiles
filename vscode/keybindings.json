@@ -270,5 +270,24 @@
 			"interval": 200
 		},
 		"when": "editorTextFocus"
+	},
+	{
+		"key": "alt+shift+g",
+		"command": "extension.multiCommand.execute",
+		"args": {
+			"sequence": [
+				"workbench.action.terminal.new",
+				{
+					"command": "workbench.action.terminal.sendSequence",
+					"args": {
+						"text": "cd ${fileDirname} && magit & disown\u000D"
+					}
+				},
+				"workbench.action.terminal.kill",
+				"workbench.action.closePanel"
+			],
+			"interval": 200
+		},
+		"when": "editorTextFocus"
 	}
 ]
