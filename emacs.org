@@ -2358,6 +2358,7 @@ basis here.
        (sql-mode . ,common)
        (json-mode . ,common)
        (jsonc-mode . ,common)
+       (dockerfile-mode . ,common)
        (web-mode . ,web-mode)
        (css-mode . ,web-mode)
        (scss-mode . ,web-mode)
