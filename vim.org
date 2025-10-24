@@ -10,13 +10,9 @@ I keep a =.vimrc= containing all the configurations that work with =vim=, i.e. t
 don't depend on neovim. To configure additional neovim features, I use
 [[~/.config/nvim/init.vim]] (defined [[*Neovim][here]]), and source [[~/.vimrc]] from within that file.
 
-I use vim as my MANPAGER by setting the =MANPAGER= variable to [[file:scripts.org::*=viman=][this wrapper
-script]] around vim. The script sets the =g:haris_man= variable to indicate that
-the current instance of vim is used as a MANPAGER. Based on this variable, I
-omit certain features from the MANPAGER to make it load faster.
-
 *NOTE: If you are tangling this config for the first time, make sure you run
-the setup script as well!.*
+[[*Setup
+][Setup]] as well!*
 
 * General config
 #+begin_src vimrc
@@ -25,7 +21,7 @@ the setup script as well!.*
   set number relativenumber
   set statusline=\ %f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)\
   set nocompatible                " required
-  filetype plugin indent on        " required
+  filetype plugin indent on       " required
   syntax enable
 
   set noautoread
@@ -52,10 +48,10 @@ the setup script as well!.*
   set mouse=a
 
   if has('gui_running')
-    set guioptions -=T guioptions -=m
+  set guioptions -=T guioptions -=m
   endif
   if !has('nvim')
-    set noesckeys
+  set noesckeys
   endif
 
   let g:sh_fold_enabled = 3
@@ -128,7 +124,7 @@ the setup script as well!.*
   endif
 
   " Remove pipe symbols
-  set fillchars+=vert:\ 
+  set fillchars+=vert:\
 
   exe "hi Normal          ".s:vmode."fg=".s:W."   ".s:vmode."bg=".s:k."                         "
   exe "hi Statement       ".s:vmode."fg=".s:B."                           ".s:vmode."=bold      "
@@ -206,46 +202,46 @@ the setup script as well!.*
 
   if exists('g:started_by_firenvim') && g:started_by_firenvim
 
-    set laststatus=0 nonumber noruler noshowcmd relativenumber!
-    noremap <CR> :wq<CR>
-    inoremap <CR> <C-o>:wq<CR>
+  set laststatus=0 nonumber noruler noshowcmd relativenumber!
+  noremap <CR> :wq<CR>
+  inoremap <CR> <C-o>:wq<CR>
 
-    fu! AutoResize()
-      if expand('%') !~ '.*overleaf.*'
-        autocmd TextChanged,TextChangedI,TextChangedP * silent let &lines=line('$')
-      else
-        autocmd! TextChanged,TextChangedI,TextChangedP *
-      endif
-    endfu
+  fu! AutoResize()
+    if expand('%') !~ '.*overleaf.*'
+      autocmd TextChanged,TextChangedI,TextChangedP * silent let &lines=line('$')
+    else
+      autocmd! TextChanged,TextChangedI,TextChangedP *
+    endif
+  endfu
 
-    autocmd BufNewFile,BufEnter,BufRead * call AutoResize()
+  autocmd BufNewFile,BufEnter,BufRead * call AutoResize()
 
-    let g:firenvim_config = {
-        \ 'globalSettings': {
-          \ 'alt': 'all',
-        \  },
-        \ 'localSettings': {
-            \ '.*': {
-          \ 'cmdline': 'firenvim',
-          \ 'priority': 0,
-          \ 'selector': 'textarea',
-          \ 'takeover': 'always',
-        \ },
-      \ }
-    \ }
+  let g:firenvim_config = {
+  \ 'globalSettings': {
+  \ 'alt': 'all',
+  \  },
+  \ 'localSettings': {
+  \ '.*': {
+  \ 'cmdline': 'firenvim',
+  \ 'priority': 0,
+  \ 'selector': 'textarea',
+  \ 'takeover': 'always',
+  \ },
+  \ }
+  \ }
 
-    let fc = g:firenvim_config['localSettings']
+  let fc = g:firenvim_config['localSettings']
 
-    let fc['.*'] = {'takeover': 'never'}
-    let fc['localhost:.*'] = { 'takeover': 'never' }
-    let fc['facebook.*'] = { 'takeover': 'never' }
-    let fc['mail\.google.*'] = { 'takeover': 'never' }
-    let fc['desmos.com*'] = { 'takeover': 'never' }
-    let fc['github.com*'] = { 'takeover': 'never' }
-    let fc['exam.net*'] = { 'takeover': 'never' }
+  let fc['.*'] = {'takeover': 'never'}
+  let fc['localhost:.*'] = { 'takeover': 'never' }
+  let fc['facebook.*'] = { 'takeover': 'never' }
+  let fc['mail\.google.*'] = { 'takeover': 'never' }
+  let fc['desmos.com*'] = { 'takeover': 'never' }
+  let fc['github.com*'] = { 'takeover': 'never' }
+  let fc['exam.net*'] = { 'takeover': 'never' }
 
-    au BufEnter localhost* silent set ft=python
-    au BufEnter github.com* silent set ft=markdown
+  au BufEnter localhost* silent set ft=python
+  au BufEnter github.com* silent set ft=markdown
 
   endif
 
@@ -254,59 +250,35 @@ the setup script as well!.*
   let g:python3_host_prog = '/bin/python3'
 
 #+end_src
-* File types
-** rst
-#+begin_src vimrc :tangle ~/.vim/ftplugin/rst.vim
-  setlocal shiftwidth=3
-  setlocal tabstop=3
-#+end_src
 * Plugin setup
 #+begin_src vimrc
   if !empty(glob('~/.vim/autoload/plug.vim'))
     call plug#begin('~/.vim/plugged')
 
-    if !exists('g:haris_man')
-      Plug 'tpope/vim-abolish'
-      Plug 'preservim/nerdcommenter'
-      Plug 'sirver/ultisnips'
-      Plug 'honza/vim-snippets'
-      Plug 'Rykka/InstantRst', { 'for': 'rst' }
-      Plug 'Rykka/riv.vim', { 'for': 'rst' }
-      Plug 'tpope/vim-surround'
-      Plug 'alx741/vinfo', { 'on': ['Vinfo'] }
-      Plug 'KabbAmine/vCoolor.vim', { 'on': ['VCoolor'] }
-      Plug 'ap/vim-css-color'
+    Plug 'tpope/vim-abolish'
+    Plug 'preservim/nerdcommenter'
+    Plug 'tpope/vim-surround'
+    Plug 'alx741/vinfo', { 'on': ['Vinfo'] }
+    Plug 'KabbAmine/vCoolor.vim', { 'on': ['VCoolor'] }
+    Plug 'ap/vim-css-color'
 
-      " Syntax highlighting
-      Plug 'dag/vim-fish', { 'for': 'fish' }
-      Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
-      Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
-      Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
-      Plug 'itspriddle/vim-shellcheck'
-      Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
+    " Syntax highlighting
+    Plug 'dag/vim-fish', { 'for': 'fish' }
+    Plug 'vim-scripts/bats.vim', { 'for': 'bats' }
+    Plug 'vifm/vifm.vim', { 'for': ['vifm'] }
+    Plug 'kovetskiy/sxhkd-vim', { 'for': ['sxhkd'] }
+    Plug 'itspriddle/vim-shellcheck'
+    Plug 'Gavinok/vim-troff', { 'for': ['groff'] }
 
-      " IDE
-      " Plug 'ycm-core/YouCompleteMe'     " Deprecated: don't use vim much for coding these days
-      Plug 'ervandew/supertab'            " Fixes problem with YCM and UltiSnips
-      Plug 'sheerun/vim-polyglot'
-      Plug 'preservim/tagbar'             " NOTE: requires ctags installed
-      Plug 'dyng/ctrlsf.vim'                " NOTE: requires ack installed
-      Plug 'derekwyatt/vim-fswitch'
-      Plug 'derekwyatt/vim-protodef'
-      Plug 'junegunn/fzf.vim'
-      Plug 'junegunn/vim-easy-align'
-      " Python
-      Plug 'fs111/pydoc.vim'
+    " IDE
+    Plug 'sheerun/vim-polyglot'
+    Plug 'derekwyatt/vim-fswitch'
+    Plug 'derekwyatt/vim-protodef'
 
-      Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
-
-      " Misc
-      if has('nvim')
-        Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
-      endif
+    " Misc
+    if has('nvim')
+      Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
     endif
-    " Always loaded
-    Plug 'vim-utils/vim-man', { 'for': 'man'}
     Plug 'easymotion/vim-easymotion'
 
     call plug#end()
@@ -384,57 +356,6 @@ the setup script as well!.*
   noremap        <M-m> :call ToggleMenubar()<CR>
 #+end_src
 * Plugin configs
-** YouCompleteMe                                                   :ARCHIVE:
-#+begin_src vimrc :tangle no
-  if !exists('g:ycm_semantic_triggers')
-    let g:ycm_semantic_triggers = {}
-  endif
-
-  " Make YCM work with UltiSnips
-  let g:ycm_key_list_select_completion = ['<C-n>']
-  let g:ycm_key_list_previous_completion = ['<C-p>']
-  let g:SuperTabDefaultCompletionType = '<C-n>'
-
-  let g:ycm_auto_hover = ''
-  nmap <leader>D <plug>(YCMHover)
-
-  let g:ycm_show_diagnostics_ui = 0
-  let g:ycm_autoclose_preview_window_after_insertion = 1
-  let g:ycm_confirm_extra_conf = 0
-  let g:ycm_min_num_of_chars_for_completion = 1
-
-  " Otherwise completion is very very slow
-  set completeopt=menu,menuone
-
-  " Make autocompletion work with css
-  let g:ycm_semantic_triggers['css'] = [ 're!^', 're!^\s+', ': ' ]
-  let g:ycm_semantic_triggers['scss'] = [ 're!^', 're!^\s+', ': ' ]
-
-  " Alt+Tab inserts a tab character
-  inoremap <M-tab> <tab>
-#+end_src
-** UltiSnips
-#+begin_src vimrc
-  let g:UltiSnipsExpandTrigger = "<tab>"
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
-  let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-  let g:UltiSnipsSnippetsDir = "~/.vim/snips"
-  let g:UltiSnipsSnippetDirectories = [ '/home/haris/.vim/snips']
-#+end_src
-** Supertab
-#+begin_src vimrc
-  let g:SuperTabDefaultCompletionType    = '<tab>'
-  let g:SuperTabCrMapping                = 0
-#+end_src
-** Jedi
-#+begin_src vimrc
-  let g:jedi#popup_on_dot = 0
-  let g:jedi#auto_vim_configuration = 1
-  let g:jedi#show_call_signatures = 1
-  let g:jedi#usages_command = ""
-  let g:jedi#rename_command = "<leader>R"
-#+end_src
 ** EasyMotion
 #+begin_src vimrc
   nmap \      <Plug>(easymotion-prefix)
@@ -503,20 +424,6 @@ the setup script as well!.*
   " (Ctrl-F + t) Toggle CtrlSF window (Insert Mode)
   inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
 #+end_src
-** FSwitch
-#+begin_src vimrc
-  au! BufEnter *.cpp let b:fswitchdst = 'hpp,h'
-  au! BufEnter *.h let b:fswitchdst = 'cpp,c'
-  nmap <silent> <Leader>of :FSHere<cr>
-  nmap <silent> <Leader>ol :FSSplitRight<cr>
-  nmap <silent> <Leader>oh :FSSplitLeft<cr>
-  nmap <silent> <Leader>ok :FSSplitAbove<cr>
-  nmap <silent> <Leader>oj :FSSplitBelow<cr>
-  nmap <silent> <Leader>oL :FSRight<cr>
-  nmap <silent> <Leader>oH :FSLeft<cr>
-  nmap <silent> <Leader>oK :FSAbove<cr>
-  nmap <silent> <Leader>oJ :FSBelow<cr>
-#+end_src
 ** Protodef
 #+begin_src vimrc
   " Pull in prototypes
@@ -543,24 +450,6 @@ the setup script as well!.*
   xmap ga <Plug>(EasyAlign)
   nmap ga <Plug>(EasyAlign)
 #+end_src
-** FZF
-#+begin_src vimrc
-  nmap <leader>/ :FZF<CR>
-  nmap <leader>? :Rg<CR>
-#+end_src
-** Riv
-#+begin_src vimrc
-  let g:riv_disable_folding = 0
-  let g:riv_fold_level = 1
-  let g:riv_fold_auto_update = 0
-  let g:riv_auto_fold_force = 0
-  let g:riv_auto_format_table = 0
-#+end_src
-** Man
-#+begin_src vimrc
-  let g:ft_man_folding_enable = 1
-  let g:man_hardwrap = 0
-#+end_src
 ** pydoc.vim
 #+begin_src vimrc
   let g:pydoc_open_cmd = 'vsplit'
@@ -577,10 +466,10 @@ the setup script as well!.*
 * Local configs
 #+begin_src vimrc
   if filereadable(expand("~/.vimrc.private"))
-  source ~/.vimrc.private
+    source ~/.vimrc.private
   endif
   if filereadable(expand("~/.vimrc.tmp"))
-  source ~/.vimrc.tmp
+    source ~/.vimrc.tmp
   endif
 #+end_src
 * Setup
@@ -595,9 +484,7 @@ the setup script as well!.*
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 #+end_src
 #+begin_src text :tangle (haris/tangle-deps "vim.pacman")
-  gvim neovim fzf
-  # Dependencies for YouCompleteMe
-  go nodejs npm jdk-openjdk
+  neovim
 #+end_src
 ** Additional setup
 We must purge all the directories from [[~/.config/nvim]] and replace them with
@@ -626,10 +513,3 @@ The [[~/.vimrc.tmp]] file is optionally used, but we have to create it to avoid 
   mkdir -p ~/.config/nvim
   touch ~/.vimrc.tmp ~/.config/nvim/init.tmp.vim
 #+end_src
-
-This script sets up the YouCompleteMe plugin:
-#+begin_src bash
-  vim '+PlugInstall'
-  cd ~/.vim/plugged/YouCompleteMe && python install.py --all
-#+end_src
-
