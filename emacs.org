@@ -2698,6 +2698,7 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      multiple-cursors
      spell-checking
      (auto-completion ; (ref:auto-completion)
+      :enabled-for  ;; Configured manually for specific languages
       :variables
       auto-completion-enable-snippets-in-popup t
       auto-completion-return-key-behavior nil
