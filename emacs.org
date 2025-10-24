@@ -1481,7 +1481,9 @@ I used this mode like 2-3 times, but I'm keeping it in case I have to use it aga
               (haris/yas-minor-mode-on)
               (yas-activate-extra-mode 'emacs-lisp-mode)
                                           ; (ref:company-backends-emacs-lisp-mode/usage)
-              (setq-local company-backends company-backends-emacs-lisp-mode)
+              (setq-local company-backends
+                          (cdr (assoc 'emacs-lisp-mode
+                                      haris/modes-to-company-backends-alist)))
               (company-mode)))
 
   (advice-add
@@ -2346,6 +2348,7 @@ basis here.
                       company-keywords
                       company-dabbrev)))
      `((text-mode . ,common)
+       (emacs-lisp-mode . ,common)
        (typescript-mode . ,common)
        (python-mode . ,common)
        (sh-mode . ,common)
