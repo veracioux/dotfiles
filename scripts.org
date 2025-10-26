@@ -1246,6 +1246,20 @@ command there.
   "$@"
   rm -rf "$tmpdir"
 #+end_src
+** =noxdg=
+Reset all XDG environment variables to mimic a fresh user environment.
+#+begin_src bash :tangle ~/.local/bin/noxdg
+  tmpdir="$(mktemp -d)"
+  echo "TMPDIR: $tmpdir" >&2
+  export XDG_CONFIG_HOME="$tmpdir/home"
+  export XDG_CACHE_HOME="$tmpdir/cache"
+  export XDG_DATA_HOME="$tmpdir/data"
+  export XDG_DATA_DIRS="$tmpdir/data"
+  export XDG_RUNTIME_DIR="$tmpdir/runtime"
+  export XDG_STATE_HOME="$tmpdir/state"
+
+  exec "$@"
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.

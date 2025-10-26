@@ -1350,6 +1350,16 @@ abbreviations for equivalent apt operations.
   _abbr sub 'mosquitto_sub -t'
   _abbr pub 'mosquitto_pub -t'
 #+end_src
+**** Developer
+***** Bun
+#+begin_src fish
+  _abbr            -g bi    "export BUN_OPTIONS='--inspect-wait=localhost:6499/%'"
+  _abbr            -g bii   "export BUN_OPTIONS=''"
+#+end_src
+***** OpenCode
+#+begin_src fish
+  _abbr            -g OC    "bun --cwd ~/proj/contrib/opencode dev"
+#+end_src
 **** Miscellaneous
 #+begin_src fish
   conditional_abbr -g g     'git'
@@ -1363,8 +1373,6 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g py    'python'
   conditional_abbr -g ipy   'ipython'
   conditional_abbr -g oc    'opencode'
-  _abbr            -g OC    "cd ~/.empty; bun ~/proj/contrib/opencode/packages/opencode/src/index.ts"
-  _abbr            -g OCd   "cd ~/.empty; bun --inspect-wait=localhost:6499/opencode ~/proj/contrib/opencode/packages/opencode/src/index.ts"
 
   conditional_abbr -g copy  'fish_clipboard_copy'
   conditional_abbr -g Tcopy 'tee /dev/tty | fish_clipboard_copy'
