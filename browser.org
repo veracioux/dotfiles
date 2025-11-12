@@ -63,9 +63,9 @@ All my browser preferences that I don't need to keep secret go here.
 #+end_src
 * CSS customizations
 :PROPERTIES:
-:header-args+: :tangle (concat main-profile-dir "/chrome/userChrome.css") :tangle no
+:header-args:css+: :tangle (concat main-profile-dir "/chrome/userChrome.css")
 :END:
-#+begin_src css
+#+begin_src css :tangle no
   #navigator-toolbox:not(:hover) #nav-bar {
       min-height: 0 !important;
       max-height: 0 !important;
@@ -156,6 +156,13 @@ so I move it to the top-right corner.
   #statuspanel {
       padding-top: 0 !important;
       inset: 0 0 auto auto !important;
+  }
+#+end_src
+** Website workarounds
+#+begin_src css :tangle (concat main-profile-dir "/chrome/userContent.css")
+  /* github textareas are broken in dark mode */
+  textarea {
+    color: rgb(240, 246, 252) !important
   }
 #+end_src
 * Tridactyl
