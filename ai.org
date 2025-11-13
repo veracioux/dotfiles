@@ -161,7 +161,6 @@
   // https://opencode.ai/docs/config/
   {
     "$schema": "https://opencode.ai/config.json",
-    "model": "opencode/grok-code",
     "instructions": [
       "README.org",
       "README.md"
