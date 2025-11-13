@@ -1353,12 +1353,14 @@ abbreviations for equivalent apt operations.
 **** Developer
 ***** Bun
 #+begin_src fish
-  _abbr            -g bi    "export BUN_OPTIONS='--inspect-wait=localhost:6499/%'"
-  _abbr            -g bii   "export BUN_OPTIONS=''"
+  _abbr            -g bi  "export BUN_OPTIONS='--inspect=localhost:6499/%'"
+  _abbr            -g biw "export BUN_OPTIONS='--inspect-wait=localhost:6499/%'"
+  _abbr            -g bib "export BUN_OPTIONS='--inspect-brk=localhost:6499/%'"
+  _abbr            -g bo  "export BUN_OPTIONS='%'"
 #+end_src
 ***** OpenCode
 #+begin_src fish
-  _abbr            -g OC    "bun --cwd ~/proj/contrib/opencode dev"
+  _abbr            -g OC    "cd ~/proj/contrib/opencode/packages/opencode"
 #+end_src
 **** Miscellaneous
 #+begin_src fish
@@ -1373,6 +1375,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g py    'python'
   conditional_abbr -g ipy   'ipython'
   conditional_abbr -g oc    'opencode'
+  conditional_abbr -g oc1   'bunx opencode-ai@latest'
 
   conditional_abbr -g copy  'fish_clipboard_copy'
   conditional_abbr -g Tcopy 'tee /dev/tty | fish_clipboard_copy'
