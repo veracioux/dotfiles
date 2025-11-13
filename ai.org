@@ -185,12 +185,17 @@
     "mcp": {
       "voice": {
         "type": "local",
-        "command": ["uvx", "voice-mode"],
+        "command": [
+          "uvx",
+          "voice-mode"
+        ],
         "environment": {
           "OPENAI_API_KEY": "«get-api-key("openai")»"
-        }
+        },
+        "enabled": false
       },
       "emacs": {
+        "enabled": false,
         "type": "local",
         "command": [
           "@gh",
@@ -212,7 +217,10 @@
       },
       "alacritty": {
         "type": "local",
-        "command": ["alacritty-mcp"]
+        "command": [
+          "alacritty-mcp"
+        ],
+        "enabled": false
       },
       "playwright": {
         "type": "local",
