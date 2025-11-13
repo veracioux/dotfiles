@@ -106,21 +106,81 @@
   frame_color             = "#ff8c8c"
   timeout                 = 20
 #+end_src
-* TODO Rsync exclude
-I'm not sure if this file is actually used by rsync.
-#+begin_src text :tangle (haris/tangle-home ".rsync-exclude")
-  *.tmp
-  *.bak
-
-  *.toc
-  *.aux
-  *.synctex.gz
-  *.log
-
-  *.o
-  **/.*Trash-*/
-  node_modules/
-  __pycache__/
+* Rsync exclude
+:PROPERTIES:
+:header-args: :tangle ~/.rsync-exclude
+:END:
+** Common user-level caches
+#+begin_src text
+  .cache/
+  .thumbnails/
+  .adobe/
+  .macromedia/
+#+end_src
+** Browser caches
+#+begin_src text
+  .mozilla/firefox/*/cache2/
+  .mozilla/firefox/*/storage/
+#+end_src
+** Package manager caches
+#+begin_src text
+  .bun/
+  .cargo/
+  .gem/
+  .go
+  .npm
+  .rustup/*/
+  .yarn/
+  .gradle/
+  .local/pnpm/
+  .pyenv/
+  **/.venv/
+  **/.pnpm-store/
+#+end_src
+** Python build/test caches
+#+begin_src text
+  **/__pycache__/
+  **/.pytest_cache/
+  **/.tox/
+  **/.mypy_cache/
+#+end_src
+** Node and related build caches
+#+begin_src text
+  **/node_modules/
+  **/.bower/
+  **/.next/
+  **/.nuxt/
+  **/.vscode/extensions/
+#+end_src
+** Build outputs
+#+begin_src text
+  **/dist/
+  **/build/
+  **/out/
+  **/target/
+  .mozbuild/
+#+end_src
+** Misc editors / IDEs
+#+begin_src text
+  .vscode*/
+  .emacs.d/eln-cache/
+  .emacs.d/elpa/
+  .spacemacs.env
+#+end_src
+** Logs and temp files
+#+begin_src text
+  ,**/*.log
+  ,**/*.swp
+  ,**/*.swo
+  ,**/*~
+  ,**/.DS_Store
+  ,**/.Trash*/
+#+end_src
+** Miscellaneous others
+#+begin_src text
+  .AndroidStudio_sdk*/
+  .ViberPC/
+  .local/share/
 #+end_src
 * IdeaVim
 #+begin_src vimrc :tangle ~/.ideavimrc
