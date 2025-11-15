@@ -1362,6 +1362,12 @@ specifically. I did that [[(company-active-map-escape-override)][here]], because
                ivy-rich-display-transformers-list))))
     (ivy-rich-mode 1))
 
+  (add-to-list 'ivy-sort-matches-functions-alist
+               `(counsel-projectile-switch-project
+                 .
+                 ,(defun haris//ivy-sort-alpha (_ candidates)
+                    "Sort CANDIDATES alphabetically."
+                    (sort candidates 'string<))))
 
   (setq ivy-initial-inputs-alist
         (append
