@@ -494,7 +494,7 @@ get better search matches.
   if [ "$(pwd)" = ~ ]; then
       cd ~/.empty/
   fi
-  alternative-command opencode "$@"
+  bunx opencode-ai@latest "$@"
 #+end_src
 * Utilities
 ** =visual-editor=
