@@ -1243,7 +1243,7 @@ command there.
   git fetch origin "$ref"
   git checkout FETCH_HEAD
   shift 2
-  "$@"
+  exec "$@"
   rm -rf "$tmpdir"
 #+end_src
 ** =with-xdg=
