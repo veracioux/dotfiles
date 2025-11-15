@@ -389,6 +389,17 @@ This enables periodic cleanup:
     (makunbound 'haris/timer/clean-buffer-list))
   (setq haris/timer/clean-buffer-list (run-with-timer 1800 1800 #'clean-buffer-list))
 #+end_src
+**** Temporary pipe files
+This makes sure that temporary pipe files are deleted when their buffers are killed.
+#+begin_src elisp
+  (add-hook
+   'kill-buffer-hook
+   (defun haris//kill-buffer-delete-pipe-file ()
+     "Delete pipe file if buffer matches /tmp/haris-pipe-* pattern"
+     (when (and buffer-file-name
+                (string-match "^/tmp/haris-pipe-" buffer-file-name))
+       (delete-file buffer-file-name))))
+#+end_src
 *** Global bindings
 #+begin_src elisp
   (global-set-key (kbd "C-+") 'text-scale-adjust)
