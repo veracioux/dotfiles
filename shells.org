@@ -493,6 +493,10 @@ on the plugin list above.
       cd (echo "$dest" | sed -E -e '/^$/d' -e 's/^\S+\s+//')
   end
 #+end_src
+**** Completions
+#+begin_src fish :tangle ~/.config/fish/completions/a.fish
+  complete -c a --no-files --wraps z
+#+end_src
 *** =open=
 #+begin_src fish :tangle ~/.config/fish/functions/open.fish
   # Open a GUI app and disown
