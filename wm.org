@@ -174,7 +174,7 @@ Shared between i3 and sway:
 #+begin_src conf-xdefaults :tangle ~/.Xresources)
   ,*.*.font: Ubuntu Mono
 #+end_src
-* Start-up
+* Startup
 ** .xinitrc
 :PROPERTIES:
 :header-args+: :tangle-mode (eval #o744)
@@ -182,27 +182,66 @@ Shared between i3 and sway:
 Since i3 is used under X server, it needs to be launched within [[~/.xinitrc]].
 There are three =.xinitrc= configuration presets, that I switch between using
 [[file:scripts.org::*=xpreset=][xpreset]]. The default one is defined here (you can change it if you want):
-#+NAME: xinitrc-default
+#+NAME: xinitrc
 #+begin_src shell :tangle ~/.xinitrc
   <<xinitrc-i3>>
 #+end_src
+The following is shared by all presets. It also contains configuration specific
+to the laptop I currently use. Please change to suit your needs.
+#+begin_src shell :tangle ~/.xinitrc.common
+  export TERM=dumb
+  export DBUS_SESSION_BUS_ADDRESS=unix:path="$XDG_RUNTIME_DIR"/bus
+  dbus-update-activation-environment --systemd --all  # Fixes dbus problems with i3
+  xrdb -merge ~/.Xresources $(ls ~/.local.Xresources 2>/dev/null)
 
+  redshift &                                   # Blue light filter
+  sxhkd &                                      # Load default bindings
+  sxhkd.private &                             # Load private bindings
+#+end_src
+*** Keyboard and mouse
+#+begin_src shell :tangle ~/.xinitrc.common
+  setxkbmap -layout "ba"
+  xmodmap -e "keycode 10 = 1 exclam asciitilde asciitilde asciitilde"
+  xmodmap -e "keycode 16 = 7 slash grave grave grave"
+  xmodmap -e "keycode 12 = 3 numbersign asciicircum asciicircum asciicircum"
+
+  touchpad_id=$( xinput list | grep -i touchpad | awk -F'id=' '{print $2 }' | awk '{print $1}' )
+  touch_option=$( xinput list-props $touchpad_id | grep -i 'Tapping Enabled' | head -1 | awk -F"[()]" '{print $2}' )
+  accel_option=$( xinput list-props $touchpad_id | grep -i 'Accel Speed' | head -1 | awk -F"[()]" '{print $2}' )
+
+  # Enable touch clicking
+  xinput set-prop $touchpad_id $touch_option 1
+  # Increase touchpad acceleration
+  xinput set-prop $touchpad_id $accel_option 0.5
+
+  # Show second monitor if available
+  xrandr2 --auto
+
+  xset r rate 200 60                          # Increase key press rate
+#+end_src
+*** Plugins
+**** WM-only
+#+NAME: xinitrc/wm-only
+#+begin_src shell
+  feh --bg-fill ~/.wallpaper                  # Set wallpaper
+  xset s 300                                  # Set lock timeout (seconds)
+  xss-lock -l -- lock-screen &                # Start lock screen daemon
+  systemctl start --user clipmenud            # (ref:clipmenud)
+  dunst &                                     # Notification daemon
+#+end_src
+*** Presets
 Here are the configs you can choose from:
+**** i3
 #+NAME: xinitrc-i3
 #+begin_src shell :tangle ~/.xinitrc-i3
   . ~/.xinitrc.common
-
-  dunst &                                       # Notification daemon
-  picom &                                       # Compositor
-  autotiling &                                  # Autotiling for i3
-
-  export TERM=dumb
-  sxhkd &                                       # Load default bindings
-  sxhkd.private &                               # Load private bindings
+  «xinitrc/wm-only»
+  picom &                                      # Compositor
 
   export DESKTOP_SESSION=i3
   exec i3                                       # Window manager
 #+end_src
+**** GNOME
 #+NAME: xinitrc-gnome
 #+begin_src shell :tangle ~/.xinitrc-gnome
   . ~/.xinitrc.common
@@ -211,6 +250,7 @@ Here are the configs you can choose from:
   export GDK_BACKEND=x11
   exec gnome-session
 #+end_src
+**** KDE Plasma
 #+NAME: xinitrc-plasma
 #+begin_src shell :tangle ~/.xinitrc-plasma
   . ~/.xinitrc.common
@@ -218,39 +258,18 @@ Here are the configs you can choose from:
   export DESKTOP_SESSION=plasma
   exec dbus-launch startplasma-x11
 #+end_src
+**** Xfce4
 #+NAME: xinitrc-xfce4
 #+begin_src shell :tangle ~/.xinitrc-xfce4
   . ~/.xinitrc.common
 
   startxfce4
 #+end_src
-The following is shared by all presets. It also contains configuration specific
-to the laptop I currently use. Please change to suit your needs.
-#+NAME: xinitrc-common
-#+begin_src shell :tangle ~/.xinitrc.common
-  export DBUS_SESSION_BUS_ADDRESS=unix:path="$XDG_RUNTIME_DIR"/bus
-
-  dbus-update-activation-environment --systemd --all  # Fixes dbus problems with i3
-
-  «dell-g15-xinitrc»
-  xset r rate 200 60                          # Increase key press rate
-  redshift &                                  # Blue light filter
-
-  xset s 300                                  # Set lock timeout (seconds)
-  xss-lock -l -- lock-screen &                # Start lock screen daemon
-  systemctl start --user clipmenud            # (ref:clipmenud)
-
-  xrdb -merge ~/.Xresources $(ls ~/.local.Xresources 2>/dev/null)
-  feh --bg-fill ~/.wallpaper                  # Set wallpaper
-  # vim: ft=sh
-#+end_src
 ** i3 start-up
 Some things are tightly tied to i3 and should be launched as part of its
 configuration reload procedure:
 #+begin_src i3wm-config
-  exec_always --no-startup-id \
-  /home/haris/.local/lib/i3/i3-cycle-focus.py --history 2
-  exec_always --no-startup-id "autotiling"
+  exec_always --no-startup-id autotiling
   # Use pactl to adjust volume in PulseAudio.
   set $refresh_i3status killall -SIGUSR1 i3status
 #+end_src
@@ -268,34 +287,6 @@ Please verify that the correct device-specific config is chosen. Otherwise
 change it according to your preference:
 #+begin_src i3wm-config :tangle ~/.config/sway/config
   <<dell-g15-sway>>
-#+end_src
-** System-specific setups
-*** Dell G15 5510
-#+NAME: dell-g15-xinitrc
-#+begin_src shell :tangle no
-  setxkbmap -layout "ba"
-  xmodmap -e "keycode 10 = 1 exclam asciitilde asciitilde asciitilde"
-  xmodmap -e "keycode 16 = 7 slash grave grave grave"
-  xmodmap -e "keycode 12 = 3 numbersign asciicircum asciicircum asciicircum"
-
-  touchpad_id=$( xinput list | grep -i touchpad | awk -F'id=' '{print $2 }' | awk '{print $1}' )
-  touch_option=$( xinput list-props $touchpad_id | grep -i 'Tapping Enabled' | head -1 | awk -F"[()]" '{print $2}' )
-  accel_option=$( xinput list-props $touchpad_id | grep -i 'Accel Speed' | head -1 | awk -F"[()]" '{print $2}' )
-
-  # Enable touch clicking
-  xinput set-prop $touchpad_id $touch_option 1
-  # Increase touchpad acceleration
-  xinput set-prop $touchpad_id $accel_option 0.5
-
-  # Show second monitor
-  xrandr2 --auto
-#+end_src
-#+NAME: dell-g15-sway
-#+begin_src i3wm-config :tangle no
-  input * {
-      xkb_layout "ba"
-  }
-  # TODO replicate other commands from i3 part
 #+end_src
 * Key bindings and menus
 Only a core set of keybindings whose behavior is coupled to i3 are defined in
@@ -1216,6 +1207,66 @@ I use picom as my compositor with the i3 window manager.
   # Do not fade destroyed ARGB windows with WM frame. Workaround of bugs in Openbox, Fluxbox, etc.
   no-fading-destroyed-argb = false
 #+end_src
+* Alternative Desktop Environments
+** Plasma
+*** SDDM Configuration
+To configure SDDM to run KDE Plasma, you need to set up the display manager and session files.
+**** Dependencies
+#+begin_src shell :tangle /tmp/dependencies-$USER/sddm.pacman
+  sddm
+  plasma
+#+end_src
+**** SDDM Configuration
+Configure SDDM to use Plasma as the default session by creating the main configuration file:
+#+begin_src conf :tangle /etc/sddm.conf :tangle no
+  [Autologin]
+  Session=plasma.desktop
+#+end_src
+**** Plasma Session File
+Ensure the Plasma desktop session file exists:
+#+begin_src desktop :tangle /usr/share/xsessions/plasma.desktop :tangle no
+  [Desktop Entry]
+  Name=Plasma
+  Exec=env KDEWM=<<which-i3()>> startplasma-x11
+  TryExec=startplasma-x11
+  Type=Application
+  X-DesktopNames=KDE
+#+end_src
+**** Enable and Start SDDM
+Enable the SDDM service to start on boot:
+#+begin_src shell :tangle no
+  sudo systemctl enable --now sddm
+#+end_src
+The Plasma session will now appear in SDDM's session selection menu and can be set as the default.
+*** Plasma with i3
+With my installation, there's a Plasma Desktop window that covers everything.
+Kill it:
+#+begin_src i3wm-config
+  for_window [title="Desktop @ QRect.*"] kill, floating enable, border none
+#+end_src
+Plasma compatibility improvements:
+#+begin_src i3wm-config
+  for_window [window_role="pop-up"] floating enable
+  for_window [window_role="task_dialog"] floating enable
+
+  for_window [class="yakuake"] floating enable
+  for_window [class="systemsettings"] floating enable
+  for_window [class="plasmashell"] floating enable
+  for_window [class="Plasma"] floating enable, border none
+  for_window [title="plasma-desktop"] floating enable, border none
+  for_window [title="win7"] floating enable, border none
+  for_window [class="krunner"] floating enable, border none
+  for_window [class="Kmix"] floating enable, border none
+  for_window [class="Klipper"] floating enable, border none
+  for_window [class="Plasmoidviewer"] floating enable, border none
+  for_window [class="(?i)*nextcloud*"] floating disable
+  for_window [class="plasmashell" window_type="notification"] border none, move position 70 ppt 81 ppt
+  no_focus [class="plasmashell" window_type="notification"]
+#+end_src
+**** Start i3
+#+begin_src shell :tangle ~/.config/plasma-workspace/env/i3.sh
+  i3 & disown
+#+end_src
 * Appendix
 ** Dependencies                                                       :deps:
 *** i3
@@ -1229,6 +1280,11 @@ I use picom as my compositor with the i3 window manager.
   paru -S swhkd-git
 #+end_src
 ** Helper functions
+*** =which-i3=
+#+NAME: which-i3
+#+begin_src shell
+  which i3 | trim
+#+end_src
 *** =dip=
 #+NAME: dip
 #+begin_src elisp :var value=100
