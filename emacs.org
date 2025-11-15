@@ -1704,6 +1704,11 @@ Takes too long to load.
   (remove-hook 'server-switch-hook 'magit-commit-diff)
   (remove-hook 'with-editor-filter-visit-hook 'magit-commit-diff)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+
+  (with-eval-after-load 'forge
+    (remove-hook 'magit-status-sections-hook 'forge-insert-pullreqs)
+    (remove-hook 'magit-status-sections-hook 'forge-insert-issues)
+    (remove-hook 'magit-status-sections-hook 'forge-insert-discussions))
 #+end_src
 ** Commit
 #+begin_src elisp
