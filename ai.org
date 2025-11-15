@@ -424,6 +424,43 @@
   ---
   List all MCP tools that are currently available to you.
 #+end_src
+**** Commit
+#+begin_src markdown :tangle ~/.config/opencode/command/commit.md
+  ---
+  description: Create a git commit for the current changes in the repository
+  <!-- model: opencode/big-pickle -->
+  permission:
+    bash:
+      "git commit *": ask
+      "git add *": allow
+      "git log *": allow
+  ---
+  Your task: Commit $ARGUMENTS.
+  !`cd "$(git rev-parse --git-dir)" && mv COMMIT_EDITMSG COMMIT_EDITMSG.bak`
+  1. Analyze the changes provided in this prompt, don't run any commands for this
+  2. Generate a commit message and write it in COMMIT_EDITMSG using the
+     instructions below
+  3. Commit the changes using `git commit --file "$(git rev-parse --git-dir)"/COMMIT_EDITMSG`
+  4. Show a decorated log of last 2 commits (without --oneline option)
+
+  If any error occurs during these steps, try to diagnose the issue based solely
+  on the error log and previous context info, and inform the user. DO NOT TRY TO
+  FIX THE ISSUE YOURSELF, NOR RUN ANY COMMANDS IN RESPONSE TO THE ISSUE.
+
+  Don't think, just follow the instructions.
+
+  ## How to write the commit message
+  !`[ "$(pwd)" = ~/.haris ] && cat ~/.ai/prompts/git-commit-dotfiles.md || cat ~/.ai/prompts/git-commit.md`
+
+  ## Current repo state
+  COMMIT_EDITMSG location: !`echo -n "$(git rev-parse --git-dir)"`/COMMIT_EDITMSG
+  ### Git status
+  !`git status`
+  ### Staged changes
+  !`git diff --cached`
+  ### Unstaged changes
+  !`git diff --cached --quiet && git diff || echo 'Not relevant'`
+#+end_src
 * Appendix
 *** Helper functions
 **** =get-api-key=
