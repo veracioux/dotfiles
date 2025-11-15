@@ -241,7 +241,7 @@
 #+begin_src markdown :tangle ~/.config/opencode/agent/simple.md
   ---
   description: Follows simple instructions
-  model: google/gemini-2.5-flash
+  <!-- model: google/gemini-2.5-flash -->
   permission:
     write: "deny"
     edit: "deny"
@@ -255,7 +255,7 @@
 #+begin_src markdown :tangle ~/.config/opencode/agent/teacher.md
   ---
   description: Can teach and explain concepts
-  model: anthropic/claude-3-5-haiku-latest
+  <!-- model: anthropic/claude-3-5-haiku-latest -->
   permission:
     write: deny
     edit: deny
@@ -267,7 +267,7 @@
 #+begin_src markdown :tangle ~/.config/opencode/agent/emacs-helper.md
   ---
   description: Helps with Emacs-related tasks
-  model: anthropic/claude-3-5-haiku-latest
+  <!-- model: anthropic/claude-3-5-haiku-latest -->
   tools:
     emacs_execute_emacs_lisp_code: true
   ---
@@ -284,7 +284,7 @@
 #+begin_src markdown :tangle ~/.config/opencode/agent/pkgbuilder.md
   ---
   description: Helps with building Linux packages
-  model: anthropic/claude-3-5-haiku-latest
+  <!-- model: anthropic/claude-3-5-haiku-latest -->
   permission:
     bash:
       "git config --global user.name": allow
@@ -313,16 +313,16 @@
 **** System
 #+begin_src markdown :tangle ~/.config/opencode/agent/system.md
   ---
-    description: Helps with system control and administration
-    model: anthropic/claude-3-5-haiku-latest
-    tools:
-      "alacritty*": true
-    permission:
-      read: ask
-      edit: ask
-      write: ask
-      bash:
-        "journalctl --user *": allow
+  description: Helps with system control and administration
+  <!-- model: anthropic/claude-3-5-haiku-latest -->
+  tools:
+    "alacritty*": true
+  permission:
+    read: ask
+    edit: ask
+    write: ask
+    bash:
+      "journalctl --user *": allow
   ---
 #+end_src
 **** Linter
