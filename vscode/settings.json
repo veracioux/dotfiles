@@ -98,5 +98,6 @@
     },
     "search.exclude": {
         "wt*": true
-    }
+    },
+    "zig.zls.enabled": "on"
 }
