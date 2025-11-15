@@ -84,7 +84,7 @@
             "args": ["fish"]
         }
     },
-    "mdb.mcp.server": "enabled",
+    "mdb.mcp.server": "prompt",
     "mdb.sendTelemetry": false,
     "mdb.confirmRunAll": false,
     "redhat.telemetry.enabled": false,
