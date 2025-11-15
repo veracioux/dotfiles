@@ -7,8 +7,6 @@
 
 Emacs is a very versatile tool. I use it as:
 - a text editor (of course)
-- a [[*Email][mail client]] (mu4e)
-- an [[*ERC][IRC chat client]] (ERC)
 - a [[*Git][git GUI]] (magit)
 - a multilingual [[*Programming languages][IDE for quick and simple work]]
 - a [[*Vterm][special-purpose terminal emulator]] (vterm)
@@ -17,67 +15,38 @@ Emacs is a very versatile tool. I use it as:
 
 What's more, I'm using a distribution of Emacs called Spacemacs, which comes
 with many sensible defaults and simplifies the installation and setup of
-packages. Because it is so feature-rich, Emacs can take an annoying time to
-start up. That's why I have set up a systemd service that runs an emacs daemon
-on system startup. When I want to launch emacs to perform a task, I run [[file:~/.haris/scripts.org::*=myemacs=][myemacs]]
-(a custom command that wraps [[man:emacsclient][emacsclient]]), which attaches to the daemon, without
-the need to load the cruft each time.
-** Daemons
-For some of those use cases I mentioned above, I want to run a standalone emacs
-daemon, specialized for that use case. One reason is that emacs is
-single-threaded, so a hang-up in one application would render the rest of the
-daemon unresponsive. Another reason is simply to have a cleaner buffer list, so
-I can use =ibuffer= more efficiently.
+packages. Because it is so feature-rich, Emacs can take a long time to start up.
+That's why I have set up a systemd service that runs an emacs daemon on system
+startup. When I want to launch emacs to perform a task, I run [[file:~/.haris/scripts.org::*=myemacs=][myemacs]] (a custom
+command that wraps [[man:emacsclient][emacsclient]]), which attaches to the daemon, without the need
+to load the cruft each time.
+** Eamcs Daemon
+#+NAME: emacs.service
+#+begin_src systemd :tangle ~/.config/systemd/user/emacs.service :exports none
+  [Unit]
+  Description=Emacs text editor
+  Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
-Here's a list of standalone daemons I have configured. Each one has a systemd
-service configured and thus launches on system startup. For each entry the
-daemon name is shown (as passed to the =--socket-name= option). Each daemon has
-its own configuration file (see [[* Configuration loading][Configuration loading]]) to prevent loading of
-unnecessary code.
+  [Service]
+  Type=forking
+  Environment=COLORTERM=truecolor
+  Environment=LSP_USE_PLISTS=true
+  ExecStart=/usr/bin/emacs --daemon="emacs"
+  Restart=always
+  TimeoutStartSec=600
+  TimeoutStopSec=30
+  StartLimitBurst=0
 
-- =irc= :: Used as an IRC chat client
-  - Configuration file :: =~/.emacs.d/haris/irc.el=
-
-  #+begin_src systemd :tangle no
-    <<irc.service>>
-  #+end_src
-
-- =ide= :: Used as a multilingual IDE via the lsp protocol
-
-  *NOTE*: The functionality for this daemon is not yet configured.
-- =emacs= :: Everything else is done through this daemon. This includes basic text
-  editing and applications that don't warrant a standalone daemon.
-  - Configuration file :: =~/.emacs.d/default.el=
-
-  #+NAME: emacs.service
-  #+begin_src systemd :tangle ~/.config/systemd/user/emacs.service :exports none
-    [Unit]
-    Description=Emacs text editor
-    Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
-
-    [Service]
-    Type=forking
-    Environment=COLORTERM=truecolor
-    Environment=LSP_USE_PLISTS=true
-    ExecStart=/usr/bin/emacs --daemon="emacs"
-    Restart=always
-    TimeoutStartSec=600
-    TimeoutStopSec=30
-    StartLimitBurst=0
-
-    [Install]
-    WantedBy=default.target
-  #+end_src
-
+  [Install]
+  WantedBy=default.target
+#+end_src
 *** Configuration loading
 The main generated user configuration file is [[~/.emacs.d/haris/root.el]]. This
-file is loaded by spacemacs and internally, it loads the other files based on
-the type of the purpose of the current emacs daemon (by reading the
-=server-name= variable). This is the config file:
+file is loaded by spacemacs and in turn, it loads the other files based on
+the purpose of the current emacs daemon (by reading the =server-name= variable).
+Currently, only the default daemon =emacs= is used, but this might change in the future.
 #+begin_src elisp :tangle ~/.emacs.d/haris/root.el
-  (load-file (cond ((and (boundp 'server-name) (equal server-name "irc"))
-                    "~/.emacs.d/haris/irc.el")
-                   ("~/.emacs.d/haris/default.el")))
+  (load-file "~/.emacs.d/haris/default.el")
 #+end_src
 * General
 ** Setup
@@ -193,7 +162,6 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
      :host github
      :repo "lastquestion/explain-pause-mode"))
   (use-package fontawesome :defer t)
-  (use-package direnv :config (direnv-mode))
 #+end_src
 *** Language modes
 #+begin_src elisp
@@ -378,7 +346,7 @@ You can test the transforms by calling this:
         ;; polling was disabled above.
         ;; An example where this can be observed is when an org-mode code block
         ;; is tangled and the target file is open in another buffer.
-        auto-revert-interval 0.2)
+        auto-revert-interval 2.5)
 #+end_src
 **** Miscellaneous
 #+begin_src elisp
@@ -957,18 +925,6 @@ Some custom keybindings are defined here as well.
               (lambda ()
                 (setq-local lsp-enable-imenu nil))))
 #+end_src
-*** OpenAPI
-#+begin_src elisp
-  (straight-use-package '(openapi-yaml-mode :type git :host github :repo "magoyette/openapi-yaml-mode"))
-  (straight-use-package '(openapi-preview :type git :host github :repo "merrickluo/openapi-preview"))
-
-  (eval-after-load "yaml"
-    (defun haris//after-load/openapi ()
-      (require 'openapi-yaml-mode)
-      (require 'openapi-preview)))
-
-  (add-to-list 'auto-mode-alist '("(openapi|swagger)\\.ya?ml$" . openapi-yaml-mode))
-#+end_src
 *** Keybindings
 #+begin_src elisp
   (eval-after-load 'yaml-pro
@@ -1054,46 +1010,6 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
     (with-eval-after-load 'lsp-ui-sideline
       (setq lsp-ui-sideline-delay 1.0)))
 #+end_src
-
-Use LSP indentation features when running =spacemacs/indent-region-or-buffer=, if
-they are available.
-#+begin_src elisp
-  ;; (eval-after-load 'lsp-mode
-  ;;   (add-hook
-  ;;    'lsp-configure-hook
-  ;;    (defun haris//setup-format-function-for-lsp-buffer ()
-  ;;      ;; Record default indentation function
-  ;;      (when (not (boundp 'haris//default-indent-region-function))
-  ;;        (setq-local haris//default-indent-region-function indent-region-function))
-  ;;      ;; Set up a custom indent function that uses LSP formatting
-  ;;      (setq-local
-  ;;       indent-region-function
-  ;;       (defun haris//lsp-format-dwim-with-fallback (start end)
-  ;;         (condition-case nil
-  ;;             ;; Try lsp-format-region
-  ;;             (lsp-format-region start end)
-  ;;           ;; If it fails:
-  ;;           (error
-  ;;            ;; Check if the region is the whole buffer
-  ;;            (if (and (= start (point-min))
-  ;;                     (= end (point-max)))
-  ;;                ;; If yes:
-  ;;                (condition-case nil
-  ;;                    ;; Try lsp-format-buffer
-  ;;                    (lsp-format-buffer)
-  ;;                  ;; If this also fails:
-  ;;                  (error
-  ;;                   (let ((bound-func (key-binding (kbd ",=="))))
-  ;;                     ;; If a command is bound to ",=="
-  ;;                     (if bound-func
-  ;;                         ;; Run it
-  ;;                         (call-interactively bound-func)
-  ;;                       ;; Else: Use the default indent region function
-  ;;                       (funcall haris//default-indent-region-function start end)))))
-  ;;                  ;; Else: if region is not whole buffer
-  ;;                  ;; Use the default indent region function
-  ;;                  (funcall haris//default-indent-region-function start end)))))))))
-#+end_src
 *** Keybindings
 #+begin_src elisp
   (eval-after-load 'lsp-mode
@@ -1139,7 +1055,6 @@ insert mode. I disable those modes by aliasing them to =ignore=.
              ("'" dap-ui-repl "Show REPL"))))
 #+end_src
 ** Python
-Spacemacs: elpy layer downloaded from [[https://github.com/rgemulla/spacemacs-layers][here]]
 #+begin_src elisp
   (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
 
@@ -1320,101 +1235,6 @@ Fix for empty image list (not sure if the fix works):
 #+begin_src elisp
   (use-package bluetooth :defer t)
 #+end_src
-** ERC
-#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el
-  (use-package erc)
-  (setq erc-server "irc.libera.chat"
-        erc-nick "veracioux"
-        erc-user-full-name "Haris Gušić"
-        erc-track-shorten-start 8
-        erc-autojoin-channels-alist '(("irc.libera.chat" "#archlinux" "#Jobs" "#fossjobs"))
-        erc-kill-buffer-on-part t
-        erc-auto-query 'bury)
-
-  (add-hook 'erc-join-hook (lambda () (evil-normal-state)))
-
-  ;; For some reason erc-modules is undefined
-  (add-to-list 'erc-modules 'notifications)
-  (delete 'readonly erc-modules)
-  (erc-services-mode 1)
-  (erc-update-modules)
-
-  (erc-notify-mode t)
-  (erc-notifications-mode t)
-#+end_src
-*** Keybindings
-#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el
-  (defun haris/erc-quit-channel () (interactive)
-         (erc-part-from-channel ""))
-  (defun haris/euirc () (interactive)
-         (erc :server "irc.euirc.net" :port 6667 :nick "veracioux"))
-  (defun haris/erc-list-channels () (interactive)
-         (erc-with-server-buffer
-          (erc-kill-input)
-          (insert "/list")
-          (erc-send-current-line)))
-
-  (define-key               erc-mode-map    (kbd "C-l") 'comint-clear-buffer)
-  (evil-define-key  'normal erc-mode-map    (kbd ",b")  'erc-switch-to-buffer)
-  (evil-define-key  'normal erc-mode-map    (kbd ",j")  'erc-join-channel)
-  (evil-define-key  'normal erc-mode-map    (kbd ",q")  'haris/erc-quit-channel)
-  (evil-define-key  'normal erc-mode-map    (kbd ",l")  'haris/erc-list-channels)
-
-  (evil-define-key  'motion erc-list-menu-mode-map  (kbd "RET")   nil)
-  (evil-define-key  'normal erc-list-menu-mode-map  (kbd "RET")   nil)
-#+end_src
-*** Theme tweak
-#+begin_src elisp :tangle ~/.emacs.d/haris/irc.el
-  (setq erc-track-faces-priority-list
-        '(erc-error-face
-          erc-notice-face
-          (erc-nick-default-face erc-current-nick-face)
-          erc-current-nick-face erc-keyword-face
-          (erc-nick-default-face erc-pal-face)
-          erc-pal-face erc-nick-msg-face erc-direct-msg-face
-          (erc-button erc-default-face)
-          (erc-nick-default-face erc-dangerous-host-face)
-          erc-dangerous-host-face erc-nick-default-face
-          (erc-nick-default-face erc-default-face)
-          erc-default-face erc-action-face
-          (erc-nick-default-face erc-fool-face)
-          erc-fool-face erc-input-face erc-prompt-face))
-#+end_src
-*** Systemd service
-#+NAME: irc.service
-#+begin_src systemd :tangle ~/.config/systemd/user/irc.service
-  [Unit]
-  Description=Emacs daemon for IRC chat
-  Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
-
-  [Service]
-  Type=forking
-  Environment=COLORTERM=truecolor
-  ExecStart=/usr/bin/emacs --daemon="irc"
-  Restart=always
-  TimeoutStartSec=600
-  TimeoutStopSec=30
-  StartLimitBurst=0
-
-  [Install]
-  WantedBy=default.target
-#+end_src
-** EDBI
-Database viewer in Emacs.
-#+begin_src elisp
-  (use-package edbi
-    :defer t
-    :config (progn
-              (define-key edbi:dbview-keymap (kbd "SPC") nil)
-              (define-key edbi:dbview-keymap (kbd "RET")
-                'edbi:dbview-show-tabledef-command)))
-#+end_src
-*** Dependencies                                                     :deps:
-#+begin_src shell :tangle (haris/tangle-deps "emacs/edbi.cpan")
-  RPC::EPC::Service DBI
-  # For postgres support
-  DBD::Pg
-#+end_src
 ** Octave
 #+begin_src elisp
   (defun octave-write-and-source () (interactive)
@@ -1425,31 +1245,6 @@ Database viewer in Emacs.
     (kbd ",ss") 'octave-write-and-source)
   (evil-define-key 'normal inferior-octave-mode-map
     (kbd ",hh") 'octave-help)
-#+end_src
-** Reddit
-*** md4rd
-#+begin_src elisp
-  (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines)
-  (setq md4rd-subs-active '(linuxquestions+linux+opensource plc))
-#+end_src
-*** reddigg
-This is a very elegant reader for reddit that uses org-mode.
-#+begin_src elisp
-  (defun reddit-view-linux () (interactive)
-         (reddigg-view-sub "linux+linuxquestions+opensource"))
-  (defun reddit-view-elec () (interactive)
-         (reddigg-view-sub "plc+ElectricalEngineering+embedded"))
-#+end_src
-** Maxima
-I used this mode like 2-3 times, but I'm keeping it in case I have to use it again.
-#+begin_src elisp
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
-  (autoload 'maxima-mode "maxima" "Maxima mode" t)
-  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
-  (autoload 'maxima "maxima" "Maxima interaction" t)
-  (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
-  (setq imaxima-use-maxima-mode-flag t)
-  (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 #+end_src
 * Minibuffer
 #+begin_src elisp
@@ -1692,13 +1487,6 @@ I extend the Ivy actions for some commands.
                           (file-expand-wildcards "~/proj/*/*.org")
                           (file-expand-wildcards "~/proj/drytoe/*/*.org")))
 #+end_src
-** TODO Syntax extensions
-Doesn't get loaded correctly.
-#+begin_src elisp :tangle no
-  (use-package org-special-block-extras
-    :ensure t
-    :hook (org-mode . org-special-block-extras-mode))
-#+end_src
 ** org-alert
 Takes too long to load.
 #+begin_src elisp :tangle no
@@ -1818,18 +1606,6 @@ Takes too long to load.
     (spacemacs/set-leader-keys-for-minor-mode
       'verb-response-body-mode
       "rs" #'verb-show-request))
-#+end_src
-** Restclient
-#+begin_src elisp
-  (defun haris/org-babel-restclient-split-window-fix ()
-    "Fixes a bug where executing a restclient code block splits the window."
-    (interactive)
-    (if (string=
-         (car (org-babel-get-src-block-info))
-         "restclient")
-        (delete-window)))
-
-  (add-hook 'org-babel-after-execute-hook 'haris/org-babel-restclient-split-window-fix)
 #+end_src
 ** Bindings
 #+begin_src elisp
@@ -2015,40 +1791,6 @@ Takes too long to load.
         '(make-llm-claude :key anthropic-key :chat-model "claude-sonnet-4-5-20250929"))
 
   (provide 'haris/ai)
-#+end_src
-** ChatGPT
-#+begin_src elisp
-  (eval-after-load 'chatgpt
-    (lambda () (setq chatgpt-model "gpt-4-turbo-preview")))
-  (eval-after-load 'codegpt
-    (lambda () (setq codegpt-model "gpt-3.5-turbo-instruct")))
-  (setq chatgpt-window-prompt "")
-  (setq chatgpt-display-method
-        (lambda (buffer-or-name)
-          (pop-to-buffer buffer-or-name
-                         `((display-buffer-in-direction)
-                           (dedicated . t)))
-          (spacemacs/toggle-maximize-buffer)
-          (chatgpt-type-response)))
-  (add-hook 'chatgpt-input-mode-hook
-            (defun haris//chatgpt-input-setup ()
-              (call-interactively 'evil-insert-state)))
-#+end_src
-*** Keybindings
-#+begin_src elisp
-  ;; ChatGPT mode
-  (define-key chatgpt-mode-map (kbd "q") 'quit-window)
-  (define-key chatgpt-mode-map (kbd "RET")
-              (defun haris//chatgpt-type-response ()
-                (interactive)
-                (let ((haris/chatgpt-session-buffer (current-buffer)))
-                  (chatgpt-type-response))))
-  ;; CodeGPT mode
-  (haris/evil-define-key-both codegpt-mode-map (kbd "q") 'quit-window)
-
-  ;; ChatGPT input mode
-  (evil-define-key 'normal chatgpt-input-mode-map (kbd "q") 'kill-this-buffer)
-  (evil-define-key 'visual chatgpt-input-mode-map (kbd "q") 'kill-this-buffer)
 #+end_src
 ** Copilot
 #+begin_src elisp
@@ -2252,26 +1994,6 @@ I wrap my shell in =screen= as a workaround. NOTE: If I set =vterm-shell=
 directly, it is overriden by the Spacemacs shell layer.
 #+begin_src elisp
   (setq shell-default-term-shell "screen fish")
-#+end_src
-*** Vterm daemon
-I sometimes use Emacs as my terminal emulator. For that I need additional
-stability, so I run a separate daemon for that, which is unaffected by blockage
-and crashes of my default Emacs instance.
-#+begin_src systemd :tangle ~/.config/systemd/user/vterm.service
-  [Unit]
-  Description=Emacs daemon for Vterm
-
-  [Service]
-  Type=forking
-  Environment=COLORTERM=truecolor
-  ExecStart=/usr/bin/emacs --daemon="vterm"
-  Restart=always
-  TimeoutStartSec=600
-  TimeoutStopSec=30
-  StartLimitBurst=0
-
-  [Install]
-  WantedBy=default.target
 #+end_src
 *** Bindings
 #+begin_src elisp
@@ -2624,10 +2346,6 @@ Remove Info mode annoying keybindings.
   (eval-after-load 'transient
     (lambda () (setq transient-values-file "~/.emacs.d/transient/values.el")))
 #+end_src
-** dirvish
-#+begin_src elisp
-  (use-package dirvish :defer t)
-#+end_src
 ** Documentation
 #+begin_src elisp
   (use-package tldr :defer t)
@@ -2696,7 +2414,6 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
       :variables
       vim-style-enable-undo-region t)
      spacemacs-editing-visual
-     multiple-cursors
      spell-checking
      (auto-completion ; (ref:auto-completion)
       :enabled-for  ;; Configured manually for specific languages
@@ -2717,7 +2434,6 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
           org-enable-appear-support t
           org-enable-transclusion-support t
           org-enable-verb-support t)
-     restclient
 
      ;; Search and help
      search-engine
@@ -2789,7 +2505,6 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
       llm-client-enable-ellama t)
 
      ;; REPLs
-     ipython-notebook
      shell
 
      ;; Misc
@@ -2803,42 +2518,12 @@ Spacemacs would delete them every time on startup.
   (setq-default
    dotspacemacs-additional-packages
    '(
-     org-fragtog
-     org-drill
-     org-ref
-     org-attach-screenshot
-     org-special-blocks
-     ob-ipython
      yasnippet-snippets
      vterm
      rainbow-mode
      evil-easymotion
-     reddigg
-     md4rd
-     pydoc
      pylint
-     python-info
      nodejs-repl
-     command-log-mode
-     org-preview-html
-     vimrc-mode
-     systemd
-     evil-quickscope
-     edbi
-     counsel-jq
-     sxhkdrc-mode
-     bluetooth
-     git-gutter
-     json-mode
-     fish-mode
-     currency-convert
-     i3wm-config-mode
-     docker-compose-mode
-     react
-     focus-autosave-mode
-     xclip
-     accent
-     sqlite3
      company-shell
      company-statistics
      (lsp-mode :location (recipe :fetcher github
