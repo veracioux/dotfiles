@@ -106,81 +106,53 @@
   frame_color             = "#ff8c8c"
   timeout                 = 20
 #+end_src
-* Rsync exclude
-:PROPERTIES:
-:header-args: :tangle ~/.rsync-exclude
-:END:
-** Common user-level caches
-#+begin_src text
-  .cache/
-  .thumbnails/
-  .adobe/
-  .macromedia/
-#+end_src
-** Browser caches
-#+begin_src text
-  .mozilla/firefox/*/cache2/
-  .mozilla/firefox/*/storage/
-#+end_src
-** Package manager caches
-#+begin_src text
-  .bun/
-  .cargo/
-  .gem/
-  .go
-  .npm
-  .rustup/*/
-  .yarn/
-  .gradle/
-  .local/pnpm/
-  .pyenv/
-  **/.venv/
-  **/.pnpm-store/
-#+end_src
-** Python build/test caches
-#+begin_src text
-  **/__pycache__/
-  **/.pytest_cache/
-  **/.tox/
-  **/.mypy_cache/
-#+end_src
-** Node and related build caches
-#+begin_src text
-  **/node_modules/
-  **/.bower/
-  **/.next/
-  **/.nuxt/
-  **/.vscode/extensions/
-#+end_src
-** Build outputs
-#+begin_src text
-  **/dist/
-  **/build/
-  **/out/
-  **/target/
-  .mozbuild/
-#+end_src
-** Misc editors / IDEs
-#+begin_src text
-  .vscode*/
-  .emacs.d/eln-cache/
-  .emacs.d/elpa/
-  .spacemacs.env
-#+end_src
-** Logs and temp files
-#+begin_src text
-  ,**/*.log
-  ,**/*.swp
-  ,**/*.swo
-  ,**/*~
-  ,**/.DS_Store
-  ,**/.Trash*/
-#+end_src
-** Miscellaneous others
-#+begin_src text
-  .AndroidStudio_sdk*/
-  .ViberPC/
-  .local/share/
+* Backup
+#+begin_src shell :tangle ~/.local/bin/backup
+  _ls() {
+      ls -d "$@" || true
+  }
+
+  files() {
+      git --git-dir ~/.git --work-tree ~ ls-files
+      _ls ~/.git
+      _ls ~/.password-store/
+      _ls ~/.ssh/
+      _ls ~/.gnupg/
+      _ls ~/.local/share/fish/fish_history*
+      _ls ~/.local/share/buku/
+      _ls ~/.local/share/opencode/
+      _ls ~/.config/fish/private.fish
+  }
+
+  exclude() {
+      grep --fixed-strings                        \
+           -ve /node_modules/                     \
+           -ve /_node_modules/                    \
+           -ve /.venv/                            \
+           -ve /.pnpm-store/                      \
+           -ve /__pycache__/                      \
+           -ve /.pytest_cache/                    \
+           -ve /.tox/                             \
+           -ve /.mypy_cache/                      \
+           -ve /.bower/                           \
+           -ve /.next/                            \
+           -ve /.nuxt/                            \
+           -ve /dist/                             \
+           -ve /build/                            \
+           -ve /out/                              \
+           -ve /target/                           \
+           -ve /log/                              \
+           -ve /logs/                             \
+          | grep                                  \
+                -ve '/\.Trash.*/'                 \
+                -ve '.*\.DS_Store$'               \
+                -ve '.*\.log$'                    \
+                -ve '.*\.swp$'                    \
+                -ve '.*\.swo$'                    \
+                -ve '.*\.~$'
+  }
+
+  files | exclude
 #+end_src
 * IdeaVim
 #+begin_src vimrc :tangle ~/.ideavimrc
