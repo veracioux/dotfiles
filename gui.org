@@ -117,7 +117,6 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   allowMultipleGuiInstances=false
   autoCloseIdleDaemon=true
   buttons=@Variant(\0\0\0\x7f\0\0\0\x19QList<CaptureTool::Type>\0)
-  checkForUpdates=false
   contrastOpacity=188
   contrastUiColor=#f298c3
   disabledTrayIcon=false
@@ -143,7 +142,6 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   TYPE_DELETE_CURRENT_TOOL=Del
   TYPE_DRAWER=D
   TYPE_EXIT=Ctrl+Q
-  TYPE_IMAGEUPLOADER=Ctrl+U
   TYPE_MARKER=M
   TYPE_MOVESELECTION=Ctrl+M
   TYPE_MOVE_DOWN=J
@@ -162,7 +160,6 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
   TYPE_RESIZE_UP=Shift+K
   TYPE_SAVE=Ctrl+S
   TYPE_SELECTION=S
-  TYPE_SELECTIONINDICATOR=
   TYPE_SELECT_ALL=Ctrl+A
   TYPE_SIZEDECREASE=-
   TYPE_SIZEINCREASE=+
