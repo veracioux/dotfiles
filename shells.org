@@ -93,11 +93,6 @@ run it on the =fish_preexec= event if it wasn't run before.
           set private "(private) "
       end
 
-      set -l node_env
-      if [ -n "$NODE_ENV" ]
-          set node_env "  $NODE_ENV"
-      end
-
       set -l tty_id "  $(basename (tty))"
 
       echo -n -s  (set_color --bold brblue)   "$USER$host "               \
@@ -109,6 +104,7 @@ run it on the =fish_preexec= event if it wasn't run before.
                   "$tty_id"                                               \
                   (set_color green)           $node_env                   \
                   " " (__haris_prompt_compose_status)                     \
+                  "$(__haris_prompt_env_vars)"                            \
                   (set_color yellow)          \n" $suffix "
 
       # These are needed because some apps (docker-compose) don't clean up properly
@@ -118,6 +114,117 @@ run it on the =fish_preexec= event if it wasn't run before.
           # Show the cursor again
           echo -e "\e[?25h"
       end
+  end
+#+end_src
+***** Helpers
+****** =__haris_prompt_env_vars=
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_prompt_env_vars.fish
+  function __haris_prompt_env_vars --argument-names cmd
+      argparse h/help -- $argv
+      if [ -n "$_flag_help" ]
+          echo "Usage: __haris_prompt_env_vars [dump]"
+          echo
+          echo "Commands:"
+          echo "  dump    Dump the current variable values as the baseline"
+          return
+      end
+      set -l file ~/.local/state/haris_prompt_env_defaults.txt
+      if [ "$cmd" = "dump" ] || [ ! -f "$file" ]
+          env > "$file"
+          return
+      end
+      awk '
+          BEGIN { FS="=" }
+          NR==FNR { defaults[$1] = substr($0, index($0, "=") + 1); next }
+          { runtime[$1] = substr($0, index($0, "=") + 1) }
+          END {
+              for (var in defaults) {
+                  if (!(var in runtime)) {
+                      print var, "|", defaults[var], "| "
+                  } else {
+                      print var, "|", defaults[var], "|", runtime[var]
+                  }
+              }
+              for (var in runtime) {
+                  if (!(var in defaults)) {
+                      print var, "|  |", runtime[var]
+                  }
+              }
+          }
+      ' "$file" (env | psub) | while read -l line
+          set -l var (string split -f1 " | " -- "$line")
+          set -l default_value (string split -f2 " | " -- "$line")
+          set -l runtime_value (string split -f3 " | " -- "$line")
+          switch "$var"
+              case WINDOWID RCLONE_PASSWORD_COMMAND ALACRITTY_SOCKET \
+                  DEBUGINFOD_URLS ALACRITTY_WINDOW_ID ALACRITTY_LOG SHELL \
+                  LSP_USE_PLISTS INVOCATION_ID MEMORY_PRESSURE_WATCH \
+                  MEMORY_PRESSURE_WRITE PWD SYSTEMD_EXEC_PID MANAGERPID \
+                  MANAGERPIDFDID JOURNAL_STREAM WORKTREE EXPOSED_IP COMPOSE_PROJECT_NAME
+                  continue
+              case NODE_ENV
+                  if [ -z "$runtime_value" ]
+                      continue
+                  end
+                  set_color --bold green && echo -n "  $runtime_value" && set_color normal
+                  continue
+              case BUN_OPTIONS NODE_OPTIONS
+                  if [ -z "$default_value" ]
+                      set_color --bold yellow
+                      echo -n " $var=$runtime_value"
+                      continue
+                  end
+          end
+
+          # Display removed variables
+          if [ -n "$default_value" ] && [ -z "$runtime_value" ]
+              set_color red
+              echo -n " -$var"
+              set_color normal
+              continue
+          end
+
+          # Display added variables
+          if [ -z "$default_value" ] && [ -n "$runtime_value" ]
+              set_color --bold green
+              echo -n " +$var"
+              set_color normal
+              continue
+          end
+
+          if [ "$default_value" != "$runtime_value" ]
+              set_color --bold yellow
+              echo -n " $var"
+              set_color normal
+              continue
+          end
+      end
+  end
+#+end_src
+****** =__haris_prompt_compose_status=
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_prompt_compose_status.fish
+  function __haris_prompt_compose_status
+      set_color yellow
+      set -l any_content
+      if [ -n "$WORKTREE" ]
+          echo -n "WT: $WORKTREE"
+          set any_content true
+      end
+      if [ "$COMPOSE_PROJECT_NAME" ]
+          if [ -n "$any_content" ]
+              echo -n " "
+          end
+          echo -n "COMPOSE: $COMPOSE_PROJECT_NAME"
+          set any_content true
+      end
+      if [ -n "$EXPOSED_IP" ]
+          if [ -n "$any_content" ]
+              echo -n " "
+          end
+          echo -n "IP: $EXPOSED_IP"
+          set any_content true
+      end
+      set_color normal
   end
 #+end_src
 **** =fish_mode_prompt=
@@ -143,33 +250,6 @@ run it on the =fish_preexec= event if it wasn't run before.
                   set_color --bold red
                   echo '?'
           end
-      end
-      set_color normal
-  end
-#+end_src
-**** Helpers
-***** =__haris_prompt_compose_status=
-#+begin_src fish :tangle ~/.config/fish/functions/__haris_prompt_compose_status.fish
-  function __haris_prompt_compose_status
-      set_color yellow
-      set -l any_content
-      if [ -n "$WORKTREE" ]
-          echo -n "WT: $WORKTREE"
-          set any_content true
-      end
-      if [ "$COMPOSE_PROJECT_NAME" ]
-          if [ -n "$any_content" ]
-              echo -n " | "
-          end
-          echo -n "COMPOSE: $COMPOSE_PROJECT_NAME"
-          set any_content true
-      end
-      if [ -n "$EXPOSED_IP" ]
-          if [ -n "$any_content" ]
-              echo -n " | "
-          end
-          echo -n "IP: $EXPOSED_IP"
-          set any_content true
       end
       set_color normal
   end
