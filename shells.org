@@ -93,15 +93,22 @@ run it on the =fish_preexec= event if it wasn't run before.
           set private "(private) "
       end
 
+      set -l node_env
+      if [ -n "$NODE_ENV" ]
+          set node_env "  $NODE_ENV"
+      end
 
-      echo -n -s  (set_color --bold brblue)   "$USER$host "                \
-                  (set_color bryellow)        "$private"          $normal  \
-                  (set_color --bold magenta)  (prompt_pwd)        $normal  \
-                  (set_color brmagenta)       "$vcs_prompt"                \
-                  (set_color brmagenta)       $prompt_status               \
-                  (set_color white)           $sudo_privilege              \
-                  "  $(basename (tty))"                                  \
-                  "    " (__haris_prompt_compose_status)                   \
+      set -l tty_id "  $(basename (tty))"
+
+      echo -n -s  (set_color --bold brblue)   "$USER$host "               \
+                  (set_color bryellow)        "$private"          $normal \
+                  (set_color --bold magenta)  (prompt_pwd)        $normal \
+                  (set_color brmagenta)       "$vcs_prompt"               \
+                  (set_color brmagenta)       $prompt_status              \
+                  (set_color white)           $sudo_privilege             \
+                  "$tty_id"                                               \
+                  (set_color green)           $node_env                   \
+                  " " (__haris_prompt_compose_status)                     \
                   (set_color yellow)          \n" $suffix "
 
       # These are needed because some apps (docker-compose) don't clean up properly
