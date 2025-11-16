@@ -425,7 +425,6 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   # Fixes some vterm issues
   pymander/vfish
   brgmnn/fish-docker-compose
-  oh-my-fish/plugin-pyenv@df70a41
   rstacruz/fish-asdf@5869c1b
   jethrokuan/z
 #+end_src
