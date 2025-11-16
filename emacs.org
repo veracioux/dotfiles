@@ -489,7 +489,7 @@ without binding them to any keys.
     "Open a file or directory in VSCode."
     (interactive (list (buffer-file-name)))
     (start-process
-     "code" nil
+     "vscode" nil
      "fish" "-c"
      (format "o code --wait --new-window %s &"
              (shell-quote-argument (expand-file-name file)))))
@@ -1428,7 +1428,7 @@ I extend the Ivy actions for some commands.
         "open opencode in project")
        ("V"
         (lambda (project)
-          (start-process "vscode" nil "o" "vscode" "--new-window" (expand-file-name project)))
+          (haris/vscode project))
         "open vscode in project"))))
 #+end_src
 *** Bindings
