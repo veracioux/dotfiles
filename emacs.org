@@ -1420,7 +1420,7 @@ I extend the Ivy actions for some commands.
         "open opencode in project")
        ("V"
         (lambda (project)
-          (start-process "vscode" nil "o" "vscode" (expand-file-name project)))
+          (start-process "vscode" nil "o" "vscode" "--new-window" (expand-file-name project)))
         "open vscode in project"))))
 #+end_src
 *** Bindings
