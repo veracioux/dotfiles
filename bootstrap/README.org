@@ -41,18 +41,6 @@ A library of functions for easier tangling.
      (shell      . t)
      (python     . t)))
 #+end_src
-** Keys
-#+begin_src elisp
-  (condition-case err
-      (progn
-        (setq openai-key
-              (password-store-get "openai/api-key"))
-        (setq anthropic-key
-              (password-store-get "anthropic/api-key")))
-    (error (message "WARNING: %s" err)))
-#+end_src
-*** OpenAI key file                                          :configurable:
-To make your OpenAI key available to various AI tools, you can put it in [[~/.local/share/haris/openai-api-key.txt][this file]].
 ** Custom functions and tweaks
 #+begin_src elisp
   (defun haris/prevent-annoying-messages ()

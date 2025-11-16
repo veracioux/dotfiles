@@ -144,18 +144,6 @@
     "apiKeyHelper": "pass show anthropic/api-key | trim"
   }
 #+end_src
-** Aider
-#+begin_src yaml :tangle ~/.aider.conf.yml
-  model: openai/o4-mini
-  auto-commits: false
-  notifications: true
-  watch-files: true
-
-  api-key:
-    - openai=«get-api-key("openai")»
-    - gemini=«get-api-key("gemini")»
-    - anthropic=«get-api-key("anthropic")»
-#+end_src
 ** OpenCode
 #+begin_src jsonc :tangle ~/.config/opencode/opencode.jsonc
   // https://opencode.ai/docs/config/
@@ -188,9 +176,6 @@
           "uvx",
           "voice-mode"
         ],
-        "environment": {
-          "OPENAI_API_KEY": "«get-api-key("openai")»"
-        },
         "enabled": false
       },
       "emacs": {

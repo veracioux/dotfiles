@@ -169,7 +169,6 @@ correctly, like the ID of your bluetooth headphones, etc.
 These tweaks are mandatory for all the features to work correctly. If you don't
 configure some of them, your system probably won't break but you will experience
 missing features.
-- [[file:bootstrap/README.org::*OpenAI key file][OpenAI key]]
 - [[file:wm.org::*Bluetooth headphones ID][Bluetooth headphones ID]]
 - [[file:wm.org::*Local configuration][CPU temperature file]]
 ** Optional tweaks

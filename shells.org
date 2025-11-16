@@ -1466,12 +1466,6 @@ abbreviations for equivalent apt operations.
   # VirtualBox
   conditional_abbr -g vb   'vboxmanage'
 #+end_src
-**** API Keys
-#+begin_src fish
-  abbr --position anywhere --set-cursor '$AK' '$(pass show %/api-key)'
-  abbr --position anywhere --set-cursor '$AKO' '$(pass show openai/api-key)'
-  abbr --position anywhere --set-cursor '$AKM' '$(pass show mistral/api-key)'
-#+end_src
 **** Discard helper function
 #+begin_src fish
   functions --erase conditional_abbr
@@ -1572,11 +1566,6 @@ Code block that is evaluated in order to edit the ephemeral configuration file.
   (spacemacs/find-file-split
    (format "%s/ephemeral.config.fish"
            (getenv "XDG_RUNTIME_DIR" (selected-frame))))
-#+end_src
-*** =get-openai-key=
-#+NAME: get-openai-key
-#+begin_src elisp
-  (if (boundp 'openai-key) openai-key "''")
 #+end_src
 ** Dependencies                                                       :deps:
 #+begin_src text :tangle (haris/tangle-deps "shells.pacman")

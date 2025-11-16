@@ -13,14 +13,6 @@
    (shell      . t)
    (python     . t)))
 
-(condition-case err
-    (progn
-      (setq openai-key
-            (password-store-get "openai/api-key"))
-      (setq anthropic-key
-            (password-store-get "anthropic/api-key")))
-  (error (message "WARNING: %s" err)))
-
 (defun haris/prevent-annoying-messages ()
   (require 'cl-lib)
   (advice-add 'sh-set-shell :around

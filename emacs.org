@@ -100,6 +100,14 @@ you perfomed the [[*Setup][setup]] in order to have the theme available.
                                 (load-theme 'dracula t)))
               (remove-hook 'after-make-frame-functions #'haris/load-theme-delayed)))
 #+end_src
+** API keys
+#+begin_src elisp
+  (defun haris/api-keys ()
+    (interactive)
+    (setq openai-key (password-store-get "openai/api-key"))
+    (setq anthropic-key (password-store-get "anthropic/api-key"))
+    (provide 'haris/api-keys))
+#+end_src
 ** Package bootstrapping
 I normally use =use-package= for installing packages (with =melpa= as the default source).
 I use =straight= to clone some packages that are not available on =melpa=.
@@ -1807,16 +1815,17 @@ Takes too long to load.
 #+end_src
 * AI
 #+begin_src elisp
-  (require 'llm-claude)
+  (with-eval-after-load 'haris/api-keys
+    (require 'llm-claude)
 
-  (setq haris/ai/model/openai/o3-mini/creator
-        '(make-llm-openai :key openai-key :chat-model "o3-mini"))
-  (setq haris/ai/model/openai/o4-mini/creator
-        '(make-llm-openai :key openai-key :chat-model "o4-mini"))
-  (setq haris/ai/model/claude/sonnet-4.5/creator
-        '(make-llm-claude :key anthropic-key :chat-model "claude-sonnet-4-5-20250929"))
+    (setq haris/ai/model/openai/o3-mini/creator
+          '(make-llm-openai :key openai-key :chat-model "o3-mini"))
+    (setq haris/ai/model/openai/o4-mini/creator
+          '(make-llm-openai :key openai-key :chat-model "o4-mini"))
+    (setq haris/ai/model/claude/sonnet-4.5/creator
+          '(make-llm-claude :key anthropic-key :chat-model "claude-sonnet-4-5-20250929"))
 
-  (provide 'haris/ai)
+    (provide 'haris/ai))
 #+end_src
 ** Copilot
 #+begin_src elisp
@@ -1946,17 +1955,19 @@ Takes too long to load.
 #+end_src
 ** Gptel
 #+begin_src elisp
-  (setq gptel-confirm-tool-calls t)
-  (setq gptel-default-mode 'org-mode)
-  (setq gptel-api-key openai-key)
+  (with-eval-after-load 'haris/api-keys
+    (setq gptel-confirm-tool-calls t)
+    (setq gptel-default-mode 'org-mode)
+    (setq gptel-api-key openai-key))
 #+end_src
 ** Ellama
 #+begin_src elisp
-  (setopt
-   ellama-providers
-   `(("openai/o3-mini" . (,haris/ai/model/openai/o3-mini/creator))
-     ("openai/o4-mini" . (,haris/ai/model/openai/o4-mini/creator))))
-  (setopt ellama-provider (eval haris/ai/model/openai/o4-mini/creator))
+  (with-eval-after-load 'haris/ai
+    (setopt
+     ellama-providers
+     `(("openai/o3-mini" . (,haris/ai/model/openai/o3-mini/creator))
+       ("openai/o4-mini" . (,haris/ai/model/openai/o4-mini/creator))))
+    (setopt ellama-provider (eval haris/ai/model/openai/o4-mini/creator)))
 #+end_src
 * REPLs in Emacs
 ** Common settings
