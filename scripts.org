@@ -133,7 +133,14 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =firefox=                                                         :wrapper:
 #+begin_src shell :tangle ~/.local/bin/firefox
-  /usr/bin/firefox $(printarg --new-tab "$@" | uniq)
+  args="$(printarg --new-tab "$@" | uniq)"
+
+  if [ "$(get-os-type)" = ubuntu ] && [ -e ~/.local/opt/firefox ]; then
+      ~/.local/opt/firefox/firefox $args
+      exit
+  fi
+
+  alternative-command firefox $args
 #+end_src
 ** =myemacs=                                                         :wrapper:
 #+begin_src bash :tangle ~/.local/bin/myemacs
