@@ -216,6 +216,21 @@
         "enabled": true
       }
     },
+    "provider": {
+      "ollama": {
+        "npm": "@ai-sdk/openai-compatible",
+        "name": "Ollama (local)",
+        "options": {
+          "baseURL": "http://localhost:11434/v1"
+        },
+        "models": {
+          "qwen2.5-coder": {},
+          "smollm2:135m": {},
+          "qwen2.5-coder:1.5b": {},
+          "qwen2.5-coder:0.5b": {},
+        }
+      }
+    },
     "keybinds": {
       "agent_list": "alt+a",
       "model_list": "alt+m"
