@@ -176,7 +176,7 @@ run it on the =fish_preexec= event if it wasn't run before.
                   set_color --bold green && echo -n "  $runtime_value" && set_color normal
                   continue
               case BUN_OPTIONS NODE_OPTIONS
-                  if [ -z "$default_value" ]
+                  if [ -z "$default_value" ] && [ -n "$runtime_value" ]
                       set_color --bold yellow
                       echo -n " $var=$runtime_value"
                       continue
