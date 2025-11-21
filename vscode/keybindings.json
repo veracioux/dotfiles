@@ -248,7 +248,7 @@
 				"workbench.action.terminal.kill",
 				"workbench.action.closePanel"
 			],
-			"interval": 200
+			"interval": 400
 		},
 		"when": "editorTextFocus"
 	},
@@ -267,7 +267,7 @@
 				"workbench.action.terminal.kill",
 				"workbench.action.closePanel"
 			],
-			"interval": 200
+			"interval": 400
 		},
 		"when": "editorTextFocus"
 	},
@@ -286,7 +286,7 @@
 				"workbench.action.terminal.kill",
 				"workbench.action.closePanel"
 			],
-			"interval": 200
+			"interval": 400
 		},
 		"when": "editorTextFocus"
 	}
