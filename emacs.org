@@ -923,10 +923,6 @@ Some custom keybindings are defined here as well.
 
   (let ((hooks '(yaml-mode-hook yaml-ts-mode-hook)))
     (dolist (hook hooks)
-      (add-hook hook
-                (lambda ()
-                  (require 'openapi-yaml-mode)
-                  (require 'openapi-preview)))
       (add-hook hook 'spacemacs/toggle-indent-guide)
       (add-hook hook #'eldoc-mode 90)
       (add-hook hook 'spacemacs/toggle-display-fill-column-indicator-on)
@@ -2116,6 +2112,7 @@ basis here.
        (sql-interactive-mode . ,common)
        (sql-mode . ,common)
        (json-mode . ,common)
+       (json-ts-mode . ,common)
        (jsonc-mode . ,common)
        (dockerfile-mode . ,common)
        (web-mode . ,web-mode)
