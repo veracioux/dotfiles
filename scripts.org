@@ -1291,40 +1291,41 @@ are designed to be easily integrated into dmenu scripts.
 
   for arg in "$@"; do
       case "$arg" in
-          .haris)         echo ~/.haris ;;
-          README.org)     echo ~/.haris/README.org ;;
-          temporary.org)  echo ~/.haris/temporary.org ;;
-          bootstrap.org)  echo ~/.haris/bootstrap/README.org ;;
-          alacritty)      echo ~/.haris/terminal.org ;;
-          alias-tmp)      echo ~/.alias-tmp ;;
-          alias-gui-tmp)  echo ~/.alias-gui-tmp ;;
-          fish)           echo ~/.haris/shells.org ;;
-          fish-private)   echo ~/.config/fish/private.fish ;;
-          fish-tmp)       echo ~/.config/fish/tmp.fish ;;
-          vifm)           echo ~/.haris/terminal.org ;;
-          git)            echo ~/.haris/vcs.org ;;
-          gh)             echo ~/.haris/vcs.org ;;
-          hg)             echo ~/.haris/vcs.org ;;
-          picom)          echo ~/.haris/wm.org ;;
-          dunst)          echo ~/.haris/misc.org ;;
-          tem)            echo ~/.haris/terminal.org ;;
-          mime)           echo ~/.haris/README.org ;;
-          zathura)        echo ~/.haris/gui.org ;;
-          emacs)          echo ~/.haris/emacs.org ;;
-          spacemacs)      echo ~/.spacemacs ;;
-          cron)           echo ~/.crontab ;;
-          octave)         echo ~/.octaverc ;;
-          python)         echo ~/.startup.py ;;
-          tuterm)         echo ~/.haris/terminal.org ;;
-          xinit)          echo ~/.haris/wm.org ;;
-          sxhkd)          echo ~/.haris/wm.org ;;
-          mpv)            echo ~/.haris/gui.org ;;
-          flameshot)      echo ~/.haris/gui.org ;;
-          cheat)          echo ~/.haris/terminal.org ;;
-          monero)         echo ~/.config/monero-project/monero-core.conf ;;
-          xmrig)          echo ~/.config/xmrig.json ;;
-          tmux)           echo ~/.tmux.conf ;;
-          *)
+          .haris)                  echo ~/.haris ;;
+          README.org)              echo ~/.haris/README.org ;;
+          temporary.org)           echo ~/.haris/temporary.org ;;
+          bootstrap.org)           echo ~/.haris/bootstrap/README.org ;;
+          alacritty)               echo ~/.haris/terminal.org ;;
+          alias-tmp)               echo ~/.alias-tmp ;;
+          alias-gui-tmp)           echo ~/.alias-gui-tmp ;;
+          fish)                    echo ~/.haris/shells.org ;;
+          fish-private)            echo ~/.config/fish/private.fish ;;
+          fish-tmp)                echo ~/.config/fish/tmp.fish ;;
+          vifm)                    echo ~/.haris/terminal.org ;;
+          git)                     echo ~/.haris/vcs.org ;;
+          gh)                      echo ~/.haris/vcs.org ;;
+          hg)                      echo ~/.haris/vcs.org ;;
+          picom)                   echo ~/.haris/wm.org ;;
+          dunst)                   echo ~/.haris/misc.org ;;
+          tem)                     echo ~/.haris/terminal.org ;;
+          mime)                    echo ~/.haris/README.org ;;
+          zathura)                 echo ~/.haris/gui.org ;;
+          emacs)                   echo ~/.haris/emacs.org ;;
+          spacemacs)               echo ~/.spacemacs ;;
+          cron)                    echo ~/.crontab ;;
+          octave)                  echo ~/.octaverc ;;
+          python)                  echo ~/.startup.py ;;
+          tuterm)                  echo ~/.haris/terminal.org ;;
+          xinit)                   echo ~/.haris/wm.org ;;
+          sxhkd)                   echo ~/.haris/wm.org ;;
+          mpv)                     echo ~/.haris/gui.org ;;
+          flameshot)               echo ~/.haris/gui.org ;;
+          cheat)                   echo ~/.haris/terminal.org ;;
+          xmrig)                   echo ~/.config/xmrig.json ;;
+          tmux)                    echo ~/.tmux.conf ;;
+          vscode/settings.json)    echo ~/.haris/vscode/settings.json ;;
+          vscode/keybindings.json) echo ~/.haris/vscode/keybindings.json ;;
+          ,*)
               if [ -f ~/.haris/"$arg" ]; then
                   echo ~/.haris/"$arg"
               fi
