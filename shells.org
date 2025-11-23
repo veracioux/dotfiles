@@ -1563,6 +1563,7 @@ abbreviations for equivalent apt operations.
   _abbr            -g l1    'ls -1'
   _abbr            -g T     'tee /dev/tty'
   _abbr            -g '?'   'whatis'
+  _abbr            -g fn    'function'
 #+end_src
 **** Google cloud
 #+begin_src fish
