@@ -167,7 +167,9 @@ run it on the =fish_preexec= event if it wasn't run before.
                   VSCODE_DEBUGPY_ADAPTER_ENDPOINTS PYTHON_BASIC_REPL VSCODE_NONCE \
                   GIT_ASKPASS ORIGINAL_XDG_CURRENT_DESKTOP VSCODE_GIT_IPC_HANDLE \
                   BUNDLED_DEBUGPY_PATH HARIS_CALLER_IS_DMENU EMACS_VTERM_PATH \
-                  INSIDE_EMACS STY TERMCAP SXHKD_PID I3SOCK DESKTOP_SESSION
+                  INSIDE_EMACS STY TERMCAP SXHKD_PID I3SOCK DESKTOP_SESSION WINDOW \
+                  GTK_MODULES GSM_SKIP_SSH_AGENT_WORKAROUND NIX_REMOTE \
+                  QT_ACCESSIBILITY CREDENTIALS_DIRECTORY
                   continue
               case NODE_ENV
                   if [ -z "$runtime_value" ]
