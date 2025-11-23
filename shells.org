@@ -216,14 +216,14 @@ run it on the =fish_preexec= event if it wasn't run before.
       set_color yellow
       set -l any_content
       if [ -n "$WORKTREE" ]
-          echo -n "WT: $WORKTREE"
+          echo -n "WT$WORKTREE"
           set any_content true
       end
       if [ "$COMPOSE_PROJECT_NAME" ]
           if [ -n "$any_content" ]
               echo -n " "
           end
-          echo -n "COMPOSE: $COMPOSE_PROJECT_NAME"
+          echo -n "  $COMPOSE_PROJECT_NAME"
           set any_content true
       end
       if [ -n "$EXPOSED_IP" ]
