@@ -916,6 +916,36 @@ Note: This code block must not contain any apostrophes!
       end
   end
 #+end_src
+*** =secclip=
+#+begin_src fish :tangle ~/.config/fish/functions/secclip.fish
+  function secclip --description "Copy text to clipboard for a limited time" --argument-names duration
+      set -g content "$(xsel -b -o)"
+      if [ -z "$content" ]
+          echo "No clipboard content detected. Copy something first and rerun."
+          return
+      end
+      set -g masked "$(echo "$content" | sed -E 's/^(..).*(..)$/\1****\2/')"
+      echo "Your secret: $masked"
+      set_color --bold red; echo "All occurrences of this secret will be deleted from the clipmenu history when the current shell exits"
+      echo "If this is not your intended secret, abort."
+      set_color normal
+
+      read -n1 -P "Proceed? (y/N): " answer
+
+      export HARIS_SECCLIP=1
+      set -g fish_private_mode true
+
+      if test "$answer" != "y" -a "$answer" != "Y"
+          echo "Aborting."
+          return
+      end
+
+      function (tmp_func) --on-event fish_exit
+          notify-send "secclip" "Deleting secret '$masked' from clipboard history"
+          clipdel -d "$content"
+      end
+  end
+#+end_src
 *** Worktree utilities
 **** =wt=
 #+begin_src fish :tangle ~/.config/fish/functions/wt.fish
