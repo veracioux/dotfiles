@@ -109,9 +109,6 @@
     "[github-actions-workflow]": {
         "editor.defaultFormatter": "redhat.vscode-yaml"
     },
-    "[vue]": {
-        "editor.defaultFormatter": "Vue.volar"
-    },
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
