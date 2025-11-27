@@ -160,9 +160,11 @@ so I move it to the top-right corner.
 #+end_src
 ** Website workarounds
 #+begin_src css :tangle (concat main-profile-dir "/chrome/userContent.css")
-  /* github textareas are broken in dark mode */
-  textarea {
-    color: rgb(240, 246, 252) !important
+  @-moz-document domain("github.com") {
+    /* github textareas are broken in dark mode */
+    textarea {
+      color: rgb(240, 246, 252) !important
+    }
   }
 #+end_src
 * Tridactyl
