@@ -10,7 +10,7 @@ RUN chown user:user /tmp/entrypoint.sh
 
 WORKDIR /home/user
 COPY . .haris
-RUN chown -R user .
+RUN chown -R user /home
 USER user
 
 ENTRYPOINT ["/tmp/entrypoint.sh"]

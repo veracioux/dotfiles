@@ -61,5 +61,5 @@ export USER="$user" HOME="$home"
 emacs --script bootstrap/tangle-all.sh
 
 exec 1>&3
-cd /tmp/tangle-"$user"
+cd "$home"
 tar czv .
