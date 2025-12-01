@@ -1631,7 +1631,7 @@ Make the environment variables available for shells as well:
 
   export PATH="$CLOUDSDK_ROOT_DIR"/bin:"$PATH"
   export PATH=~/.go/bin:"$PATH"
-  gempath="$(gem environment gempath)"
+  gempath="$(command -v gem >/dev/null && gem environment gempath)"
   if [ -n "$gempath" ]; then
       export PATH="$(echo "$gempath" | sed -E 's_(:|$)_/bin:_g')$PATH"
   fi
