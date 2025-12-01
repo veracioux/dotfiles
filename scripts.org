@@ -1036,7 +1036,7 @@ Get the OS type.
 #+begin_src shell :tangle ~/.local/bin/get-os-type
   cat /etc/lsb-release 2>/dev/null | grep -q 'Ubuntu'     && echo 'ubuntu' && exit
   cat /etc/os-release  2>/dev/null | grep -q 'Arch Linux' && echo 'arch'   && exit
-  echo 'Unsupported OS' >&2
+  echo 'warning: get-os-type: Unsupported OS' >&2
   exit 1
 #+end_src
 ** =urlencode=
