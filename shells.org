@@ -129,6 +129,7 @@ run it on the =fish_preexec= event if it wasn't run before.
           return
       end
       set -l file ~/.local/state/haris_prompt_env_defaults.txt
+      mkdir -p ~/.local/state/
       if [ "$cmd" = "dump" ] || [ ! -f "$file" ]
           env > "$file"
           return
