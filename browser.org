@@ -234,7 +234,8 @@ Tridactyl extension.
                savannah.gnu.org \
                octave.sourceforge.io \
                gnu.org \
-               buildyourownlisp.com
+               buildyourownlisp.com \
+               excalidraw.com
 #+end_src
 ** Default home page
 Tridactyl doesn't work on the default home page, so I change the page to
