@@ -1195,6 +1195,7 @@ Note: =~/.bashrc= is sourced by fish as well.
 #+begin_src fish
   alias src_fish  'source ~/.config/fish/config.fish'
   alias term      'term & disown'
+  alias vim       'nvim'
   abbr stage      'ndir /tmp/stage-$USER'
   if command --quiet docker
       alias alpine    'docker run -it --rm --name alpine alpine'
@@ -1507,6 +1508,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g oc    'opencode'
   conditional_abbr -g oc1   'bunx opencode-ai@latest'
 
+  # Clipboard
   conditional_abbr -g copy  'fish_clipboard_copy'
   conditional_abbr -g Tcopy 'tee /dev/tty | fish_clipboard_copy'
   conditional_abbr -g TC    'tee /dev/tty | fish_clipboard_copy'
@@ -1526,22 +1528,19 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g cmd   'command'
   conditional_abbr -g w     'which'
   conditional_abbr -g P     "pgrep -af"
-  conditional_abbr -g Pu     "pgrep -afu "(whoami)
+  conditional_abbr -g Pu    "pgrep -afu "(whoami)
   conditional_abbr -g yt    'ytfzf -t -s'
   conditional_abbr -g t     'tem'
   conditional_abbr -g v     'vim'
   conditional_abbr -g vf    'vim (fzf)'
   conditional_abbr -g fm    'vifm'
-  conditional_abbr -g fb    'facebook-cli'
   conditional_abbr -g fl    'flameshot'
   conditional_abbr -g ff    'firefox'
   conditional_abbr -g tb    'nc termbin.com 9999'
   conditional_abbr -g asc   'asciinema'
-  conditional_abbr -g hk    'heroku'
-  conditional_abbr -g cu    'container-use'
   conditional_abbr -g mhc   'man http-codes'
   conditional_abbr -g rgh   'rg --hidden'
-  conditional_abbr -g px    'ping x'
+  conditional_abbr -g p1    'ping 1.1.1.1'
   conditional_abbr -g ii    'curl ipinfo.io'
   conditional_abbr -g bt    'bluetoothctl'
   conditional_abbr -g sshk  'ssh-copy-id -i ~/.ssh/%'
@@ -1565,6 +1564,7 @@ abbreviations for equivalent apt operations.
   _abbr            -g T     'tee /dev/tty'
   _abbr            -g '?'   'whatis'
   _abbr            -g fn    'function'
+  _abbr            -g F     'forever'
 #+end_src
 **** Google cloud
 #+begin_src fish
@@ -1587,7 +1587,7 @@ abbreviations for equivalent apt operations.
   # VirtualBox
   conditional_abbr -g vb   'vboxmanage'
 #+end_src
-**** Discard helper function
+**** [Discard helper function]
 #+begin_src fish
   functions --erase conditional_abbr
 #+end_src
