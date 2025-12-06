@@ -170,7 +170,8 @@ run it on the =fish_preexec= event if it wasn't run before.
                   BUNDLED_DEBUGPY_PATH HARIS_CALLER_IS_DMENU EMACS_VTERM_PATH \
                   INSIDE_EMACS STY TERMCAP SXHKD_PID I3SOCK DESKTOP_SESSION WINDOW \
                   GTK_MODULES GSM_SKIP_SSH_AGENT_WORKAROUND NIX_REMOTE \
-                  QT_ACCESSIBILITY CREDENTIALS_DIRECTORY
+                  QT_ACCESSIBILITY CREDENTIALS_DIRECTORY \
+                  DOCKER_CLIENT_TIMEOUT COMPOSE_HTTP_TIMEOUT PGPASSWORD
                   continue
               case NODE_ENV
                   if [ -z "$runtime_value" ]
