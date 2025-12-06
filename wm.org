@@ -416,11 +416,12 @@ dmenu doesn't work.
 #+end_src
 ** Applications menu
 #+begin_src i3wm-config
-  set $mode_apps "Apps | [p]acman [c]lipmenu [e]lement [v]iber [u]nicode [V]pn [t]eams"
+  set $mode_apps "Apps | [p]acman [c]lipmenu [s]ecclip [e]lement [v]iber [u]nicode [V]pn [t]eams"
 
   mode $mode_apps {
   bindsym p       exec dmenu_run pacman, mode default
   bindsym c       exec dmenu_run Clipboard, mode default
+  bindsym s       exec alacritty-float -e fish -C secclip, mode default
   bindsym e       exec element-desktop, mode default
   bindsym v       exec viber, mode default
   bindsym u       exec dmenu_run Unicode, mode default
