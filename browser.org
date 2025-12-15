@@ -158,15 +158,6 @@ so I move it to the top-right corner.
       inset: 0 0 auto auto !important;
   }
 #+end_src
-** Website workarounds
-#+begin_src css :tangle (concat main-profile-dir "/chrome/userContent.css")
-  @-moz-document domain("github.com") {
-    /* github textareas are broken in dark mode */
-    textarea {
-      color: rgb(240, 246, 252) !important
-    }
-  }
-#+end_src
 * Tridactyl
 :PROPERTIES:
 :header-args+: :tangle ~/.config/tridactyl/tridactylrc
@@ -325,7 +316,7 @@ This code block is that blank page, and is tangled to the appropriate location:
     color: var(--mycolor-brcyan);
     font-weight: bold;
   }
-  .focused * {                                            /* Active entry */
+  .ExcmdCompletionOption option focused * {               /* Active entry */
     font-weight: bold;
     color: var(--mycolor-black);
   }
