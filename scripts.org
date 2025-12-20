@@ -2320,7 +2320,6 @@ URLs (each on a new line) to display in this menu.
   if choice.startswith('dmenu-'):
       submenu = choice.replace("dmenu-", "")
       submenu = submenu[0].upper() + submenu[1:]
-      run(["notify-send", submenu])
       EVAL = fr'''
           (progn (find-file "~/.haris/scripts.org")
                  (call-interactively (swiper "^\\*\\* {submenu}"))
