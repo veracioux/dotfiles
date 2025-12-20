@@ -329,6 +329,16 @@ This applies only to graphical sessions, the linux TTY is unaffected.
       end
   end
 #+end_src
+*** NVM version auto-switch
+#+begin_src fish
+  function _ensure_nvm --on-event fish_postexec
+      set -l dir "$PWD"
+      if [ "$PWD" != "$__haris_nvm_dir" ]
+          nvm use 2>/dev/null
+          set -g __haris_nvm_dir "$PWD"
+      end
+  end
+#+end_src
 *** =edit_command_buffer_custom=
 #+begin_src fish :tangle ~/.config/fish/functions/edit_command_buffer_custom.fish
   set -l actual_editor
