@@ -186,9 +186,9 @@ Tridactyl extension.
   bind ,D open about:debugging
   bind ,M open about:memory
 
-   bind ,g tabopen google.com
-   bind \ tabopen excalidraw.com
-   bind ,m composite get_current_url | mpvsafe
+  bind ,g tabopen google.com
+  bind ,/ tabopen excalidraw.com
+  bind ,m composite get_current_url | mpvsafe
   bind <C-.> tabdetach
 
   # Yank the current URL but with the hostname replaced with the resolved IP
