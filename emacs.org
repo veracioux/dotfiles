@@ -485,14 +485,19 @@ These are commands that I primarily intend to use interactively and directly,
 without binding them to any keys.
 *** General purpose commands
 #+begin_src elisp
-  (defun haris/vscode (file)
+  (defun haris/vscode (file &optional new-window)
     "Open a file or directory in VSCode."
-    (interactive (list (buffer-file-name)))
-    (start-process
-     "vscode" nil
-     "fish" "-c"
-     (format "o code --wait --new-window %s &"
-             (shell-quote-argument (expand-file-name file)))))
+    (interactive (list (buffer-file-name) current-prefix-arg))
+    (if new-window
+        (start-process
+         "vscode" nil
+         "fish" "-c"
+         (format "o code --wait --new-window %s &"
+                 (shell-quote-argument (expand-file-name file))))
+      (start-process
+       "vscode" nil
+       "code"
+       (expand-file-name file))))
 #+end_src
 *** Commands from local shell scripts
 All commands defined in [[file:scripts.org][./scripts.org]] are taken and loaded as equivalent Elisp
@@ -890,7 +895,7 @@ Some custom keybindings are defined here as well.
 
   (defun haris/projectile-open-in-vscode ()
     (interactive)
-      (haris/vscode (projectile-project-root)))
+      (haris/vscode (projectile-project-root) t))
 
   (defun haris/projectile-open-opencode ()
     (interactive)
