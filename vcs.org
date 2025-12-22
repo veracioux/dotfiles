@@ -223,18 +223,6 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   [url "git@github.com:"]
     insteadOf = ghg:
 
-  [url "file://«eval-user-home()»/"]
-  	insteadOf = mnt:
-
-  [url "file://«eval-user-home()»/proj/"]
-  	insteadOf = proj:
-
-  [url "git@veracioux.me:"]
-    insteadOf = me:
-
-  [url "eo-git@veracioux.me:"]
-    insteadOf = me-eo:
-
   [url "https://gitlab.com/"]
     insteadOf = gl:
   [url "git@gitlab.com:"]
@@ -242,9 +230,20 @@ My config for version control systems I use (overwhelmingly git + GitHub).
   [url "git@gitlab.com:veracioux/"]
     insteadOf = myglg:
 
+  [url "file://«eval-user-home()»/mnt/"]
+  	insteadOf = mnt:
+  [url "file://«eval-user-home()»/proj/"]
+  	insteadOf = proj:
+  [url "file://«eval-user-home()»/src/"]
+  	insteadOf = src:
+
+  [url "git@veracioux.me:"]
+    insteadOf = me:
+  [url "eo-git@veracioux.me:"]
+    insteadOf = me-eo:
+
   [url "ssh://aur@aur.archlinux.org/"]
     insteadOf = aurg:
-
   [url "ssh://git@heroku.com/"]
     insteadOf = https://git.heroku.com/
 #+end_src
