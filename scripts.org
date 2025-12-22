@@ -1953,7 +1953,7 @@ Open a website in Firefox. Suggests bookmarks managed by buku, but you can input
 any URL. To suggest additional URLs, you can create the script
 [[~/.local/lib/haris/custom/dmenu/open.sh]], which should print a list of additional
 URLs (each on a new line) to display in this menu.
-#+begin_src shell :tangle ~/.local/lib/dmenu/open
+#+begin_src bash :tangle ~/.local/lib/dmenu/open
   edit=" Edit..."
   sync=" Sync..."
 
@@ -2019,6 +2019,12 @@ URLs (each on a new line) to display in this menu.
       [ -z "$url" ] && url="$choice"
       # All google links shall be opened in firefox
       echo "$url" | grep -q 'google' && browser="$(echo "$browser" | sed 's_librewolf_/bin/firefox/')"
+
+      # If choice is a number, assume it's a localhost port
+      if [[ "$url" =~ ^[0-9]+$ ]]; then
+          url="localhost:$choice"
+      fi
+
       echo "$url"
       auto-browser -P haris "$url"
   fi
