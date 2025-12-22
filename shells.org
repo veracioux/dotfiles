@@ -1442,11 +1442,6 @@ abbreviations for equivalent apt operations.
   _abbr -g w1 'watch -n1'
   _abbr -g w2 'watch -n2'
 #+end_src
-**** Ufw
-#+begin_src fish
-  _abbr ufw   'sudo ufw'
-  _abbr ufws  'sudo ufw status numbered'
-#+end_src
 **** MQTT
 #+begin_src fish
   _abbr sub 'mosquitto_sub -t'
@@ -1531,6 +1526,11 @@ abbreviations for equivalent apt operations.
 ****** [End guard]
 #+begin_src fish
   end
+#+end_src
+***** Ufw
+#+begin_src fish
+  _abbr ufw   'sudo ufw'
+  _abbr ufws  'sudo ufw status numbered'
 #+end_src
 **** CLI Apps
 #+begin_src fish
