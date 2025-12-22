@@ -1100,9 +1100,6 @@ the link above to do this automatically, you will be prompted for the CPU temper
   for_window [class="GNU Octave"]                       scratchpad show
 
   # Miscellaneous
-  for_window [class="SpeedCrunch"]                      floating enable
-  for_window [class="SpeedCrunch" floating]             $resize1
-  for_window [class="SpeedCrunch" floating]             move position center
   for_window [class="VirtualBox" \
               title=".*(Settings|Preferences).*"]       floating enable
 
@@ -1111,8 +1108,9 @@ the link above to do this automatically, you will be prompted for the CPU temper
   for_window [class="Typora"]                           floating enable
   for_window [class="Typora" floating]                  move position center
 
-  assign [class="Gimp.*"] number $ws6
-  assign [class="VirtualBox Manager"] number $ws8
+  # Emacs dialogs
+  for_window [class="Emacs" window_type=dialog]         $resize1
+  for_window [class="Emacs" window_type=dialog]         move position center
 #+end_src
 * Compositor
 :PROPERTIES:
