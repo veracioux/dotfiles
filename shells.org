@@ -1495,14 +1495,42 @@ abbreviations for equivalent apt operations.
 **** Developer
 ***** Bun
 #+begin_src fish
-  _abbr            -g bi  "export BUN_OPTIONS='--inspect=localhost:6499/%'"
-  _abbr            -g biw "export BUN_OPTIONS='--inspect-wait=localhost:6499/%'"
-  _abbr            -g bib "export BUN_OPTIONS='--inspect-brk=localhost:6499/%'"
-  _abbr            -g bo  "export BUN_OPTIONS='%'"
+  _abbr -g bi  "export BUN_OPTIONS='--inspect=localhost:6499/%'"
+  _abbr -g biw "export BUN_OPTIONS='--inspect-wait=localhost:6499/%'"
+  _abbr -g bib "export BUN_OPTIONS='--inspect-brk=localhost:6499/%'"
+  _abbr -g bo  "export BUN_OPTIONS='%'"
 #+end_src
 ***** OpenCode
 #+begin_src fish
-  _abbr            -g OC    "cd ~/proj/contrib/opencode/packages/opencode"
+  _abbr -g OC    "cd ~/proj/contrib/opencode/packages/opencode"
+#+end_src
+**** Clipboard
+#+begin_src fish
+  conditional_abbr -g copy  'fish_clipboard_copy'
+  conditional_abbr -g Tcopy 'tee /dev/tty | fish_clipboard_copy'
+  conditional_abbr -g TC    'tee /dev/tty | fish_clipboard_copy'
+  conditional_abbr -g CC    'clipctl tmp-disable | fish_clipboard_copy'
+  conditional_abbr -g TCC   'tee /dev/tty | clipctl tmp-disable | fish_clipboard_copy'
+  conditional_abbr -g paste 'xsel -b -o'
+#+end_src
+**** Sysadmin
+#+begin_src fish
+  conditional_abbr -g s     'sudo'
+  conditional_abbr -g M     'sudo mount -o uid=(id -u),gid=(id -g) /dev/%'
+  conditional_abbr -g U     'sudo umount'
+  conditional_abbr -g Um    'sudo umount ~/mnt/%'
+  conditional_abbr -g UM    'sudo umount ~/mnt/%'
+  _abbr            -g ek    'sudo etckeeper'
+  conditional_abbr -g u     'fusermount -u'
+  conditional_abbr -g um    'fusermount -u ~/mnt/%'
+  conditional_abbr -g p1    'ping 1.1.1.1'
+  conditional_abbr -g ii    'curl ipinfo.io'
+  conditional_abbr -g sshk  'ssh-copy-id -i ~/.ssh/%'
+  conditional_abbr -g sshkm 'ssh-copy-id -i ~/.ssh/main.pub'
+  conditional_abbr -g tf    'terraform'
+  conditional_abbr -g P     "pgrep -af"
+  conditional_abbr -g Pu    "pgrep -afu "(whoami)
+  _abbr            -g sni   'sudo npm install -g'
 #+end_src
 **** Miscellaneous
 #+begin_src fish
@@ -1513,62 +1541,37 @@ abbreviations for equivalent apt operations.
       conditional_abbr -g e 'myemacs'
   end
   conditional_abbr -g E     'myemacs'
-  conditional_abbr -g s     'sudo'
   conditional_abbr -g py    'python'
   conditional_abbr -g ipy   'ipython'
   conditional_abbr -g oc    'opencode'
   conditional_abbr -g oc1   'bunx opencode-ai@latest'
-
-  # Clipboard
-  conditional_abbr -g copy  'fish_clipboard_copy'
-  conditional_abbr -g Tcopy 'tee /dev/tty | fish_clipboard_copy'
-  conditional_abbr -g TC    'tee /dev/tty | fish_clipboard_copy'
-  conditional_abbr -g CC    'clipctl tmp-disable | fish_clipboard_copy'
-  conditional_abbr -g TCC   'tee /dev/tty | clipctl tmp-disable | fish_clipboard_copy'
-  conditional_abbr -g paste 'xsel -b -o'
-
   conditional_abbr -g oct   'octave'
   conditional_abbr -g octb  'OCTAVE_BASIC=true command octave'
-  conditional_abbr -g va    'vagrant'
-  conditional_abbr -g M     'sudo mount -o uid=(id -u),gid=(id -g) /dev/%'
-  conditional_abbr -g u     'fusermount -u'
-  conditional_abbr -g um    'fusermount -u ~/mnt/%'
-  conditional_abbr -g U     'sudo umount'
-  conditional_abbr -g Um    'sudo umount ~/mnt/%'
-  conditional_abbr -g UM    'sudo umount ~/mnt/%'
-  conditional_abbr -g cmd   'command'
-  conditional_abbr -g w     'which'
-  conditional_abbr -g P     "pgrep -af"
-  conditional_abbr -g Pu    "pgrep -afu "(whoami)
   conditional_abbr -g yt    'ytfzf -t -s'
-  conditional_abbr -g t     'tem'
+  conditional_abbr -g va    'vagrant'
+  conditional_abbr -g cmd   'command'
   conditional_abbr -g v     'vim'
   conditional_abbr -g vf    'vim (fzf)'
-  conditional_abbr -g fm    'vifm'
+  conditional_abbr -g t     'tem'
   conditional_abbr -g fl    'flameshot'
   conditional_abbr -g ff    'firefox'
-  conditional_abbr -g tb    'nc termbin.com 9999'
   conditional_abbr -g asc   'asciinema'
-  conditional_abbr -g mhc   'man http-codes'
   conditional_abbr -g rgh   'rg --hidden'
-  conditional_abbr -g p1    'ping 1.1.1.1'
-  conditional_abbr -g ii    'curl ipinfo.io'
   conditional_abbr -g bt    'bluetoothctl'
-  conditional_abbr -g tf    'terraform'
-  conditional_abbr -g sshk  'ssh-copy-id -i ~/.ssh/%'
-  conditional_abbr -g sshkm 'ssh-copy-id -i ~/.ssh/main.pub'
+  conditional_abbr -g vb    'vboxmanage'
   conditional_abbr -g SSHFS 'sshfs -o uid=(id -u),gid=(id -g),idmap=user,reconnect,ServerAliveInterval=1'
-  _abbr            -g ek    'sudo etckeeper'
-
+#+end_src
+**** Utils
+#+begin_src fish
   if [ "$TERM" != "linux" ]
       conditional_abbr -g man   'eman'
   end
+  conditional_abbr -g w     'which'
+  conditional_abbr -g tb    'nc termbin.com 9999'
   conditional_abbr -g R     'reset'
   conditional_abbr -g pa    'printarg'
-  conditional_abbr -g hosts 'myemacs -c /etc/hosts'
 
   _abbr            -g WT    'export WORKTREE=%'
-  _abbr            -g sni   'sudo npm install -g'
   _abbr            -g c     'cut -d " " -f'
   _abbr            -g ..    'cd ../%'
   _abbr            -g ...   'cd ../../%'
@@ -1596,8 +1599,6 @@ abbreviations for equivalent apt operations.
 #+end_src
 **** VirtualBox
 #+begin_src fish
-  # VirtualBox
-  conditional_abbr -g vb   'vboxmanage'
 #+end_src
 **** [Discard helper function]
 #+begin_src fish
