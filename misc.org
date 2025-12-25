@@ -155,6 +155,29 @@
   files | exclude
 #+end_src
 * IdeaVim
+:PROPERTIES:
+:header-args+: :tangle ~/.ideavimrc
+:END:
+I use Intellimacs which is a Spacemacs emulation layer. It needs to be installed
+as per [[https://github.com/marcoieni/intellimacs?tab=readme-ov-file#installation][these instructions]].
+** Intellimacs config
+#+begin_src vimrc :tangle ~/.ideavimrc
+  source ~/.intellimacs/spacemacs.vim
+
+  " Enable other Intellimacs modules
+  source ~/.intellimacs/extra.vim
+  source ~/.intellimacs/major.vim
+  source ~/.intellimacs/hybrid.vim
+
+  " Comma for major mode
+  nmap , <leader>m
+  vmap , <leader>m
+
+  " Enable which-key plugin
+  source ~/.intellimacs/which-key.vim
+#+end_src
+** My customizations
 #+begin_src vimrc :tangle ~/.ideavimrc
   set surround
+  nnoremap Y y$
 #+end_src
