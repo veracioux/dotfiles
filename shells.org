@@ -1585,7 +1585,9 @@ abbreviations for equivalent apt operations.
 #+end_src
 **** Google cloud
 #+begin_src fish
-  conditional_abbr -g gce 'gcloud compute'
+  conditional_abbr -g gce  'gcloud compute'
+  conditional_abbr -g gcil 'gcloud compute instances list'
+  conditional_abbr -g gcdl 'gcloud compute disks list'
 #+end_src
 **** Tmux
 #+begin_src fish
