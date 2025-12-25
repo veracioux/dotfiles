@@ -331,11 +331,13 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 #+end_src
 *** NVM version auto-switch
 #+begin_src fish
-  function _ensure_nvm --on-event fish_postexec
-      set -l dir "$PWD"
-      if [ "$PWD" != "$__haris_nvm_dir" ]
-          nvm use 2>/dev/null
-          set -g __haris_nvm_dir "$PWD"
+  if type -q nvm
+      function _ensure_nvm --on-event fish_postexec
+          set -l dir "$PWD"
+          if [ "$PWD" != "$__haris_nvm_dir" ]
+              nvm use 2>/dev/null
+              set -g __haris_nvm_dir "$PWD"
+          end
       end
   end
 #+end_src
