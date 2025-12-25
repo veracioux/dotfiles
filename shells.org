@@ -1484,10 +1484,13 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g ii    'curl ipinfo.io'
   conditional_abbr -g sshk  'ssh-copy-id -i ~/.ssh/%'
   conditional_abbr -g sshkm 'ssh-copy-id -i ~/.ssh/main.pub'
-  conditional_abbr -g tf    'terraform'
-  conditional_abbr -g P     "pgrep -af"
+  conditional_abbr -g P     'pgrep -af'
   conditional_abbr -g Pu    "pgrep -afu "(whoami)
   _abbr            -g sni   'sudo npm install -g'
+
+  conditional_abbr -g tf    'terraform'
+  conditional_abbr -g tfw   'terraform workspace'
+  conditional_abbr -g tfws  'terraform workspace select'
 #+end_src
 ***** Systemd
 ****** [Guard]
