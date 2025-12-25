@@ -112,7 +112,7 @@
 #+begin_src text :tangle ~/.ai/prompts/git-commit-dotfiles.md
   «prompts/git-commit»
 
-  One additional rule:
+  Additional rules:
 
   - Make sure that after <TYPE>, you also include the <RESOURCE_NAME> that the
     change applies to. This is usually the name before suffix of the ORG file
@@ -129,6 +129,8 @@
     fix: emacs: Load projects before adding fixed ones
     feat: shells: fish: Add api-key-related abbreviations
     ```
+
+  - Changes in vscode settings are considered features, not chores
 #+end_src
 ** Workarounds
 #+NAME: prompts/workarounds/deprioritize-filesystem
