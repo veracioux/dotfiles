@@ -114,5 +114,7 @@
     },
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "jdk.telemetry.enabled": false,
+    "stripe.java.home": "/usr/lib/jvm/default"
 }
