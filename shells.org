@@ -1552,6 +1552,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g oc1   'bunx opencode-ai@latest'
   conditional_abbr -g oct   'octave'
   conditional_abbr -g yt    'ytfzf -t -s'
+  conditional_abbr -g y     'yt-dlp'
   conditional_abbr -g va    'vagrant'
   conditional_abbr -g cmd   'command'
   conditional_abbr -g v     'vim'
