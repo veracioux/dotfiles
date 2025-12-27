@@ -77,6 +77,7 @@
     ],
     "workbench.colorTheme": "Dracula Theme",
     "debug.toolBarLocation": "hidden",
+    "terminal.integrated.shell.linux": "fish",
     "terminal.integrated.defaultProfile.linux": "fish",
     "terminal.integrated.profiles.linux": {
         "fish": {
