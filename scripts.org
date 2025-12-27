@@ -133,7 +133,11 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =firefox=                                                         :wrapper:
 #+begin_src shell :tangle ~/.local/bin/firefox
-  args="$(printarg --new-tab "$@" | uniq)"
+  if [ -n "$VSCODE_PID" ]; then
+      args="$(printarg "$@" | uniq)"
+  else
+      args="$(printarg --new-tab "$@" | uniq)"
+  fi
 
   if [ "$(get-os-type)" = ubuntu ] && [ -e ~/.local/opt/firefox ]; then
       ~/.local/opt/firefox/firefox $args
