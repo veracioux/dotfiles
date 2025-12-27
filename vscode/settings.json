@@ -29,12 +29,22 @@
             ]
         },
         {
-            "before": ["v", "v"],
-            "after": ["V"]
+            "before": [
+                "v",
+                "v"
+            ],
+            "after": [
+                "V"
+            ]
         },
         {
-            "before": ["V"],
-            "after": ["v", "$"]
+            "before": [
+                "V"
+            ],
+            "after": [
+                "v",
+                "$"
+            ]
         }
     ],
     "vim.visualModeKeyBindingsNonRecursive": [
@@ -82,7 +92,9 @@
     "terminal.integrated.profiles.linux": {
         "fish": {
             "path": "/usr/bin/env",
-            "args": ["fish"]
+            "args": [
+                "fish"
+            ]
         }
     },
     "mdb.mcp.server": "prompt",
