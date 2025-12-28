@@ -1589,21 +1589,21 @@ abbreviations for equivalent apt operations.
 **** Google cloud
 #+begin_src fish
   conditional_abbr -g gc  'gcloud compute'
-  conditional_abbr -g gd  'gcloud compute disks'
   conditional_abbr -g gdc 'gcloud compute disks create'
-  conditional_abbr -g gdl 'gcloud compute disks list'
   conditional_abbr -g gdd 'gcloud compute disks describe'
-  conditional_abbr -g gi  'gcloud compute instances'
+  conditional_abbr -g gd  'gcloud compute disks'
+  conditional_abbr -g gdl 'gcloud compute disks list'
+  conditional_abbr -g gia 'gcloud compute instances attach-disk --disk=%'
   conditional_abbr -g gic 'gcloud compute instances create'
   conditional_abbr -g gid 'gcloud compute instances describe'
-  conditional_abbr -g gil 'gcloud compute instances list'
-  conditional_abbr -g gia 'gcloud compute instances attach-disk --disk=%'
   conditional_abbr -g giD 'gcloud compute instances detach-disk --disk=%'
-  conditional_abbr -g giS 'gcloud compute instances stop'
+  conditional_abbr -g gi  'gcloud compute instances'
+  conditional_abbr -g gil 'gcloud compute instances list'
   conditional_abbr -g gis 'gcloud compute instances start'
+  conditional_abbr -g giS 'gcloud compute instances stop'
+  conditional_abbr -g gsc 'gcloud compute snapshots create --source-disk=%'
   conditional_abbr -g gs  'gcloud compute snapshots'
   conditional_abbr -g gsl 'gcloud compute snapshots list'
-  conditional_abbr -g gsc 'gcloud compute snapshots create --source-disk=%'
 #+end_src
 **** Tmux
 #+begin_src fish
