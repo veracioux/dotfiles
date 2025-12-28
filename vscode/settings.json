@@ -130,4 +130,5 @@
     },
     "jdk.telemetry.enabled": false,
     "stripe.java.home": "/usr/lib/jvm/default"
+    "python.analysis.typeCheckingMode": "strict"
 }
