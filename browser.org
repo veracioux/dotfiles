@@ -201,16 +201,16 @@ Tridactyl extension.
   bind \ji fillcmdline goto
 
   # Gmail authuser change
-  bind ,0 js location.href = location.href + "&authuser=0"
-  bind ,1 js location.href = location.href + "&authuser=1"
-  bind ,2 js location.href = location.href + "&authuser=2"
-  bind ,3 js location.href = location.href + "&authuser=3"
-  bind ,4 js location.href = location.href + "&authuser=4"
-  bind ,5 js location.href = location.href + "&authuser=5"
-  bind ,6 js location.href = location.href + "&authuser=6"
-  bind ,7 js location.href = location.href + "&authuser=7"
-  bind ,8 js location.href = location.href + "&authuser=8"
-  bind ,9 js location.href = location.href + "&authuser=9"
+  bind ,0 js let u = new URL(location.href); u.searchParams.set("authuser", "0"); location.href = u.toString()
+  bind ,1 js let u = new URL(location.href); u.searchParams.set("authuser", "1"); location.href = u.toString()
+  bind ,2 js let u = new URL(location.href); u.searchParams.set("authuser", "2"); location.href = u.toString()
+  bind ,3 js let u = new URL(location.href); u.searchParams.set("authuser", "3"); location.href = u.toString()
+  bind ,4 js let u = new URL(location.href); u.searchParams.set("authuser", "4"); location.href = u.toString()
+  bind ,5 js let u = new URL(location.href); u.searchParams.set("authuser", "5"); location.href = u.toString()
+  bind ,6 js let u = new URL(location.href); u.searchParams.set("authuser", "6"); location.href = u.toString()
+  bind ,7 js let u = new URL(location.href); u.searchParams.set("authuser", "7"); location.href = u.toString()
+  bind ,8 js let u = new URL(location.href); u.searchParams.set("authuser", "8"); location.href = u.toString()
+  bind ,9 js let u = new URL(location.href); u.searchParams.set("authuser", "9"); location.href = u.toString()
 
   unbind <C-b>
   unbind <C-f>
