@@ -1995,6 +1995,16 @@ URLs (each on a new line) to display in this menu.
   EOF_e245552b
   }
 
+  from_etc_hosts() {
+      if ! which hostess &>/dev/null; then
+          notify-send \
+              --expire-time 1000 \
+              "dmenu: open: warning" "hostess is not installed, some entries may be missing"
+          return
+      fi
+      hostess ls | cut -f1 -d' '
+  }
+
   choice="$(
       {
           echo "$edit"
@@ -2002,6 +2012,7 @@ URLs (each on a new line) to display in this menu.
           unbuffer buku -p --format 30 | grep -v '^$' | sort
           [ -x ~/.local/lib/haris/custom/dmenu/open.sh ] && ~/.local/lib/haris/custom/dmenu/open.sh
           firefox_about_pages
+          from_etc_hosts
       } | dmenu -p 'Open:'
   )"
 
