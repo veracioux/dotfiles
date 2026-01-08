@@ -438,7 +438,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 :END:
 #+begin_src fish :tangle ~/.config/fish/functions/bind_all_modes.fish
   function bind_all_modes
-      for mode in (bind --list-modes)
+      for mode in default insert replace replace_one visual
           bind -M "$mode" $argv
       end
   end
