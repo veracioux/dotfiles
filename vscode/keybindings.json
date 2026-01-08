@@ -309,5 +309,9 @@
 			"interval": 400
 		},
 		"when": "editorTextFocus"
+	},
+	{
+		"key": "ctrl+shift+t",
+		"command": "workbench.view.testing.focus"
 	}
 ]
