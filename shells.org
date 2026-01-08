@@ -247,6 +247,7 @@ run it on the =fish_preexec= event if it wasn't run before.
                   XDG_SESSION_ID \
                   XDG_SESSION_TYPE \
                   XDG_VTNR \
+                  ''
                   # NOTE: For some reason vscode gets the *SECURELOCK* vars
                   continue
               case NODE_ENV
