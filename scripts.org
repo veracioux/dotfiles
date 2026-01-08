@@ -1292,6 +1292,35 @@ Reset all XDG environment variables to mimic a fresh user environment.
   echo "TMPDIR: $tmpdir" >&2
   with-xdg "$tmpdir" "$@"
 #+end_src
+** =in=
+Run a command in a given directory.
+#+begin_src bash :tangle ~/.local/bin/in
+  print_help() {
+      echo "Usage: in <directory> <command> [args...]"
+      echo "Runs the specified command in the given directory."
+  }
+
+  dir="$1"
+  shift 1
+
+  (
+      cd "$dir" || exit 1
+      exec "$@"
+  )
+#+end_src
+*** Completions
+#+begin_src fish :tangle ~/.config/fish/completions/in.fish
+  function __haris_complete_in
+      set -l argv (commandline -opc) (commandline -t)
+      set -l cursor_index (count $argv)
+      if [ "$cursor_index" -gt 2 ]
+          complete -C "command $(echo $argv[3..])"
+      else
+          complete -C "ls $argv[2]"
+      end
+  end
+  complete -c in -fa '(__haris_complete_in)'
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
