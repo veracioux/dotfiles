@@ -134,6 +134,10 @@ run it on the =fish_preexec= event if it wasn't run before.
           env > "$file"
           return
       end
+      if env | grep -q '^VSCODE_'
+          echo (set_color --bold yellow)" VSCODE"
+          return
+      end
       awk '
           BEGIN { FS="=" }
           NR==FNR { defaults[$1] = substr($0, index($0, "=") + 1); next }
@@ -157,21 +161,93 @@ run it on the =fish_preexec= event if it wasn't run before.
           set -l default_value (string split -f2 " | " -- "$line")
           set -l runtime_value (string split -f3 " | " -- "$line")
           switch "$var"
-              case WINDOWID RCLONE_PASSWORD_COMMAND ALACRITTY_SOCKET \
-                  DEBUGINFOD_URLS ALACRITTY_WINDOW_ID ALACRITTY_LOG SHELL \
-                  LSP_USE_PLISTS INVOCATION_ID MEMORY_PRESSURE_WATCH \
-                  MEMORY_PRESSURE_WRITE PWD SYSTEMD_EXEC_PID MANAGERPID \
-                  MANAGERPIDFDID JOURNAL_STREAM WORKTREE EXPOSED_IP \
-                  COMPOSE_PROJECT_NAME SHLVL TMUX_PANE NO_AT_BRIDGE TERM_PROGRAM \
-                  VSCODE_GIT_ASKPASS_MAIN VSCODE_GIT_ASKPASS_NODE CHROME_DESKTOP \
-                  GDK_BACKEND PYDEVD_DISABLE_FILE_VALIDATION TERM_PROGRAM_VERSION \
-                  VSCODE_DEBUGPY_ADAPTER_ENDPOINTS PYTHON_BASIC_REPL VSCODE_NONCE \
-                  GIT_ASKPASS ORIGINAL_XDG_CURRENT_DESKTOP VSCODE_GIT_IPC_HANDLE \
-                  BUNDLED_DEBUGPY_PATH HARIS_CALLER_IS_DMENU EMACS_VTERM_PATH \
-                  INSIDE_EMACS STY TERMCAP SXHKD_PID I3SOCK DESKTOP_SESSION WINDOW \
-                  GTK_MODULES GSM_SKIP_SSH_AGENT_WORKAROUND NIX_REMOTE \
-                  QT_ACCESSIBILITY CREDENTIALS_DIRECTORY \
-                  DOCKER_CLIENT_TIMEOUT COMPOSE_HTTP_TIMEOUT PGPASSWORD
+              case \
+                  ALACRITTY_LOG \
+                  ALACRITTY_SOCKET \
+                  ALACRITTY_WINDOW_ID \
+                  BUNDLED_DEBUGPY_PATH \
+                  CHROME_DESKTOP \
+                  COMPOSE_HTTP_TIMEOUT \
+                  COMPOSE_PROJECT_NAME \
+                  CREDENTIALS_DIRECTORY \
+                  CREDENTIALS_DIRECTORY \
+                  DEBUGINFOD_URLS \
+                  DESKTOP_SESSION \
+                  DESKTOP_SESSION \
+                  DOCKER_CLIENT_TIMEOUT \
+                  EMACS_VTERM_PATH \
+                  EXPOSED_IP \
+                  FONTCONFIG_FILE \
+                  FONTCONFIG_PATH \
+                  GDK_BACKEND \
+                  GIO_MODULE_DIR \
+                  GIT_ASKPASS \
+                  GPG_TTY \
+                  GSETTINGS_SCHEMA_DIR \
+                  GSM_SKIP_SSH_AGENT_WORKAROUND \
+                  GSM_SKIP_SSH_AGENT_WORKAROUND \
+                  GTK_EXE_PREFIX \
+                  GTK_IM_MODULE_FILE \
+                  GTK_MODULES \
+                  GTK_MODULES \
+                  GTK_PATH \
+                  HARIS_CALLER_IS_DMENU \
+                  I3SOCK \
+                  I3SOCK \
+                  INSIDE_EMACS \
+                  INSIDE_EMACS \
+                  INVOCATION_ID \
+                  JOURNAL_STREAM \
+                  LOCPATH \
+                  LSP_USE_PLISTS \
+                  MAIL \
+                  MANAGERPID \
+                  MANAGERPIDFDID \
+                  MEMORY_PRESSURE_WATCH \
+                  MEMORY_PRESSURE_WRITE \
+                  NIX_PATH \
+                  NIX_REMOTE \
+                  NIX_REMOTE \
+                  NO_AT_BRIDGE \
+                  ORIGINAL_XDG_CURRENT_DESKTOP \
+                  PGPASSWORD \
+                  PWD \
+                  PYDEVD_DISABLE_FILE_VALIDATION \
+                  PYTHON_BASIC_REPL \
+                  QT_ACCESSIBILITY \
+                  QT_ACCESSIBILITY \
+                  RCLONE_PASSWORD_COMMAND \
+                  RUSTC_WRAPPER \
+                  SHELL \
+                  SHLVL \
+                  SSH_AGENT_PID \
+                  SSH_AGENT_SOCK \
+                  SSH_AUTH_SOCK \
+                  STY \
+                  STY \
+                  SXHKD_PID \
+                  SXHKD_PID \
+                  SYSTEMD_EXEC_PID \
+                  TERMCAP \
+                  TERMCAP \
+                  TERM_PROGRAM \
+                  TERM_PROGRAM_VERSION \
+                  TMUX \
+                  TMUX_PANE \
+                  VSCODE_DEBUGPY_ADAPTER_ENDPOINTS \
+                  VSCODE_GIT_ASKPASS_MAIN \
+                  VSCODE_GIT_ASKPASS_NODE \
+                  VSCODE_GIT_IPC_HANDLE \
+                  VSCODE_NONCE \
+                  WINDOW \
+                  WINDOW \
+                  WINDOWID \
+                  WORKTREE \
+                  XDG_DATA_DIRS_VSCODE_SNAP_ORIG \
+                  XDG_SESSION_ID \
+                  XDG_SESSION_TYPE \
+                  XDG_VTNR \
+                  # NOTE: For some reason vscode gets the *SECURELOCK* vars
                   continue
               case NODE_ENV
                   if [ -z "$runtime_value" ]
