@@ -235,7 +235,9 @@
     },
     "keybinds": {
       "agent_list": "alt+a",
-      "model_list": "alt+m"
+      "model_list": "alt+m",
+      "session_child_cycle": "ctrl+l",
+      "session_child_cycle_reverse": "ctrl+h"
     }
   }
 #+end_src
