@@ -1563,6 +1563,9 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g tf    'terraform'
   conditional_abbr -g tfw   'terraform workspace'
   conditional_abbr -g tfws  'terraform workspace select'
+
+  # Personal website
+  conditional_abbr -g V     'veracioux'
 #+end_src
 ***** Systemd
 ****** [Guard]
