@@ -1790,6 +1790,7 @@ Make the environment variables available for shells as well:
 #+end_src
 ** Miscellaneous
 #+begin_src shell
+  export_both COMPOSE_BAKE=true
   export_both MAKEFLAGS='-j6'
   export_both GPG_TTY=$(tty)
   export_both PYTHONSTARTUP=~/.startup.py
