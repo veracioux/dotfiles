@@ -1261,10 +1261,6 @@ Note: =~/.bashrc= is sourced by fish as well.
   } 2>/dev/null
 
   export SHELL='fish'
-
-  if ! [[ "$PATH" =~ ~/\.local/bin ]]; then
-      export PATH=~/.local/bin:"$PATH"
-  fi
 #+end_src
 * Aliases
 ** Posix Sh
@@ -1734,13 +1730,50 @@ Make the environment variables available for shells as well:
 :PROPERTIES:
 :header-args:shell+: :tangle ~/.profile
 :END:
-** Local configuration                                        :configurable:
+** Helper functions
+#+begin_src shell
+  # Export a variable in shell and register to add in as well ~/.config/environment.d/
+  export_both() {
+      if [ "$#" -gt 1 ]; then
+          echo "Usage: export_both VARIABLE=VALUE (only one argument allowed)"
+          return 1
+      fi
+      export "$1"
+      __haris_exported_vars="$__haris_exported_vars"$'\n'"$1"
+  }
+  __haris_exported_vars=""
+
+  # Write registered variables to ~/.config/environment.d/20-from-shell.conf
+  flush_exports() {
+      conf_dir="$HOME/.config/environment.d"
+      conf_file="$conf_dir/20-from-shell.conf"
+
+      # Read existing file into variable
+      local existing_content=""
+      if [ -f "$conf_file" ]; then
+          existing_content="$(cat "$conf_file")"
+      fi
+
+      # Compare with $__haris_exported_vars
+      if [ "$existing_content" != "$__haris_exported_vars" ]; then
+          echo "Environment variables updated. Please re-login for changes to take effect in systemd services." >&2
+
+          mkdir -p "$conf_dir"
+
+          echo "$__haris_exported_vars" > "$conf_file"
+      fi
+  }
+#+end_src
 ** Executable paths
 #+begin_src shell
   mkdir -p ~/.go
-  export GOPATH="$HOME"/.go
+  export_both GOPATH="$HOME"/.go
 
-  export PATH="$CLOUDSDK_ROOT_DIR"/bin:"$PATH"
+  # Expand the PATH variable. Each added entry is in ascending precedence
+  export PATH=/usr/local/bin:"$PATH"
+  if [ -n "$CLOUDSDK_ROOT_DIR" ]; then
+      export PATH="$CLOUDSDK_ROOT_DIR"/bin:"$PATH"
+  fi
   export PATH=~/.go/bin:"$PATH"
   gempath="$(command -v gem >/dev/null && gem environment gempath)"
   if [ -n "$gempath" ]; then
@@ -1756,27 +1789,35 @@ Make the environment variables available for shells as well:
 #+end_src
 ** Miscellaneous
 #+begin_src shell
-  export MAKEFLAGS='-j6'
-  export GPG_TTY=$(tty)
-  export PYTHONSTARTUP=~/.startup.py
-  export RUSTC_WRAPPER=sccache
-  export MOZ_USE_XINPUT2=1
-  [ "$(get-os-type)" = "arch" ] && export QT_QPA_PLATFORMTHEME=gtk2
+  export_both MAKEFLAGS='-j6'
+  export_both GPG_TTY=$(tty)
+  export_both PYTHONSTARTUP=~/.startup.py
+  export_both RUSTC_WRAPPER=sccache
+  export_both MOZ_USE_XINPUT2=1
+  [ "$(get-os-type)" = "arch" ] && export_both QT_QPA_PLATFORMTHEME=gtk2
 
   # If rootless docker is used, configure the DOCKER_HOST variable
   if systemctl is-enabled --user --quiet docker.service; then
-      export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+      export_both DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
   fi
 
   # Better pager for psql command
   if which pspg >/dev/null 2>&1; then
       # '-s 5' chooses the mutt theme
-      export PSQL_PAGER='pspg -s 5'
+      export_both PSQL_PAGER='pspg -s 5'
   fi
 
   mkdir -p /tmp/stage-"$USER"
 
   if [ -f ~/.local.profile ]; then . ~/.local.profile; fi
+#+end_src
+** Finally
+#+begin_src shell
+  export_both PATH="$(
+      # Uniquify PATH entries
+      printf "%s" "$PATH" | awk -v RS=: '!seen[$0]++' | paste -sd:
+  )"
+  flush_exports
 #+end_src
 * Local and temporary configs                                  :configurable:
 These are optional and must be provided separately.
