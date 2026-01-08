@@ -61,7 +61,11 @@ This is a wrapper around GNU =pass=.
   # TODO: Use alternative-command instead
   alias pass=/usr/bin/pass
 
+  clipctl_previous_status="$(clipctl status || echo enable)"
+
   clipctl disable >/dev/null || true
+
+  exit_status=0
 
   # Add a password read directly from stdin (without prompting to interactively
   # enter it)
@@ -70,11 +74,15 @@ This is a wrapper around GNU =pass=.
       destdir="$(dirname "$dest")"
       mkdir -p "$destdir"
       cat | gpg -e -o- -r "$(cat ~/.password-store/.gpg-id)" > "$dest".gpg
+      exit_status=$?
   else
       pass "$@"
+      exit_status=$?
   fi
 
-  clipctl enable >/dev/null || true
+  clipctl "$clipctl_previous_status" >/dev/null || true
+
+  exit $exit_status
 #+end_src
 ** =passmenu=                                                        :wrapper:
 This is a wrapper around =passmenu=, trying to use =passmenu-otp= if present,
