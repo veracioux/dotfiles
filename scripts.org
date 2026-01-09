@@ -1893,7 +1893,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
       echo " Fix Wifi"      # Fix Wi-Fi drop issue on some networks
       echo " Config"        # Open documentation selection
       echo " System"        # System actions
-      echo " Services"       # Control systemd services
       echo " Update cache"   # Update desktop app cache
       echo "Tem"              # Launch tem development environment
       echo "Octave"           # Launch octave in emacs
@@ -1947,8 +1946,6 @@ Create a Xephyr session for the current user that tries to mimic a regular
           run_script config ;;
       "System")
           run_script system ;;
-      "Services")
-          run_script services ;;
       "Update cache")
           rm "$CACHE_FILE" ;;
       "Tem")
@@ -2434,129 +2431,6 @@ URLs (each on a new line) to display in this menu.
       # For convenience, grub-reboot should be allowed passwordless in sudoers.
       sudo grub-reboot "$choice"
       reboot || sudo reboot
-  fi
-#+end_src
-** Services
-#+begin_src bash :tangle ~/.local/lib/dmenu/services
-  # Unicode glyphs
-  started=""
-  stopped=""
-  arrow=""
-  restart=""
-  user=""
-
-  list() {
-      systemctl "list-$1" \
-                --all \
-                --full \
-                --plain \
-                --no-pager \
-                --no-legend \
-                --type=service 2>&- \
-                "${@:2}" \
-          | cut -f1 -d' '
-  }
-
-  get_prefix() {
-      if [ "$1" == "--user" ]; then \
-          echo -n "$user "
-      else
-          echo -n "   " # NOTE: This string contains a THIN SPACE unicode character
-      fi
-  }
-
-  entries() {
-      local opt="$1" running_services stopped_services
-      readarray -t running_services < <(list units --state=running $opt)
-
-      # Running services
-      paste -d' ' <(
-          systemctl show "${running_services[@]}" \
-                    $opt \
-              | grep ^Restart= \
-              | sed -e "s/^Restart=no$/$started $arrow $stopped/" \
-                    -e "s/^Restart=.*/$started $arrow $restart/" \
-                    -e "s/^/$(get_prefix $opt)/"
-      ) \
-            <(printf "%s\n" "${running_services[@]}")
-
-      # Stopped services
-      {
-          for state in exited failed; do
-              list units      --state="$state" $opt
-          done
-      } | sed -e "s/^/$stopped $arrow $started /" \
-              -e "s/^/$(get_prefix $opt)/"
-
-      # Other services
-      if [ -z "$opt" ]; then
-          comm -23 \
-               <(list unit-files --state=disabled $opt | sort) \
-               <(printf "%s\n" "${running_services[@]}" | sort) \
-              | sed "s/^/$(get_prefix $opt)$stopped $arrow $started /"
-      fi
-  }
-  selection="$(
-      {
-          entries
-          entries --user
-      } | dmenu -p 'Services:' -l 20
-  )"
-
-  if [ -z "$selection" ]; then
-      exit 1
-  fi
-
-  service="$(echo "$selection" | grep --only-matching '\S\+$')"
-
-  user_opt=''
-  sudo='sudo'
-  if grep -q "$user" <<<"$selection"; then
-      echo here
-      user_opt="--user"
-      sudo=""
-  fi
-
-  cmd=''
-  if grep -q "$started $arrow $stopped" <<<"$selection"; then
-      cmd=stop
-  elif grep -q "$stopped $arrow $started" <<<"$selection"; then
-      cmd=start
-  else
-      cmd=restart
-  fi
-
-  set -e
-
-  # Notify the user
-  service_name="${service%.service}"
-
-  # Execute the action
-  export HARIS_BACKGROUND_TASKS_SILENT=true
-  o sh -c "SUDO_ASKPASS=\"$(which askpass-gui)\" $sudo systemctl '$cmd' $user_opt '$service'"
-
-  jctl_session_name="$(
-    tmux new -P -F'#{session_name}' -d journalctl --follow --lines=0 $user_opt -u "$service"
-  )"
-
-  action="$(
-      case "$cmd" in
-          start)
-              notify-send --action 0 "Starting service..." "$service_name"
-              ;;
-          restart)
-              notify-send --action 0 "Restarting service..." "$service_name"
-              ;;
-          stop)
-              notify-send --action 0 "Stopping service..." "$service_name"
-              ;;
-      esac
-  )"
-
-  if [ "$action" = "0" ]; then
-      alacritty-float -e tmux attach -t "$jctl_session_name"
-  else
-      tmux kill-session -t "$jctl_session_name"
   fi
 #+end_src
 ** GPG
