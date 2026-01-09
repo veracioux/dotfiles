@@ -1718,18 +1718,6 @@ abbreviations for equivalent apt operations.
       source "$XDG_RUNTIME_DIR/ephemeral.config.fish"
   end
 #+end_src
-* Environment
-#+begin_src conf :tangle ~/.config/environment.d/90-haris.conf
-  # Clipmenu
-  # (ref:CM_DIR)
-  CM_DIR=$HOME/.local/share/haris/clipmenu
-  RCLONE_PASSWORD_COMMAND="pass rclone/config"
-  VAGRANT_HOME=/usr/local/share/haris/vagrant
-#+end_src
-Make the environment variables available for shells as well:
-#+begin_src shell :tangle ~/.profile
-  eval "$(cat ~/.config/environment.d/90-haris.conf | grep -vP '^\s*#' | sed 's/^/export /')"
-#+end_src
 * .profile
 :PROPERTIES:
 :header-args:shell+: :tangle ~/.profile
@@ -1799,6 +1787,17 @@ Make the environment variables available for shells as well:
   export_both PYTHONSTARTUP=~/.startup.py
   export_both RUSTC_WRAPPER=sccache
   export_both MOZ_USE_XINPUT2=1
+  # Clipmenu
+  # (ref:CM_DIR)
+  export_both CM_DIR="$HOME/.local/share/haris/clipmenu"
+  export_both RCLONE_PASSWORD_COMMAND="pass rclone/config"
+
+  # Set up vagrant home for reuse
+  VAGRANT_HOME=/usr/local/share/"$USER"/vagrant
+  if [ -d "$VAGRANT_HOME" ]; then
+      export_both VAGRANT_HOME="$VAGRANT_HOME"
+  fi
+
   [ "$(get-os-type)" = "arch" ] && export_both QT_QPA_PLATFORMTHEME=gtk2
 
   # If rootless docker is used, configure the DOCKER_HOST variable
