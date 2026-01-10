@@ -213,9 +213,6 @@ Here are the configs you can choose from:
 #+begin_src shell :tangle ~/.xinitrc-i3
   . ~/.xinitrc.common
   «xinitrc/wm-only»
-  picom &                                     # Compositor
-
-  systemctl --user import-environment DISPLAY DESKTOP_SESSION TERMINAL
   systemctl --user start haris-gui-i3.target
   systemctl start --user i3.service
 #+end_src
@@ -473,7 +470,9 @@ dmenu doesn't work.
   bindsym s               layout stacking
   bindsym t               layout tabbed
   bindsym k               sticky toggle
-  bindsym c               exec --no-startup-id "pgrep picom && pkill picom || picom"
+  bindsym c               exec systemctl --user is-active -q picom.service \
+                               && systemctl --user stop picom.service \
+                               || systemctl --user start picom.service
   bindsym a               exec --no-startup-id \
   "pgrep autotiling && pkill autotiling || autotiling"
   bindsym x               exec xrandr-toggle; mode "default"

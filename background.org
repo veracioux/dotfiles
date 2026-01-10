@@ -20,10 +20,11 @@ One of these targets is started by startx, depending on which xinitrc preset is 
   PartOf=graphical-session.target
   Requires=default.target
   Requires=graphical-session.target
-  Requires=clipmenud.service
-  Requires=dunst.service
-  Requires=sxhkd.service
-  Requires=sxhkd-private.service
+  Wants=clipmenud.service
+  Wants=dunst.service
+  Wants=sxhkd.service
+  Wants=sxhkd-private.service
+  Wants=picom.service
   AllowIsolate=yes
 #+end_src
 ** WM
@@ -155,6 +156,18 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   [Service]
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env sxhkd -c %h/.private.sxhkdrc
+  Restart=on-failure
+#+end_src
+* Picom
+#+begin_src systemd :tangle ~/.config/systemd/user/picom.service
+  [Unit]
+  Description=Picom compositor
+  PartOf=haris-gui-x11.target
+  After=haris-gui-x11.target
+  After=wm.target
+
+  [Service]
+  ExecStart=/usr/bin/env picom
   Restart=on-failure
 #+end_src
 * Cron
