@@ -252,8 +252,6 @@ Some things are tightly tied to i3 and should be launched as part of its
 configuration reload procedure:
 #+begin_src i3wm-config
   exec_always --no-startup-id autotiling
-  # Use pactl to adjust volume in PulseAudio.
-  set $refresh_i3status killall -SIGUSR1 i3status
 #+end_src
 ** sway start-up
 #+begin_src i3wm-config :tangle ~/.config/sway/config
