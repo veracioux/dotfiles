@@ -763,29 +763,29 @@ seldom use that so it's fine.
 * Status bar
 #+begin_src i3wm-config
   bar {
-  font pango:Source Code Pro, Icons bold 9.3
-  position bottom
-  mode hide
-  modifier $mod
-  workspace_buttons yes
-  strip_workspace_numbers yes
+    font pango:Source Code Pro, Icons bold 9.3
+    position bottom
+    mode hide
+    modifier $mod
+    workspace_buttons yes
+    strip_workspace_numbers yes
 
-  status_command i3status | ~/.config/i3status/custom-script.py
-  # TODO status_command i3status
-  # Trays are bloat, but they are sometimes necessary
-  tray_output primary
+    status_command i3status | ~/.config/i3status/custom-script.py
+    # TODO status_command i3status
+    # Trays are bloat, but they are sometimes necessary
+    tray_output primary
 
-  i3bar_command i3bar --transparency
-  colors {
-  # class             border    backgr.   text
-  focused_workspace   $col_b_b  $col_b_b  $col_n_k
-  inactive_workspace  $col_a_k  $col_a_k  $col_n_m
-  urgent_workspace    $col_n_y  $col_n_y  $col_n_k
+    i3bar_command i3bar --transparency
+    colors {
+      # class             border    backgr.   text
+      focused_workspace   $col_b_b  $col_b_b  $col_n_k
+      inactive_workspace  $col_a_k  $col_a_k  $col_n_m
+      urgent_workspace    $col_n_y  $col_n_y  $col_n_k
 
-  background          $col_a_k
-  statusline          $col_b_c
-  separator           $col_a_m
-  }
+      background          $col_a_k
+      statusline          $col_b_c
+      separator           $col_a_m
+    }
   }
 #+end_src
 ** i3status
