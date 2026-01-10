@@ -21,25 +21,6 @@ With i3, I also use [[*Compositor][picom as my compositor]].
 * Quick interaction                                                :noexport:
 - [[~/.config/i3/config][Tangled destination file for i3]].
 - [[~/.config/sway/config][Tangled destination file for sway]].
-
-Execute the following call to tangle this file and apply changes to the running
-i3/sway session:
-#+CALL: tangle-and-apply(wm="i3")
-#+CALL: tangle-and-apply(wm="sway")
-
-#+NAME: tangle-and-apply
-#+begin_src emacs-lisp :tangle no :results none :var wm="i3"
-  (org-babel-tangle)
-  (shell-command (format "%s-msg -t command restart" wm))
-  (call-process "pkill" nil 0 nil "-u" (user-login-name) "sxhkd")
-  (run-with-timer
-   1 nil
-   (lambda ()
-     (let ((default-directory "~/"))
-       (call-process "fish" nil 0 nil "-c" "sxhkd & disown")
-       (if (locate-file exec-path "sxhkd.private")
-           (call-process "fish" nil 0 nil "-c" "sxhkd.private & disown")))))
-#+end_src
 * Helper scripts and local variables
 :PROPERTIES:
 :header-args+: :tangle-mode (eval #o744)
