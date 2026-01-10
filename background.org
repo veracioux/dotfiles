@@ -19,6 +19,7 @@ Note: [[*Clipmenud][Clipmenud]] is started by [[file:wm.org::(clipmenud)][startx
   Wants=ssh-agent.service
   Wants=vpn-notifier.service
   # Wants=clipmenud.service
+  Wants=sxhkd.service
   AllowIsolate=yes
 
   [Install]
@@ -71,6 +72,19 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env vpn-notifier
   SyslogIdentifier=vpn-notifier
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+* Sxhkd
+#+begin_src systemd :tangle ~/.config/systemd/user/sxhkd.service
+  [Unit]
+  Description=Simple X hotkey daemon
+
+  [Service]
+  Environment=XDG_RUNTIME_DIR=/run/user/%U
+  ExecStart=/usr/bin/env sxhkd
+  Restart=on-failure
 
   [Install]
   WantedBy=default.target
