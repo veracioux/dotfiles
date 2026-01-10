@@ -56,17 +56,16 @@ This target is always reached when a WM is started, regardless of which one.
 #+begin_src systemd :tangle ~/.config/systemd/user/i3.service
   [Unit]
   Description=i3 window manager
-  Type=oneshot
   PartOf=haris-gui-i3.target
   After=haris-gui-i3.target
   Wants=wm.target
 
   [Service]
+  Type=oneshot
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   Environment=DESKTOP_SESSION=i3
   # Used by i3-sensible-terminal
   Environment=TERMINAL=alacritty
-
   ExecStart=/usr/bin/env i3
 #+end_src
 * Clipmenud
