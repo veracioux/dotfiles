@@ -707,7 +707,7 @@ Menu of utilities that allow me to chat with my computer.
 #+end_src
 ** Screenshot menu
 #+begin_src i3wm-config
-  set $mode_screenshot " Screenshot | [g]ui [s]creen [f]ull [c]onfig [d]aemon"
+  set $mode_screenshot " Screenshot | [g]ui dela[y] [s]creen [f]ull [c]onfig [d]aemon"
 
   mode $mode_screenshot {
   bindsym g       exec sleep 0.1 && flameshot gui,    mode default
@@ -715,10 +715,17 @@ Menu of utilities that allow me to chat with my computer.
   bindsym f       exec sleep 0.1 && flameshot full,   mode default
   bindsym c       exec flameshot config, mode default
   bindsym d       exec sh -c 'pkill "^flameshot$" || o flameshot'
+  bindsym y       exec ~/.local/lib/haris/flameshot-gui-prompt-delay.sh, mode default
   bindsym Escape  mode default
   }
 
   bindsym $mod+Shift+s mode $mode_screenshot
+#+end_src
+*** Helper scripts
+**** Flameshot with prompt for delay
+#+begin_src shell :tangle ~/.local/lib/haris/flameshot-gui-prompt-delay.sh
+  delay=$(echo -n | dmenu -p "Delay (s):")
+  [ -n "$delay" ] && flameshot gui --delay "$(($delay*1000))"
 #+end_src
 * Workspaces
 #+NAME: workspaces
