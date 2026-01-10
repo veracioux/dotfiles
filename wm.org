@@ -175,9 +175,7 @@ to the laptop I currently use. Please change to suit your needs.
   dbus-update-activation-environment --systemd --all  # Fixes dbus problems with i3
   xrdb -merge ~/.Xresources $(ls ~/.local.Xresources 2>/dev/null)
 
-  redshift &                                   # Blue light filter
-  sxhkd &                                      # Load default bindings
-  sxhkd.private &                             # Load private bindings
+  redshift &                                  # Blue light filter
 #+end_src
 *** Keyboard and mouse
 #+begin_src shell :tangle ~/.xinitrc.common
@@ -207,8 +205,6 @@ to the laptop I currently use. Please change to suit your needs.
   feh --bg-fill ~/.wallpaper                  # Set wallpaper
   xset s 300                                  # Set lock timeout (seconds)
   xss-lock -l -- lock-screen &                # Start lock screen daemon
-  systemctl start --user clipmenud            # (ref:clipmenud)
-  dunst &                                     # Notification daemon
 #+end_src
 *** Presets
 Here are the configs you can choose from:
@@ -219,9 +215,9 @@ Here are the configs you can choose from:
   «xinitrc/wm-only»
   picom &                                     # Compositor
 
-  export DESKTOP_SESSION=i3
-  export TERMINAL=alacritty                   # Used by i3-sensible-terminal
-  exec i3                                     # Window manager
+  systemctl --user import-environment DISPLAY DESKTOP_SESSION TERMINAL
+  systemctl --user start haris-gui-i3.target
+  systemctl start --user i3.service
 #+end_src
 **** GNOME
 #+NAME: xinitrc-gnome
@@ -458,7 +454,7 @@ dmenu doesn't work.
   mode $mode_session {
   bindsym r               reload
   bindsym Ctrl+r          restart
-  bindsym q               exit
+  bindsym q               exec systemctl --user stop graphical-session.target
   bindsym k               exec --no-startup-id kbind, mode default
   bindsym Escape          mode default
   }

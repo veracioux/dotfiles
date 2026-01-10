@@ -20,27 +20,8 @@ That's why I have set up a systemd service that runs an emacs daemon on system
 startup. When I want to launch emacs to perform a task, I run [[file:~/.haris/scripts.org::*=myemacs=][myemacs]] (a custom
 command that wraps [[man:emacsclient][emacsclient]]), which attaches to the daemon, without the need
 to load the cruft each time.
-** Eamcs Daemon
-#+NAME: emacs.service
-#+begin_src systemd :tangle ~/.config/systemd/user/emacs.service :exports none
-  [Unit]
-  Description=Emacs text editor
-  Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
-
-  [Service]
-  Type=forking
-  Environment=COLORTERM=truecolor
-  Environment=LSP_USE_PLISTS=true
-  ExecStart=/usr/bin/emacs --daemon="emacs"
-  Restart=always
-  TimeoutStartSec=600
-  TimeoutStopSec=30
-  StartLimitBurst=0
-
-  [Install]
-  WantedBy=default.target
-#+end_src
-*** Configuration loading
+* General
+** Configuration loading
 The main generated user configuration file is [[~/.emacs.d/haris/root.el]]. This
 file is loaded by spacemacs and in turn, it loads the other files based on
 the purpose of the current emacs daemon (by reading the =server-name= variable).
@@ -48,7 +29,6 @@ Currently, only the default daemon =emacs= is used, but this might change in the
 #+begin_src elisp :tangle ~/.emacs.d/haris/root.el
   (load-file "~/.emacs.d/haris/default.el")
 #+end_src
-* General
 ** Setup
 :PROPERTIES:
 :header-args:bash+: :tangle ~/.haris-setup/setup-emacs.sh
