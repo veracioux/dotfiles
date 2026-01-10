@@ -236,10 +236,11 @@ Here are the configs you can choose from:
 #+begin_src shell :tangle ~/.xinitrc-i3
   . ~/.xinitrc.common
   «xinitrc/wm-only»
-  picom &                                      # Compositor
+  picom &                                     # Compositor
 
   export DESKTOP_SESSION=i3
-  exec i3                                       # Window manager
+  export TERMINAL=alacritty                   # Used by i3-sensible-terminal
+  exec i3                                     # Window manager
 #+end_src
 **** GNOME
 #+NAME: xinitrc-gnome
