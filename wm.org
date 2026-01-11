@@ -174,8 +174,6 @@ to the laptop I currently use. Please change to suit your needs.
   export DBUS_SESSION_BUS_ADDRESS=unix:path="$XDG_RUNTIME_DIR"/bus
   dbus-update-activation-environment --systemd --all  # Fixes dbus problems with i3
   xrdb -merge ~/.Xresources $(ls ~/.local.Xresources 2>/dev/null)
-
-  redshift &                                  # Blue light filter
 #+end_src
 *** Keyboard and mouse
 #+begin_src shell :tangle ~/.xinitrc.common

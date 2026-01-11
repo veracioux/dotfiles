@@ -25,6 +25,7 @@ One of these targets is started by startx, depending on which xinitrc preset is 
   Wants=sxhkd.service
   Wants=sxhkd-private.service
   Wants=picom.service
+  Wants=redshift.service
   AllowIsolate=yes
 #+end_src
 ** WM
@@ -193,6 +194,18 @@ This service updates the user's crontab when any of the custom crontab files cha
 
   [Service]
   ExecStart=/usr/bin/env picom
+  Restart=on-failure
+#+end_src
+** Redshift
+#+begin_src systemd :tangle ~/.config/systemd/user/redshift.service
+  [Unit]
+  Description=Redshift blue light filter
+  PartOf=haris-gui-x11.target
+  After=haris-gui-x11.target
+  After=wm.target
+
+  [Service]
+  ExecStart=/usr/bin/env redshift
   Restart=on-failure
 #+end_src
 ** Clipmenud
