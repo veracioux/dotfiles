@@ -1093,8 +1093,8 @@ the link above to do this automatically, you will be prompted for the CPU temper
   for_window [class="Emacs" window_type=dialog]         move position center
 
   # Move Selenium test windows to extra workspace
-  for_window [class="Google-chrome" instance="^google-chrome \\(/tmp/\\.org\\.chromium\\.Chromium"] floating enable
-  assign [class="Google-chrome" instance="^google-chrome \\(/tmp/\\.org\\.chromium\\.Chromium"]     number $ws6
+  for_window [instance=".*\(/tmp/.org.chromium.Chromium.*\).*"] floating enable
+  assign [instance=".*\(/tmp/.org.chromium.Chromium.*\).*"]     number $ws6
 #+end_src
 * Compositor
 :PROPERTIES:
