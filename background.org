@@ -44,6 +44,7 @@ Services that run automatically upon login (TTY or graphical).
   Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
   [Service]
+  SyslogIdentifier=emacs
   Type=forking
   Environment=COLORTERM=truecolor
   Environment=LSP_USE_PLISTS=true
@@ -62,9 +63,9 @@ Services that run automatically upon login (TTY or graphical).
   Description=VPN notifier
 
   [Service]
+  SyslogIdentifier=vpn-notifier
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env vpn-notifier
-  SyslogIdentifier=vpn-notifier
 
   [Install]
   WantedBy=default.target
@@ -103,7 +104,8 @@ This service updates the user's crontab when any of the custom crontab files cha
   Description=Crontab change listener and updater
 
   [Service]
-  ExecStart=<<eval-user-home()>>/.local/bin/crontab-listen-update
+  SyslogIdentifier=crontab-listen-update
+  ExecStart=/usr/bin/env crontab-listen-update
   Restart=on-failure
 
   [Install]
@@ -148,6 +150,7 @@ This service updates the user's crontab when any of the custom crontab files cha
   Wants=wm.target
 
   [Service]
+  SyslogIdentifier=i3
   Type=oneshot
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   Environment=DESKTOP_SESSION=i3
@@ -164,6 +167,7 @@ This service updates the user's crontab when any of the custom crontab files cha
   After=wm.target
 
   [Service]
+  SyslogIdentifier=sxhkd
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env sxhkd
   Restart=on-failure
@@ -180,6 +184,7 @@ This service updates the user's crontab when any of the custom crontab files cha
   WantedBy=haris-gui-x11.target
 
   [Service]
+  SyslogIdentifier=sxhkd(private)
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env sxhkd -c %h/.private.sxhkdrc
   Restart=on-failure
@@ -193,6 +198,7 @@ This service updates the user's crontab when any of the custom crontab files cha
   After=wm.target
 
   [Service]
+  SyslogIdentifier=picom
   ExecStart=/usr/bin/env picom
   Restart=on-failure
 #+end_src
@@ -205,6 +211,7 @@ This service updates the user's crontab when any of the custom crontab files cha
   After=wm.target
 
   [Service]
+  SyslogIdentifier=redshift
   ExecStart=/usr/bin/env redshift
   Restart=on-failure
 #+end_src
@@ -217,6 +224,7 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   After=haris-gui-x11.target
 
   [Service]
+  SyslogIdentifier=clipmenud
   Environment=CM_DEBUG=1
   Environment=CM_MAX_CLIPS=99999
   Environment=XDG_RUNTIME_DIR=/run/user/%U
@@ -230,6 +238,7 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   After=haris-gui-x11.target
 
   [Service]
+  SyslogIdentifier=dunst
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env dunst
 #+end_src
@@ -241,6 +250,7 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   After=graphical-session.target
 
   [Service]
+  SyslogIdentifier=jira-branch-transformer
   ExecStart=/usr/bin/env jira-branch-transformer
 #+end_src
 *** Executable
