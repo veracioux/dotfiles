@@ -36,6 +36,7 @@ One of these targets is started by startx, depending on which xinitrc preset is 
   Description=Haris' graphical session target
   Requires=default.target
   Wants=jira-branch-transformer.service
+  StopWhenUnneeded=yes
 #+end_src
 ** WM
 This target is always reached when a WM is started, regardless of which one.
@@ -58,7 +59,7 @@ Services that run automatically upon login (TTY or graphical).
   Type=forking
   Environment=COLORTERM=truecolor
   Environment=LSP_USE_PLISTS=true
-  ExecStart=/usr/bin/emacs --daemon="emacs"
+  ExecStart=/usr/bin/env emacs --daemon="emacs" --no-window-system
   Restart=always
   TimeoutStartSec=1200
   TimeoutStopSec=30
