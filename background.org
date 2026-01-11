@@ -13,6 +13,7 @@ One of these targets is started by startx, depending on which xinitrc preset is 
   Requires=i3.service
   PartOf=graphical-session.target
   AllowIsolate=yes
+  StopWhenUnneeded=yes
 #+end_src
 ** Common graphical targets
 #+begin_src systemd :tangle ~/.config/systemd/user/haris-gui-x11.target
@@ -28,6 +29,7 @@ One of these targets is started by startx, depending on which xinitrc preset is 
   Wants=picom.service
   Wants=redshift.service
   AllowIsolate=yes
+  StopWhenUnneeded=yes
 #+end_src
 #+begin_src systemd :tangle ~/.config/systemd/user/graphical-session.target
   [Unit]
@@ -41,6 +43,7 @@ This target is always reached when a WM is started, regardless of which one.
   [Unit]
   Description=Window manager target
   Requires=default.target
+  StopWhenUnneeded=yes
 #+end_src
 * Default
 Services that run automatically upon login (TTY or graphical).
