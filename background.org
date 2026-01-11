@@ -278,17 +278,9 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   done
 #+end_src
 * Helpers
-#+NAME: eval-user-home
-#+begin_src emacs-lisp :cache yes
-  (getenv "HOME")
-#+end_src
 #+NAME: eval-path-env
 #+begin_src emacs-lisp
   (getenv "PATH")
-#+end_src
-#+NAME: eval-xdg-runtime-dir
-#+begin_src emacs-lisp
-  (getenv "XDG_RUNTIME_DIR")
 #+end_src
 * Local variables
 # Local Variables:
