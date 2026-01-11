@@ -250,9 +250,11 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
       cb="$(timeout 1s xsel -bo)"
       if grep -qE <<<"$cb" "^git checkout -b [A-Z]+-[0-9]+"; then
           echo "Clipboard matched. Transforming to branch name..."
-          get-branch
+          branch="$(rev <<<"$cb" | cut -f1 -d' ' | rev)"
+          echo "Transformed content: $branch"
+          echo -n "$branch" | xsel -b
       fi
-      sleep 2
+      sleep 3
   done
 #+end_src
 * Helpers
