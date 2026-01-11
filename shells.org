@@ -1544,7 +1544,6 @@ abbreviations for equivalent apt operations.
 #+end_src
 **** Sysadmin
 #+begin_src fish
-  conditional_abbr -g s     'sudo'
   conditional_abbr -g M     'sudo mount -o uid=(id -u),gid=(id -g) /dev/%'
   conditional_abbr -g U     'sudo umount'
   conditional_abbr -g Um    'sudo umount ~/mnt/%'
@@ -1574,6 +1573,7 @@ abbreviations for equivalent apt operations.
 #+end_src
 ****** Abbreviations
 #+begin_src fish
+  # Old abbreviations
   _abbr -g ctl       'sudo systemctl'
   _abbr -g start     'sudo systemctl start'
   _abbr -g stop      'sudo systemctl stop'
@@ -1584,11 +1584,27 @@ abbreviations for equivalent apt operations.
   _abbr -g rel       'sudo systemctl reload'
   _abbr -g res       'sudo systemctl restart'
   _abbr -g dres      'sudo systemctl daemon-reload --user && systemctl restart  --user'
+
+  # New (more brief)
+  _abbr -g S         'sudo systemctl'
+  _abbr -g Ss        'sudo systemctl start'
+  _abbr -g S.        'sudo systemctl stop'
+  _abbr -g Se        'sudo systemctl enable'
+  _abbr -g Sd        'sudo systemctl disable'
+  _abbr -g SS        'systemctl status'
+  _abbr -g Sdr       'sudo systemctl daemon-reload'
+  _abbr -g Sr        'sudo systemctl reload'
+  _abbr -g SR        'sudo systemctl restart'
+  _abbr -g Sdrr      'sudo systemctl daemon-reload --user && systemctl restart  --user'
+  _abbr -g Sc        'systemctl cat'
+  _abbr -g Sl        'systemctl list-units'
+
   _abbr -g sus       'systemctl suspend'
   _abbr -g j         'journalctl -f -u'
 #+end_src
 ******* --user versions
 #+begin_src fish
+  # Old abbreviations
   _abbr -g ctlu      'systemctl --user'
   _abbr -g startu    'systemctl start --user'
   _abbr -g stopu     'systemctl stop --user'
@@ -1599,8 +1615,22 @@ abbreviations for equivalent apt operations.
   _abbr -g relu      'systemctl reload --user'
   _abbr -g resu      'systemctl restart  --user'
   _abbr -g dresu     'systemctl daemon-reload --user && systemctl restart  --user'
-  _abbr -g ju        'journalctl --user -f -u'
 
+  # New (more brief)
+  _abbr -g s         'systemctl --user'
+  _abbr -g ss        'systemctl start --user'
+  _abbr -g s.        'systemctl stop --user'
+  _abbr -g se        'systemctl enable --user'
+  _abbr -g sd        'systemctl disable --user'
+  _abbr -g sS        'systemctl status --user'
+  _abbr -g sdr       'systemctl daemon-reload --user'
+  _abbr -g sr        'systemctl reload --user'
+  _abbr -g sR        'systemctl restart  --user'
+  _abbr -g sdrr      'systemctl daemon-reload --user && systemctl restart  --user'
+  _abbr -g sc        'systemctl --user cat'
+  _abbr -g sl        'systemctl --user list-units'
+
+  _abbr -g ju        'journalctl --user -f -u'
   _abbr -g jue       'journalctl --user -f -u emacs'
 #+end_src
 ****** [End guard]
