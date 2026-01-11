@@ -1587,11 +1587,11 @@ abbreviations for equivalent apt operations.
 
   # New (more brief)
   _abbr -g S         'sudo systemctl'
-  _abbr -g Ss        'sudo systemctl start'
+  _abbr -g Ss        'systemctl status'
+  _abbr -g SS        'sudo systemctl start'
   _abbr -g S.        'sudo systemctl stop'
   _abbr -g Se        'sudo systemctl enable'
   _abbr -g Sd        'sudo systemctl disable'
-  _abbr -g SS        'systemctl status'
   _abbr -g Sdr       'sudo systemctl daemon-reload'
   _abbr -g Sr        'sudo systemctl reload'
   _abbr -g SR        'sudo systemctl restart'
@@ -1618,11 +1618,11 @@ abbreviations for equivalent apt operations.
 
   # New (more brief)
   _abbr -g s         'systemctl --user'
-  _abbr -g ss        'systemctl start --user'
+  _abbr -g ss        'systemctl status --user'
+  _abbr -g sS        'systemctl start --user'
   _abbr -g s.        'systemctl stop --user'
   _abbr -g se        'systemctl enable --user'
   _abbr -g sd        'systemctl disable --user'
-  _abbr -g sS        'systemctl status --user'
   _abbr -g sdr       'systemctl daemon-reload --user'
   _abbr -g sr        'systemctl reload --user'
   _abbr -g sR        'systemctl restart  --user'
