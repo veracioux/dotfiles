@@ -2096,6 +2096,7 @@ basis here.
        (python-mode . ,common)
        (sh-mode . ,common)
        (yaml-mode . ,common)
+       (docker-compose-mode . ,common)
        (yaml-ts-mode . ,common)
        (sql-interactive-mode . ,common)
        (sql-mode . ,common)
