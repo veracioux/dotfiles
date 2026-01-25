@@ -1051,6 +1051,13 @@ Get the OS type.
   echo 'warning: get-os-type: Unsupported OS' >&2
   exit 1
 #+end_src
+** =get-self-ip=
+#+begin_src shell :tangle ~/.local/bin/get-self-ip
+  case "$(get-os-type)" in
+      arch)   hostname -i | cut -f1 -d' ' ;;
+      *)      hostname -I | cut -f1 -d' ' ;;
+  esac
+#+end_src
 ** =urlencode=
 #+begin_src bash :tangle ~/.local/bin/urlencode
   python -c 'import urllib.parse as p; print(p.quote(input()))'
