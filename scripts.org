@@ -1321,6 +1321,60 @@ Run a command in a given directory.
   end
   complete -c in -fa '(__haris_complete_in)'
 #+end_src
+** =git-haris-setup=
+#+begin_src bash :tangle ~/.local/bin/git-haris-setup
+  # Setup git remotes for Haris' workflow
+  # - If origin exists and doesn't start with "myghg:" and there's no upstream, rename origin to upstream
+  # - Create remote "me" pointing to git@veracioux.me:<directory-basename>
+
+  # Check if we're in a git repository
+  if ! git rev-parse --git-dir >/dev/null 2>&1; then
+      echo "Error: Not in a git repository"
+      exit 1
+  fi
+
+  # Get current directory basename for the remote URL
+  dir_basename="$(basename "$(pwd)")"
+
+  # Check if origin remote exists
+  if git remote get-url origin >/dev/null 2>&1; then
+      origin_url="$(git remote get-url origin)"
+
+      # Check if origin doesn't start with "myghg:" and there's no upstream remote
+      if [[ ! "$origin_url" =~ ^myghg: ]] && ! git remote get-url upstream >/dev/null 2>&1; then
+          echo "Renaming origin to upstream..."
+          git remote rename origin upstream
+          echo "Remote 'origin' renamed to 'upstream'"
+      else
+          echo "Origin remote already configured correctly or upstream exists"
+      fi
+  else
+      echo "No origin remote found"
+  fi
+
+  # Create or update the "me" remote
+  if git remote get-url me >/dev/null 2>&1; then
+      echo "Remote 'me' already exists"
+  else
+      echo "Creating remote 'me' pointing to git@veracioux.me:$dir_basename..."
+      git remote add me "git@veracioux.me:$dir_basename"
+      echo "Remote 'me' created successfully"
+  fi
+
+  # Create or update the "me-eo" remote
+  if git remote get-url me-eo >/dev/null 2>&1; then
+      echo "Remote 'me-eo' already exists"
+  else
+      echo "Creating remote 'me-eo' pointing to me-git@veracioux.me:$dir_basename..."
+      git remote add me-eo "eo-git@veracioux.me:$dir_basename"
+      echo "Remote 'me-eo' created successfully"
+  fi
+
+  # Show final remote configuration
+  echo
+  echo "Current remotes:"
+  git remote -v
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
