@@ -1102,6 +1102,7 @@ Note: This code block must not contain any apostrophes!
       set -gx WORKTREE "$worktree_index"
       set -gx COMPOSE_PROJECT_NAME "$project$worktree_index"
       set -gx EXPOSED_IP (dig +short "$COMPOSE_PROJECT_NAME" | grep -v '^;;')
+      set -gx HOST_IP (get-self-ip)
 
       if [ -z "$EXPOSED_IP" ]
           set_color yellow
