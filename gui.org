@@ -100,16 +100,16 @@ Some settings in GTK 3.0 don't work if we quote their values.
 Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
 =Alt+<number>=, where indexing starts from 1, and =Alt+0= chooses the 10th item.
 #+begin_src conf :tangle ~/.config/gtk-3.0/bookmarks
-  file://<<eval-user-home()>>/proj projects
-  file://<<eval-user-home()>>/src src
-  file://<<eval-user-home()>>/tmp ~/tmp
-  file://<<eval-user-home()>>/data data
-  file://<<eval-user-home()>>/mnt/cloud cloud
-  file://<<eval-user-home()>>/repo repo
-  file://<<eval-user-home()>>/data/literature literature
-  file://<<eval-user-home()>>/.local/share ~/.local/share
+  file://<<eval-user-home()>>/proj 1 projects
+  file://<<eval-user-home()>>/src 2 src
+  file://<<eval-user-home()>>/tmp 3 ~/tmp
+  file://<<eval-user-home()>>/data 4 data
+  file://<<eval-user-home()>>/mnt/cloud 5 cloud
+  file://<<eval-user-home()>>/data/personal/job 6 job
   file:///dev/null unbound
-  file:///tmp/stage-<<eval-user-name()>> stage
+  file:///dev/null unbound
+  file:///dev/null unbound
+  file:///tmp/stage-<<eval-user-name()>> 0 stage
 #+end_src
 * Flameshot
 #+begin_src conf :tangle ~/.config/flameshot/flameshot.ini
