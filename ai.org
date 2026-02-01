@@ -202,13 +202,6 @@
           "EMACS_SOCKET_NAME": "emacs"
         }
       },
-      "alacritty": {
-        "type": "local",
-        "command": [
-          "alacritty-mcp"
-        ],
-        "enabled": false
-      },
       "playwright": {
         "type": "local",
         "command": [
