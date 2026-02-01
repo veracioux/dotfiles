@@ -231,6 +231,15 @@
     }
   }
 #+end_src
+*** Global instructions
+#+begin_src markdown :tangle ~/.config/opencode/AGENTS.md
+  ---
+  description: Global instructions for OpenCode
+  ---
+  Some tasks that require special consideration:
+  - When creating an OpenCode configuration for a project, prefer the
+    `<project-root>/.opencode/opencode.json` location
+#+end_src
 *** Agents
 **** Simple
 #+begin_src markdown :tangle ~/.config/opencode/agent/simple.md
