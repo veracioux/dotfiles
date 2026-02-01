@@ -397,6 +397,54 @@
   STEPS ABOVE.
 #+end_src
 *** Custom commands
+**** Add MCP Server
+#+begin_src markdown :tangle ~/.config/opencode/command/add-mcp.md
+  ---
+  agent: simple
+  ---
+  Task: Add an MCP server for use with OpenCode.
+
+  In the "Detailed task specification" below I will tell you which MCP server to add. This can happen in
+  multiple ways. Follow the instructions below:
+
+  # Resolving the MCP
+  I will usually tell you to add an MCP server in one of two ways:
+
+  - I give you a JSON config snippet containing an "mcpServer" key. This is a
+    claude-code-style configuration. You will need to convert it to the OpenCode
+    configuration format documented here: https://opencode.ai/docs/mcp-servers
+  - I tell you the MCP server's purpose, e.g. the tool it is meant to connect to.
+    For example, I can say "Add an MCP server for MongoDB". In this case, you
+    should search the internet for a suitable MCP server for MongoDB. Make the
+    search detailed and list any possible candidates.
+
+  When you find an MCP server (or multiple), you will inform me of the following:
+  - Where you found it (GitHub, etc)
+  - How popular it is (stars, etc)
+  - What installation methods it supports (Pacman, Docker, npx, uvx, etc)
+
+  If you found multiple candidates, you will list them along with brief pros/cons
+  and you will prompt me to choose one. If there are multiple installation
+  methods, you will prompt me to choose one.
+
+  # Adding the MCP to OpenCode config
+
+  You will ask me whether the MCP server should be added to the global OpenCode
+  user config (~/.opencode/opencode.json) or to the current project. Note that
+  when adding to the global user config, you won't have access to it. In that case
+  I want you to output a prompt for me to paste in another OpenCode agent, so that
+  it can add the MCP server to my global config.
+
+  When adding an MCP using npx, uvx or equivalent, you will resolve the most exact
+  version. Never use "latest" directly, always resolve it to a specific version.
+  Even better, use a commit hash if possible.
+
+  ---
+
+  # Detailed task specification
+
+  Add MCP $ARGUMENTS
+#+end_src
 **** Edit file
 #+begin_src markdown :tangle ~/.config/opencode/command/e.md
   ---
