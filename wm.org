@@ -152,7 +152,7 @@ Shared between i3 and sway:
   for_window [instance="Float" class="Alacritty"] floating enable
 #+end_src
 * X config
-#+begin_src conf-xdefaults :tangle ~/.Xresources)
+#+begin_src conf-xdefaults :tangle ~/.Xresources
   ,*.*.font: Ubuntu Mono
 #+end_src
 * Startup
