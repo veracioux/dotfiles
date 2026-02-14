@@ -160,12 +160,19 @@
       "bash": {
         "*": "ask",
         "docker run --rm": "allow",
-        "mkdir *": "allow",
+        "git diff *": "allow",
         "git log *": "allow",
+        "git log *": "allow",
+        "git show *": "allow",
+        "git status *": "allow",
         "git status*": "allow",
-        "rg *": "allow",
+        "head *": "allow",
+        "ls *": "allow",
+        "mkdir *": "allow",
         "sudo *": "deny",
-        "sudo -k *": "ask"
+        "sudo -k *": "ask",
+        "tail *": "allow",
+        "wc *": "allow"
       }
     },
     "tools": {
