@@ -154,6 +154,9 @@ Shared between i3 and sway:
 * X config
 #+begin_src conf-xdefaults :tangle ~/.Xresources
   ,*.*.font: Ubuntu Mono
+  XTerm*faceName: Ubuntu Mono
+  XTerm*faceSize: 12
+  XTerm*background: #1e1e1e
 #+end_src
 * Startup
 ** .xinitrc
