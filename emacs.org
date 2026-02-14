@@ -1115,7 +1115,6 @@ want bindings (link following etc) from =compilation-mode-map= to be available.
         lsp-javascript-suggest-complete-js-docs t)
 
   (eval-after-load 'js (lambda () (require 'dap-node)))
-  (eval-after-load 'ts (lambda () require 'dap-node))
 
   (eval-after-load "npm-mode" (lambda () (npm-global-mode t)))
 #+end_src
@@ -1149,14 +1148,6 @@ want bindings (link following etc) from =compilation-mode-map= to be available.
 #+begin_src elisp
   (straight-use-package
    '(scss-mode :type git :host github :repo "veracioux/scss-mode"))
-#+end_src
-** Vue
-#+begin_src text :tangle (haris/tangle-deps "emacs/vue.pacman")
-  vue-language-server
-#+end_src
-** Angular
-#+begin_src text :tangle (haris/tangle-deps "emacs/angular.npm")
-  @angular/language-service@next typescript @angular/language-server
 #+end_src
 ** TailwindCSS
 #+begin_src elisp
