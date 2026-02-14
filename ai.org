@@ -246,6 +246,7 @@
   Some tasks that require special consideration:
   - When creating an OpenCode configuration for a project, prefer the
     `<project-root>/.opencode/opencode.json` location
+  - NEVER run shell commands for which OpenCode provides an internal tool
 #+end_src
 *** Agents
 **** Simple
