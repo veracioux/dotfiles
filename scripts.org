@@ -555,7 +555,7 @@ get better search matches.
   window_title="$2"
   notification="$3"
 
-  if [ "$TERM" != "dumb" ]; then
+  if [ "$TERM" != "dumb" ] && [ -t 0 ]; then
       if [ -n "$DISPLAY" ]; then
           id="$(notify-send "$window_title" "$notification" --print-id --expire-time 0)"
           trap "dunstify --close=$id" EXIT
