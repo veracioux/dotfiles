@@ -1,0 +1,55 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    username: haris
+    user_groups:
+      - wheel
+      - docker
+
+  pre_tasks:
+    - name: Update package cache
+      pacman:
+        update_cache: yes
+      changed_when: false
+
+  tasks:
+    - name: Install base development packages
+      pacman:
+        name:
+          - base-devel
+          - git
+          - neovim
+          - fish
+          # TODO for another time: Use rootless
+          - docker
+          - docker-compose
+          - python
+          - python-pip
+        state: present
+        force: yes  # Force installation to resolve conflicts
+
+    - name: Ensure docker service is started and enabled
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Add user to docker group
+      user:
+        name: "{{ username }}"
+        groups: docker
+        append: yes
+
+    - name: Create .haris directory for dotfiles
+      file:
+        path: /home/{{ username }}/.haris
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+
+  post_tasks:
+    - name: Clean package cache
+      command: pacman -Scc --noconfirm
+      changed_when: false

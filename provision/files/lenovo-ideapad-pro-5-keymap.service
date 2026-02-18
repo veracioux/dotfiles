@@ -1,0 +1,22 @@
+[Unit]
+Description=Custom keymap remapping for Lenovo IdeaPad Pro 5
+After=local-fs.target systemd-modules-load.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+Environment="DISPLAY=:0"
+# Remap scancodes to keycodes
+# ć to Enter
+ExecStart=/usr/bin/setkeycodes 28 28
+# ž to Enter
+ExecStart=/usr/bin/setkeycodes 2b 28
+# đ to Enter
+ExecStart=/usr/bin/setkeycodes 1b 28
+# š to Enter
+ExecStart=/usr/bin/setkeycodes 1a 28
+# CapsLock to Escape
+ExecStart=/usr/bin/setkeycodes 3a 1
+
+# NOTE: Must be started manually:
+# sudo systemctl start lenovo-ideapad-pro-5-keymap.service

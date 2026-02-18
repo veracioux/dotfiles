@@ -1,0 +1,25 @@
+# Vagrant
+.vagrant/
+*.box
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+
+# Ansible
+*.retry
