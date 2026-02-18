@@ -281,6 +281,23 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
       sleep 3
   done
 #+end_src
+* Keyboard remapping
+** Lenovo IdeaPad Pro 5
+Remap the <> key (located between left Shift and Z) to act as an additional Shift key.
+Must be started manually: systemctl --user start lenovo-ideapad-pro-5-keymap.service
+#+begin_src systemd :tangle ~/.config/systemd/user/lenovo-ideapad-pro-5-keymap.service
+  [Unit]
+  Description=Lenovo IdeaPad Pro 5 keymap (<> to Shift)
+  PartOf=haris-gui-x11.target
+  After=haris-gui-x11.target
+
+  [Service]
+  Type=oneshot
+  ExecStart=/usr/bin/xmodmap -e 'keycode 94 = Shift_L'
+
+  [Install]
+  WantedBy=default.target
+#+end_src
 * Helpers
 #+NAME: eval-path-env
 #+begin_src emacs-lisp
