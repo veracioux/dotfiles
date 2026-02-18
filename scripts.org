@@ -2066,6 +2066,7 @@ URLs (each on a new line) to display in this menu.
   about:config
   about:crashes
   about:credits
+  about:debugging#/runtime/this-firefox
   about:devtools
   about:downloads
   about:home
@@ -2083,10 +2084,10 @@ URLs (each on a new line) to display in this menu.
   about:robots
   about:serviceworkers
   about:sessionrestore
+  about:studies
   about:support
   about:telemetry
   about:welcome
-  about:studies
   EOF_e245552b
   }
 
