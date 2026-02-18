@@ -35,21 +35,13 @@ Vagrant.configure("2") do |config|
     shell.inline = <<-SHELL
       #!/bin/bash
       set -e
-      pacman -Sy --noconfirm archlinux-keyring
-      pacman -S --noconfirm base-devel python python-pip sudo
-      
-      # Create 'haris' user to match live laptop
-      if ! id -u haris &>/dev/null; then
-        useradd -m -G wheel -s /bin/bash haris
-        echo "haris ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/haris
-        chmod 440 /etc/sudoers.d/haris
-      fi
+      /vagrant/bootstrap-ansible.sh haris
     SHELL
   end
 
   # Ansible provisioning
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "main.yml"
+    ansible.playbook = "playbook.yml"
     ansible.verbose = true
     ansible.extra_vars = {
       username: "haris"

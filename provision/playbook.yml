@@ -1,0 +1,191 @@
+---
+- hosts: all
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    username: haris # TODO: Configure
+    user_groups:
+      - wheel
+      - docker
+
+  pre_tasks:
+    - name: Update package cache
+      pacman:
+        update_cache: yes
+      changed_when: false
+
+  tasks:
+    - name: Install base admin packages
+      pacman:
+        name:
+          - base-devel
+          - git
+          - neovim
+          - fish
+          # TODO for another time: Use rootless
+          - docker
+          - python
+          - python-pip
+        state: present
+        force: yes  # Force installation to resolve conflicts
+
+    - name: Ensure docker service is started and enabled
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Add user to docker group
+      user:
+        name: "{{ username }}"
+        groups: docker
+        append: yes
+
+    - name: Clone dotfiles repository
+      git:
+        repo: https://github.com/veracioux/dotfiles
+        dest: /home/{{ username }}/.haris
+        version: master
+      become_user: "{{ username }}"
+
+    - name: Set dotfiles pushurl to SSH
+      command:
+        cmd: git remote set-url --push origin git@github.com:veracioux/dotfiles
+        chdir: /home/{{ username }}/.haris
+      become_user: "{{ username }}"
+      changed_when: false
+
+    - name: Clone spacemacs repository
+      git:
+        repo: https://github.com/veracioux/spacemacs
+        dest: /home/{{ username }}/.emacs.d
+        version: haris/main
+      become_user: "{{ username }}"
+
+    - name: Set spacemacs pushurl to SSH
+      command:
+        cmd: git remote set-url --push origin git@github.com:veracioux/spacemacs
+        chdir: /home/{{ username }}/.emacs.d
+      become_user: "{{ username }}"
+      changed_when: false
+
+    # Set up paru
+    - block:
+      - name: Gather installed package facts
+        package_facts:
+      - name: Install rustup
+        when: "'paru' not in ansible_facts.packages"
+        pacman:
+          name:
+            - rustup
+          state: present
+      - name: Get current rust default toolchain
+        when: "'paru' not in ansible_facts.packages"
+        command: rustup show active-toolchain
+        register: rust_toolchain
+        changed_when: false
+        failed_when: false
+        become_user: "{{ username }}"
+      - name: Set rust toolchain to stable if needed
+        when: "'paru' not in ansible_facts.packages and 'stable' not in rust_toolchain.stdout"
+        ansible.builtin.command: rustup default stable
+        become_user: "{{ username }}"
+      - name: Clone paru repository
+        when: "'paru' not in ansible_facts.packages"
+        git:
+          repo: https://aur.archlinux.org/paru.git
+          dest: /tmp/paru-clone
+          version: 329be2113c590046cb29858c23d9b96a8d7bd586
+          force: true
+        become_user: "{{ username }}"
+        changed_when: false
+      - name: Create paru package
+        when: "'paru' not in ansible_facts.packages"
+        shell: cd /tmp/paru-clone && makepkg
+        changed_when: false
+        become_user: "{{ username }}"
+      - name: Install paru
+        when: "'paru' not in ansible_facts.packages"
+        shell: pacman -U --noconfirm /tmp/paru-clone/paru-2.*.pkg.tar.zst
+        changed_when: true
+      - name: Delete paru-clone
+        when: "'paru' not in ansible_facts.packages"
+        command: rm -rf /tmp/paru-clone
+        changed_when: false
+    - name: Install desktop environment
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - xorg
+          - xorg-xinit
+          - xorg-xinput
+          - xorg-xsetroot
+          - xorg-xprop
+          - xorg-xev
+          - xorg-xwininfo
+          - xorg-xbacklight
+          - xorg-xmodmap
+          - xorg-xrdb
+          - xorg-xrandr
+          - i3-wm
+          - i3status
+          - sxhkd
+          - dunst
+          - picom
+          - redshift
+          # - dmenu-height
+          - xclip
+          - xsel
+        state: present
+    - name: Install basic user packages
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - emacs
+          - fisher
+          - docker-compose
+          - visual-studio-code-bin
+          - google-chrome
+          - firefox
+          - firefox-tridactyl
+          - alacritty
+        use: paru
+        state: present
+    - name: Install tools and utilities
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - nodejs
+          - npm
+          - go
+          - ipython
+          - python-pip
+          - fd
+          - ripgrep
+          - fzf
+          - bat
+          - tmux
+        use: paru
+        state: present
+    - block:
+        - name: Tangle dotfiles
+          command: "/home/{{ username }}/.haris/bootstrap/tangle-all.sh"
+        - name: Collect installed vscode extensions
+          shell: code --list-extensions | sort | uniq
+          register: vscode_extensions_installed
+          changed_when: false
+        - name: Collect desired vscode extensions
+          shell: cat extensions.txt | cut -f1 -d@
+          args:
+            chdir: "/home/{{ username }}/.haris/vscode"
+          register: vscode_extensions_desired
+          changed_when: false
+        - name: Set up vscode
+          shell: head grep -v '@99\.' <extensions.txt | xargs -n 1 code --install-extension
+          when: vscode_extensions_installed.stdout != vscode_extensions_desired.stdout
+          args:
+            chdir: "/home/{{ username }}/.haris/vscode"
+        # - name: Set up fish
+        #   command: fisher update
+      tags: configure-user
+      become_user: "{{ username }}"

@@ -26,6 +26,6 @@ description: AI agent instructions for provision project
 ## Files
 
 - `Vagrantfile` - VM config, includes Python bootstrap
-- `main.yml` - Main Ansible playbook
+- `playbook.yml` - Main Ansible playbook
 - `inventory` - Vagrant host inventory
 - `ansible/` - Empty roles structure (expand as needed)

@@ -3,7 +3,7 @@
 
 * Extensions
 ** Dump
-#+begin_src shell
+#+begin_src shell :tangle ~/.local/lib/haris/vscode-dump-extensions.sh
   {
       code --list-extensions --show-versions
       cat extensions.txt
@@ -11,7 +11,7 @@
 #+end_src
 * Bootstrap
 ** Symlinks
-#+begin_src shell
+#+begin_src shell ~/.local/lib/haris/vscode-bootstrap-symlinks.sh
   src="$(pwd)"
   for dest in ~/".config/Code/User" ~/".config/Code - OSS"; do
       (
@@ -23,6 +23,6 @@
   done
 #+end_src
 ** Extensions
-#+begin_src shell
+#+begin_src shell ~/.local/lib/haris/vscode-install-extensions.sh
   xargs -n 1 code --install-extension < extensions.txt
 #+end_src

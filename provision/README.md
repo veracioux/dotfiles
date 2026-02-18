@@ -14,6 +14,6 @@ vagrant destroy -f  # Destroy VM
 ## Files
 
 - `Vagrantfile` - VM configuration
-- `main.yml` - Ansible playbook
+- `playbook.yml` - Ansible playbook
 - `inventory` - Ansible inventory
 - `ansible/` - Ansible project structure
