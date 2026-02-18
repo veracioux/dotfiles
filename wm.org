@@ -446,13 +446,14 @@ dmenu doesn't work.
 ** Controlling the i3 session
 #+NAME: i3-session-bindings
 #+begin_src i3wm-config
-  set $mode_session    " i3 session [r]eload [Ctrl+r]estart [q]uit [k]bind"
+  set $mode_session    " i3 session [r]eload [Ctrl+r]estart [q]uit [k]bind [x]prop"
 
   mode $mode_session {
   bindsym r               reload
   bindsym Ctrl+r          restart
   bindsym q               exec systemctl --user stop graphical-session.target
   bindsym k               exec --no-startup-id kbind, mode default
+  bindsym x               exec alacritty-float -e fish -C xprop, mode default
   bindsym Escape          mode default
   }
 
