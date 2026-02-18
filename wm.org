@@ -776,9 +776,42 @@ Menu of utilities that allow me to chat with my computer.
   bindsym $mod+n            workspace next
   bindsym $mod+p            workspace prev
   bindsym $mod+Tab          workspace back_and_forth
+
+  # Extra workspaces (a-f)
+  set $ws_a "11:aux-a"
+  set $ws_b "12:aux-b"
+  set $ws_c "13:aux-c"
+  set $ws_d "14:aux-d"
+  set $ws_e "15:aux-e"
+  set $ws_f "16:aux-f"
 #+end_src
 #+begin_src i3wm-config :tangle ~/.config/sway/config
   <<workspaces>>
+#+end_src
+** Extra workspaces menu
+#+NAME: extra-workspaces-menu
+#+begin_src i3wm-config
+  set $mode_extra_ws "Extra WS | [a] [b] [c] [d] [e] [f] | Shift+[a-f] to move"
+
+  mode $mode_extra_ws {
+  bindsym a               workspace $ws_a, mode default
+  bindsym b               workspace $ws_b, mode default
+  bindsym c               workspace $ws_c, mode default
+  bindsym d               workspace $ws_d, mode default
+  bindsym e               workspace $ws_e, mode default
+  bindsym f               workspace $ws_f, mode default
+
+  bindsym Shift+a         move container to workspace $ws_a, mode default
+  bindsym Shift+b         move container to workspace $ws_b, mode default
+  bindsym Shift+c         move container to workspace $ws_c, mode default
+  bindsym Shift+d         move container to workspace $ws_d, mode default
+  bindsym Shift+e         move container to workspace $ws_e, mode default
+  bindsym Shift+f         move container to workspace $ws_f, mode default
+
+  bindsym Escape          mode default
+  }
+
+  bindsym $mod+a            mode $mode_extra_ws
 #+end_src
 ** Workaround for Emacs
 Sometimes an Emacs frame becomes faulty and I can't close it. This workspace
