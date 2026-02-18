@@ -344,7 +344,7 @@ External bindings are served by sxhkd.
   mod4 + ctrl + Return
       eterm
   mod4 + shift + f
-      firefox -P «eval-user-name()»
+      ~/.local/lib/haris/firefox-profile-launcher
   mod4 + shift + v
       vscode
   mod4 + v
@@ -567,6 +567,34 @@ Comments start with =#=.
   output="$(bluetoothctl "$1" "$(get_id)")"
 
   notify-send 'Status' "$output"
+#+end_src
+**** Firefox profile launcher
+#+NAME: firefox-profile-launcher
+#+begin_src shell :tangle ~/.local/lib/haris/firefox-profile-launcher :tangle-mode (eval #o744)
+  profiles_ini="$HOME/.mozilla/firefox/profiles.ini"
+
+  if [ ! -f "$profiles_ini" ]; then
+      notify-send "Firefox" "profiles.ini not found"
+      exit 1
+  fi
+
+  # Extract profile names and find default
+  profiles=$(awk -F= '/^Name=/{print $2}' "$profiles_ini")
+  default=$(awk -F= '/^Default=/{print $2}' "$profiles_ini" | head -1)
+
+  # Sort profiles with default first
+  if [ -n "$default" ]; then
+      sorted_profiles="$default$(echo "$profiles" | grep -vx "$default" | sed 's/^/\n/')"
+  else
+      sorted_profiles="$profiles"
+  fi
+
+  # Prompt user with dmenu
+  selected=$(echo "$sorted_profiles" | dmenu -p "Firefox profile:")
+
+  if [ -n "$selected" ]; then
+      firefox -P "$selected" &
+  fi
 #+end_src
 ** Emacs apps menu
 This is a menu that allows me to launch some utility apps I commonly use, but
