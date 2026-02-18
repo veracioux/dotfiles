@@ -388,7 +388,7 @@ dmenu doesn't work.
 #+end_src
 ** Applications menu
 #+begin_src i3wm-config
-  set $mode_apps "Apps | [p]acman [c]lipmenu [s]ecclip [e]lement [v]iber [u]nicode [V]pn [t]eams"
+  set $mode_apps "Apps | [p]acman [c]lipmenu [s]ecclip [e]lement [v]iber [u]nicode [V]pn [t]eams [q]r"
 
   mode $mode_apps {
   bindsym p       exec dmenu_run pacman, mode default
@@ -399,6 +399,7 @@ dmenu doesn't work.
   bindsym u       exec dmenu_run Unicode, mode default
   bindsym Shift+v exec vpn-toggle, mode default
   bindsym t       exec teams, mode default
+  bindsym q       mode $mode_qr
 
   bindsym Escape mode default
   }
@@ -498,7 +499,7 @@ dmenu doesn't work.
   bindsym Escape          mode default
   }
 
-  bindsym $mod+Shift+q      mode $mode_qr
+
 #+end_src
 ** Organization menu (using org-mode)
 #+NAME: org-menu
