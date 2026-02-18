@@ -177,6 +177,9 @@ This service updates the user's crontab when any of the custom crontab files cha
   After=haris-gui-x11.target
   After=wm.target
 
+  [Install]
+  WantedBy=haris-gui-x11.target
+
   [Service]
   SyslogIdentifier=sxhkd
   Environment=XDG_RUNTIME_DIR=/run/user/%U
