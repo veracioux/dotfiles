@@ -581,12 +581,12 @@ Comments start with =#=.
   fi
 
   # Extract profile names and find default
-  profiles=$(awk -F= '/^Name=/{print $2}' "$profiles_ini")
+  profiles=$(awk -F= '/^Name=/{print $2}' "$profiles_ini" | grep -v '^$')
   default=$(awk -F= '/^Default=/{print $2}' "$profiles_ini" | head -1)
 
   # Sort profiles with default first
   if [ -n "$default" ]; then
-      sorted_profiles="$default$(echo "$profiles" | grep -vx "$default" | sed 's/^/\n/')"
+      sorted_profiles="$(echo "$default"; echo "$profiles" | grep -vx "$default")"
   else
       sorted_profiles="$profiles"
   fi
