@@ -6,9 +6,21 @@
 #+begin_src conf :tangle ~/.config/paru/paru.conf
   [options]
   [bin]
-  [sys]
+  Include = <<eval-user-home()>>/.config/paru/conf.d/ansible.conf
+  [custom]
   Url = https://github.com/veracioux/custom-packages
   Depth = 3
+#+end_src
+** For ansible
+During non-interactive provisioning, paru cannot prompt for PKGBUILD review. To
+maintain security, the ansible playbook restricts paru to only install packages
+from trusted sources by writing =RepoOnly= to this included config file.
+
+This allows normal interactive use with full AUR access, while ansible
+provisioning restricts paru to official repositories and the [custom] repo only.
+#+begin_src conf :tangle ~/.config/paru/conf.d/ansible.conf
+# This file is managed by Ansible during provisioning
+# When populated with 'RepoOnly', paru is restricted to official + [custom] repos
 #+end_src
 * Performance optimizations
 Install and enable tlp.service.
@@ -20,3 +32,14 @@ Install and enable tlp.service.
   CPU_MAX_PERF_ON_AC=50
   CPU_BOOST_ON_AC=0
 #+end_src
+* Appendix
+** Helper code blocks
+*** =eval-user-home=
+#+NAME: eval-user-home
+#+begin_src elisp
+  (expand-file-name "~")
+#+end_src
+** Local variables
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:

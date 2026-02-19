@@ -86,6 +86,26 @@
         when: "'paru' not in ansible_facts.packages"
         shell: pacman -U --noconfirm /tmp/paru-clone/paru-2.*.pkg.tar.zst
         changed_when: true
+      - name: Ensure paru ansible config directory exists
+        file:
+          path: /home/{{ username }}/.config/paru/conf.d
+          state: directory
+          owner: "{{ username }}"
+          group: "{{ username }}"
+          mode: '0755'
+      - name: Create paru ansible config file
+        copy:
+          content: |
+            [options]
+            RepoOnly
+          dest: /home/{{ username }}/.config/paru/conf.d/ansible.conf
+          owner: "{{ username }}"
+          group: "{{ username }}"
+          mode: '0644'
+      - name: Sync pkgbuilds
+        command: paru -Sy --pkgbuilds --noconfirm
+        changed_when: false
+        become_user: "{{ username }}"
       - name: Delete paru-clone
         when: "'paru' not in ansible_facts.packages"
         command: rm -rf /tmp/paru-clone
