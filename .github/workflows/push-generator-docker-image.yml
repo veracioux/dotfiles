@@ -16,17 +16,17 @@ jobs:
         run: |
           commit="$(git rev-parse HEAD)"
           docker build . \
-            --tag ghcr.io/${{ github.repository_owner }}/dotfiles-generator:"$commit" \
+            --tag ghcr.io/${{ github.repository_owner }}/dotfiles:"$commit" \
             --file bootstrap/Dockerfile
           if [ "${{github.event_name}}" != "pull_request" ]; then
-            docker tag ghcr.io/${{ github.repository_owner }}/dotfiles-generator:"$commit" ghcr.io/${{ github.repository_owner }}/dotfiles-generator:latest
+            docker tag ghcr.io/${{ github.repository_owner }}/dotfiles:"$commit" ghcr.io/${{ github.repository_owner }}/dotfiles:latest
           fi
       - name: Push the image to GHCR
         run: |
           commit="$(git rev-parse HEAD)"
           echo "${{ secrets.GITHUB_TOKEN }}" | \
             docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker push ghcr.io/${{ github.repository_owner }}/dotfiles-generator:"$commit"
+          docker push ghcr.io/${{ github.repository_owner }}/dotfiles:"$commit"
           if [ "${{github.event_name}}" != "pull_request" ]; then
-            docker push ghcr.io/${{ github.repository_owner }}/dotfiles-generator:latest
+            docker push ghcr.io/${{ github.repository_owner }}/dotfiles:latest
           fi
