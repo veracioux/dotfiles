@@ -1,0 +1,22 @@
+#+SETUPFILE: .setup.org
+#+TAGS: manual(m)
+#+TITLE: System configuration
+
+* paru
+#+begin_src conf :tangle ~/.config/paru/paru.conf
+  [options]
+  [bin]
+  [sys]
+  Url = https://github.com/veracioux/custom-packages
+  Depth = 3
+#+end_src
+* Performance optimizations
+Install and enable tlp.service.
+
+** /etc/tlp.d/10-powersave.conf                                      :manual:
+#+begin_src conf :tangle ~/.root-template/etc/tlp.d/10-powersave.conf.template
+  CPU_ENERGY_PERF_POLICY_ON_AC=power
+  CPU_ENERGY_PERF_POLICY_ON_BAT=power
+  CPU_MAX_PERF_ON_AC=50
+  CPU_BOOST_ON_AC=0
+#+end_src
