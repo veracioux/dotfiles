@@ -42,7 +42,7 @@ Vagrant.configure("2") do |config|
     shell.inline = <<-SHELL
       #!/bin/bash
       set -e
-      /vagrant/bootstrap-ansible.sh haris
+      echo haris | /vagrant/bootstrap-ansible.sh haris
     SHELL
   end
 
