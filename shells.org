@@ -1446,7 +1446,7 @@ abbreviations for equivalent apt operations.
   if [ "$__haris_docker" = "docker" ] &&
       begin
           docker compose version ||
-          docker-compose version
+          type --quiet docker-compose
       end &>/dev/null
       _abbr -g D      'docker-compose'
 
