@@ -7,31 +7,33 @@ extractdir="$(mktemp -d)"
 backupdir="$(mktemp -dt tangle-home-backup-"$(whoami)"-XXXXXXX)"
 
 check_missing_then_install() {
-    local distro="$(lsb_release --id | cut -f2)"
-    local install_cmd
-    local packages=()
-    case "$distro" in
-        Arch)
-            install_cmd=(sudo pacman -S);;
-        Ubuntu)
-            install_cmd=(sudo apt -y install);;
-    esac
-    for name in "$@"; do
-        if [ ! -x "$(command -v "$name")" ]; then
-            packages=("${packages[@]}" "$name")
-        fi
-    done
-    if [ "${#packages[@]}" = 0 ]; then
-        return 0;
-    fi
-    echo "Some required commands missing. Will be installed using:" >&2
-    echo "    ${install_cmd[*]} ${packages[@]}" >&2
-    read -n1 -p "Ok? [Y/n]: " ok
-    if [ -z "$ok" -o "${ok^}" = "Y" ]; then
-        "${install_cmd[@]}" "${packages[@]}"
-    else
-        return 1
-    fi
+	local distro="$(lsb_release --id | cut -f2)"
+	local install_cmd
+	local packages=()
+	case "$distro" in
+	Arch)
+		install_cmd=(sudo pacman -S)
+		;;
+	Ubuntu)
+		install_cmd=(sudo apt -y install)
+		;;
+	esac
+	for name in "$@"; do
+		if [ ! -x "$(command -v "$name")" ]; then
+			packages=("${packages[@]}" "$name")
+		fi
+	done
+	if [ "${#packages[@]}" = 0 ]; then
+		return 0
+	fi
+	echo "Some required commands missing. Will be installed using:" >&2
+	echo "    ${install_cmd[*]} ${packages[@]}" >&2
+	read -n1 -p "Ok? [Y/n]: " ok
+	if [ -z "$ok" -o "${ok^}" = "Y" ]; then
+		"${install_cmd[@]}" "${packages[@]}"
+	else
+		return 1
+	fi
 }
 
 check_missing_then_install docker rsync
@@ -39,7 +41,7 @@ check_missing_then_install docker rsync
 echo "--------------------------------"
 echo "Generating configs into tar file"
 echo "--------------------------------"
-docker run docker.veracioux.me/dotfiles >"$tmpfile" --user "$(whoami)" --home ~
+docker run ghcr.io/veracioux/dotfiles --user "$(whoami)" --home ~ >"$tmpfile"
 
 echo "--------------------------------"
 echo "Extracting tar file"

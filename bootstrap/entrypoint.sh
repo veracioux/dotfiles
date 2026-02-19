@@ -7,9 +7,9 @@ set -e
 # Entrypoint for the container created from Dockerfile
 
 usage() {
-    echo 'Usage: docker run docker.veracioux.me/dotfiles-generator [OPTIONS]'
-    echo '  -u, --user      The UNIX user the config is meant for'
-    echo '  -h, --home      The path of the home directory, if it differs from /home/<user>'
+	echo 'Usage: docker run ghcr.io/veracioux/dotfiles [OPTIONS]'
+	echo '  -u, --user      The UNIX user the config is meant for'
+	echo '  -h, --home      The path of the home directory, if it differs from /home/<user>'
 }
 
 parsed_args="$(getopt --name run --options hr:b:u:h --long help,user:,home: -- "$@")"
@@ -20,31 +20,32 @@ home=''
 user=''
 
 while :; do
-    case "$1" in
-        -u | --user)
-            user="$2"
-            if [ -z "$home" ]; then
-                home="/home/$user"
-            fi
-            shift 2
-            ;;
-        -H | --home)
-            home="$2"
-            shift 2
-            ;;
-        --)
-            shift; break
-            ;;
-        *)
-            usage
-            exit 0
-            ;;
-    esac
+	case "$1" in
+	-u | --user)
+		user="$2"
+		if [ -z "$home" ]; then
+			home="/home/$user"
+		fi
+		shift 2
+		;;
+	-H | --home)
+		home="$2"
+		shift 2
+		;;
+	--)
+		shift
+		break
+		;;
+	*)
+		usage
+		exit 0
+		;;
+	esac
 done
 
 if [ -z "$user" ]; then
-    echo "ERROR: --user option is required" >&2
-    exit 1
+	echo "ERROR: --user option is required" >&2
+	exit 1
 fi
 
 cd ~/.haris

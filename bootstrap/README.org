@@ -10,11 +10,11 @@ context, i.e. from [[../]] relative to this directory!
 
 #+begin_src shell
   cd ..
-  docker build -t docker.veracioux.me/dotfiles-generator -f bootstrap/Dockerfile .
+  docker build -t ghcr.io/veracioux/dotfiles -f bootstrap/Dockerfile .
 #+end_src
 
 #+begin_src shell
-  docker run docker.veracioux.me/dotfiles-generator -u $USER
+  docker run ghcr.io/veracioux/dotfiles -u $USER
 #+end_src
 
 Run with =--help= to see detailed usage.
