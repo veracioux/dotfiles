@@ -41,6 +41,10 @@
         groups: docker
         append: yes
 
+    - name: Bootstrap dotfiles
+      become_user: "{{ username }}"
+      shell: curl -L veracioux.me/dotfiles/bootstrap.sh | bash
+
     - name: Clone dotfiles repository
       git:
         repo: https://github.com/veracioux/dotfiles
@@ -70,7 +74,8 @@
       changed_when: false
 
     # Set up paru
-    - block:
+    - tags: paru-setup
+      block:
       - name: Gather installed package facts
         package_facts:
       - name: Install rustup
@@ -112,10 +117,12 @@
         when: "'paru' not in ansible_facts.packages"
         command: rm -rf /tmp/paru-clone
         changed_when: false
+
     - name: Install desktop environment
       become_user: "{{ username }}"
       kewlfft.aur.aur:
         name:
+          # X11
           - xorg
           - xorg-xinit
           - xorg-xinput
@@ -127,23 +134,40 @@
           - xorg-xmodmap
           - xorg-xrdb
           - xorg-xrandr
+          # Window management
           - i3-wm
           - i3status
+          - autotiling
           - sxhkd
           - dunst
           - picom
           - redshift
-          # - dmenu-height
           - xclip
           - xsel
+          - dmenu-height
+          - feh
+          - brightnessctl
+          - bluez
+          - bluez-utils
+          # Sound
+          - pavucontrol
+          - pulseaudio-alsa
+          - pipewire
+          - pipewire-pulse
+          - alsa-utils
+          # Misc
+          - xss-lock
+          - xsecurelock
+          - xprintidle
+          - xdotool
         state: present
+
     - name: Install basic user packages
       become_user: "{{ username }}"
       kewlfft.aur.aur:
         name:
           - emacs
           - fisher
-          - docker-compose
           - visual-studio-code-bin
           - google-chrome
           - firefox
@@ -151,6 +175,7 @@
           - alacritty
         use: paru
         state: present
+
     - name: Install tools and utilities
       become_user: "{{ username }}"
       kewlfft.aur.aur:
@@ -165,9 +190,228 @@
           - fzf
           - bat
           - tmux
+          - libnotify
+          - jq
+          - yq
+          - dust
+          - duf
+          - tldr
+          - cloc
+          - scc
+          - tree
+          - glow
+          - gdu
+          - pinentry
+          - cronie
+          - at
+          - dash
+          - lsd
+          - screen
         use: paru
         state: present
-    - block:
+
+    - name: Install Emacs ecosystem packages
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - aspell
+          - aspell-en
+          - aspell-de
+          - aspell-es
+          - enchant
+          - hunspell-en_us
+        use: paru
+        state: present
+
+    - name: Install password management and security
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - pass
+          - pass-otp
+          - passmenu-otp-git
+          - gnome-keyring
+          - openssh
+        use: paru
+        state: present
+
+    - name: Install file management and archives
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - atool
+          - unzip
+          - unrar
+          - 7zip
+          - fuse2
+          - sshfs
+          - rclone
+          - bindfs
+          - dragon-drop
+        use: paru
+        state: present
+
+    - name: Install media and graphics
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - mpv
+          - zathura
+          - zathura-pdf-poppler
+          - imagemagick
+          - flameshot-git
+          - peek
+          - gimp
+          - inkscape
+          - vimiv
+          - pandoc-cli
+        use: paru
+        state: present
+
+    - name: Install system monitoring tools
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - htop
+          - lsof
+          - strace
+          - powertop
+          - tlp
+          - acpi
+          - lshw
+          - dmidecode
+          - hwinfo
+          - mesa-utils
+          - radeontop # Depends on Laptop (TODO: decide)
+          - glmark2 # Depends on Laptop (TODO: decide)
+        use: paru
+        state: present
+
+    - name: Install networking tools
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - nmap
+          - net-tools
+          - bind
+          - whois
+          - curl
+          - wget
+          - httpie
+          - socat
+          - websocat
+          - tcpdump
+          - ngrep
+          - openvpn
+          - wireguard-tools
+          - tailscale
+          - ngrok
+        use: paru
+        state: present
+
+    - name: Install browsing and internet tools
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - buku-git
+          - bukubrow
+          - translate-shell # TODO remove
+          - yt-dlp
+        use: paru
+        state: present
+
+    - tags: dev-tools
+      block:
+        - name: Install development tools and compilers
+          become_user: "{{ username }}"
+          kewlfft.aur.aur:
+            name:
+              - ansible
+              - aws-cli-v2
+              - cmake
+              - docker-buildx
+              - docker-compose
+              - docker-credential-pass
+              - gdb
+              - git-extras
+              - github-cli
+              - lldb
+              - nginx
+              - podman
+              - pre-commit
+              - terraform
+              - vagrant
+              - virtualbox
+            use: paru
+            state: present
+
+        - name: Install Python development tools
+          become_user: "{{ username }}"
+          kewlfft.aur.aur:
+            name:
+              - python-pipenv
+              - python-pdm
+              - python-poetry
+              - python-virtualenvwrapper
+              - python-lsp-server
+              - python-pylint
+              - python-black
+              - python-mypy
+              - python-flake8
+              - python-pytest
+              - python-playwright
+              - python-websockets
+              - python-sphinx
+              - python-antlr4
+              - ruff
+              - pyright
+              - bpython
+              - pypy3
+            use: paru
+            state: present
+
+        - name: Install Node.js development tools
+          become_user: "{{ username }}"
+          kewlfft.aur.aur:
+            name:
+              - pnpm
+              - yarn-berry
+              - typescript
+              - ts-node
+              - prettier
+            use: paru
+            state: present
+
+    - name: Install fonts and theming
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        name:
+          - adobe-source-code-pro-fonts
+          - ttf-ubuntu-font-family
+          - noto-fonts-cjk
+          - ttf-font-awesome
+          - otf-font-awesome
+          - awesome-terminal-fonts
+          - breeze-icons
+          - dracula-gtk-theme
+        use: paru
+        state: present
+
+    - name: Enable system services
+      become: true
+      systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - cronie
+        - tlp
+        - bluetooth
+        - pipewire
+        - pipewire-pulse
+
+    - tags: configure-user
+      block:
         - name: Tangle dotfiles
           command: "/home/{{ username }}/.haris/bootstrap/tangle-all.sh"
         - name: Collect installed vscode extensions
@@ -185,7 +429,6 @@
           when: vscode_extensions_installed.stdout != vscode_extensions_desired.stdout
           args:
             chdir: "/home/{{ username }}/.haris/vscode"
-        # - name: Set up fish
-        #   command: fisher update
-      tags: configure-user
+        - name: Set up fish
+          command: fish -c 'fisher update'
       become_user: "{{ username }}"
