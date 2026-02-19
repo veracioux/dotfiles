@@ -20,6 +20,7 @@
         name:
           - base-devel
           - git
+          - rsync
           - neovim
           - fish
           # TODO for another time: Use rootless
@@ -44,34 +45,6 @@
     - name: Bootstrap dotfiles
       become_user: "{{ username }}"
       shell: curl -L veracioux.me/dotfiles/bootstrap.sh | bash
-
-    - name: Clone dotfiles repository
-      git:
-        repo: https://github.com/veracioux/dotfiles
-        dest: /home/{{ username }}/.haris
-        version: master
-      become_user: "{{ username }}"
-
-    - name: Set dotfiles pushurl to SSH
-      command:
-        cmd: git remote set-url --push origin git@github.com:veracioux/dotfiles
-        chdir: /home/{{ username }}/.haris
-      become_user: "{{ username }}"
-      changed_when: false
-
-    - name: Clone spacemacs repository
-      git:
-        repo: https://github.com/veracioux/spacemacs
-        dest: /home/{{ username }}/.emacs.d
-        version: haris/main
-      become_user: "{{ username }}"
-
-    - name: Set spacemacs pushurl to SSH
-      command:
-        cmd: git remote set-url --push origin git@github.com:veracioux/spacemacs
-        chdir: /home/{{ username }}/.emacs.d
-      become_user: "{{ username }}"
-      changed_when: false
 
     # Set up paru
     - tags: paru-setup
@@ -412,6 +385,31 @@
 
     - tags: configure-user
       block:
+        - name: Clone dotfiles repository
+          git:
+            repo: https://github.com/veracioux/dotfiles
+            dest: /home/{{ username }}/.haris
+            version: master
+            force: true
+          become_user: "{{ username }}"
+        - name: Set dotfiles pushurl to SSH
+          command:
+            cmd: git remote set-url --push origin git@github.com:veracioux/dotfiles
+            chdir: /home/{{ username }}/.haris
+          become_user: "{{ username }}"
+          changed_when: false
+        - name: Clone spacemacs repository
+          git:
+            repo: https://github.com/veracioux/spacemacs
+            dest: /home/{{ username }}/.emacs.d
+            version: haris/main
+          become_user: "{{ username }}"
+        - name: Set spacemacs pushurl to SSH
+          command:
+            cmd: git remote set-url --push origin git@github.com:veracioux/spacemacs
+            chdir: /home/{{ username }}/.emacs.d
+          become_user: "{{ username }}"
+          changed_when: false
         - name: Tangle dotfiles
           command: "/home/{{ username }}/.haris/bootstrap/tangle-all.sh"
         - name: Collect installed vscode extensions
@@ -431,4 +429,5 @@
             chdir: "/home/{{ username }}/.haris/vscode"
         - name: Set up fish
           command: fish -c 'fisher update'
+
       become_user: "{{ username }}"
