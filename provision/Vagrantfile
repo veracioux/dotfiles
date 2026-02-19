@@ -4,11 +4,11 @@
 VAGRANT_COMMAND = ARGV[0]
 
 Vagrant.configure("2") do |config|
-  # Use Arch Linux box
-  config.vm.box = "archlinux/archlinux"
+  # Arch Linux box
+ config.vm.box = "Kppqju77/arch"
 
   # VM Name
-  config.vm.define "dev-playground"
+ config.vm.define "dev-playground"
 
   # SSH configuration
   if VAGRANT_COMMAND == "ssh"
