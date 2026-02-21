@@ -214,6 +214,7 @@ Tridactyl extension.
 
   unbind <C-b>
   unbind <C-f>
+  unbind <F1>
 
   # GitHub
 
