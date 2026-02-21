@@ -2,6 +2,24 @@
 #+TAGS: manual(m)
 #+TITLE: System configuration
 
+* SSH
+#+begin_src ssh-config :tangle ~/.ssh/config
+  Include conf.d/*.conf
+
+  Match all
+    AddKeysToAgent yes
+    IdentityFile ~/.ssh/main
+    IdentitiesOnly yes
+    RequestTTY yes
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 600
+    SetEnv TERM=xterm-256color
+
+  Host localhost 127.0.0.1 ::1
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+#+end_src
 * paru
 #+begin_src conf :tangle ~/.config/paru/paru.conf
   [options]
