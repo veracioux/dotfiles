@@ -23,6 +23,10 @@
     ControlPath ~/.ssh/sockets/%r@%h-%p
     ControlPersist 600
     SetEnv TERM=xterm-256color
+
+  Host localhost 127.0.0.1 ::1
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
 #+end_src
 * Dunst
 :PROPERTIES:
