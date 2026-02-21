@@ -86,6 +86,10 @@
         when: "'paru' not in ansible_facts.packages"
         shell: pacman -U --noconfirm /tmp/paru-clone/paru-2.*.pkg.tar.zst
         changed_when: true
+      - name: Update paru package cache from custom repo
+        command: paru -Sy --pkgbuilds --noconfirm
+        changed_when: false
+        become_user: "{{ username }}"
       - name: Delete paru-clone
         when: "'paru' not in ansible_facts.packages"
         command: rm -rf /tmp/paru-clone
