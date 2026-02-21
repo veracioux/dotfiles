@@ -180,6 +180,7 @@
           - dash
           - lsd
           - screen
+          - sshpass
         use: paru
         state: present
 
