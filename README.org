@@ -140,6 +140,7 @@ and some added mime type associations. To apply the changes, run:
   x-scheme-handler/file=nemo.desktop;
   x-scheme-handler/http=firefox.desktop;
   x-scheme-handler/https=firefox.desktop;
+  x-scheme-handler/mailto=firefox.desktop;
   x-scheme-handler/msteams=teams.desktop;
   x-scheme-handler/tg=org.telegram.desktop.desktop;
   x-scheme-handler/viber=viber.desktop;
