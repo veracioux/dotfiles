@@ -1559,6 +1559,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g P     'pgrep -af'
   conditional_abbr -g Pu    "pgrep -afu "(whoami)
   _abbr            -g sni   'sudo npm install -g'
+  conditional_abbr -g n     'notify-send'
 
   conditional_abbr -g tf    'terraform'
   conditional_abbr -g tfw   'terraform workspace'
