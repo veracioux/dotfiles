@@ -652,16 +652,6 @@ be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
 
   fd . "${lookup_dirs[@]}" 2>/dev/null
 #+end_src
-** =n=
-#+begin_src shell :tangle ~/.local/bin/n
-  # Print n of the received arguments, where n=$1
-
-  [ "$#" = 0 ] && exit 1
-
-  num="$1"
-  shift
-  printarg $(printarg "${@}" | head -"$num")
-#+end_src
 ** =printarg=
 #+begin_src bash :tangle ~/.local/bin/printarg
   # Print commandline arguments passed to this function each on its own line
