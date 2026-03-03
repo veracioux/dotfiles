@@ -160,7 +160,11 @@
       "bash": {
         "*": "ask",
         "docker run --rm": "allow",
+        "git add *": "allow",
+        "git commit *": "ask",
+        "git-commit-from-editmsg": "allow",
         "git diff *": "allow",
+        "git log *": "allow",
         "git log *": "allow",
         "git log *": "allow",
         "git show *": "allow",
@@ -172,7 +176,7 @@
         "sudo *": "deny",
         "sudo -k *": "ask",
         "tail *": "allow",
-        "wc *": "allow"
+        "wc *": "allow",
       }
     },
     "tools": {
@@ -472,8 +476,6 @@
   tools:
     "*": false
     "voice_converse": true
-  permission:
-    "*": deny
   ---
   Start a voice conversation using voice mode MCP tool. You will start the conversation by saying just "Hello" AND NOTHING ELSE.
 #+end_src
@@ -488,12 +490,6 @@
 #+begin_src markdown :tangle ~/.config/opencode/command/commit.md
   ---
   description: Create a git commit for the current changes in the repository
-  <!-- model: opencode/big-pickle -->
-  permission:
-    bash:
-      "git commit *": ask
-      "git add *": allow
-      "git log *": allow
   ---
   Your task: Commit $ARGUMENTS.
   !`cd "$(git rev-parse --git-dir)" && mv COMMIT_EDITMSG COMMIT_EDITMSG.bak`
