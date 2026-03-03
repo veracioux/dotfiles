@@ -517,6 +517,40 @@
   ### Unstaged changes
   !`git diff --cached --quiet && git diff && echo 'Stage changes first, then commit' || echo 'Not relevant'`
 #+end_src
+**** Nudge commands
+Reusable prompts that nudge the agent when it strays from its original instructions.
+***** Use OpenCode integrated tools
+#+begin_src markdown :tangle ~/.config/opencode/command/nudge:tools.md
+  ---
+  description: Nudge agent to use OpenCode integrated tools
+  ---
+  Remember to use the integrated tools available via OpenCode. Only run shell commands when there is no integrated tool available for the task at hand.
+  Reply with OK.
+#+end_src
+***** Do not provide summary
+#+begin_src markdown :tangle ~/.config/opencode/command/nudge:no-summary.md
+  ---
+  description: Nudge agent to avoid providing summaries
+  ---
+  After making a change, do not provide a summary of changes or a changelog.
+  Reply with OK.
+#+end_src
+***** Be very terse
+#+begin_src markdown :tangle ~/.config/opencode/command/nudge:terse.md
+  ---
+  description: Nudge agent to be very terse in its responses
+  ---
+  Remember to be very very terse in your responses. Only provide the essential information, and avoid any unnecessary explanations or commentary. Be concise and to the point.
+  Reply with OK.
+#+end_src
+***** Use tooling from this project
+#+begin_src markdown :tangle ~/.config/opencode/command/nudge:project-tools.md
+  ---
+  description: Nudge agent to use tools defined by the project
+  ---
+  Make sure to use the tooling already used by this project.
+  Reply with OK.
+#+end_src
 * Appendix
 *** Helper functions
 **** =get-api-key=
