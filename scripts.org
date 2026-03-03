@@ -467,21 +467,6 @@ get better search matches.
   export TERM=xterm-256color
   alternative-command ngrok "$@"
 #+end_src
-** =teams=                                                         :wrapper:
-#+begin_src shell :tangle ~/.local/bin/teams
-  flatpak_name="com.github.IsmaelMartinez.teams_for_linux"
-
-  if [ "$(which -a teams | uniq | wc -l)" -gt 1 ]; then
-      alternative-command teams "$@"
-  elif [ "$(which -a teams-for-linux | uniq | wc -l)" -gt 0 ]; then
-      teams-for-linux "$@"
-  elif flatpak info "$flatpak_name" >/dev/null 2>&1; then
-       flatpak run "$flatpak_name"
-  else
-      echo "Teams is not installed. Tried:" >&2
-      printf '    %s\n' teams teams-for-linux "Flatpak: $flatpak_name"
-  fi
-#+end_src
 ** =yarn=                                                          :wrapper:
 #+begin_src shell :tangle ~/.local/bin/yarn
   if [ "$(which -a yarn | uniq | wc -l)" -gt 1 ]; then
@@ -2807,17 +2792,6 @@ Open a GUI window in the correct workspace.
   i3-msg exec "$script"
   rm -f "$script"
 #+end_src
-** =snip=
-#+begin_src bash :tangle ~/.local/bin/snip
-  nvim ~/.vim/snips/"$1".snippets
-#+end_src
-** =renice-emacs=
-Modify niceness of emacs processes to give them higher priority.
-#+begin_src shell :tangle ~/.local/bin/renice-emacs
-  for pid in $(pgrep emacs); do
-      /usr/bin/renice -n -15 "$pid"
-  done
-#+end_src
 ** sxhkd
 TODO: move to main README
 
@@ -2883,17 +2857,6 @@ Returns the second executable with the given name, looked up in execpath.
 
 # Quick test...
 #+CALL: find-alt-cmd(name="emacs")
-** OS-specific code
-#+NAME: on-macos
-#+begin_src emacs-lisp :var text="" :var else=""
-  ;; Insert text only on macOS
-  (if (eq system-type 'darwin) text else)
-#+end_src
-#+NAME: on-linux
-#+begin_src emacs-lisp :var text="" :var else=""
-  ;; Insert text only on Linux
-  (if (eq system-type 'darwin) text else)
-#+end_src
 ** =eval-real-uid=
 #+NAME: eval-real-uid
 #+begin_src emacs-lisp
