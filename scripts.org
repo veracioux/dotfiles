@@ -1357,6 +1357,12 @@ Run a command in a given directory.
   echo "Current remotes:"
   git remote -v
 #+end_src
+** Utilities for AI agents
+Utility scripts for AI agents to use.
+*** =git-commit-from-editmsg=
+#+begin_src shell :tangle ~/.local/bin/git-commit-from-editmsg
+  git commit --file "$(git rev-parse --git-dir)"/COMMIT_EDITMSG
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
