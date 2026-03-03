@@ -496,7 +496,7 @@
   1. Analyze the changes provided in this prompt, don't run any commands for this
   2. Generate a commit message and write it in COMMIT_EDITMSG using the
      instructions below
-  3. Commit the changes using `git commit --file "$(git rev-parse --git-dir)"/COMMIT_EDITMSG`
+  3. Commit the changes using this exact command: `git-commit-from-editmsg`
   4. Show a decorated log of last 2 commits (without --oneline option)
 
   If any error occurs during these steps, try to diagnose the issue based solely
@@ -515,7 +515,7 @@
   ### Staged changes
   !`git diff --cached`
   ### Unstaged changes
-  !`git diff --cached --quiet && git diff || echo 'Not relevant'`
+  !`git diff --cached --quiet && git diff && echo 'Stage changes first, then commit' || echo 'Not relevant'`
 #+end_src
 * Appendix
 *** Helper functions
