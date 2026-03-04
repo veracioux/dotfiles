@@ -1109,6 +1109,8 @@ the link above to do this automatically, you will be prompted for the CPU temper
   for_window [class="Alacritty" floating]               $resize1
   for_window [class="Alacritty" floating]               move position center
 
+  for_window [instance="dragon-drop"]                   sticky toggle
+
   for_window [class="flameshot"]                        floating enable
 
   # I use feh to display a QR code, so I make it floating
