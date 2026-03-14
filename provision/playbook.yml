@@ -35,6 +35,8 @@
         name: docker
         enabled: yes
         state: started
+      tags:
+        - systemd
 
     - name: Add user to docker group
       user:
@@ -392,8 +394,20 @@
         - cronie
         - tlp
         - bluetooth
-        - pipewire
-        - pipewire-pulse
+      tags:
+        - systemd
+
+    - name: Enable user audio services
+      become: true
+      systemd_service:
+        name: "{{ item }}"
+        enabled: yes
+        scope: global
+      loop:
+        - pipewire.service
+        - pipewire-pulse.service
+      tags:
+        - systemd
 
     - tags: configure-user
       block:
@@ -402,7 +416,7 @@
             repo: https://github.com/veracioux/dotfiles
             dest: /home/{{ username }}/.haris
             version: master
-            force: true
+            update: yes
           become_user: "{{ username }}"
         - name: Set dotfiles pushurl to SSH
           command:
