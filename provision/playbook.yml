@@ -301,8 +301,6 @@
       kewlfft.aur.aur:
         name:
           - buku-git
-          - bukubrow
-          - translate-shell # TODO remove
           - yt-dlp
         use: paru
         state: present
@@ -343,13 +341,13 @@
               - python-lsp-server
               - python-pylint
               - python-black
-              - python-mypy
               - python-flake8
               - python-pytest
               - python-playwright
               - python-websockets
               - python-sphinx
               - python-antlr4
+              - mypy
               - ruff
               - pyright
               - bpython
