@@ -95,6 +95,15 @@
         command: rm -rf /tmp/paru-clone
         changed_when: false
 
+    - name: Install dmenu-height
+      tags: install-dmenu-height
+      become_user: "{{ username }}"
+      kewlfft.aur.aur:
+        use: paru
+        name:
+          - dmenu-height
+        extra_args: --overwrite=/usr/local/share/man*
+
     - name: Install desktop environment
       become_user: "{{ username }}"
       kewlfft.aur.aur:
