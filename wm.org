@@ -505,7 +505,7 @@ dmenu doesn't work.
 ** Organization menu (using org-mode)
 #+NAME: org-menu
 #+begin_src i3wm-config
-  set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos con[v]ersations [a]ll"
+  set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos con[v]ersations [p]actos [a]ll"
 
   mode $mode_org {
   bindsym t               exec --no-startup-id "myemacs-float ~/wiki/todo.org", mode default
@@ -515,6 +515,7 @@ dmenu doesn't work.
   bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org", mode default
   bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org", mode default
   bindsym Shift+t         exec --no-startup-id "dmenu_run todo", mode default
+  bindsym p               exec --no-startup-id "myemacs-float ~/wiki/pactos.org", mode default
   bindsym a               exec --no-startup-id "myemacs-float ~/wiki/index.org", mode default
 
   bindsym Escape          mode default
