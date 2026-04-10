@@ -1532,6 +1532,11 @@ abbreviations for equivalent apt operations.
   _abbr -g bib "export BUN_OPTIONS='--inspect-brk=localhost:6499/%'"
   _abbr -g bo  "export BUN_OPTIONS='%'"
 #+end_src
+***** pnpm
+#+begin_src fish
+  _abbr -g N  'pnpm'
+  _abbr -g Nf 'pnpm --filter'
+#+end_src
 ***** OpenCode
 #+begin_src fish
   _abbr -g OC    "cd ~/proj/contrib/opencode/packages/opencode"
@@ -1833,6 +1838,8 @@ abbreviations for equivalent apt operations.
   fi
 
   [ "$(get-os-type)" = "arch" ] && export_both QT_QPA_PLATFORMTHEME=gtk2
+
+  export_both PNPM_HOME=$HOME/.local/share/pnpm
 
   # If rootless docker is used, configure the DOCKER_HOST variable
   if systemctl is-enabled --user --quiet docker.service; then
