@@ -252,6 +252,8 @@
   - When creating an OpenCode configuration for a project, prefer the
     `<project-root>/.opencode/opencode.json` location
   - NEVER run shell commands for which OpenCode provides an internal tool
+  - NEVER start a subagent for a single background task! Only start subagents if
+    you are gonna start 2 or more!
 #+end_src
 *** Agents
 **** Simple
