@@ -369,6 +369,7 @@ My config for version control systems I use (overwhelmingly git + GitHub).
       rel: release create
       prc: pr create
       co: pr checkout
+      mp: markdown-preview
 #+end_src
 * Mercury (hg)
 #+begin_src conf :tangle ~/.hgrc
