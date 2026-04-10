@@ -2337,7 +2337,8 @@ URLs (each on a new line) to display in this menu.
   # ┃ Additional entries and customization ┃
   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   entries = (
-      ' Agent...\n' +
+      ' Claude...\n' +
+      ' OpenCode...\n' +
       ' Edit...\n' +
       ' ' + entries.replace('\n', '\n ') +
       'dmenu\n dmenu ' +
@@ -2384,7 +2385,9 @@ URLs (each on a new line) to display in this menu.
                  (evil-ex-nohiglight))
       '''
       run(["myemacs-float", "--eval", EVAL])
-  elif choice == 'Agent...':
+  elif choice == 'Claude...':
+      run(["alacritty-float", "-e", "fish", "-C", "cd ~/.haris && claude"])
+  elif choice == 'OpenCode...':
       run(["alacritty-float", "-e", "fish", "-C", "cd ~/.haris && opencode --agent build"])
   else:
       run("fish -c 'ecf {}'".format(choice), shell=True)
