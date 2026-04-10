@@ -144,7 +144,11 @@
 #+begin_src json :tangle ~/.claude/settings.json
   {
     "model": "sonnet",
-    "effortLevel": "low"
+    "effortLevel": "low",
+    "attribution": {
+      "commit": "",
+      "pr": ""
+    }
   }
 #+end_src
 ** OpenCode
