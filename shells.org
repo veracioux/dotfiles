@@ -1745,6 +1745,10 @@ abbreviations for equivalent apt operations.
 #+begin_src fish
   set aur 'aur@aur.archlinux.org'
 #+end_src
+*** direnv
+#+begin_src fish
+  direnv hook fish | source
+#+end_src
 *** Load local and temporary configs
 #+begin_src fish
   if [ -f ~/.config/fish/local.fish ]
