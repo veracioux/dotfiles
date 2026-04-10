@@ -1049,9 +1049,9 @@ Note: This code block must not contain any apostrophes!
       set -l worktree_root
 
       if [ -n "$wt_index" ]
-          set worktree_root (git worktree list | cut -f1 -d' ' | grep "wt$wt_index\$")
+          set worktree_root (git worktree list | cut -f1 -d' ' | grep -v '\.claude/worktrees' | grep "wt$wt_index\$")
       else
-          set worktree_root (git worktree list | fzf | cut -f1 -d' ')
+          set worktree_root (git worktree list | grep -v '\.claude/worktrees' | fzf | cut -f1 -d' ')
       end
 
       if [ -z "$worktree_root" ]
@@ -1073,7 +1073,7 @@ Note: This code block must not contain any apostrophes!
       # The worktree index was provided
       if [ (count $args) -gt 1 ]
           set -l wt_index {$args[2]}
-          set new_git_root (git worktree list | cut -f1 -d' ' | grep "wt$wt_index\$")
+          set new_git_root (git worktree list | cut -f1 -d' ' | grep -v '\.claude/worktrees' | grep "wt$wt_index\$")
           if [ -z "$new_git_root" ]
               return
           end
