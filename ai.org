@@ -207,6 +207,7 @@
     "permission": {
       "bash": {
         "*": "ask",
+        "tangle *": "allow",
         "docker run --rm": "allow",
         "git add *": "allow",
         "git commit *": "ask",
