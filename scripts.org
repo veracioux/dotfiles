@@ -298,8 +298,27 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   complete -c myemacs --long "wait" --description "Override --no-wait if it would otherwise be in effect"
 #+end_src
 ** =myemacs-float=                                                 :wrapper:
-#+begin_src shell :tangle ~/.local/bin/myemacs-float
-  myemacs -c --frame-parameters='(quote (name . "EmacsFloat"))' "$@"
+#+begin_src bash :tangle ~/.local/bin/myemacs-float
+  i3-msg -t subscribe '["window"]' \
+    | jq -c --unbuffered 'select(.change == "new")' \
+    | head -1 > /dev/null &
+  sub_pid=$!
+  myemacs -c "$@"
+  wait $sub_pid
+  i3-msg floating enable, move scratchpad, scratchpad show
+#+end_src
+** =myemacs-smart=                                                 :wrapper:
+Launches =myemacs= normally if the current i3 container layout is split
+(horizontal/vertical), but as =myemacs-float= if the layout is stacking or
+tabbed.
+#+begin_src bash :tangle ~/.local/bin/myemacs-smart
+  layout=$(i3-msg -t get_tree | jq -r \
+    '.. | objects | select(.nodes[]?.focused == true) | .layout' | tail -1)
+
+  case "$layout" in
+    stacked|tabbed) myemacs-float "$@" ;;
+    *)              myemacs "$@" ;;
+  esac
 #+end_src
 ** =notify-send=                                                   :wrapper:
 #+begin_src shell :tangle ~/.local/bin/notify-send
@@ -1551,9 +1570,9 @@ are designed to be easily integrated into dmenu scripts.
 #+NAME: eman
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle ~/.local/bin/eman
-  (with-selected-frame (make-frame `((name . "EmacsMan")
-                                     (display . ,(getenv "DISPLAY"))
+  (with-selected-frame (make-frame `((display . ,(getenv "DISPLAY"))
                                      (environment . ,process-environment)))
+    <<i3-float-focused>>
     (let ((man-buffer nil))
       (defvar haris/last-man-buffer nil "The last man buffer that was opened")
       (setq man-buffer
@@ -1587,9 +1606,9 @@ are designed to be easily integrated into dmenu scripts.
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle ~/.local/bin/edocker
   (let ((dir default-directory))
-    (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                       (display . ,(getenv "DISPLAY"))
+    (with-selected-frame (make-frame `((display . ,(getenv "DISPLAY"))
                                        (environment . ,process-environment)))
+      <<i3-float-focused>>
       (setq-local default-directory dir)
       (spacemacs/switch-to-scratch-buffer)
       (run-with-timer 0.3 nil 'docker)))
@@ -1598,9 +1617,9 @@ are designed to be easily integrated into dmenu scripts.
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle ~/.local/bin/edocker-compose
   (let ((dir default-directory))
-    (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                       (display . ,(getenv "DISPLAY"))
+    (with-selected-frame (make-frame `((display . ,(getenv "DISPLAY"))
                                        (environment . ,process-environment)))
+      <<i3-float-focused>>
       (switch-to-buffer (get-buffer-create
                          (generate-new-buffer-name haris/custom-temp-buffer-name)))
       (setq-local default-directory dir)
@@ -1622,9 +1641,9 @@ are designed to be easily integrated into dmenu scripts.
 #+HEADER: :shebang "#!/usr/bin/env myemacs-load"
 #+begin_src elisp :tangle ~/.local/bin/magit
   (let ((dir default-directory))
-    (with-selected-frame (make-frame `((name . "EmacsFloat")
-                                       (display . ,(getenv "DISPLAY"))
+    (with-selected-frame (make-frame `((display . ,(getenv "DISPLAY"))
                                        (environment . ,process-environment)))
+      <<i3-float-focused>>
       (let ((default-directory dir))
         (magit-status))))
 #+end_src
@@ -2932,6 +2951,15 @@ Returns the second executable with the given name, looked up in execpath.
 #+NAME: add-create-frame-option-if-term-dumb
 #+begin_src shell :tangle no
   set -- "$@" $([ "$TERM" = "dumb" ] && echo --create-frame || echo '')
+#+end_src
+** =i3-float-focused=
+Float the currently focused window via i3-msg (elisp). Used by elisp scripts
+that create Emacs frames and want them to float without relying on i3 window
+rules.
+#+NAME: i3-float-focused
+#+begin_src elisp :tangle no
+  (start-process "i3-float" nil "i3-msg"
+                 "floating enable, move scratchpad, scratchpad show")
 #+end_src
 ** =eval-user-name=
 #+NAME: eval-user-name
