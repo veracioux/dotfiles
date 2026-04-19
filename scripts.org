@@ -38,6 +38,11 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
       git "$@"
   fi
 #+end_src
+** =flameshot=                                                       :wrapper:
+#+begin_src shell :tangle ~/.local/bin/flameshot
+  pgrep --quiet -u "$USER" '^flameshot$' || o flameshot
+  alternative-command flameshot "$@"
+#+end_src
 ** =rm=                                                              :wrapper:
 #+begin_src shell :tangle ~/.local/bin/rm
   for arg in "$@"; do
