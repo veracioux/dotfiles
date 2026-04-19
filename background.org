@@ -213,6 +213,8 @@ This service updates the user's crontab when any of the custom crontab files cha
 
   [Service]
   SyslogIdentifier=picom
+  ExecCondition=/bin/sh -c '! "$@"' -- systemd-detect-virt
+
   ExecStart=/usr/bin/env picom
   Restart=on-failure
 #+end_src
