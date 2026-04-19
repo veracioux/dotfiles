@@ -141,7 +141,7 @@
   inspect the filesystem.
 #+end_src
 ** Instructions
-Global instructions shared by Claude Code and OpenCode. Tangled to
+Global instructions shared across AI coding agents. Tangled to
 =~/.ai/AGENTS.md= and symlinked into each tool's config directory.
 #+begin_src markdown :tangle ~/.ai/AGENTS.md
   - Be very terse in your responses. Only provide essential information.
@@ -176,7 +176,7 @@ Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skil
      if any.
 
   ## Rules
-  - NEVER commit without showing the staged diff first.
+  - NEVER commit without showing the WHOLE staged diff first.
   - Always enable color when printing diffs (`--color=always`).
   - If a file contains hunks belonging to different subsets, use `git add -p`
     with non-interactive scripted input to stage only the relevant hunks.
