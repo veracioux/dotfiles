@@ -382,6 +382,15 @@ get better search matches.
 #+begin_src shell :tangle ~/.local/bin/vscode
   code "$@"
 #+end_src
+** =web-ext=                                                       :wrapper:
+#+begin_src bash :tangle ~/.local/bin/web-ext
+  alternative-command web-ext "$@" &
+  child_pid="$!"
+
+  trap 'kill -TERM "$child_pid" 2>/dev/null' INT
+
+  wait "$child_pid"
+#+end_src
 ** =lnav=                                                          :wrapper:
 #+begin_src shell :tangle ~/.local/bin/lnav
   export TERM=xterm-256color
