@@ -619,7 +619,8 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
 
   tmux new-session -d -s "term-$n" "$launcher"
   tmux set-option -t "term-$n" prefix None
-  tmux set-option -t "term-$n" prefix-2 None
+  tmux set-option -t "term-$n" set-titles on
+  tmux set-option -t "term-$n" set-titles-string '#{pane_title}'
   exec tmux attach -t "term-$n"
 #+end_src
 ** =safe=
