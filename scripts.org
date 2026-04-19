@@ -304,25 +304,25 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+end_src
 ** =myemacs-float=                                                 :wrapper:
 #+begin_src bash :tangle ~/.local/bin/myemacs-float
-  i3-msg -t subscribe '["window"]' \
-    | jq -c --unbuffered 'select(.change == "new")' \
-    | head -1 > /dev/null &
-  sub_pid=$!
+  {
+    i3-msg -t subscribe '["window"]' \
+      | jq -c --unbuffered 'select(.change == "new")' \
+      | head -1 > /dev/null
+    i3-msg floating enable, move position center
+  } &
   myemacs -c "$@"
-  wait $sub_pid
-  i3-msg floating enable, move scratchpad, scratchpad show
 #+end_src
 ** =myemacs-smart=                                                 :wrapper:
-Launches =myemacs= normally if the current i3 container layout is split
-(horizontal/vertical), but as =myemacs-float= if the layout is stacking or
-tabbed.
+Launches =myemacs= normally if the current i3 container layout is stacking or
+tabbed (where a new tiled window is unobtrusive), but as =myemacs-float= in
+split layouts (where tiling would reshuffle windows).
 #+begin_src bash :tangle ~/.local/bin/myemacs-smart
   layout=$(i3-msg -t get_tree | jq -r \
     '.. | objects | select(.nodes[]?.focused == true) | .layout' | tail -1)
 
   case "$layout" in
-    stacked|tabbed) myemacs-float "$@" ;;
-    *)              myemacs "$@" ;;
+    stacked|tabbed) myemacs -c "$@" ;;
+    *)              myemacs-float "$@" ;;
   esac
 #+end_src
 ** =notify-send=                                                   :wrapper:
@@ -608,7 +608,7 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
 Run a command in a read-only sandbox using bubblewrap. The entire filesystem is
 mounted read-only, with writable =/tmp= and =/run= for programs that need them.
 #+begin_src shell :tangle ~/.local/bin/safe
-  notify-send "FYI" "safe $*"
+  notify-send --expire-time=1000 "FYI" "safe $*"
   exec bwrap \
       --ro-bind / / \
       --dev /dev \
@@ -1572,23 +1572,12 @@ are designed to be easily integrated into dmenu scripts.
   myemacs --socket-name=vterm --eval '(multi-vterm)' "$@"
 #+end_src
 ** =eman=
-#+NAME: eman
-#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle ~/.local/bin/eman
-  (with-selected-frame (make-frame `((display . ,(getenv "DISPLAY"))
-                                     (environment . ,process-environment)))
-    <<i3-float-focused>>
-    (let ((man-buffer nil))
-      (defvar haris/last-man-buffer nil "The last man buffer that was opened")
-      (setq man-buffer
-            (if argv
-                (man (car argv))
-              (progn
-                (when (and (boundp 'haris/last-man-buffer)
-                           (buffer-live-p haris/last-man-buffer))
-                  (switch-to-buffer haris/last-man-buffer))
-                (call-interactively 'man))))
-      (when man-buffer (setq haris/last-man-buffer man-buffer))))
+#+begin_src shell :tangle ~/.local/bin/eman
+  if [ -n "$1" ]; then
+      myemacs-float --eval "(man \"$1\")"
+  else
+      myemacs-float --eval "(call-interactively 'man)"
+  fi
 #+end_src
 #+CALL: eman(argv='())
 #+CALL: eman(argv='("vim"))
@@ -1608,30 +1597,12 @@ are designed to be easily integrated into dmenu scripts.
           "$@"
 #+end_src
 ** =edocker=
-#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle ~/.local/bin/edocker
-  (let ((dir default-directory))
-    (with-selected-frame (make-frame `((display . ,(getenv "DISPLAY"))
-                                       (environment . ,process-environment)))
-      <<i3-float-focused>>
-      (setq-local default-directory dir)
-      (spacemacs/switch-to-scratch-buffer)
-      (run-with-timer 0.3 nil 'docker)))
+#+begin_src shell :tangle ~/.local/bin/edocker
+  myemacs-float --eval "(run-with-timer 0.3 nil 'docker)" "$@"
 #+end_src
 ** =edocker-compose=
-#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle ~/.local/bin/edocker-compose
-  (let ((dir default-directory))
-    (with-selected-frame (make-frame `((display . ,(getenv "DISPLAY"))
-                                       (environment . ,process-environment)))
-      <<i3-float-focused>>
-      (switch-to-buffer (get-buffer-create
-                         (generate-new-buffer-name haris/custom-temp-buffer-name)))
-      (setq-local default-directory dir)
-      (setq-local process-environment (cdr (assq 'environment
-                                                 (frame-parameters
-                                                  (selected-frame)))))
-      (run-with-timer 0.3 nil 'docker-compose)))
+#+begin_src shell :tangle ~/.local/bin/edocker-compose
+  myemacs-float --eval "(run-with-timer 0.3 nil 'docker-compose)" "$@"
 #+end_src
 ** =ebluetooth=
 #+begin_src shell :tangle ~/.local/bin/ebluetooth
@@ -1643,14 +1614,8 @@ are designed to be easily integrated into dmenu scripts.
   myemacs-float --eval '(progn (proced) (delete-other-windows))' "$@"
 #+end_src
 ** =magit=
-#+HEADER: :shebang "#!/usr/bin/env myemacs-load"
-#+begin_src elisp :tangle ~/.local/bin/magit
-  (let ((dir default-directory))
-    (with-selected-frame (make-frame `((display . ,(getenv "DISPLAY"))
-                                       (environment . ,process-environment)))
-      <<i3-float-focused>>
-      (let ((default-directory dir))
-        (magit-status))))
+#+begin_src shell :tangle ~/.local/bin/magit
+  myemacs-float --eval "(magit-status)" "$@"
 #+end_src
 ** =qr=
 #+begin_src bash :tangle ~/.local/bin/qr
@@ -2956,15 +2921,6 @@ Returns the second executable with the given name, looked up in execpath.
 #+NAME: add-create-frame-option-if-term-dumb
 #+begin_src shell :tangle no
   set -- "$@" $([ "$TERM" = "dumb" ] && echo --create-frame || echo '')
-#+end_src
-** =i3-float-focused=
-Float the currently focused window via i3-msg (elisp). Used by elisp scripts
-that create Emacs frames and want them to float without relying on i3 window
-rules.
-#+NAME: i3-float-focused
-#+begin_src elisp :tangle no
-  (start-process "i3-float" nil "i3-msg"
-                 "floating enable, move scratchpad, scratchpad show")
 #+end_src
 ** =eval-user-name=
 #+NAME: eval-user-name
