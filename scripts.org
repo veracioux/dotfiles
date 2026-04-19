@@ -646,6 +646,28 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
   bunx opencode-ai@latest "$@"
 #+end_src
 * Utilities
+** =alacritty-pane-cwd=
+Print the current working directory of the active tmux pane in the calling
+alacritty window. Falls back to =$HOME= if detection fails.
+#+begin_src bash :tangle ~/.local/bin/alacritty-pane-cwd
+  ALACRITTY_PID=$(xdotool getactivewindow getwindowpid 2>/dev/null)
+  if [ -z "$ALACRITTY_PID" ]; then
+      echo "$HOME"
+      exit
+  fi
+
+  CHILD_PID=$(pgrep -P "$ALACRITTY_PID" | head -1)
+  CHILD_TTY=$(readlink "/proc/$CHILD_PID/fd/0" 2>/dev/null)
+
+  SESSION=$(tmux list-clients -F '#{client_tty} #{session_name}' 2>/dev/null \
+      | awk -v tty="$CHILD_TTY" '$1 == tty {print $2}')
+
+  if [ -n "$SESSION" ]; then
+      tmux display-message -t "$SESSION" -p '#{pane_current_path}'
+  else
+      readlink "/proc/$CHILD_PID/cwd" 2>/dev/null || echo "$HOME"
+  fi
+#+end_src
 ** =visual-editor=
 #+begin_src shell :tangle ~/.local/bin/visual-editor
   if xprop -id "$WINDOWID" | grep -q _NET_WM_STATE_FULLSCREEN; then
@@ -1629,7 +1651,13 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =magit=
 #+begin_src shell :tangle ~/.local/bin/magit
-  myemacs-float --eval "(magit-status)" "$@"
+  myemacs-smart --eval "(magit-status)" "$@"
+#+end_src
+** =myemacs-here=
+Open emacs in the current tmux pane's working directory.
+#+begin_src shell :tangle ~/.local/bin/myemacs-here
+  cd "$(alacritty-pane-cwd)"
+  myemacs-smart .
 #+end_src
 ** =qr=
 #+begin_src bash :tangle ~/.local/bin/qr
