@@ -1,8 +1,9 @@
 #+TITLE: AI Tools
 #+SETUPFILE: .setup.org
 
-* Prompts
-** System prompt
+* Shared
+** Prompts
+*** System prompt
 #+NAME: prompts/system
 #+begin_src text
   You are a helpful assistant that can perform various tasks using different
@@ -15,7 +16,7 @@
 
   «prompts/workarounds/deprioritize-filesystem»
 #+end_src
-** Git commits
+*** Git commits
 #+NAME: prompts/git-commit
 #+begin_src markdown :tangle ~/.ai/prompts/git-commit.md
   When making git commits, you will respect the following commit message format:
@@ -107,7 +108,7 @@
 
   Now write the commit message. DO NOT ADD MARKDOWN CODE BLOCK FENCES AROUND IT.
 #+end_src
-** Git commits for dotfiles repo
+*** Git commits for dotfiles repo
 #+NAME: prompts/git-commit/dotfiles
 #+begin_src text :tangle ~/.ai/prompts/git-commit-dotfiles.md
   «prompts/git-commit»
@@ -132,19 +133,74 @@
 
   - Changes in vscode settings are considered features, not chores
 #+end_src
-** Workarounds
+*** Workarounds
 #+NAME: prompts/workarounds/deprioritize-filesystem
 #+begin_src text
   If you are asked to describe commands or shell functions, try
   custom-shell-interaction first. Only if that fails to yield results, you can
   inspect the filesystem.
 #+end_src
+** Instructions
+Global instructions shared by Claude Code and OpenCode. Tangled to
+=~/.ai/AGENTS.md= and symlinked into each tool's config directory.
+#+begin_src markdown :tangle ~/.ai/AGENTS.md
+  - Be very terse in your responses. Only provide essential information.
+  - When running shell commands that only read data (no side effects), prefix
+    them with `safe` (e.g. `safe cat /etc/hosts`). This runs the command in a
+    read-only sandbox and grants automatic permission.
+  - When adding permissions to Claude Code or OpenCode settings, always add the
+    equivalent permissions to the other tool as well, without being asked.
+#+end_src
+** Skills
+Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skills/<name>/SKILL.md=.
+*** Atomic commit
+#+begin_src markdown :tangle ~/.ai/skills/atomic-commit/SKILL.md
+  Classify the current git changeset into atomic subsets suitable for individual
+  commits and commit them one by one.
+
+  ## Workflow
+
+  1. Run `git diff` (include staged + unstaged) to see all uncommitted changes.
+  2. Classify the changes into atomic, independent subsets. Each subset should be
+     a logically coherent unit of change (e.g. one feature, one fix, one config
+     change per file/topic). Present the list to the user with a short title and
+     the files/hunks involved.
+  3. For each subset the user selects:
+     a. Stage **only** the relevant hunks (use `git add -p` with scripted
+        answers, or `git add <file>` when the whole file belongs to the subset).
+     b. Show the staged diff with color (`git diff --staged --color=always`) so
+        the user can review it.
+     c. Wait for the user to approve before committing.
+     d. Commit with a well-formed message following the repo's commit conventions.
+  4. After all selected subsets are committed, show the remaining unstaged changes
+     if any.
+
+  ## Rules
+  - NEVER commit without showing the staged diff first.
+  - Always enable color when printing diffs (`--color=always`).
+  - If a file contains hunks belonging to different subsets, use `git add -p`
+    with non-interactive scripted input to stage only the relevant hunks.
+  - Follow the commit message conventions already established in the repository
+    (inspect recent `git log` if unsure).
+#+end_src
 * CLI tools
 ** Claude Code
+*** Bootstrap
+#+begin_src shell :tangle ~/.local/lib/haris/claude-bootstrap-symlinks.sh
+  src=~/.haris/claude
+  rm -f ~/.claude/keybindings.json
+  ln -s "$src"/keybindings.json ~/.claude/keybindings.json
+#+end_src
+*** Settings
 #+begin_src json :tangle ~/.claude/settings.json
   {
     "model": "sonnet",
     "effortLevel": "low",
+    "env": {
+      "GIT_CONFIG_COUNT": "1",
+      "GIT_CONFIG_KEY_0": "color.ui",
+      "GIT_CONFIG_VALUE_0": "always"
+    },
     "attribution": {
       "commit": "",
       "pr": ""
@@ -164,6 +220,7 @@
     },
     "permissions": {
       "allow": [
+        "Bash(safe *)",
         "Bash(tangle *)",
         "Bash(docker run --rm *)",
         "Bash(git add *)",
@@ -176,7 +233,12 @@
         "Bash(ls *)",
         "Bash(mkdir *)",
         "Bash(tail *)",
-        "Bash(wc *)"
+        "Bash(wc *)",
+        "Bash(vagrant status *)",
+        "Bash(vagrant global-status)",
+        "Bash(vagrant ssh-config *)",
+        "Bash(vagrant port *)",
+        "Bash(vagrant version)"
       ],
       "deny": [
         "Bash(sudo *)"
@@ -202,11 +264,13 @@
     "instructions": [
       "README.org",
       "README.md",
-      "AGENTS.veracioux.md"
+      "AGENTS.veracioux.md",
+      "~/.ai/AGENTS.md"
     ],
     "permission": {
       "bash": {
         "*": "ask",
+        "safe *": "allow",
         "tangle *": "allow",
         "docker run --rm": "allow",
         "git add *": "allow",
@@ -226,6 +290,11 @@
         "sudo -k *": "ask",
         "tail *": "allow",
         "wc *": "allow",
+        "vagrant status *": "allow",
+        "vagrant global-status": "allow",
+        "vagrant ssh-config *": "allow",
+        "vagrant port *": "allow",
+        "vagrant version": "allow",
       }
     },
     "tools": {
@@ -603,8 +672,8 @@ Reusable prompts that nudge the agent when it strays from its original instructi
   Reply with OK.
 #+end_src
 * Appendix
-*** Helper functions
-**** =get-api-key=
+** Helper functions
+*** =get-api-key=
 #+NAME: get-api-key
 #+begin_src bash :var provider="openai"
   pass show "$provider"/api-key | trim

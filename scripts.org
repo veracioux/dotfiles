@@ -502,6 +502,25 @@ get better search matches.
 #+begin_src shell :tangle ~/.local/bin/fzf
   alternative-command fzf --layout=reverse "$@"
 #+end_src
+** =safe=
+Run a command in a read-only sandbox using bubblewrap. The entire filesystem is
+mounted read-only, with writable =/tmp= and =/run= for programs that need them.
+#+begin_src shell :tangle ~/.local/bin/safe
+  exec bwrap \
+      --ro-bind / / \
+      --dev /dev \
+      --proc /proc \
+      --tmpfs /tmp \
+      --tmpfs /run \
+      "$@"
+#+end_src
+** =claude=                                                        :wrapper:
+#+begin_src shell :tangle ~/.local/bin/claude
+  if [ "$(pwd)" = ~ ]; then
+      cd ~/.empty/
+  fi
+  alternative-command claude "$@"
+#+end_src
 ** =opencode=                                                      :wrapper:
 #+begin_src shell :tangle ~/.local/bin/opencode
   if [ "$(pwd)" = ~ ]; then
