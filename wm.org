@@ -785,6 +785,17 @@ Menu of utilities that allow me to chat with my computer.
   set $ws_d "14:aux-d"
   set $ws_e "15:aux-e"
   set $ws_f "16:aux-f"
+
+  # Extra workspaces (1-9)
+  set $ws_n1 "17:aux-1"
+  set $ws_n2 "18:aux-2"
+  set $ws_n3 "19:aux-3"
+  set $ws_n4 "20:aux-4"
+  set $ws_n5 "21:aux-5"
+  set $ws_n6 "22:aux-6"
+  set $ws_n7 "23:aux-7"
+  set $ws_n8 "24:aux-8"
+  set $ws_n9 "25:aux-9"
 #+end_src
 #+begin_src i3wm-config :tangle ~/.config/sway/config
   <<workspaces>>
@@ -792,7 +803,7 @@ Menu of utilities that allow me to chat with my computer.
 ** Extra workspaces menu
 #+NAME: extra-workspaces-menu
 #+begin_src i3wm-config
-  set $mode_extra_ws "Extra WS | [a] [b] [c] [d] [e] [f] | Shift+[a-f] to move"
+  set $mode_extra_ws "Extra WS | [a-f] [1-9] | Shift+key to move"
 
   mode $mode_extra_ws {
   bindsym a               workspace $ws_a, mode default
@@ -808,6 +819,26 @@ Menu of utilities that allow me to chat with my computer.
   bindsym Shift+d         move container to workspace $ws_d, mode default
   bindsym Shift+e         move container to workspace $ws_e, mode default
   bindsym Shift+f         move container to workspace $ws_f, mode default
+
+  bindsym 1               workspace $ws_n1, mode default
+  bindsym 2               workspace $ws_n2, mode default
+  bindsym 3               workspace $ws_n3, mode default
+  bindsym 4               workspace $ws_n4, mode default
+  bindsym 5               workspace $ws_n5, mode default
+  bindsym 6               workspace $ws_n6, mode default
+  bindsym 7               workspace $ws_n7, mode default
+  bindsym 8               workspace $ws_n8, mode default
+  bindsym 9               workspace $ws_n9, mode default
+
+  bindsym Shift+1         move container to workspace $ws_n1, mode default
+  bindsym Shift+2         move container to workspace $ws_n2, mode default
+  bindsym Shift+3         move container to workspace $ws_n3, mode default
+  bindsym Shift+4         move container to workspace $ws_n4, mode default
+  bindsym Shift+5         move container to workspace $ws_n5, mode default
+  bindsym Shift+6         move container to workspace $ws_n6, mode default
+  bindsym Shift+7         move container to workspace $ws_n7, mode default
+  bindsym Shift+8         move container to workspace $ws_n8, mode default
+  bindsym Shift+9         move container to workspace $ws_n9, mode default
 
   bindsym Escape          mode default
   }
