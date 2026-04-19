@@ -402,19 +402,33 @@ of the current terminal. Only whitelisted commands are allowed.
       exit 1
   fi
 
-  SHELL_PID=$(pgrep -P "$ALACRITTY_PID" | head -1)
-  if [ -z "$SHELL_PID" ]; then
-      notify-send "alacritty-fork" "Could not find shell process"
-      exit 1
+  TMUX_CLIENT_PID=$(pgrep -P "$ALACRITTY_PID" | head -1)
+
+  # Find the tmux session attached to this alacritty instance, then query
+  # the active pane's foreground command — works even inside tmux-managed PTYs
+  SESSION=$(tmux list-clients -F '#{client_pid} #{session_name}' 2>/dev/null \
+      | awk -v pid="$TMUX_CLIENT_PID" '$1 == pid {print $2}')
+
+  if [ -n "$SESSION" ]; then
+      PANE_PID=$(tmux display-message -t "$SESSION" -p '#{pane_pid}' 2>/dev/null)
+      PTY=$(readlink /proc/$PANE_PID/fd/0)
+      PTY_NAME=${PTY#/dev/}
+      PANE_CMD=$(tmux display-message -t "$SESSION" -p '#{pane_current_command}' 2>/dev/null)
+      FG_CMD=$(ps -t "$PTY_NAME" -o comm=,stat= --no-headers 2>/dev/null \
+          | awk -v shell="$PANE_CMD" '$2 ~ /\+/ && $1 != shell {print $1}' \
+          | tail -1)
+      # Fall back to the pane command itself if nothing deeper is running
+      [ -z "$FG_CMD" ] && FG_CMD="$PANE_CMD"
+  else
+      # Fallback for non-tmux terminals: inspect the PTY directly
+      SHELL_PID="$TMUX_CLIENT_PID"
+      PTY=$(readlink /proc/$SHELL_PID/fd/0)
+      PTY_NAME=${PTY#/dev/}
+      SHELL_CMD=$(ps -p "$SHELL_PID" -o comm= 2>/dev/null)
+      FG_CMD=$(ps -t "$PTY_NAME" -o comm=,stat= --no-headers 2>/dev/null \
+          | awk -v shell="$SHELL_CMD" '$2 ~ /\+/ && $1 != shell {print $1}' \
+          | tail -1)
   fi
-
-  PTY=$(readlink /proc/$SHELL_PID/fd/0)
-  PTY_NAME=${PTY#/dev/}
-
-  SHELL_CMD=$(ps -p "$SHELL_PID" -o comm= 2>/dev/null)
-  FG_CMD=$(ps -t "$PTY_NAME" -o comm=,stat= --no-headers 2>/dev/null \
-      | awk -v shell="$SHELL_CMD" '$2 ~ /\+/ && $1 != shell {print $1}' \
-      | tail -1)
 
   if [ -z "$FG_CMD" ]; then
       notify-send "alacritty-fork" "No foreground command detected (shell is idle)"
