@@ -173,6 +173,10 @@ run it on the =fish_preexec= event if it wasn't run before.
                   CREDENTIALS_DIRECTORY \
                   DEBUGINFOD_URLS \
                   DESKTOP_SESSION \
+                  DIRENV_DIFF \
+                  DIRENV_DIR \
+                  DIRENV_FILE \
+                  DIRENV_WATCHES \
                   DESKTOP_SESSION \
                   DOCKER_CLIENT_TIMEOUT \
                   EMACS_VTERM_PATH \
