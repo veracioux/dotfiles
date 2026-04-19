@@ -10,7 +10,7 @@ A collection of configs for my terminal(s) and terminal apps.
 If you are viewing this on Linux, you can find the config reference [[file:/usr/share/doc/alacritty/example/alacritty.yml][here]].
 ** General
 #+begin_src toml
-  terminal.shell.program = "fish"
+  terminal.shell.program = "tmux-shell"
   scrolling.history = 100000  # Unfortunately, this is a hard limit in alacritty
   selection.save_to_clipboard = true
 
@@ -98,10 +98,10 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
     { key = "P", mods = "Alt|Shift", command = { program = "sh", args = ["-c", "passmenu -l 10 && xdotool key Ctrl+Shift+V Return"] }, mode = "~AppCursor" },
     { key = "E", mods = "Alt|Shift", command = { program = "myemacs-float", args = ["."] } },
     { key = "F9", mods = "Alt", chars = "\\e[20~" },
-    { key = "P", mods = "Control", chars = "\u001b[A", mode = "~AppCursor" },
-    { key = "N", mods = "Control", chars = "\u001b[B", mode = "~AppCursor" },
-    { key = "P", mods = "Alt", chars = "\u001b[A", mode = "~AppCursor" },
-    { key = "N", mods = "Alt", chars = "\u001b[B", mode = "~AppCursor" },
+    { key = "P", mods = "Control", chars = "\u001b[A" },
+    { key = "N", mods = "Control", chars = "\u001b[B" },
+    { key = "P", mods = "Alt", chars = "\u001b[A" },
+    { key = "N", mods = "Alt", chars = "\u001b[B" },
     { key = "Space", mods = "Control", action = "ToggleViMode", mode = "~AppCursor" },
     { key = "Key4", mods = "Shift", action = "Last", mode = "Vi" },
     { key = "Key4", action = "Last", mode = "Vi" },
@@ -110,6 +110,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
     { key = "X", mods = "Alt", chars = "\u001b[3~", mode = "~AppCursor" },
     { key = "V", mods = "Alt", command = { program = "code", args = ["."] } },
     { key = "Enter", mods = "Shift", chars = "\u001b[27;2;13~", mode = "~Search" },
+    { key = "F", mods = "Alt", command = { program = "alacritty-fork" }, mode = "~AppCursor" },
   ]
 #+end_src
 * Tuterm
@@ -138,7 +139,10 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   bind k select-pane -U
   bind l select-pane -R
 
-  set -g default-terminal "screen-256color"
+  set -g default-terminal "tmux-256color"
+  set -g extended-keys always
+  set -g allow-passthrough on
+  set -as terminal-features ',alacritty*:extkeys'
   # Use the terminal emulator's scrollback
   set -g terminal-overrides '*:smcup@:rmcup@'
 #+end_src

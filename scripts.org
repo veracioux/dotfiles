@@ -366,6 +366,44 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
 #+begin_src shell :tangle ~/.local/bin/alacritty-float
   alacritty --class Alacritty,Float "$@"
 #+end_src
+** =alacritty-fork=
+Open a new alacritty window running the same command as the foreground process
+of the current terminal. Only whitelisted commands are allowed.
+#+begin_src bash :tangle ~/.local/bin/alacritty-fork
+  WHITELIST=(claude opencode)
+
+  ALACRITTY_PID=$(xdotool getactivewindow getwindowpid 2>/dev/null)
+  if [ -z "$ALACRITTY_PID" ]; then
+      notify-send "alacritty-fork" "Could not determine active window PID"
+      exit 1
+  fi
+
+  SHELL_PID=$(pgrep -P "$ALACRITTY_PID" | head -1)
+  if [ -z "$SHELL_PID" ]; then
+      notify-send "alacritty-fork" "Could not find shell process"
+      exit 1
+  fi
+
+  PTY=$(readlink /proc/$SHELL_PID/fd/0)
+  PTY_NAME=${PTY#/dev/}
+
+  SHELL_CMD=$(ps -p "$SHELL_PID" -o comm= 2>/dev/null)
+  FG_CMD=$(ps -t "$PTY_NAME" -o comm=,stat= --no-headers 2>/dev/null \
+      | awk -v shell="$SHELL_CMD" '$2 ~ /\+/ && $1 != shell {print $1}' \
+      | tail -1)
+
+  if [ -z "$FG_CMD" ]; then
+      notify-send "alacritty-fork" "No foreground command detected (shell is idle)"
+      exit 1
+  fi
+
+  if printf '%s\n' "${WHITELIST[@]}" | grep -qx "$FG_CMD"; then
+      alacritty -e fish -C "$FG_CMD" &
+  else
+      notify-send "alacritty-fork" \
+          "'$FG_CMD' is not whitelisted. To allow it, add it to WHITELIST in alacritty-fork (scripts.org)."
+  fi
+#+end_src
 ** =sway=                                                          :wrapper:
 #+begin_src shell :tangle ~/.local/bin/sway
   export XDG_CURRENT_DESKTOP=Sway
@@ -502,10 +540,51 @@ get better search matches.
 #+begin_src shell :tangle ~/.local/bin/fzf
   alternative-command fzf --layout=reverse "$@"
 #+end_src
+** =tmux-shell=
+Launches fish inside a predictably named tmux session (=term-0=, =term-1=, ...).
+This enables sharing a terminal session across multiple windows and
+programmatic access to the scrollback buffer via =tmux capture-pane=.
+#+begin_src bash :tangle ~/.local/bin/tmux-shell
+  has_newline=false
+  while IFS= read -r -d '' entry; do
+      value="${entry#*=}"
+      if [[ "$value" == *$'\n'* ]]; then
+          has_newline=true
+          break
+      fi
+  done < <(env -0)
+  if $has_newline; then
+      echo "Warning: env contains values with newlines; falling back to plain fish" >&2
+      exec fish
+  fi
+
+  n=0
+  while tmux has-session -t "term-$n" 2>/dev/null; do
+      n=$((n + 1))
+  done
+
+  launcher=$(mktemp /tmp/tmux-launch-XXXXXX)
+  chmod +x "$launcher"
+  {
+      echo '#!/usr/bin/env bash'
+      echo "rm -f $launcher"
+      echo 'exec env -i \'
+      env -0 | while IFS='=' read -r -d '' key value; do
+          printf '  %q=%q \\\n' "$key" "$value"
+      done
+      echo '  TERM="$TERM" \'
+      echo '  TMUX="$TMUX" \'
+      echo '  TMUX_PANE="$TMUX_PANE" \'
+      echo '  fish'
+  } > "$launcher"
+
+  exec tmux new-session -s "term-$n" "$launcher"
+#+end_src
 ** =safe=
 Run a command in a read-only sandbox using bubblewrap. The entire filesystem is
 mounted read-only, with writable =/tmp= and =/run= for programs that need them.
 #+begin_src shell :tangle ~/.local/bin/safe
+  notify-send "FYI" "safe $*"
   exec bwrap \
       --ro-bind / / \
       --dev /dev \
