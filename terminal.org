@@ -93,7 +93,7 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
     { key = "K", mods = "Alt", action = "ScrollLineUp", mode = "~AppCursor" },
     { key = "H", mods = "Alt", chars = "\u001b[D" },
     { key = "L", mods = "Alt", chars = "\u001b[C" },
-    { key = "T", mods = "Alt", action = "SpawnNewInstance", mode = "~AppCursor" },
+    { key = "T", mods = "Alt", action = "SpawnNewInstance" },
     { key = "G", mods = "Alt|Shift", command = { program = "sh", args = ["-c", "tmux new -d magit"] }, mode = "~AppCursor" },
     { key = "P", mods = "Alt|Shift", command = { program = "sh", args = ["-c", "passmenu -l 10 && xdotool key Ctrl+Shift+V Return"] }, mode = "~AppCursor" },
     { key = "E", mods = "Alt|Shift", command = { program = "myemacs-smart", args = ["."] } },
