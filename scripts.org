@@ -617,7 +617,10 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
       echo '  fish'
   } > "$launcher"
 
-  exec tmux new-session -s "term-$n" "$launcher"
+  tmux new-session -d -s "term-$n" "$launcher"
+  tmux set-option -t "term-$n" prefix None
+  tmux set-option -t "term-$n" prefix-2 None
+  exec tmux attach -t "term-$n"
 #+end_src
 ** =safe=
 Run a command in a read-only sandbox using bubblewrap. The entire filesystem is
@@ -1214,16 +1217,16 @@ Get the OS type.
   mkfifo /tmp/fifo 2>/dev/null
 
   session_exists() {
-      tmux has-session -t fifo 2>/dev/null
+      env TMUX= tmux has-session -t fifo 2>/dev/null
   }
 
   create_session() {
-      tmux new -s fifo "$@" tail --follow=name /tmp/fifo
+      env TMUX= tmux new -s fifo "$@" tail --follow=name /tmp/fifo
   }
 
   if [ -t 0 ]; then
       if session_exists; then
-          tmux attach -t fifo
+          env TMUX= tmux attach -t fifo
       else
           create_session
       fi
@@ -1271,6 +1274,19 @@ Get the OS type.
   echo -ne "\033[0m" >&2
 
   "$@"
+#+end_src
+** =warn=
+#+begin_src bash :tangle ~/.local/bin/warn
+  echo -ne "\033[1;33m" >&2
+  echo "$@" | fifo >&2
+  echo -ne "\033[0m" >&2
+#+end_src
+** =error=
+#+begin_src bash :tangle ~/.local/bin/error
+  echo -ne "\033[1;31m" >&2
+  echo "$@" | fifo >&2
+  echo -ne "\033[0m" >&2
+  notify-send --urgency=critical "$@"
 #+end_src
 ** =dragon=
 #+begin_src bash :tangle ~/.local/bin/dragon
