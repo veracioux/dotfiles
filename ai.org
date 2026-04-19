@@ -148,8 +148,51 @@
     "attribution": {
       "commit": "",
       "pr": ""
+    },
+    "hooks": {
+      "Stop": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "session_id=$(jq -r '.session_id'); title=$(python3 -c \"\nimport json, glob, os\nf = glob.glob(os.path.expanduser('~/.claude/projects/**/$session_id.jsonl'), recursive=True)\nif not f: exit()\nwith open(f[0]) as fh:\n    for line in fh:\n        obj = json.loads(line)\n        if obj.get('type') != 'user': continue\n        content = obj.get('message', {}).get('content', '')\n        texts = [content] if isinstance(content, str) else [c['text'] for c in content if isinstance(c, dict) and c.get('type') == 'text']\n        for t in texts:\n            t = t.strip()\n            if len(t) > 15 and not t.startswith('<') and not t.startswith('[Request interrupted'):\n                print(t[:60])\n                exit()\n\" 2>/dev/null); notify-send 'Claude' \"${title:-Awaiting your input}\" 2>/dev/null || true",
+              "async": true
+            }
+          ]
+        }
+      ]
+    },
+    "permissions": {
+      "allow": [
+        "Bash(tangle *)",
+        "Bash(docker run --rm *)",
+        "Bash(git add *)",
+        "Bash(git diff *)",
+        "Bash(git log *)",
+        "Bash(git show *)",
+        "Bash(git status *)",
+        "Bash(gh pr view *)",
+        "Bash(head *)",
+        "Bash(ls *)",
+        "Bash(mkdir *)",
+        "Bash(tail *)",
+        "Bash(wc *)"
+      ],
+      "deny": [
+        "Bash(sudo *)"
+      ],
+      "ask": [
+        "Bash(git commit *)"
+      ]
     }
   }
+#+end_src
+*** Commands
+**** Commit
+#+begin_src markdown :tangle ~/.claude/commands/commit.md
+  Commit $ARGUMENTS
+
+  Do not stage files unless specifically instructed to.
 #+end_src
 ** OpenCode
 #+begin_src jsonc :tangle ~/.config/opencode/opencode.jsonc
