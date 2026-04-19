@@ -195,6 +195,10 @@ Tridactyl extension.
   command replace_hostname_with_arg js -p Promise.resolve(new URL(location.href)).then(url => {url.hostname = JS_ARG.split('\n')[0]; return url.toString()})
   bind yi composite js new URL(location.href).hostname | composite !s dig +short | replace_hostname_with_arg | clipboard yank
 
+  # Yank basename from URL
+  bind yb composite js new URL(location.href).pathname.split('/').filter(x => x).pop() | clipboard yank
+  bind yp composite js new URL(location.href).pathname.split('/').filter(x => x).pop() | js -p `gh pr checkout ${JS_ARG}` | clipboard yank
+
   bind ;D js debugger;
   bind ;? hint -W exclaim_quiet notify-send
 
