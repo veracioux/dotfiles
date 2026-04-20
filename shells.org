@@ -465,7 +465,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   # it only for alacritty which has been proven to work. I can add other terminals
   # here as needed.
 
-  if [ "$TERM" = "alacritty" ]
+  if [ "$TERM" = "alacritty" ] || [ "$TERM" = "tmux-256color" ]
       function __haris_toggle_private_mode
           set -g fish_private_mode ([ -z "$fish_private_mode" ] && echo true)
           commandline -f repaint
