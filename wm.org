@@ -1183,6 +1183,10 @@ the link above to do this automatically, you will be prompted for the CPU temper
   # Move Selenium test windows to extra workspace
   for_window [instance=".*\(/tmp/.org.chromium.Chromium.*\).*"] floating enable
   assign [instance=".*\(/tmp/.org.chromium.Chromium.*\).*"]     number $ws6
+
+  # Send Playwright browser windows to extra workspace
+  for_window [instance=".*playwright.*"] floating enable
+  assign [instance=".*playwright.*"] number $ws6
 #+end_src
 * Compositor
 :PROPERTIES:
