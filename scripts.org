@@ -580,7 +580,7 @@ get better search matches.
   alternative-command fzf --layout=reverse "$@"
 #+end_src
 ** =tmux-shell=
-Launches fish inside a predictably named tmux session (=term-0=, =term-1=, ...).
+Launches fish inside a predictably named tmux session (=term-001=, =term-002=, ...).
 This enables sharing a terminal session across multiple windows and
 programmatic access to the scrollback buffer via =tmux capture-pane=.
 #+begin_src bash :tangle ~/.local/bin/tmux-shell
@@ -597,10 +597,11 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
       exec fish
   fi
 
-  n=0
-  while tmux has-session -t "term-$n" 2>/dev/null; do
+  n=1
+  while tmux has-session -t "$(printf 'term-%03d' $n)" 2>/dev/null; do
       n=$((n + 1))
   done
+  name=$(printf 'term-%03d' $n)
 
   launcher=$(mktemp /tmp/tmux-launch-XXXXXX)
   chmod +x "$launcher"
@@ -617,11 +618,11 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
       echo '  fish'
   } > "$launcher"
 
-  tmux new-session -d -s "term-$n" "$launcher"
-  tmux set-option -t "term-$n" prefix None
-  tmux set-option -t "term-$n" set-titles on
-  tmux set-option -t "term-$n" set-titles-string '#{pane_title}'
-  exec tmux attach -t "term-$n"
+  tmux new-session -d -s "$name" "$launcher"
+  tmux set-option -t "$name" prefix None
+  tmux set-option -t "$name" set-titles on
+  tmux set-option -t "$name" set-titles-string '#{pane_title}'
+  exec tmux attach -t "$name"
 #+end_src
 ** =safe=
 Run a command in a read-only sandbox using bubblewrap. The entire filesystem is
