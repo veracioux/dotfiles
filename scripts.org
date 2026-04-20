@@ -308,7 +308,7 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
     i3-msg -t subscribe '["window"]' \
       | jq -c --unbuffered 'select(.change == "new")' \
       | head -1 > /dev/null
-    i3-msg floating enable, move position center
+    i3-msg floating enable, move scratchpad, scratchpad show
   } &
   myemacs -c "$@"
 #+end_src
