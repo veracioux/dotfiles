@@ -133,6 +133,13 @@
 
   - Changes in vscode settings are considered features, not chores
 #+end_src
+*** Tmux history
+#+NAME: prompts/tmux-history
+#+begin_src text
+  Look at the history of my current tmux session by capturing the pane contents.
+  Use `tmux capture-pane -p -S -` to grab the full scrollback from the current
+  pane, then answer any questions or observations I have about it.
+#+end_src
 *** Workarounds
 #+NAME: prompts/workarounds/deprioritize-filesystem
 #+begin_src text
@@ -312,6 +319,12 @@ Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skil
   Commit $ARGUMENTS
 
   Do not stage files unless specifically instructed to.
+#+end_src
+**** Tmux
+#+begin_src markdown :tangle ~/.claude/commands/tmux.md :noweb yes
+  «prompts/tmux-history»
+
+  $ARGUMENTS
 #+end_src
 ** OpenCode
 #+begin_src jsonc :tangle ~/.config/opencode/opencode.jsonc
@@ -710,6 +723,15 @@ Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skil
     "voice_converse": true
   ---
   Start a voice conversation using voice mode MCP tool. You will start the conversation by saying just "Hello" AND NOTHING ELSE.
+#+end_src
+**** Tmux
+#+begin_src markdown :tangle ~/.config/opencode/command/tmux.md :noweb yes
+  ---
+  description: Look at the history of the current tmux session
+  ---
+  «prompts/tmux-history»
+
+  $ARGUMENTS
 #+end_src
 **** MCP
 #+begin_src markdown :tangle ~/.config/opencode/command/mcp.md
