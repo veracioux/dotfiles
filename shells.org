@@ -481,7 +481,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 *** Utility bindings
 #+begin_src fish
   # Copy the current contents of the command line
-  bind_all_modes \ec 'fish_clipboard_copy && notify-send "Copied to clipboard"'
+  bind_all_modes \ec '__haris_copy_or_capture'
 
   # Run the current command in bash
   bind_all_modes \eb __haris_run_in_bash
@@ -530,6 +530,20 @@ This applies only to graphical sessions, the linux TTY is unaffected.
   end                                          # End fish_user_key_bindings
 #+end_src
 **** Helper functions
+***** =__haris_copy_or_capture=
+Copy command line to clipboard, or if empty, copy the tmux pane contents.
+#+begin_src fish :tangle ~/.config/fish/functions/__haris_copy_or_capture.fish
+  function __haris_copy_or_capture
+      set -l cmd (string trim (commandline -b))
+      if test -z "$cmd"
+          echo -n "$TMUX_PANE" | xsel -b -i
+          notify-send "Copied $TMUX_PANE to clipboard"
+      else
+          fish_clipboard_copy
+          notify-send "Copied to clipboard"
+      end
+  end
+#+end_src
 ***** =__haris_run_in_bash=
 #+begin_src fish :tangle ~/.config/fish/functions/__haris_run_in_bash.fish
   function __haris_run_in_bash
