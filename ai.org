@@ -299,7 +299,8 @@ Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skil
         "Bash(vagrant global-status)",
         "Bash(vagrant ssh-config *)",
         "Bash(vagrant port *)",
-        "Bash(vagrant version)"
+        "Bash(vagrant version)",
+        "WebFetch"
       ],
       "deny": [
         "Bash(git branch *-d*)",
