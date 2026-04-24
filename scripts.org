@@ -2906,18 +2906,6 @@ Options:
 #+begin_src shell :tangle ~/.local/bin/fix-wifi
   sudo rfkill block wifi && sudo rfkill unblock wifi
 #+end_src
-** =guirun=
-Open a GUI window in the correct workspace.
-#+begin_src bash :tangle ~/.local/bin/guirun
-  # This roundabout way is because i3-msg exec can't handle commas in arguments
-
-  script="$(mktemp)"
-  chmod u+x "$script"
-  printf "%q " "$@" > "$script"
-
-  i3-msg exec "$script"
-  rm -f "$script"
-#+end_src
 ** sxhkd
 TODO: move to main README
 
