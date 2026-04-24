@@ -884,6 +884,11 @@ Some custom keybindings are defined here as well.
     (interactive)
     (let ((default-directory (projectile-project-root)))
       (terminal-here '("fish" "-C" "opencode"))))
+
+  (defun haris/projectile-open-claude ()
+    (interactive)
+    (let ((default-directory (projectile-project-root)))
+      (terminal-here '("fish" "-C" "claude"))))
 #+end_src
 *** Keybindings
 #+begin_src elisp
@@ -893,6 +898,7 @@ Some custom keybindings are defined here as well.
   (define-key spacemacs-cmds (kbd "p s") 'projectile-save-project-buffers)
   (define-key spacemacs-cmds (kbd "p V") 'haris/projectile-open-in-vscode)
   (define-key spacemacs-cmds (kbd "p O") 'haris/projectile-open-opencode)
+  (define-key spacemacs-cmds (kbd "p C") 'haris/projectile-open-claude)
 #+end_src
 * Programming languages
 #+begin_src elisp
