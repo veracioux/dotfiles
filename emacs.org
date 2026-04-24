@@ -1675,10 +1675,6 @@ Takes too long to load.
   ;; Loading it eagerly helps with proper initialization of hooks.
   ;; Magit is essential to my workflow so having it eagerly loaded is no tradeoff.
   (use-package magit)
-  (use-package magit-gptcommit)
-  ;; For some reason the module is not loaded correctly unless I specify this
-  (require 'magit-gptcommit)
-
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
         magit-diff-refine-hunk 'all
         magit-save-repository-buffers nil)
@@ -1726,32 +1722,11 @@ Takes too long to load.
 #+end_src
 *** AI
 #+begin_src elisp
-  (require 'llm-openai)
-
-  (with-eval-after-load 'magit-gptcommit
-    (with-eval-after-load 'haris/ai
-      (setq magit-gptcommit-llm-provider (eval haris/ai/model/claude/sonnet-4.5/creator))
-      (setq haris/commit-prompt-default
-            (concat
-             "THE FILE DIFFS:\n```\n%s\n```\n\n"
-             (with-temp-buffer
-              (insert-file-contents (expand-file-name "~/.ai/prompts/git-commit.md"))
-              (buffer-string))))
-
-      (setq haris/commit-prompt-dotfiles
-            (concat
-             "THE FILE DIFFS:\n```\n%s\n```\n\n"
-             (with-temp-buffer
-              (insert-file-contents (expand-file-name "~/.ai/prompts/git-commit-dotfiles.md"))
-              (buffer-string))))
-
-      (setq magit-gptcommit-prompt haris/commit-prompt-default)
-
-      (with-eval-after-load 'magit-status
-        (when (not (boundp 'haris//gptcommit-status-buffer-setup-p))
-          (defvar haris//gptcommit-status-buffer-setup-p t
-            "Flag to indicate if the gptcommit status buffer setup has been done.")
-          (magit-gptcommit-status-buffer-setup)))))
+  (transient-append-suffix 'magit-commit "c"
+    '(1 "G" "generate (Claude)" (lambda ()
+       (interactive)
+       (let ((default-directory (magit-toplevel)))
+         (start-process "claude-commit" nil "smart-launch" "term" "claude" "--effort" "low" "--model" "sonnet" "/commit")))))
 #+end_src
 ** Custom transient commands
 #+begin_src elisp
