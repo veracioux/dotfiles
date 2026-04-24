@@ -508,7 +508,6 @@ Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skil
     edit: "deny"
     bash:
       "*": ask
-      "myemacs-float *": allow
   ---
   Follows simple instructions.
 #+end_src
@@ -713,7 +712,7 @@ Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skil
   ---
   agent: simple
   ---
-  Run the command `myemacs-float $ARGUMENTS`, removing the @ symbol from the arguments.
+  Run the command `smart-launch myemacs -c $ARGUMENTS`, removing the @ symbol from the arguments.
 #+end_src
 **** Voice
 #+begin_src markdown :tangle ~/.config/opencode/command/voice.md

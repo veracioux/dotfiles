@@ -302,28 +302,27 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   complete -c myemacs --wraps emacsclient
   complete -c myemacs --long "wait" --description "Override --no-wait if it would otherwise be in effect"
 #+end_src
-** =myemacs-float=                                                 :wrapper:
-#+begin_src bash :tangle ~/.local/bin/myemacs-float
-  {
-    con_id=$(i3-msg -t subscribe '["window"]' \
-      | jq -r --unbuffered 'select(.change == "new") | .container.id' \
-      | head -1)
-    i3-msg "[con_id=$con_id]" floating enable, move scratchpad, scratchpad show
-  } &
-  myemacs -c "$@"
-#+end_src
-** =myemacs-smart=                                                 :wrapper:
-Launches =myemacs= normally if the current i3 container layout is stacking or
-tabbed (where a new tiled window is unobtrusive), but as =myemacs-float= in
-split layouts (where tiling would reshuffle windows).
-#+begin_src bash :tangle ~/.local/bin/myemacs-smart
+** =smart-launch=
+Runs a command, and decides how to place its resulting window based on the
+currently focused i3 container:
+- Stacked/tabbed layout: run normally (new window tiles unobtrusively).
+- Split layout: float the new window and move it to scratchpad (so tiling
+  doesn't reshuffle existing windows).
+- If the currently focused window is itself floating (e.g. a scratchpad), hide
+  it first so the new window appears on top rather than behind it.
+
+Usage: =smart-launch CMD...=
+#+begin_src bash :tangle ~/.local/bin/smart-launch
+  if [ "$#" = 0 ]; then
+    echo "usage: smart-launch CMD..." >&2
+    exit 2
+  fi
+
   tree=$(i3-msg -t get_tree)
 
   layout=$(echo "$tree" | jq -r \
     '.. | objects | select(.nodes[]?.focused == true) | .layout' | tail -1)
 
-  # If the focused window is floating (e.g. scratchpad), hide it first so the
-  # new window appears on top rather than behind it
   is_floating=$(echo "$tree" | jq -r \
     '.. | objects | select(.focused == true) | .floating' | head -1)
   case "$is_floating" in
@@ -331,11 +330,21 @@ split layouts (where tiling would reshuffle windows).
   esac
 
   case "$layout" in
-    stacked|tabbed) myemacs -c "$@" ;;
-    *)              myemacs-float "$@" ;;
+    stacked|tabbed)
+      exec "$@"
+      ;;
+    *)
+      {
+        con_id=$(i3-msg -t subscribe '["window"]' \
+          | jq -r --unbuffered 'select(.change == "new") | .container.id' \
+          | head -1)
+        i3-msg "[con_id=$con_id]" floating enable, move scratchpad, scratchpad show
+      } &
+      exec "$@"
+      ;;
   esac
 #+end_src
-** =notify-send=                                                   :wrapper:
+** =notify-send=                                                     :wrapper:
 #+begin_src shell :tangle ~/.local/bin/notify-send
   export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/<<eval-real-uid()>>/bus"
 
@@ -686,10 +695,8 @@ alacritty window. Falls back to =$HOME= if detection fails.
 #+end_src
 ** =visual-editor=
 #+begin_src shell :tangle ~/.local/bin/visual-editor
-  if xprop -id "$WINDOWID" | grep -q _NET_WM_STATE_FULLSCREEN; then
-      myemacs --wait "$@"
-  elif which myemacs-float >/dev/null; then
-      myemacs-float --wait "$@" >/dev/null
+  if xprop -id "$WINDOWID" | grep -q _NET_WM_STATE_FULLSCREEN || which emacsclient >/dev/null; then
+      smart-launch myemacs -c --wait "$@"
   else
       editor "$@"
   fi
@@ -700,7 +707,7 @@ alacritty window. Falls back to =$HOME= if detection fails.
       which "$1" >/dev/null
   }
   if exists myemacs; then
-      myemacs "$@"
+      smart-launch myemacs -c "$@"
   elif exists nvim; then
       nvim "$@"
   elif exists vim; then
@@ -863,7 +870,7 @@ be listed using it. In addition it shows the =*.org= files in [[~/.haris/]].
       files=("$(mktemp "$destdir"/XXXXXXXXXXX)")
   fi
 
-  myemacs-float --wait "${files[@]}" >&2
+  smart-launch myemacs -c --wait "${files[@]}" >&2
 
   if [ -n "$print_content" ]; then
       cat "${files[@]}"
@@ -1639,9 +1646,9 @@ are designed to be easily integrated into dmenu scripts.
 ** =eman=
 #+begin_src shell :tangle ~/.local/bin/eman
   if [ -n "$1" ]; then
-      myemacs-float --eval "(man \"$1\")"
+      smart-launch myemacs -c --eval "(man \"$1\")"
   else
-      myemacs-float --eval "(call-interactively 'man)"
+      smart-launch myemacs -c --eval "(call-interactively 'man)"
   fi
 #+end_src
 #+CALL: eman(argv='())
@@ -1663,30 +1670,30 @@ are designed to be easily integrated into dmenu scripts.
 #+end_src
 ** =edocker=
 #+begin_src shell :tangle ~/.local/bin/edocker
-  myemacs-float --eval "(run-with-timer 0.3 nil 'docker)" "$@"
+  smart-launch myemacs -c --eval "(run-with-timer 0.3 nil 'docker)" "$@"
 #+end_src
 ** =edocker-compose=
 #+begin_src shell :tangle ~/.local/bin/edocker-compose
-  myemacs-float --eval "(run-with-timer 0.3 nil 'docker-compose)" "$@"
+  smart-launch myemacs -c --eval "(run-with-timer 0.3 nil 'docker-compose)" "$@"
 #+end_src
 ** =ebluetooth=
 #+begin_src shell :tangle ~/.local/bin/ebluetooth
-  myemacs-float -c --eval '(bluetooth-list-devices)'
+  smart-launch myemacs -c --eval '(bluetooth-list-devices)'
 #+end_src
 ** =proced=
 #+begin_src shell :tangle ~/.local/bin/proced
   <<add-create-frame-option-if-term-dumb>>
-  myemacs-float --eval '(progn (proced) (delete-other-windows))' "$@"
+  smart-launch myemacs -c --eval '(progn (proced) (delete-other-windows))' "$@"
 #+end_src
 ** =magit=
 #+begin_src shell :tangle ~/.local/bin/magit
-  myemacs-smart --eval "(magit-status)" "$@"
+  smart-launch myemacs -c --eval "(magit-status)" "$@"
 #+end_src
 ** =myemacs-here=
 Open emacs in the current tmux pane's working directory.
 #+begin_src shell :tangle ~/.local/bin/myemacs-here
   cd "$(alacritty-pane-cwd)"
-  myemacs-smart .
+  smart-launch myemacs -c .
 #+end_src
 ** =qr=
 #+begin_src bash :tangle ~/.local/bin/qr
@@ -1885,7 +1892,7 @@ Open emacs in the current tmux pane's working directory.
   # Temporarily bind keys
 
   pkill -f '^sxhkd\.tmp '
-  myemacs-float --wait -c ~/.tmp.sxhkdrc
+  smart-launch myemacs --wait -c ~/.tmp.sxhkdrc
 
   notify-send "kbind" "Applying config"
   o --silent sxhkd.tmp
@@ -2266,7 +2273,7 @@ URLs (each on a new line) to display in this menu.
   if [ "$choice" = " Edit..." ]; then
       cd "$(dirname "$0")"; gvim "$0"
   else
-      myemacs-float "$(echo "$lookup" | grep "/$choice/TODO.org")"
+      smart-launch myemacs -c "$(echo "$lookup" | grep "/$choice/TODO.org")"
   fi
 #+end_src
 ** Pacman
@@ -2328,7 +2335,7 @@ URLs (each on a new line) to display in this menu.
           alacritty --class Alacritty,Float -e fish -C "$(get_fish_cmd sudo pacman -R $choice)" && exit
           ;;
       "$manage")
-          myemacs-float "$(fcmd system-install)"
+          smart-launch myemacs -c "$(fcmd system-install)"
           ;;
       "$keyring")
           alacritty --class Alacritty,Float -e fish -C "$(get_fish_cmd sudo pacman -Sy archlinux-keyring && exit)"
@@ -2535,7 +2542,7 @@ URLs (each on a new line) to display in this menu.
                  (call-interactively (swiper "^\\* Dmenu"))
                  (evil-ex-nohiglight))
       '''
-      run(["myemacs-float", "--eval", EVAL])
+      run(["smart-launch", "myemacs", "-c", "--eval", EVAL])
   if choice.startswith('dmenu-'):
       submenu = choice.replace("dmenu-", "")
       submenu = submenu[0].upper() + submenu[1:]
@@ -2544,14 +2551,14 @@ URLs (each on a new line) to display in this menu.
                  (call-interactively (swiper "^\\*\\* {submenu}"))
                  (evil-ex-nohiglight))
       '''
-      run(["myemacs-float", "--eval", EVAL])
+      run(["smart-launch", "myemacs", "-c", "--eval", EVAL])
   elif choice == 'Edit...':
       EVAL = '''
           (progn (find-file "~/.haris/scripts.org")
                  (goto-char (org-find-property "CUSTOM_ID" "cf"))
                  (evil-ex-nohiglight))
       '''
-      run(["myemacs-float", "--eval", EVAL])
+      run(["smart-launch", "myemacs", "-c", "--eval", EVAL])
   elif choice == 'Claude...':
       run(["alacritty-float", "-e", "fish", "-C", "cd ~/.haris && claude"])
   elif choice == 'OpenCode...':

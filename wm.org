@@ -346,7 +346,7 @@ External bindings are served by sxhkd.
   mod4 + shift + v
       vscode
   mod4 + v
-      myemacs-float -c --eval '(scratch-buffer)'
+      smart-launch myemacs -c --eval '(scratch-buffer)'
   mod4 + shift + e
       myemacs -c --eval '(scratch-buffer)'
   mod4 + shift + g
@@ -508,15 +508,15 @@ dmenu doesn't work.
   set $mode_org        " ORG [t]odo [k]knowledge [j]ournal [n]otes [c]omputers [l]ifestyle [T]odos con[v]ersations [p]actos [a]ll"
 
   mode $mode_org {
-  bindsym t               exec --no-startup-id "myemacs-float ~/wiki/todo.org", mode default
-  bindsym k               exec --no-startup-id "myemacs-float ~/wiki/knowledge.org", mode default
-  bindsym j               exec --no-startup-id "myemacs-float ~/wiki/journal.org", mode default
-  bindsym n               exec --no-startup-id "myemacs-float ~/wiki/notes.org", mode default
-  bindsym c               exec --no-startup-id "myemacs-float ~/wiki/computers.org", mode default
-  bindsym l               exec --no-startup-id "myemacs-float ~/wiki/lifestyle.org", mode default
+  bindsym t               exec --no-startup-id "smart-launch myemacs -c ~/wiki/todo.org", mode default
+  bindsym k               exec --no-startup-id "smart-launch myemacs -c ~/wiki/knowledge.org", mode default
+  bindsym j               exec --no-startup-id "smart-launch myemacs -c ~/wiki/journal.org", mode default
+  bindsym n               exec --no-startup-id "smart-launch myemacs -c ~/wiki/notes.org", mode default
+  bindsym c               exec --no-startup-id "smart-launch myemacs -c ~/wiki/computers.org", mode default
+  bindsym l               exec --no-startup-id "smart-launch myemacs -c ~/wiki/lifestyle.org", mode default
   bindsym Shift+t         exec --no-startup-id "dmenu_run todo", mode default
-  bindsym p               exec --no-startup-id "myemacs-float ~/wiki/pactos.org", mode default
-  bindsym a               exec --no-startup-id "myemacs-float ~/wiki/index.org", mode default
+  bindsym p               exec --no-startup-id "smart-launch myemacs -c ~/wiki/pactos.org", mode default
+  bindsym a               exec --no-startup-id "smart-launch myemacs -c ~/wiki/index.org", mode default
 
   bindsym Escape          mode default
   }

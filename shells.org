@@ -504,7 +504,7 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 
   bind_all_modes \ee 'edit_command_buffer_custom'
 
-  bind_all_modes \eE 'myemacs-smart .'
+  bind_all_modes \eE 'smart-launch myemacs -c .'
 
   bind_all_modes \ea 'commandline -i "(adhoc)"'
 
@@ -788,7 +788,7 @@ on the plugin list above.
       else
           read -n 1 -P "Create new script? [y/N]: " choice
           if [ "$choice" = 'y' ]
-              myemacs-float ~/.haris/scripts.org
+              smart-launch myemacs -c ~/.haris/scripts.org
           else
               echo 'Aborting...'
               return 1
@@ -1139,11 +1139,11 @@ Note: This code block must not contain any apostrophes!
   function cdcf;   set -l file (cf "$argv");   test -f "$file" && cd (dirname        "$file"); end
   function catcf;  set -l file (cf "$argv");   test -f "$file" && cat                "$file" ; end
   function vicf;   set -l file (cf "$argv");   test -e "$file" && vim                "$file" ; end
-  function ecf;    set -l file (cf "$argv");   test -e "$file" && myemacs-float "$file" ; end
+  function ecf;    set -l file (cf "$argv");   test -e "$file" && smart-launch myemacs -c "$file" ; end
 
   function cdcmd;  set -l file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
   function catcmd; set -l file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
-  function ecmd;   set -l file (fcmd "$argv"); test -f "$file" && myemacs     "$file" ; end
+  function ecmd;   set -l file (fcmd "$argv"); test -f "$file" && smart-launch myemacs -c "$file" ; end
   function rmcmd;  set -l file (fcmd "$argv"); rm "$file";                              end
 #+end_src
 **** =eman=
