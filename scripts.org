@@ -660,6 +660,7 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
 ** =claude=                                                        :wrapper:
 #+begin_src shell :tangle ~/.local/bin/claude
   if [ "$(pwd)" = ~ ]; then
+      mkdir -p ~/.empty
       cd ~/.empty/
   fi
   alternative-command claude "$@"
@@ -667,6 +668,7 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
 ** =opencode=                                                      :wrapper:
 #+begin_src shell :tangle ~/.local/bin/opencode
   if [ "$(pwd)" = ~ ]; then
+      mkdir -p ~/.empty
       cd ~/.empty/
   fi
   bunx opencode-ai@latest "$@"
