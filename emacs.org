@@ -1076,16 +1076,6 @@ insert mode. I disable those modes by aliasing them to =ignore=.
    lsp-diagnostics--flycheck-enabled t)
 #+end_src
 *** Workarounds
-**** DAP Pyenv
-The regular dap-python--pyenv-executable-find doesn't cooperate with auto-virtualenv.
-#+begin_src elisp
-  (with-eval-after-load 'dap-mode
-    (with-eval-after-load 'dap-python
-      (dolist (hook '(dap-session-created-hook dap-session-changed-hook))
-        (add-hook
-         hook
-         (lambda () (defalias 'dap-python--pyenv-executable-find 'executable-find))))))
-#+end_src
 **** PET Mode
 PET mode is unbearably slow.
 #+begin_src elisp
@@ -1123,25 +1113,6 @@ want bindings (link following etc) from =compilation-mode-map= to be available.
   (eval-after-load 'js (lambda () (require 'dap-node)))
 
   (eval-after-load "npm-mode" (lambda () (npm-global-mode t)))
-#+end_src
-*** Unit Testing
-#+begin_src elisp
-  (use-package jest-test-mode :ensure t)
-
-  (add-hook 'typescript-mode-hook 'jest-test-mode)
-
-  (spacemacs/set-leader-keys-for-minor-mode
-    'jest-test-mode
-    "tb" 'jest-test-run)
-  (spacemacs/set-leader-keys-for-minor-mode
-    'jest-test-mode
-    "tt" 'jest-test-run-at-point)
-  (spacemacs/set-leader-keys-for-minor-mode
-    'jest-test-mode
-    "tl" 'jest-test-rerun-test)
-  (spacemacs/set-leader-keys-for-minor-mode
-    'jest-test-mode
-    "ta" 'jest-test-run-all-tests)
 #+end_src
 ** Web
 #+begin_src elisp
@@ -1728,21 +1699,6 @@ Takes too long to load.
        (let ((default-directory (magit-toplevel)))
          (start-process "claude-commit" nil "smart-launch" "term" "claude" "--effort" "low" "--model" "sonnet" "/commit")))))
 #+end_src
-** Custom transient commands
-#+begin_src elisp
-  (defun haris/magit-fetch-to-local (remote branch args)
-    "Fetch a remote branch to a local branch of the same name"
-    (interactive
-     (let ((remote (magit-read-remote-or-url "Fetch from remote or url")))
-       (list remote
-             (magit-read-remote-branch "Fetch branch" remote)
-             (magit-fetch-arguments))))
-    (magit-git-fetch remote (cons (concat branch ":" branch) args)))
-
-  (transient-append-suffix
-    'magit-fetch "o"
-    '(1 "O" "another, to local" haris/magit-fetch-to-local))
-#+end_src
 ** Repo list
 #+begin_src elisp
   (with-eval-after-load 'magit-repos
@@ -1770,19 +1726,6 @@ Takes too long to load.
   (evil-define-key 'normal magit-section-mode-map (kbd "g h") #'magit-section-up)
 #+end_src
 * AI
-#+begin_src elisp
-  (with-eval-after-load 'haris/api-keys
-    (require 'llm-claude)
-
-    (setq haris/ai/model/openai/o3-mini/creator
-          '(make-llm-openai :key openai-key :chat-model "o3-mini"))
-    (setq haris/ai/model/openai/o4-mini/creator
-          '(make-llm-openai :key openai-key :chat-model "o4-mini"))
-    (setq haris/ai/model/claude/sonnet-4.5/creator
-          '(make-llm-claude :key anthropic-key :chat-model "claude-sonnet-4-5-20250929"))
-
-    (provide 'haris/ai))
-#+end_src
 ** Copilot
 #+begin_src elisp
   (require 'copilot)
@@ -1882,48 +1825,6 @@ Takes too long to load.
     (define-key copilot-completion-map (kbd "M-n") 'copilot-next-completion)
     (define-key copilot-completion-map (kbd "M-p") 'copilot-previous-completion)
     (spacemacs/set-leader-keys "oC" 'copilot-mode))
-#+end_src
-** Aidermacs
-#+begin_src elisp
-  (straight-use-package
-   '(aidermacs :type git
-               :host github
-               :repo "veracioux/aidermacs"))
-
-  (use-package aidermacs :defer t)
-  (setq aidermacs-default-model "openai/o4-mini")
-  (setq aidermacs-backend 'vterm)
-  (setq aidermacs-extra-args '("--no-check-update"))
-
-  (setq aidermacs-show-diff-after-change t)
-#+end_src
-*** Bindings
-#+begin_src elisp
-  (spacemacs/set-leader-keys "A" 'aidermacs-transient-menu)
-#+end_src
-** Claude
-#+begin_src elisp
-  (use-package claude-code :defer t)
-#+end_src
-*** Bindings
-#+begin_src elisp
-  (spacemacs/set-leader-keys "#" 'claude-code-transient)
-#+end_src
-** Gptel
-#+begin_src elisp
-  (with-eval-after-load 'haris/api-keys
-    (setq gptel-confirm-tool-calls t)
-    (setq gptel-default-mode 'org-mode)
-    (setq gptel-api-key openai-key))
-#+end_src
-** Ellama
-#+begin_src elisp
-  (with-eval-after-load 'haris/ai
-    (setopt
-     ellama-providers
-     `(("openai/o3-mini" . (,haris/ai/model/openai/o3-mini/creator))
-       ("openai/o4-mini" . (,haris/ai/model/openai/o4-mini/creator))))
-    (setopt ellama-provider (eval haris/ai/model/openai/o4-mini/creator)))
 #+end_src
 * REPLs in Emacs
 ** Common settings
@@ -2330,12 +2231,6 @@ Remove Info mode annoying keybindings.
 #+begin_src elisp
   (evil-collection-init 'bookmark)
 #+end_src
-** nmcli-wifi
-#+begin_src elisp
-  (straight-use-package '(nmcli-wifi :type git :host github :repo "luckysori/nmcli-wifi"))
-  (evil-define-key 'normal nmcli-wifi-mode-map (kbd "c") 'nmcli-wifi-connect)
-  (evil-define-key 'normal nmcli-wifi-mode-map (kbd "r") 'nmcli-wifi-refresh)
-#+end_src
 ** transient
 #+begin_src elisp
   (eval-after-load 'transient
@@ -2459,11 +2354,8 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
                     shell-scripts-backend 'lsp)
      (yaml :variables
            yaml-enable-lsp t)
-     octave
      javascript
      typescript
-     java
-     kotlin
      go
      prettier
      vue
@@ -2486,18 +2378,11 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      (docker :variables
              docker-dockerfile-backend 'lsp)
 
-     ;; Communication and Collaboration
-     slack
+     ;; Collaboration
      git
 
      ;; AI / LLM Integration
      github-copilot
-     openai
-     whisper
-     (llm-client
-      :variables
-      llm-client-enable-gptel t
-      llm-client-enable-ellama t)
 
      ;; REPLs
      shell
