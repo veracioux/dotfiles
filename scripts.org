@@ -1637,12 +1637,6 @@ are designed to be easily integrated into dmenu scripts.
   <<add-create-frame-option-if-term-dumb>>
   myemacs --eval "(progn (call-interactively 'run-python) (delete-other-windows))" "$@"
 #+end_src
-** =eterm=
-#+begin_src shell :tangle ~/.local/bin/eterm
-  # Run an emacs-hosted terminal via vterm
-  <<add-create-frame-option-if-term-dumb>>
-  myemacs --socket-name=vterm --eval '(multi-vterm)' "$@"
-#+end_src
 ** =eman=
 #+begin_src shell :tangle ~/.local/bin/eman
   if [ -n "$1" ]; then
@@ -1658,15 +1652,6 @@ are designed to be easily integrated into dmenu scripts.
 *** Completions
 #+begin_src fish :tangle ~/.config/fish/completions/eman.fish
   complete -c eman --wraps man
-#+end_src
-** =erc=
-#+begin_src shell :tangle ~/.local/bin/erc
-  # Open emacs and run ERC in it
-
-  <<add-create-frame-option-if-term-dumb>>
-  myemacs --socket-name="irc" \
-          --eval "(unless erc-server-connected (call-interactively 'erc-tls))" \
-          "$@"
 #+end_src
 ** =edocker=
 #+begin_src shell :tangle ~/.local/bin/edocker
