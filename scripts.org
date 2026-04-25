@@ -2865,7 +2865,7 @@ Options:
 * Miscellaneous
 ** =term=
 #+begin_src bash :tangle ~/.local/bin/term
-  alacritty --working-directory "$PWD" "$@"
+  alacritty --working-directory "$PWD" -e fish -C "$([ "$#" -ge 1 ] && printf %q\  "$@" || :)"
 #+end_src
 ** =aurvote=
 #+begin_src shell :tangle ~/.local/bin/aurvote

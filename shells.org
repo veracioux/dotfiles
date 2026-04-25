@@ -1299,7 +1299,6 @@ Note: =~/.bashrc= is sourced by fish as well.
 *** Aliases
 #+begin_src fish
   alias src_fish  'source ~/.config/fish/config.fish'
-  alias term      'term & disown'
   alias vim       'nvim'
   abbr stage      'ndir /tmp/stage-$USER'
   if command --quiet docker
