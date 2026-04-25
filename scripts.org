@@ -460,7 +460,8 @@ of the current terminal. Only whitelisted commands are allowed.
   fi
   info "alacritty-fork: forking '$FG_CMD'"
 
-  alacritty -e fish -C "$FG_CMD" &
+  cd "$(alacritty-pane-cwd)"
+  term "$FG_CMD" &
 #+end_src
 ** =sway=                                                          :wrapper:
 #+begin_src shell :tangle ~/.local/bin/sway
