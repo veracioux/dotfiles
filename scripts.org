@@ -326,7 +326,7 @@ Usage: =smart-launch CMD...=
   is_floating=$(echo "$tree" | jq -r \
     '.. | objects | select(.focused == true) | .floating' | head -1)
   case "$is_floating" in
-    user_on|auto_on) i3-msg move scratchpad ;;
+    user_on|auto_on) i3-msg move scratchpad >/dev/null ;;
   esac
 
   case "$layout" in
@@ -338,7 +338,7 @@ Usage: =smart-launch CMD...=
         con_id=$(i3-msg -t subscribe '["window"]' \
           | jq -r --unbuffered 'select(.change == "new") | .container.id' \
           | head -1)
-        i3-msg "[con_id=$con_id]" floating enable, move scratchpad, scratchpad show
+        i3-msg "[con_id=$con_id]" floating enable, move scratchpad, scratchpad show >/dev/null
       } &
       exec "$@"
       ;;
