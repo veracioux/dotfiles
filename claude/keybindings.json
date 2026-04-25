@@ -19,6 +19,7 @@
         "ctrl+f": "chat:killAgents",
         "shift+tab": "chat:cycleMode",
         "meta+p": "chat:modelPicker",
+        "meta+m": "chat:modelPicker",
         "meta+o": "chat:fastMode",
         "meta+t": "chat:thinkingToggle",
         "enter": "chat:submit",
@@ -172,7 +173,8 @@
       "context": "ModelPicker",
       "bindings": {
         "left": "modelPicker:decreaseEffort",
-        "right": "modelPicker:increaseEffort"
+        "right": "modelPicker:increaseEffort",
+        "meta+e": "modelPicker:increaseEffort"
       }
     },
     {
