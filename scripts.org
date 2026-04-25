@@ -614,7 +614,7 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
   done < <(env -0)
   if $has_newline; then
       echo "Warning: env contains values with newlines; falling back to plain fish" >&2
-      exec fish
+      exec fish "$@"
   fi
 
   n=1
@@ -635,7 +635,7 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
       echo '  TERM="$TERM" \'
       echo '  TMUX="$TMUX" \'
       echo '  TMUX_PANE="$TMUX_PANE" \'
-      echo '  fish'
+      echo "  $(printf '%q ' fish "$@")"
   } > "$launcher"
 
   tmux new-session -d -s "$name" "$launcher"
