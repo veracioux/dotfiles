@@ -663,7 +663,10 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
       mkdir -p ~/.empty
       cd ~/.empty/
   fi
-  alternative-command claude "$@"
+  # Model and effort are set globally, not per-session. Set them here to ensure
+  # consistent defaults for interactive use. To use different settings, pass
+  # --model or --effort explicitly to override.
+  alternative-command claude --model opus --effort medium "$@"
 #+end_src
 ** =opencode=                                                      :wrapper:
 #+begin_src shell :tangle ~/.local/bin/opencode
