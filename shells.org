@@ -688,13 +688,37 @@ on the plugin list above.
 #+end_src
 *** =a=
 #+begin_src fish :tangle ~/.config/fish/functions/a.fish
-  # Run z through fzf
+  # Run z through fzf, augmented with git worktree and pnpm workspace entries
   function a
+      # z entries (score + path)
       z -l $argv | read -z choices
-      set -l count (echo "$choices" | sed '/^$/d' | wc -l)
-      set dest (echo "$choices" | sed '/^$/d' | tac | fzf --select-1)
+      set -l paths (echo "$choices" | sed '/^$/d' | tac | sed -E 's/^\S+\s+//')
 
-      cd (echo "$dest" | sed -E -e '/^$/d' -e 's/^\S+\s+//')
+      # Add worktree and pnpm entries if inside a git repo
+      if set -l git_root (git rev-parse --show-toplevel 2>/dev/null)
+          set -l rel (realpath "$PWD" --relative-to "$git_root")
+
+          # Worktree entries: each worktree root + current relative subpath
+          for wt in (git worktree list --porcelain 2>/dev/null | grep '^worktree ' | sed 's/^worktree //')
+              set -l candidate "$wt/$rel"
+              test -d "$candidate"; and set -a paths "$candidate"
+          end
+
+          # pnpm workspace entries (cached for 20 min per git root)
+          if type -q pnpm; and test -f "$git_root/pnpm-workspace.yaml"
+              set -l cache_file ~/.cache/pnpm-workspaces-(echo "$git_root" | string replace -a / _)
+              if not test -f "$cache_file"; or test (math (date +%s) - (stat -c %Y "$cache_file")) -gt 1200
+                  pnpm ls -r --depth -1 --long --parseable 2>/dev/null | cut -d: -f1 > "$cache_file"
+              end
+              set -a paths (cat "$cache_file")
+          end
+      end
+
+      # Dedupe and select
+      set -l unique_paths (printf '%s\n' $paths | awk '!seen[$0]++')
+      set dest (printf '%s\n' $unique_paths | fzf --select-1)
+
+      test -n "$dest"; and cd "$dest"
   end
 #+end_src
 **** Completions
