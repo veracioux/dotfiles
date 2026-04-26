@@ -1065,6 +1065,21 @@ Note: This code block must not contain any apostrophes!
       end
   end
 #+end_src
+*** =tmux=
+Inside a =tmux-shell= session (transparent, prefix-disabled, used purely for
+scrollback capture / shared access — session names are =term-NNN=), running
+real =tmux= would refuse to start because =$TMUX= is set. Clear =$TMUX= in
+that case so a real, multiplexing tmux can launch on top.
+#+begin_src fish :tangle ~/.config/fish/functions/tmux.fish
+  function tmux
+      if test -n "$TMUX"
+          and string match -q 'term-*' -- (command tmux display-message -p '#{session_name}' 2>/dev/null)
+          TMUX='' command tmux $argv
+      else
+          command tmux $argv
+      end
+  end
+#+end_src
 *** =secclip=
 #+begin_src fish :tangle ~/.config/fish/functions/secclip.fish
   function secclip --description "Copy text to clipboard for a limited time" --argument-names duration
