@@ -1228,7 +1228,7 @@ last statement, and remove it from the output by piping to =sed=.
 ** =o=
 Wrapper command around the equivalent [[file:shells.org::*=o=][fish function]].
 #+begin_src bash :tangle ~/.local/bin/o
-  fish -C "o $(printf "%q " "$@")"
+  fish -c "o $(printf "%q " "$@")"
 #+end_src
 ** =get-os-type=
 Get the OS type.
