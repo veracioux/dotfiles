@@ -851,6 +851,9 @@ on the plugin list above.
           echo "  -s, --silent"      \t\t"Do not send a GUI notification when the command completes."
           echo "  -a, --attach"      \t\t"Immediately attach to the created tmux session"
           echo "  -K, --kill-idle"     \t"Kill all idle background sessions"
+          echo "  -t, --title"         \t"Set the tmux session name and treat as a singleton:"
+          echo                     \t\t\t"  - if running already, do nothing"
+          echo                     \t\t\t"  - if lingering idle, kill it and start fresh"
           return
       end
 
@@ -877,7 +880,19 @@ on the plugin list above.
       <<o/background-task>>
       '
 
-      set -l tmux_session "[o] $(echo "$__cmdline" | head -c20) [$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 5)]"
+      set -l tmux_session
+      if [ -n "$_flag_title" ]
+          set tmux_session "[o] $_flag_title"
+          set -l existing (tmux list-sessions -F '#{session_name}' 2>/dev/null)
+          if contains -- "$tmux_session" $existing
+              return 0
+          end
+          if contains -- "$tmux_session [IDLE]" $existing
+              tmux kill-session -t "=$tmux_session [IDLE]"
+          end
+      else
+          set tmux_session "[o] $(echo "$__cmdline" | head -c20) [$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 5)]"
+      end
 
       tmux new -d \
           -s "$tmux_session" \
@@ -913,6 +928,7 @@ Test the function by executing this code block:
     s/silent \
     a/attach \
     K/kill-idle \
+    t/title= \
     -- $__o_args
 #+end_src
 **** Background task and follow-up shell
