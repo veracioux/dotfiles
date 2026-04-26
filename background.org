@@ -163,6 +163,8 @@ This service updates the user's crontab when any of the custom crontab files cha
   [Service]
   SyslogIdentifier=i3
   Type=oneshot
+  OOMScoreAdjust=-900
+  ManagedOOMPreference=omit
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   Environment=DESKTOP_SESSION=i3
   # Used by i3-sensible-terminal
@@ -182,6 +184,8 @@ This service updates the user's crontab when any of the custom crontab files cha
 
   [Service]
   SyslogIdentifier=sxhkd
+  OOMScoreAdjust=-800
+  ManagedOOMPreference=omit
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env sxhkd
   Restart=on-failure
@@ -199,6 +203,7 @@ This service updates the user's crontab when any of the custom crontab files cha
 
   [Service]
   SyslogIdentifier=sxhkd(private)
+  ManagedOOMPreference=omit
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env sxhkd -c %h/.private.sxhkdrc
   Restart=on-failure
@@ -255,6 +260,8 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
 
   [Service]
   SyslogIdentifier=dunst
+  OOMScoreAdjust=-800
+  ManagedOOMPreference=omit
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env dunst
 #+end_src
@@ -308,6 +315,38 @@ branches in the dispatch =case=.
       sleep 3
   done
 #+end_src
+* Out-of-memory handling
+When VSCode (or anything else) eats enough RAM to push the system into swap
+thrashing, the X server stops responding and the only escape is magic-sysrq
+OOM, which often kills innocent processes.
+
+The mitigation has three layers:
+1. ~OOMScoreAdjust~ on critical services (i3, dunst, sxhkd) so the kernel OOM
+   killer never picks them as victims, plus ~ManagedOOMPreference=omit~ on the
+   recovery-critical subset (i3, sxhkd, sxhkd-private, dunst) so systemd-oomd
+   also skips them. Note: ~OOMScoreAdjust~ alone does not protect from
+   systemd-oomd, which selects by cgroup-level PSI/swap pressure;
+   ~ManagedOOMPreference=omit~ is what excludes a unit from oomd's candidate set.
+2. ~systemd-oomd~ at the system level watches PSI and swap usage and kills the
+   heaviest cgroup before the system locks up. System-side config lives in
+   [[file:sys.org::*systemd-oomd][sys.org]].
+3. A VSCode wrapper that runs it inside its own cgroup with a memory ceiling and
+   a high OOM score, so it gets throttled/killed first.
+
+** Opt user services into systemd-oomd
+Tells oomd it's allowed to act on processes inside =app.slice= (where
+=systemd-run --user= places transient scopes, and where graphical apps
+launched via desktop files end up).
+#+begin_src conf :tangle ~/.config/systemd/user/app.slice.d/50-oomd.conf
+  [Slice]
+  ManagedOOMSwap=kill
+  ManagedOOMMemoryPressure=kill
+  ManagedOOMMemoryPressureLimit=50%
+#+end_src
+** VSCode memory-bounded launcher
+The =code= wrapper lives in [[file:scripts.org::*=code=][scripts.org]]. It runs VSCode inside a
+transient systemd scope under =app.slice= with a ~MemoryHigh~ ceiling and a
+high ~OOMScoreAdjust~ so it's the first thing killed under memory pressure.
 * Keyboard remapping
 ** Lenovo IdeaPad Pro 5
 Remap the <> key (located between left Shift and Z) to act as an additional Shift key.

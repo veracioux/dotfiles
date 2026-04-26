@@ -479,6 +479,19 @@ get better search matches.
 #+begin_src shell :tangle ~/.local/bin/vscode
   code "$@"
 #+end_src
+** =code=                                                          :wrapper:
+Runs VSCode inside a transient systemd scope under =app.slice= with a
+~MemoryHigh~ ceiling and a high ~OOMScoreAdjust~ so it's the first thing killed
+under memory pressure. See [[file:background.org::*Out-of-memory handling][background.org]] for the surrounding OOM setup.
+#+begin_src bash :tangle ~/.local/bin/code :shebang "#!/usr/bin/env bash"
+  set -e
+  echo 600 > /proc/self/oom_score_adj
+  exec systemd-run --user --scope --quiet \
+       --unit="code-$$" \
+       --slice=app.slice \
+       -p MemoryHigh=12G \
+       -- alternative-command code "$@"
+#+end_src
 ** =web-ext=                                                       :wrapper:
 #+begin_src bash :tangle ~/.local/bin/web-ext
   alternative-command web-ext "$@" &

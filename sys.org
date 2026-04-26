@@ -32,9 +32,50 @@
 Install and enable tlp.service.
 
 ** /etc/tlp.d/10-powersave.conf                                      :manual:
-#+begin_src conf :tangle ~/.root-template/etc/tlp.d/10-powersave.conf.template
-  CPU_ENERGY_PERF_POLICY_ON_AC=power
-  CPU_ENERGY_PERF_POLICY_ON_BAT=power
-  CPU_MAX_PERF_ON_AC=50
-  CPU_BOOST_ON_AC=0
-#+end_src
+[[file:provision/files/10-powersave.conf]]
+
+** systemd-oomd                                                       :manual:
+Userspace OOM killer that acts on PSI/swap pressure before the kernel
+deadlocks. Companion to the user-side config in [[file:background.org::*Out-of-memory handling][background.org]].
+
+Setup:
+- =sudo systemctl enable --now systemd-oomd.service=
+- =sudo cp ~/.haris/provision/files/99-haris.conf /etc/systemd/oomd.conf.d/99-haris.conf=
+- =sudo cp ~/.haris/provision/files/50-oomd.conf /etc/systemd/system/user@.service.d/50-oomd.conf=
+- ~sudo systemctl daemon-reload~
+
+*** /etc/systemd/oomd.conf.d/99-haris.conf
+[[file:provision/files/99-haris.conf]]
+
+*** /etc/systemd/system/user@.service.d/50-oomd.conf
+Required so oomd has authority to kill cgroups inside the user manager
+(notably =app.slice=, which the user-side drop-in opts in).
+[[file:provision/files/50-oomd.conf]]
+
+** zram                                                               :manual:
+8 GiB zram device backed by zstd compression, placed in front of the 64 GiB
+swapfile. The kernel fills zram first (~50× lower latency than NVMe), spilling
+to disk only under sustained pressure.
+
+Setup:
+- ~sudo pacman -S zram-generator~
+- =sudo cp ~/.haris/provision/files/zram-generator.conf /etc/systemd/zram-generator.conf=
+- =sudo cp ~/.haris/provision/files/99-zram.conf /etc/sysctl.d/99-zram.conf=
+- ~sudo sysctl -p /etc/sysctl.d/99-zram.conf~
+- ~sudo systemctl daemon-reload~
+- ~sudo systemctl start systemd-zram-setup@zram0~
+
+*** /etc/systemd/zram-generator.conf
+[[file:provision/files/zram-generator.conf]]
+
+*** /etc/sysctl.d/99-zram.conf
+Overrides the =vm.swappiness = 10= in =99-haris-vm.conf= (sorts after it
+lexicographically). With fast zram swap, swappiness >100 tells the kernel to
+prefer reclaiming anonymous pages to zram over evicting page cache.
+[[file:provision/files/99-zram.conf]]
+
+** sysctl: reduce swappiness                                          :manual:
+With 27 GiB RAM and an NVMe-backed 31 GiB swap, the default swappiness of 60
+is far too eager — by the time the system feels slow, ~14 GiB is already
+swapped out and reclaim thrashes. Lower it so dirty pages stay in RAM longer.
+[[file:provision/files/99-haris-vm.conf]]
