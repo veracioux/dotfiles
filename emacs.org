@@ -1015,6 +1015,10 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
 
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]venv$")
 
+    ;; Disable filesystem watching; rely on buffer-driven didChange events.
+    ;; External edits (branch switches, codegen) will require lsp-workspace-restart.
+    (setq lsp-enable-file-watchers nil)
+
     ;; Reduce lsp-ui-sideline frequency to improve performance
     (with-eval-after-load 'lsp-ui-sideline
       (setq lsp-ui-sideline-delay 1.0)))
