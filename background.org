@@ -35,7 +35,7 @@ One of these targets is started by startx, depending on which xinitrc preset is 
   [Unit]
   Description=Haris' graphical session target
   Requires=default.target
-  Wants=jira-branch-transformer.service
+  Wants=clipboard-transformer.service
   StopWhenUnneeded=yes
 #+end_src
 ** WM
@@ -258,27 +258,52 @@ NOTE: The =CM_DIR= environment variable was overridden [[file:shells.org::(CM_DI
   Environment=XDG_RUNTIME_DIR=/run/user/%U
   ExecStart=/usr/bin/env dunst
 #+end_src
-** Jira Branch Transformer
-#+begin_src systemd :tangle ~/.config/systemd/user/jira-branch-transformer.service
+** Clipboard Transformer
+Watches the clipboard and transforms its contents based on which pattern the
+existing content matches. New transformations can be added as additional
+branches in the dispatch =case=.
+#+begin_src systemd :tangle ~/.config/systemd/user/clipboard-transformer.service
   [Unit]
-  Description=Jira Branch Transformer
+  Description=Clipboard Transformer
   PartOf=graphical-session.target
   After=graphical-session.target
 
   [Service]
-  SyslogIdentifier=jira-branch-transformer
-  ExecStart=/usr/bin/env jira-branch-transformer
+  SyslogIdentifier=clipboard-transformer
+  ExecStart=/usr/bin/env clipboard-transformer
 #+end_src
 *** Executable
-#+begin_src bash :tangle ~/.local/bin/jira-branch-transformer
+#+begin_src bash :tangle ~/.local/bin/clipboard-transformer
+  transform() {
+      local cb="$1"
+      # Jira branch: "git checkout -b TICKET-123" -> just the branch name.
+      if [[ "$cb" =~ ^git[[:space:]]+checkout[[:space:]]+-b[[:space:]]+[A-Z]+-[0-9]+ ]]; then
+          rev <<<"$cb" | cut -f1 -d' ' | rev
+          return
+      fi
+      # Strip a leading shell prompt ("$ " or " $ ") from a single-line clipboard.
+      if [[ "$(wc -l <<<"$cb")" -le 1 ]] && [[ "$cb" =~ ^[[:space:]]*\$[[:space:]]+ ]]; then
+          sed -E 's/^[[:space:]]*\$[[:space:]]+//' <<<"$cb"
+          return
+      fi
+      # Strip a leading "● " or "❯ " prompt marker from the first line only.
+      # Trailing whitespace may be a non-ASCII space (NBSP, narrow no-break,
+      # etc.), so match Unicode whitespace via Perl.
+      if [[ "$cb" == ●* || "$cb" == ❯* ]]; then
+          perl -CSDA -pe 's/^[●❯]\p{Space}+// if $. == 1' <<<"$cb"
+          return
+      fi
+      return 1
+  }
+
   while :; do
       echo "Scanning clipboard..."
       cb="$(timeout 1s xsel -bo)"
-      if grep -qE <<<"$cb" "^git checkout -b [A-Z]+-[0-9]+"; then
-          echo "Clipboard matched. Transforming to branch name..."
-          branch="$(rev <<<"$cb" | cut -f1 -d' ' | rev)"
-          echo "Transformed content: $branch"
-          echo -n "$branch" | xsel -b
+      if new="$(transform "$cb")" && [ -n "$new" ] && [ "$new" != "$cb" ]; then
+          echo "Clipboard matched."
+          echo "Transformed content:"
+          sed 's/^/  /' <<<"$new"
+          echo -n "$new" | xsel -b
       fi
       sleep 3
   done
