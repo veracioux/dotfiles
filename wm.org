@@ -721,7 +721,6 @@ Menu of utilities that allow me to chat with my computer.
   bindsym s       exec sleep 0.1 && flameshot screen, mode default
   bindsym f       exec sleep 0.1 && flameshot full,   mode default
   bindsym c       exec flameshot config, mode default
-  bindsym d       exec sh -c 'pkill "^flameshot$" || o flameshot'
   bindsym y       exec ~/.local/lib/haris/flameshot-gui-prompt-delay.sh, mode default
   bindsym Escape  mode default
   }

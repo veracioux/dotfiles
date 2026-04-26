@@ -40,7 +40,10 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
 #+end_src
 ** =flameshot=                                                       :wrapper:
 #+begin_src shell :tangle ~/.local/bin/flameshot
-  pgrep --quiet -u "$USER" '^flameshot$' || o flameshot
+  o --title flameshot alternative-command flameshot
+  until pgrep --quiet -x "flameshot"; do
+    sleep 0.1s
+  done
   alternative-command flameshot "$@"
 #+end_src
 ** =rm=                                                              :wrapper:
