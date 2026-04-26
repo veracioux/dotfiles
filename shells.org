@@ -1748,6 +1748,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g tb    'nc termbin.com 9999'
   conditional_abbr -g R     'reset'
   conditional_abbr -g pa    'printarg'
+  conditional_abbr -g X     'xargs'
 
   _abbr            -g WT    'export WORKTREE=%'
   _abbr            -g c     'cut -d " " -f'
@@ -1789,7 +1790,7 @@ abbreviations for equivalent apt operations.
       function (tmp_func)
           tmux attach -t (tmux list-sessions -F "#{session_created} #{session_name}" | sort | tac | grep -Po "(?<= ).*" | fzf -s)
       end
-      conditional_abbr -g X   "$(tmp_func_consume_content)"
+      conditional_abbr -g xa   "$(tmp_func_consume_content)"
   end
 #+end_src
 **** VirtualBox
