@@ -1608,6 +1608,23 @@ Run a command in a given directory.
   echo "Current remotes:"
   git remote -v
 #+end_src
+** =git-wt-for=
+Run a command in every worktree of the current repository.
+#+begin_src bash :tangle ~/.local/bin/git-wt-for
+  # Usage: git wt-for <command> [args...]
+  set -e
+  if [ $# -eq 0 ]; then
+      echo "Usage: git wt-for <command> [args...]" >&2
+      exit 1
+  fi
+  status=0
+  while IFS= read -r path; do
+      [ -z "$path" ] && continue
+      echo "=== $path ==="
+      (cd "$path" && "$@") || status=$?
+  done < <(git worktree list --porcelain | awk '/^worktree /{print substr($0, 10)}')
+  exit $status
+#+end_src
 ** Utilities for AI agents
 Utility scripts for AI agents to use.
 *** =git-commit-from-editmsg=
