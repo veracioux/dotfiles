@@ -1283,6 +1283,33 @@ Get the OS type.
   # accept it.
   comm -23 <(seq 49152 65535 | sort) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
 #+end_src
+** =portkill=
+#+begin_src bash :tangle ~/.local/bin/portkill
+  set -eu
+  if [ "$#" -lt 1 ]; then
+      echo "Usage: portkill <port> [<port>...]" >&2
+      exit 1
+  fi
+  for port in "$@"; do
+      out="$(lsof -nPi :"$port" || true)"
+      if [ -z "$out" ]; then
+          echo "No processes found on port $port" >&2
+          continue
+      fi
+      header="$(echo "$out" | head -n 1)"
+      echo "$out" | tail -n +2 | grep LISTEN | while IFS= read -r line; do
+          pid="$(echo "$line" | awk '{print $2}')"
+          echo "$header"
+          echo "$line"
+          printf 'Kill? [y/N]: '
+          read -r ans </dev/tty
+          case "$ans" in
+              y|Y|yes|YES) kill "$pid" && echo "Killed $pid" ;;
+              *) echo "Skipped $pid" ;;
+          esac
+      done
+  done
+#+end_src
 ** =docker-ls-context=
 #+begin_src bash :tangle ~/.local/bin/docker-ls-context
   tag="$(date +%s%3N | sha256sum | head -c 32)"
