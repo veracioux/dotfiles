@@ -681,7 +681,29 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
   # Model and effort are set globally, not per-session. Set them here to ensure
   # consistent defaults for interactive use. To use different settings, pass
   # --model or --effort explicitly to override.
-  alternative-command claude --model opus --effort medium "$@"
+  #
+  # Effort/model changes from inside a Claude Code instance write to
+  # ~/.claude/settings.json and would bleed into every other running instance.
+  # Point CLAUDE_CONFIG_DIR at a per-session snapshot dir whose entries
+  # symlink back to the real ~/.claude (and ~/.claude.json), except
+  # settings.json which is a local copy — so in-session writes to it land
+  # in the snapshot and are discarded on exit. Other state (projects MRU,
+  # onboarding, telemetry, session files) writes through the symlinks and
+  # persists normally.
+  cfg=$(mktemp -d -t claude-cfg.XXXXXX)
+  trap 'rm -rf "$cfg"' EXIT
+  shopt -s nullglob dotglob
+  for entry in "$HOME/.claude"/*; do
+      name=${entry##*/}
+      [[ $name == settings.json ]] && continue
+      ln -s "$entry" "$cfg/$name"
+  done
+  shopt -u nullglob dotglob
+  ln -s "$HOME/.claude.json" "$cfg/.claude.json"
+  cp "$HOME/.claude/settings.json" "$cfg/settings.json"
+  export CLAUDE_CONFIG_DIR="$cfg"
+
+  exec alternative-command claude --model opus "$@"
 #+end_src
 ** =opencode=                                                      :wrapper:
 #+begin_src shell :tangle ~/.local/bin/opencode
