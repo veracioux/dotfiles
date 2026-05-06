@@ -703,7 +703,7 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
   cp "$HOME/.claude/settings.json" "$cfg/settings.json"
   export CLAUDE_CONFIG_DIR="$cfg"
 
-  exec alternative-command claude --model opus "$@" --effort low
+  exec alternative-command claude --model opus "$@"
 #+end_src
 ** =opencode=                                                      :wrapper:
 #+begin_src shell :tangle ~/.local/bin/opencode
