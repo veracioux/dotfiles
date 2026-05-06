@@ -19,7 +19,7 @@
   # vim: ft=cfg
   [global]
   follow                  = mouse
-  width                   = (50, 300)
+  width                   = (50, 900)
   height                  = 400
   origin                  = top-right
   indicate_hidden         = yes
