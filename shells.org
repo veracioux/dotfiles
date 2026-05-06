@@ -514,8 +514,6 @@ This applies only to graphical sessions, the linux TTY is unaffected.
 
   bind_all_modes \e\cd 'disown'
 
-  bind_all_modes \eC 'edocker-compose'
-
   bind_all_modes \eT '__haris_test_eval'
 
   bind_all_modes \e\? '__haris_cmdline_prepend whatis'
