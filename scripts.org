@@ -418,13 +418,22 @@ of the current terminal. Only whitelisted commands are allowed.
 #+begin_src bash :tangle ~/.local/bin/alacritty-fork
   WHITELIST=(claude opencode)
 
-  # Walk the process tree rooted at $1, printing each descendant's command name
+  # Walk the process tree rooted at $1 from a single ps snapshot, printing
+  # each descendant's command name.
   descendants() {
-      local pid=$1
-      for child in $(pgrep -P "$pid" 2>/dev/null); do
-          ps -p "$child" -o comm= 2>/dev/null
-          descendants "$child"
-      done
+      ps -e -o pid=,ppid=,comm= | awk -v root="$1" '
+          { comm[$1]=$3; children[$2]=children[$2]" "$1 }
+          END {
+              stack=children[root]; n=0
+              while (stack != "") {
+                  sub(/^ /, "", stack)
+                  sp=index(stack, " ")
+                  if (sp) { p=substr(stack,1,sp-1); stack=substr(stack,sp+1) }
+                  else    { p=stack; stack="" }
+                  print comm[p]
+                  if (children[p] != "") stack=children[p] stack
+              }
+          }'
   }
 
   ALACRITTY_PID=$(xdotool getactivewindow getwindowpid 2>/dev/null)
@@ -451,9 +460,11 @@ of the current terminal. Only whitelisted commands are allowed.
   else
       ROOT_PID="$CHILD_PID"
   fi
-  info "alacritty-fork: root PID=$ROOT_PID descendants=$(descendants "$ROOT_PID" | tr '\n' ' ')"
 
-  FG_CMD=$(descendants "$ROOT_PID" \
+  DESCENDANTS=$(descendants "$ROOT_PID")
+  info "alacritty-fork: root PID=$ROOT_PID descendants=$(echo "$DESCENDANTS" | tr '\n' ' ')"
+
+  FG_CMD=$(printf '%s\n' "$DESCENDANTS" \
       | grep -xF "$(printf '%s\n' "${WHITELIST[@]}")" \
       | head -1)
 
