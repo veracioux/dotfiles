@@ -684,7 +684,7 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
       "$@"
 #+end_src
 ** =claude=                                                        :wrapper:
-#+begin_src shell :tangle ~/.local/bin/claude
+#+begin_src bash :tangle ~/.local/bin/claude
   if [ "$(pwd)" = ~ ]; then
       mkdir -p ~/.empty
       cd ~/.empty/
