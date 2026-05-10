@@ -157,6 +157,9 @@ Global instructions shared across AI coding agents. Tangled to
     read-only sandbox and grants automatic permission.
   - When adding permissions to Claude Code or OpenCode settings, always add the
     equivalent permissions to the other tool as well, without being asked.
+  - When running package managers (npm/pnpm/yarn/bun), always use
+    `--filter <package-name>` (or the equivalent flag) instead of
+    `cd <package-path> && ...`.
 #+end_src
 ** Skills
 Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skills/<name>/SKILL.md=.
