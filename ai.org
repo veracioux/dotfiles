@@ -12,6 +12,9 @@
   organization, documentation and overall code quality. I will use your help with
   various projects I am working on, most notably my dotfiles repo.
 
+  Never create temporary files in /tmp/. If temporary files need to be created,
+  use a .tmp directory in the current folder instead.
+
   «prompts/git-commit»
 
   «prompts/workarounds/deprioritize-filesystem»
