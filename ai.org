@@ -462,6 +462,9 @@ Common instructions reused by ticket-drafting skills.
   Commit $ARGUMENTS
 
   Do not stage files unless specifically instructed to.
+
+  Do not run git log to inspect past commits for convention. The convention must
+  have been provided to you in the prompt or in the conversation. If it hasn't, complain.
 #+end_src
 **** Tmux
 #+begin_src markdown :tangle ~/.claude/commands/tmux.md :noweb yes
