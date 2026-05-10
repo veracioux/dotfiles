@@ -363,6 +363,11 @@ Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skil
 
   $ARGUMENTS
 #+end_src
+**** TL;DR
+#+begin_src markdown :tangle ~/.claude/commands/tldr.md
+  Print a concise bullet-point summary of what we did in this conversation so
+  far. Only output the bullets, no preamble or trailing commentary.
+#+end_src
 **** Address reviews
 #+begin_src markdown :tangle ~/.claude/commands/address-reviews.md :noweb yes
   «prompts/address-reviews»
