@@ -226,6 +226,112 @@ Skills that can be used by both Claude Code and OpenCode. Tangled to =~/.ai/skil
   - Follow the commit message conventions already established in the repository
     (inspect recent `git log` if unsure).
 #+end_src
+*** Linear ticket drafting (shared)
+Common instructions reused by ticket-drafting skills.
+**** Find parent
+#+NAME: skills/ticket/find-parent
+#+begin_src markdown
+  Search Linear for a suitable parent issue or project:
+  - Use the Linear MCP tools (`list_issues`, `list_projects`, `get_issue`).
+  - Match by topic/area/keywords from the input. Prefer issues in active cycles
+    or projects related to the touched code or feature area.
+  - If multiple plausible parents exist, list them and ask the user to pick.
+  - It is acceptable to conclude there is no suitable parent.
+  - The parent slug and title MUST come from a real Linear issue you verified,
+    not a fabricated identifier.
+#+end_src
+**** Format
+#+NAME: skills/ticket/format
+#+begin_src markdown
+  Draft the ticket INLINE in the chat (do not create it in Linear yet). Format:
+
+  ```
+  # Parent: [PARENT-SLUG-IF-ISSUE: <Parent title (not URL)>]
+  # Title:  <Proposed ticket title>
+
+  ## Motivation
+  <Why this work needs to happen. Frame as a problem/opportunity that exists
+  independent of any specific implementation.>
+
+  ## Requirements
+  - <bullet>
+  - <bullet>
+  ```
+
+  If there is no parent, omit the bracketed prefix from the title.
+#+end_src
+**** Common rules
+#+NAME: skills/ticket/rules
+#+begin_src markdown
+  - The Motivation section is mandatory and high-level. If unclear, ASK the user
+    — never guess.
+  - Prefer bullet points over narrative prose for requirements.
+  - Do not create the Linear ticket. Only draft it inline. The user will create
+    it themselves (or instruct you to in a follow-up).
+#+end_src
+*** Reverse-engineer Linear ticket
+#+begin_src markdown :tangle ~/.ai/skills/reverse-ticket/SKILL.md :noweb yes
+  Reverse-engineer a Linear ticket from an existing changeset. Used when code was
+  written before a ticket existed, but policy requires every PR to be linked to
+  one.
+
+  ## Workflow
+
+  1. Obtain the changeset:
+     - If the user specifies a range/commit/PR, use that.
+     - Otherwise default to the current uncommitted diff (`git diff HEAD`
+       including staged + unstaged), plus any unpushed commits on the branch.
+  2. Analyze the diff and form a concise understanding of WHAT changed and WHY
+     it likely changed. Identify the user-facing or system-level intent, not a
+     line-by-line description.
+  3. Determine the **Motivation**:
+     - Infer from code, comments, branch name, and recent commits.
+     - If motivation is not clear from the changeset alone, ASK the user before
+       drafting. Do not invent a motivation.
+  4. Find a parent (see below).
+  5. Draft the ticket (see below).
+
+  ## Find parent
+  «skills/ticket/find-parent»
+
+  ## Draft format
+  «skills/ticket/format»
+
+  ## Rules
+  - The ticket MUST read as if it was authored BEFORE the change was
+    implemented. No phrases like "this PR does X", "the change adds Y", "we
+    updated Z". Use future/imperative tense ("Add ...", "Allow ...", "Ensure
+    ...").
+  «skills/ticket/rules»
+#+end_src
+*** Draft Linear ticket
+#+begin_src markdown :tangle ~/.ai/skills/draft-ticket/SKILL.md :noweb yes
+  Draft a Linear ticket from the user's described intent (no changeset
+  required). Used when the user wants to capture work to be done before any
+  code is written.
+
+  ## Workflow
+
+  1. Take the user's instructions describing what they want done.
+  2. Determine the **Motivation** (high-level WHY):
+     - Infer from the user's wording and surrounding project context.
+     - If you are not 100% sure of the motivation, ASK the user to clarify
+       before drafting. Getting this right is critical.
+  3. Find a parent (see below).
+  4. Draft the ticket (see below).
+
+  ## Find parent
+  «skills/ticket/find-parent»
+
+  ## Draft format
+  «skills/ticket/format»
+
+  ## Rules
+  - Write requirements as bullet points, not narrative prose. Bullets are
+    easier to read and review.
+  - Use future/imperative tense ("Add ...", "Allow ...", "Support ...").
+  «skills/ticket/rules»
+#+end_src
 * CLI tools
 ** Claude Code
 *** Bootstrap
