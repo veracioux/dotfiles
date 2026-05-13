@@ -671,6 +671,12 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
   tmux set-option -t "$name" set-titles-string '#{pane_title}'
   exec tmux attach -t "$name"
 #+end_src
+** =rm-dottmp=
+Remove the =.tmp= directory at the given path. Used to clean up scratch
+directories AI agents create per the global instructions.
+#+begin_src bash :tangle ~/.local/bin/rm-dottmp
+  rm -rf "$1/.tmp"
+#+end_src
 ** =safe=
 Run a command in a read-only sandbox using bubblewrap. The entire filesystem is
 mounted read-only, with writable =/tmp= and =/run= for programs that need them.

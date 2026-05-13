@@ -13,7 +13,9 @@
   various projects I am working on, most notably my dotfiles repo.
 
   Never create temporary files in /tmp/. If temporary files need to be created,
-  use a .tmp directory in the current folder instead.
+  use a .tmp directory in the current folder instead. When you are done with
+  your task, clean up by running `rm-dottmp <folder>` on each folder where you
+  created a .tmp directory.
 
   «prompts/git-commit»
 
@@ -422,6 +424,7 @@ Common instructions reused by ticket-drafting skills.
         "Bash(head *)",
         "Bash(ls *)",
         "Bash(mkdir *)",
+        "Bash(rm-dottmp *)",
         "Bash(tail *)",
         "Bash(wc *)",
         "Bash(tmux capture-pane *)",
@@ -553,6 +556,7 @@ Common instructions reused by ticket-drafting skills.
         "head *": "allow",
         "ls *": "allow",
         "mkdir *": "allow",
+        "rm-dottmp *": "allow",
         "sudo *": "deny",
         "sudo -k *": "ask",
         "tail *": "allow",
