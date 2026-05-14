@@ -11,6 +11,7 @@ One of these targets is started by startx, depending on which xinitrc preset is 
   Requires=default.target
   Requires=haris-gui-x11.target
   Requires=i3.service
+  Wants=i3-bar-mode-on-menu.service
   PartOf=graphical-session.target
   AllowIsolate=yes
   StopWhenUnneeded=yes
@@ -170,6 +171,20 @@ This service updates the user's crontab when any of the custom crontab files cha
   # Used by i3-sensible-terminal
   Environment=TERMINAL=alacritty
   ExecStart=/usr/bin/env i3
+#+end_src
+** Bar mode on menu
+Show the i3 bar while any mode menu is active; restore =hide= on return to
+=default=. See [[file:wm.org::*Auto-show on menu mode][wm.org]] for the script.
+#+begin_src systemd :tangle ~/.config/systemd/user/i3-bar-mode-on-menu.service
+  [Unit]
+  Description=Show i3 bar while a mode menu is active
+  PartOf=haris-gui-i3.target
+
+  [Service]
+  SyslogIdentifier=i3-bar-mode-on-menu
+  Environment=XDG_RUNTIME_DIR=/run/user/%U
+  ExecStart=%h/.config/i3/scripts/bar-mode-on-menu.sh
+  Restart=on-failure
 #+end_src
 ** Sxhkd
 #+begin_src systemd :tangle ~/.config/systemd/user/sxhkd.service
