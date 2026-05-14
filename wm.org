@@ -946,8 +946,13 @@ the link above to do this automatically, you will be prompted for the CPU temper
 
   def get_mic_volume_widget():
       source = run('pactl get-default-source').stdout.strip()
+      if not source:
+          return None
       volume_output = run(f'pactl get-source-volume {source}').stdout
-      volume = re.search(r'(\d+\.?\d*%)', volume_output)[1]
+      match = re.search(r'(\d+\.?\d*%)', volume_output)
+      if not match:
+          return None
+      volume = match[1]
       is_muted = 'yes' in run(f'pactl get-source-mute {source}').stdout
       if not is_muted:
           return {
