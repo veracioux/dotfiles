@@ -802,7 +802,7 @@ Menu of utilities that allow me to chat with my computer.
 ** Extra workspaces menu
 #+NAME: extra-workspaces-menu
 #+begin_src i3wm-config
-  set $mode_extra_ws "Extra WS | [a-f] [1-9] | Shift+key to move"
+  set $mode_extra_ws "Extra WS | [a-f] [1-9] | Shift+key to move | [n]ext"
 
   mode $mode_extra_ws {
   bindsym a               workspace $ws_a, mode default
@@ -839,10 +839,48 @@ Menu of utilities that allow me to chat with my computer.
   bindsym Shift+8         move container to workspace $ws_n8, mode default
   bindsym Shift+9         move container to workspace $ws_n9, mode default
 
+  bindsym n               exec --no-startup-id <<scripts-dir>>/aux-ws-next.sh, mode default
+
   bindsym Escape          mode default
   }
 
   bindsym $mod+a            mode $mode_extra_ws
+#+end_src
+*** Cycle to next aux workspace
+Cycles through existing =aux-*= workspaces in order: letters first
+(alphabetical), then digits (numerical). Only visits workspaces that currently
+exist (i.e. have at least one window or are focused). Wraps around. Robust to
+future additions of new letters/digits — no hardcoded cycle list.
+#+begin_src bash :tangle ~/.config/i3/scripts/aux-ws-next.sh :tangle-mode (eval #o744) :shebang "#!/usr/bin/env bash"
+  set -eu
+
+  ws_json=$(i3-msg -t get_workspaces)
+
+  mapfile -t letters < <(echo "$ws_json" | jq -r '.[].name' \
+    | sed -n 's/.*:aux-\([a-z]\+\)$/\1/p' | sort)
+  mapfile -t numbers < <(echo "$ws_json" | jq -r '.[].name' \
+    | sed -n 's/.*:aux-\([0-9]\+\)$/\1/p' | sort -n)
+
+  cycle=("${letters[@]}" "${numbers[@]}")
+  [ ${#cycle[@]} -eq 0 ] && exit 0
+
+  current=$(echo "$ws_json" \
+    | jq -r '.[] | select(.focused).name' \
+    | sed -n 's/.*:aux-\(.\+\)$/\1/p')
+
+  next_idx=0
+  for i in "${!cycle[@]}"; do
+      if [ "${cycle[$i]}" = "$current" ]; then
+          next_idx=$(( (i + 1) % ${#cycle[@]} ))
+          break
+      fi
+  done
+
+  target="${cycle[$next_idx]}"
+  full=$(echo "$ws_json" \
+    | jq -r --arg s ":aux-$target" '.[].name | select(endswith($s))' \
+    | head -1)
+  i3-msg "workspace \"$full\""
 #+end_src
 ** Workaround for Emacs
 Sometimes an Emacs frame becomes faulty and I can't close it. This workspace
