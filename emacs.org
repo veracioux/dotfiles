@@ -171,7 +171,7 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
   ;; Performance improvements
   (setq native-comp-async-report-warnings-errors nil)
   ;; 500 MB
-  (setq gc-cons-threshold (* 500 1024 1024))
+  (setq gc-cons-threshold (* 100 1024 1024))
 
   ;; Increase savehist autosave interval to reduce lag (10 minutes)
   (setq spacemacs-savehist-autosave-idle-interval 600)
@@ -190,6 +190,7 @@ Centaur tabs doesn't work properly with daemon mode. This fixes it:
       (add-hook 'dired-after-readin-hook
                 (defun haris//add-file-to-recentf ()
                   (recentf-add-file default-directory)))
+      (setq recentf-max-saved-items 10000)
       (add-to-list 'recentf-exclude "^/tmp/haris-pipe-")
       (cl-delete-if (lambda (el) (string-match "~/\\.emacs\\.d/elpa/[^/]+/develop" el))
                     recentf-exclude)))
@@ -1035,38 +1036,6 @@ can find them [[https://emacs-lsp.github.io/lsp-mode/page/performance/][here]]. 
                (mapcar (lambda (x) (lsp-workspace-folders-remove x))
                        (lsp-session-folders (lsp-session)))))))
 #+end_src
-** DAP
-#+begin_src elisp
-  (with-eval-after-load 'dap-mode
-    (setq dap-auto-show-output nil)
-    ;; Only way I found to disable the dap-ui-controls
-    (dap-ui-controls-mode -1)
-    (defalias 'dap-ui-controls-mode 'ignore))
-#+end_src
-Evilified state makes it a nightmare to edit files while debugging, so I remove
-it from all hooks.
-#+begin_src elisp
-  (with-eval-after-load 'dap-ui
-    (dolist (hook '(dap-ui-breakpoints-ui-list-mode-hook
-                    dap-ui-inspect-mode-hook
-                    dap-ui-locals-mode-hook
-                    dap-ui-sessions-mode-hook))
-      (set hook (remove 'evil-evilified-state (eval hook)))))
-#+end_src
-When the debugger starts, it starts a few modes that mess up keybindings in
-insert mode. I disable those modes by aliasing them to =ignore=.
-#+begin_src elisp
-  (with-eval-after-load 'dap-ui
-    (defalias 'dap-ui-breakpoints-mode 'ignore)
-    (defalias 'dap-ui-sessions-mode 'ignore))
-#+end_src
-*** Keybindings
-#+begin_src elisp
-  (with-eval-after-load 'dap-hydra
-    (eval '(defhydra+ dap-hydra ()
-             ("O" dap-go-to-output-buffer "Show output")
-             ("'" dap-ui-repl "Show REPL"))))
-#+end_src
 ** Python
 #+begin_src elisp
   (add-hook 'python-mode-hook (lambda () (setq tab-width 4)))
@@ -1113,10 +1082,6 @@ want bindings (link following etc) from =compilation-mode-map= to be available.
   (setq javascript-indent-level 4
         js-indent-level 4
         lsp-javascript-suggest-complete-js-docs t)
-
-  (eval-after-load 'js (lambda () (require 'dap-node)))
-
-  (eval-after-load "npm-mode" (lambda () (npm-global-mode t)))
 #+end_src
 ** Web
 #+begin_src elisp
@@ -2374,7 +2339,6 @@ The remaining code blocks in this section are tangled to [[~/.spacemacs-init.el]
      html
 
      ;; Debugging Tools
-     dap
      debug
 
      ;; Virtualization and Cloud
