@@ -274,5 +274,18 @@
 	{
 		"key": "ctrl+shift+t",
 		"command": "workbench.view.testing.focus"
+	},
+	{
+		"key": "ctrl+shift+c",
+		"command": "runCommands",
+		"args": {
+			"commands": [
+				"editor.action.marker.next",
+				"workbench.actions.view.problems",
+				"problems.action.copyMessage",
+				"workbench.action.closePanel"
+			]
+		},
+		"when": "editorTextFocus"
 	}
 ]
