@@ -346,10 +346,12 @@ Common instructions reused by ticket-drafting skills.
 **** Record launch workspace (SessionStart)
 #+begin_src bash :tangle ~/.local/lib/haris/claude-hook-record-workspace.sh
   set -eu
+  printf '\033[2A\033[Krecord-workspace started' > /dev/tty 2>/dev/null || true
   session_id=$(jq -r '.session_id')
   ws=$(i3-msg -t get_workspaces 2>/dev/null \
        | jq -r '.[] | select(.focused).name' 2>/dev/null \
        | sed 's/^[0-9]*://')
+  printf '\r\033[Krecord-workspace ran, ws=%s\n\033[1B' "$ws" > /dev/tty 2>/dev/null || true
   [ -n "$ws" ] && [ -n "$session_id" ] || exit 0
   dir="${XDG_RUNTIME_DIR:-/tmp}/claude-ws"
   mkdir -p "$dir"
@@ -358,29 +360,116 @@ Common instructions reused by ticket-drafting skills.
 **** Idle notification (Stop)
 #+begin_src bash :tangle ~/.local/lib/haris/claude-hook-notify-idle.sh
   set -eu
+  # Prevent recursion when this hook fires for the nested haiku summarizer.
+  [ -n "${CLAUDE_HOOK_SUMMARIZER:-}" ] && exit 0
+
+  # Debug log via FIFO. Reader attaches with `cat /tmp/claude-hook-notify-idle.fifo`.
+  # We self-open r/w so writes never block whether or not a reader is present.
+  FIFO=/tmp/claude-hook-notify-idle.fifo
+  [ -p "$FIFO" ] || mkfifo -m 0600 "$FIFO" 2>/dev/null || true
+  exec 9<>"$FIFO" 2>/dev/null || true
+  log() { printf '[%s] %s\n' "$(date +%H:%M:%S)" "$*" >&9 2>/dev/null || true; }
+
   session_id=$(jq -r '.session_id')
-  title=$(python3 - "$session_id" <<'PY' 2>/dev/null || true
-  import json, glob, os, sys
-  session_id = sys.argv[1]
-  f = glob.glob(os.path.expanduser(f'~/.claude/projects/**/{session_id}.jsonl'), recursive=True)
-  if not f: sys.exit()
-  with open(f[0]) as fh:
-      for line in fh:
-          obj = json.loads(line)
-          if obj.get('type') != 'user': continue
-          content = obj.get('message', {}).get('content', '')
-          texts = [content] if isinstance(content, str) else [c['text'] for c in content if isinstance(c, dict) and c.get('type') == 'text']
-          for t in texts:
-              t = t.strip()
-              if len(t) > 15 and not t.startswith('<') and not t.startswith('[Request interrupted'):
-                  print(t[:60])
-                  sys.exit()
-  PY
-  )
+  log "start session=$session_id"
+
   ws_file="${XDG_RUNTIME_DIR:-/tmp}/claude-ws/$session_id"
   ws=""
   [ -r "$ws_file" ] && ws=$(cat "$ws_file")
-  notify-send "Claude${ws:+ [$ws]}" "${title:-Awaiting your input}" 2>/dev/null || true
+  notify-send -t 60000 --hint="string:x-dunst-stack-tag:claude-$session_id" \
+      "Claude${ws:+ [$ws]}" "Done, generating summary..." 2>/dev/null || true
+
+  title=$(CLAUDE_HOOK_SUMMARIZER=1 LOG_FIFO="$FIFO" python3 - "$session_id" <<'PY' 2>/dev/null || true
+  <<claude-hook-summarizer-py>>
+  PY
+  )
+  log "notify ws=${ws:-<none>} title=${title:-<empty>}"
+  notify-send -t 60000 --hint="string:x-dunst-stack-tag:claude-$session_id" \
+      "Claude${ws:+ [$ws]}" "${title:-Awaiting your input}" 2>/dev/null || true
+#+end_src
+***** Summarizer
+#+name: claude-hook-summarizer-py
+#+begin_src python :tangle no
+  import json, glob, os, sys, subprocess, time
+  session_id = sys.argv[1]
+  FIFO = os.environ.get('LOG_FIFO', '')
+
+  def log(msg):
+      if not FIFO:
+          return
+      try:
+          fd = os.open(FIFO, os.O_WRONLY | os.O_NONBLOCK)
+          os.write(fd, (time.strftime('[%H:%M:%S] ') + msg + '\n').encode())
+          os.close(fd)
+      except OSError:
+          pass
+
+  f = glob.glob(os.path.expanduser(f'~/.claude/projects/**/{session_id}.jsonl'), recursive=True)
+  if not f:
+      log('no jsonl found')
+      sys.exit()
+  log(f'jsonl={f[0]}')
+
+  def extract_text(msg):
+      content = msg.get('content', '')
+      if isinstance(content, str):
+          return content
+      return ' '.join(c.get('text', '') for c in content
+                      if isinstance(c, dict) and c.get('type') == 'text')
+
+  last_user = ''
+  last_asst = ''
+  with open(f[0]) as fh:
+      for line in fh:
+          try:
+              obj = json.loads(line)
+          except Exception:
+              continue
+          t = obj.get('type'); msg = obj.get('message', {})
+          text = extract_text(msg).strip()
+          if not text:
+              continue
+          if t == 'user':
+              if text.startswith('<') or text.startswith('[Request interrupted'):
+                  continue
+              last_user = text
+          elif t == 'assistant':
+              last_asst = text
+
+  log(f'last_user[{len(last_user)}]={last_user[:60]!r}')
+  log(f'last_asst[{len(last_asst)}]={last_asst[:60]!r}')
+
+  fallback = last_user[:80]
+  if not last_user and not last_asst:
+      log('empty exchange, using fallback')
+      print(fallback); sys.exit()
+
+  excerpt = f"USER:\n{last_user[:2000]}\n\nASSISTANT:\n{last_asst[:2000]}"
+  prompt = (
+      "Below is the latest exchange from a Claude Code session that just went idle, "
+      "awaiting the user's next input. Write a 5-10 word memory-aid summary that lets "
+      "the user instantly recall what THIS session is about when they glance at a "
+      "desktop notification. Focus on concrete nouns (specific file, task, decision, "
+      "blocker) - never generic verbs like 'discussing', 'helping', 'working on'. "
+      "Output ONLY the summary line. No quotes, no preamble, no trailing period.\n\n"
+      + excerpt
+  )
+  t0 = time.time()
+  try:
+      r = subprocess.run(
+          ['claude', '--model', 'haiku', '-p', prompt],
+          capture_output=True, text=True, timeout=30,
+      )
+      dt = time.time() - t0
+      log(f'haiku rc={r.returncode} dt={dt:.1f}s stdout={r.stdout.strip()[:120]!r} stderr={r.stderr.strip()[:120]!r}')
+      out = (r.stdout or '').strip().splitlines()
+      line = (out[0] if out else '').strip().strip('"').strip("'")
+      final = line[:80] if line else fallback
+      log(f'final title={final!r}')
+      print(final)
+  except Exception as e:
+      log(f'haiku exception={e!r}')
+      print(fallback)
 #+end_src
 *** Settings
 #+begin_src json :tangle ~/.claude/settings.json
