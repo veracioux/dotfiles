@@ -69,6 +69,54 @@ Services that run automatically upon login (TTY or graphical).
   [Install]
   WantedBy=default.target
 #+end_src
+** Tmux Server
+Run the tmux server as its own user service so it lives in its own cgroup
+instead of inheriting the cgroup of whichever terminal/scope first launched it.
+That isolates it from systemd-oomd policies on =app.slice= and from
+=MemoryHigh= ceilings on launcher scopes (e.g. the VSCode wrapper).
+#+begin_src systemd :tangle ~/.config/systemd/user/tmux.service
+  [Unit]
+  Description=Tmux server
+  PartOf=default.target
+
+  [Service]
+  SyslogIdentifier=tmux
+  Type=forking
+  OOMScoreAdjust=-700
+  ManagedOOMPreference=omit
+  Environment=XDG_RUNTIME_DIR=/run/user/%U
+  ExecStart=/usr/bin/env tmux new-session -d -s default
+  ExecStop=/usr/bin/env tmux kill-server
+  Restart=on-failure
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+** Tmux Shell Cleanup
+Periodically kill detached =term-*= sessions created by [[file:scripts.org::*=tmux-shell=][=tmux-shell=]].
+#+begin_src systemd :tangle ~/.config/systemd/user/tmux-shell-cleanup.service
+  [Unit]
+  Description=Clean detached tmux-shell (term-*) sessions
+  After=tmux.service
+
+  [Service]
+  SyslogIdentifier=tmux-shell-cleanup
+  Type=oneshot
+  Environment=XDG_RUNTIME_DIR=/run/user/%U
+  ExecStart=/bin/sh -c 'tmux list-sessions -F "#{session_attached}:#{session_name}" 2>/dev/null | sed -n "s/^0:\\(term-.*\\)/\\1/p" | xargs -r -n1 tmux kill-session -t'
+#+end_src
+#+begin_src systemd :tangle ~/.config/systemd/user/tmux-shell-cleanup.timer
+  [Unit]
+  Description=Clean detached tmux-shell (term-*) sessions every 15 minutes
+
+  [Timer]
+  OnBootSec=15min
+  OnUnitActiveSec=15min
+  Unit=tmux-shell-cleanup.service
+
+  [Install]
+  WantedBy=timers.target
+#+end_src
 ** VPN Notifier
 #+begin_src systemd :tangle ~/.config/systemd/user/vpn-notifier.service
   [Unit]
