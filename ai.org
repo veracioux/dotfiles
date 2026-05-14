@@ -342,6 +342,46 @@ Common instructions reused by ticket-drafting skills.
   rm -f ~/.claude/keybindings.json
   ln -s "$src"/keybindings.json ~/.claude/keybindings.json
 #+end_src
+*** Hook scripts
+**** Record launch workspace (SessionStart)
+#+begin_src bash :tangle ~/.local/lib/haris/claude-hook-record-workspace.sh
+  set -eu
+  session_id=$(jq -r '.session_id')
+  ws=$(i3-msg -t get_workspaces 2>/dev/null \
+       | jq -r '.[] | select(.focused).name' 2>/dev/null \
+       | sed 's/^[0-9]*://')
+  [ -n "$ws" ] && [ -n "$session_id" ] || exit 0
+  dir="${XDG_RUNTIME_DIR:-/tmp}/claude-ws"
+  mkdir -p "$dir"
+  printf '%s' "$ws" > "$dir/$session_id"
+#+end_src
+**** Idle notification (Stop)
+#+begin_src bash :tangle ~/.local/lib/haris/claude-hook-notify-idle.sh
+  set -eu
+  session_id=$(jq -r '.session_id')
+  title=$(python3 - "$session_id" <<'PY' 2>/dev/null || true
+  import json, glob, os, sys
+  session_id = sys.argv[1]
+  f = glob.glob(os.path.expanduser(f'~/.claude/projects/**/{session_id}.jsonl'), recursive=True)
+  if not f: sys.exit()
+  with open(f[0]) as fh:
+      for line in fh:
+          obj = json.loads(line)
+          if obj.get('type') != 'user': continue
+          content = obj.get('message', {}).get('content', '')
+          texts = [content] if isinstance(content, str) else [c['text'] for c in content if isinstance(c, dict) and c.get('type') == 'text']
+          for t in texts:
+              t = t.strip()
+              if len(t) > 15 and not t.startswith('<') and not t.startswith('[Request interrupted'):
+                  print(t[:60])
+                  sys.exit()
+  PY
+  )
+  ws_file="${XDG_RUNTIME_DIR:-/tmp}/claude-ws/$session_id"
+  ws=""
+  [ -r "$ws_file" ] && ws=$(cat "$ws_file")
+  notify-send "Claude${ws:+ [$ws]}" "${title:-Awaiting your input}" 2>/dev/null || true
+#+end_src
 *** Settings
 #+begin_src json :tangle ~/.claude/settings.json
   {
@@ -357,12 +397,23 @@ Common instructions reused by ticket-drafting skills.
       "pr": ""
     },
     "hooks": {
+      "SessionStart": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "~/.local/lib/haris/claude-hook-record-workspace.sh",
+              "async": true
+            }
+          ]
+        }
+      ],
       "Stop": [
         {
           "hooks": [
             {
               "type": "command",
-              "command": "session_id=$(jq -r '.session_id'); title=$(python3 -c \"\nimport json, glob, os\nf = glob.glob(os.path.expanduser('~/.claude/projects/**/$session_id.jsonl'), recursive=True)\nif not f: exit()\nwith open(f[0]) as fh:\n    for line in fh:\n        obj = json.loads(line)\n        if obj.get('type') != 'user': continue\n        content = obj.get('message', {}).get('content', '')\n        texts = [content] if isinstance(content, str) else [c['text'] for c in content if isinstance(c, dict) and c.get('type') == 'text']\n        for t in texts:\n            t = t.strip()\n            if len(t) > 15 and not t.startswith('<') and not t.startswith('[Request interrupted'):\n                print(t[:60])\n                exit()\n\" 2>/dev/null); notify-send 'Claude' \"${title:-Awaiting your input}\" 2>/dev/null || true",
+              "command": "~/.local/lib/haris/claude-hook-notify-idle.sh",
               "async": true
             }
           ]
