@@ -437,6 +437,7 @@ Common instructions reused by ticket-drafting skills.
         "Bash(git diff *)",
         "Bash(git for-each-ref *)",
         "Bash(git grep *)",
+        "Bash(git-dotharis-commit *)",
         "Bash(git log *)",
         "Bash(git ls-files *)",
         "Bash(git ls-tree *)",
@@ -522,6 +523,10 @@ Common instructions reused by ticket-drafting skills.
   Do not run git log to inspect past commits for convention. The convention must
   have been provided to you in the prompt, in the conversation, or available in
   a skill. If not, complain.
+
+  If the current working directory is ~/.haris (the dotfiles repo), use
+  `git-dotharis-commit` instead of plain `git commit`. It accepts the same
+  arguments.
 #+end_src
 **** Tmux
 #+begin_src markdown :tangle ~/.claude/commands/tmux.md :noweb yes
@@ -582,6 +587,7 @@ Common instructions reused by ticket-drafting skills.
         "git for-each-ref *": "allow",
         "git grep *": "allow",
         "git-commit-from-editmsg": "allow",
+        "git-dotharis-commit *": "allow",
         "git log *": "allow",
         "git ls-files *": "allow",
         "git ls-tree *": "allow",

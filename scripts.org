@@ -1712,6 +1712,15 @@ Utility scripts for AI agents to use.
 #+begin_src shell :tangle ~/.local/bin/git-commit-from-editmsg
   git commit --file "$(git rev-parse --git-dir)"/COMMIT_EDITMSG
 #+end_src
+*** =git-dotharis-commit=
+Thin wrapper around =git commit= used by the =/commit= slash command inside the
+dotfiles repo. Forces the worktree to =~/.haris= regardless of the caller's
+CWD, so an AI agent operating in a subdirectory or a different worktree still
+commits against the dotfiles repo. Exists as a distinct command so the
+permission system can allow it without opening up =git commit *= globally.
+#+begin_src shell :tangle ~/.local/bin/git-dotharis-commit
+  exec git -C ~/.haris commit "$@"
+#+end_src
 * Applications
 These are programs that are meant to be used mostly interactively. As such, they
 are designed to be easily integrated into dmenu scripts.
