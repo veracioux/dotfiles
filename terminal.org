@@ -145,6 +145,11 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   set -as terminal-features ',alacritty*:extkeys'
   # Use the terminal emulator's scrollback
   set -g terminal-overrides '*:smcup@:rmcup@'
+
+  # Customize `tmux ls` output (tab-aligned): name, windows, created, attached, active pane id.
+  # Commas inside the format are escaped (\,) because `set -a` on array options splits values on comma.
+  # Fixed index keeps reloads idempotent.
+  set -s command-alias[100] 'ls=list-sessions -F "#{session_name}\t#{session_windows} windows\t(created #{t:session_created})\t#{pane_id}\t#{?session_attached\,(attached)\,}"'
 #+end_src
 * Screen
 #+begin_src conf :tangle ~/.screenrc
