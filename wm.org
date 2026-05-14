@@ -480,7 +480,7 @@ dmenu doesn't work.
   bindsym u               focus parent
   bindsym d               focus child
   bindsym 1               move workspace to output eDP-1
-  bindsym 2               move workspace to output HDMI-1-0
+  bindsym 2               move workspace to output DP-1
 
   bindsym Escape          mode default
   }
