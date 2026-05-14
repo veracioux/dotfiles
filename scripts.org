@@ -2041,8 +2041,8 @@ Create a Xephyr session for the current user that tries to mimic a regular
       HARIS_WALLPAPER_CHANGE=''
   fi
 
-  picom_running="$(pgrep '^picom$' >/dev/null && echo true)"
-  pkill '^picom$'
+  picom_running="$(systemctl --user is-active -q picom.service && echo true)"
+  systemctl --user stop picom.service
 
   # Run xsecurelock, restarting at intervals in order to change the wallpaper
   xsecurelock &
@@ -2088,7 +2088,7 @@ Create a Xephyr session for the current user that tries to mimic a regular
 
   if [ -n "$picom_running" ]; then
       sleep 0.5s
-      o picom
+      systemctl --user start picom.service
   fi
 #+end_src
 * Dmenu
