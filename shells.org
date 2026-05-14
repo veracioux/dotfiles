@@ -1761,6 +1761,7 @@ abbreviations for equivalent apt operations.
   conditional_abbr -g vb    'vboxmanage'
   conditional_abbr -g SSHFS 'sshfs -o uid=(id -u),gid=(id -g),idmap=user,reconnect,ServerAliveInterval=1'
   conditional_abbr -g h     'hostess'
+  conditional_abbr -g cat   'bat'
 #+end_src
 **** Utils
 #+begin_src fish
