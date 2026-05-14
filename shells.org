@@ -1195,7 +1195,15 @@ that case so a real, multiplexing tmux can launch on top.
   function ecf;    set -l file (cf "$argv");   test -e "$file" && smart-launch myemacs -c "$file" ; end
 
   function cdcmd;  set -l file (fcmd "$argv"); test -f "$file" && cd (dirname "$file"); end
-  function catcmd; set -l file (fcmd "$argv"); test -f "$file" && cat         "$file" ; end
+  function catcmd
+      set -l file (fcmd "$argv")
+      test -f "$file"; or return
+      if file --mime "$file" | string match -q '*charset=binary*'
+          echo "(binary: $file)"
+      else
+          cat "$file"
+      end
+  end
   function ecmd;   set -l file (fcmd "$argv"); test -f "$file" && smart-launch myemacs -c "$file" ; end
   function rmcmd;  set -l file (fcmd "$argv"); rm "$file";                              end
 #+end_src
