@@ -644,10 +644,13 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
       exec fish "$@"
   fi
 
-  n=1
-  while tmux has-session -t "$(printf 'term-%03d' $n)" 2>/dev/null; do
+  counter_file="${XDG_RUNTIME_DIR:-/tmp}/tmux-shell.counter"
+  {
+      flock 9
+      n=$(cat "$counter_file" 2>/dev/null || echo 0)
       n=$((n + 1))
-  done
+      printf '%s\n' "$n" > "$counter_file"
+  } 9>"$counter_file.lock"
   name=$(printf 'term-%03d' $n)
 
   launcher=$(mktemp /tmp/tmux-launch-XXXXXX)
