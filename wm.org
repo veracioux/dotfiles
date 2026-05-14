@@ -644,7 +644,7 @@ A menu for managing notifications.
 ** Chat menu
 Menu of utilities that allow me to chat with my computer.
 #+begin_src i3wm-config
-  set $mode_chat       " Chat | Reasoning level [1] [2] [3] [4] [5] [c]hoose"
+  set $mode_chat       " Chat | Reasoning level [1] [2] [3] [4] [5] [c]hoose | [⏎] claude-confirm"
 
   mode $mode_chat {
   bindsym 1       exec --no-startup-id <<scripts-dir>>/llm.sh 1, mode default
@@ -653,6 +653,7 @@ Menu of utilities that allow me to chat with my computer.
   bindsym 4       exec --no-startup-id <<scripts-dir>>/llm.sh 4, mode default
   bindsym 5       exec --no-startup-id <<scripts-dir>>/llm.sh 5, mode default
   bindsym c       exec --no-startup-id <<scripts-dir>>/llm.sh, mode default
+  bindsym Return  exec --no-startup-id smart-launch term claude-confirm, mode default
   bindsym Escape  mode default
   }
 

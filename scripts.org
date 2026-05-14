@@ -674,6 +674,45 @@ programmatic access to the scrollback buffer via =tmux capture-pane=.
   tmux set-option -t "$name" set-titles-string '#{pane_title}'
   exec tmux attach -t "$name"
 #+end_src
+** =claude-confirm=
+Scan all tmux panes for the text =requires confirmation=. On the first match,
+open a new alacritty window via =term= and attach it to the session containing
+that pane, with the matching pane selected.
+#+begin_src bash :tangle ~/.local/bin/claude-confirm
+  set -eu
+
+  log() { printf 'claude-confirm: %s\n' "$*" >&2; }
+
+  PATTERN='requires confirmation|Do you want to'
+
+  panes=$(tmux list-panes -a -F '#{pane_id} #{session_name}' 2>/dev/null || true)
+  if [ -z "$panes" ]; then
+      log "no tmux panes found (is the server running?)"
+      exit 1
+  fi
+  log "scanning $(printf '%s\n' "$panes" | wc -l) pane(s)"
+
+  match=""
+  while read -r pane_id session; do
+      content=$(tmux capture-pane -p -J -t "$pane_id" 2>/dev/null || true)
+      hit=$(printf '%s\n' "$content" | grep -E "$PATTERN" | head -n1 || true)
+      echo "$hit $pane_id $TMUX_PANE"
+      if [ -n "$hit" ] && [ ! "$pane_id" = "$TMUX_PANE" ]; then
+          log "MATCH $pane_id (session=$session): $(printf '%.80s' "$hit")"
+          match="$pane_id $session"
+          break
+      else
+          log "skip  $pane_id (session=$session)"
+      fi
+  done <<<"$panes"
+
+  if [ -z "$match" ]; then
+      log "no pane awaiting confirmation"
+      exit 1
+  fi
+
+  TMUX='' exec tmux attach -t "$pane_id"
+#+end_src
 ** =rm-dottmp=
 Remove the =.tmp= directory at the given path. Used to clean up scratch
 directories AI agents create per the global instructions.
