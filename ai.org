@@ -537,6 +537,16 @@ Common instructions reused by ticket-drafting skills.
 #+begin_src markdown :tangle ~/.claude/commands/address-reviews.md :noweb yes
   «prompts/address-reviews»
 #+end_src
+**** Worktree
+#+NAME: prompts/wt
+#+begin_src text
+  Run `pwd` to confirm the current working directory. If it matches the
+  worktree you intended to operate on, STOP passing `-C <worktree>` to git
+  commands. You are already there. Just run git directly.
+#+end_src
+#+begin_src markdown :tangle ~/.claude/commands/wt.md :noweb yes
+  «prompts/wt»
+#+end_src
 ** OpenCode
 #+begin_src jsonc :tangle ~/.config/opencode/opencode.jsonc
   // https://opencode.ai/docs/config/
@@ -959,6 +969,13 @@ Common instructions reused by ticket-drafting skills.
   description: Triage and address PR review feedback
   ---
   «prompts/address-reviews»
+#+end_src
+**** Worktree
+#+begin_src markdown :tangle ~/.config/opencode/command/wt.md :noweb yes
+  ---
+  description: Stop using git -C when already in the worktree
+  ---
+  «prompts/wt»
 #+end_src
 **** Commit
 #+begin_src markdown :tangle ~/.config/opencode/command/commit.md
