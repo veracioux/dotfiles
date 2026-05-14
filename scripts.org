@@ -468,14 +468,14 @@ of the current terminal. Only whitelisted commands are allowed.
       | grep -xF "$(printf '%s\n' "${WHITELIST[@]}")" \
       | head -1)
 
-  if [ -z "$FG_CMD" ]; then
-      error "alacritty-fork: no whitelisted command found in process tree"
-      exit 1
-  fi
-  info "alacritty-fork: forking '$FG_CMD'"
-
   cd "$(alacritty-pane-cwd)"
-  term "$FG_CMD" &
+  if [ -z "$FG_CMD" ]; then
+      info "alacritty-fork: no whitelisted command found, falling back to plain term"
+      term &
+  else
+      info "alacritty-fork: forking '$FG_CMD'"
+      term "$FG_CMD" &
+  fi
 #+end_src
 ** =sway=                                                          :wrapper:
 #+begin_src shell :tangle ~/.local/bin/sway
