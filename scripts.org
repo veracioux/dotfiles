@@ -1365,9 +1365,17 @@ Get the OS type.
       fi
   else
       if ! session_exists; then
-          create_session -d
+          create_session -d || true
       fi
-      tee /tmp/fifo
+      # Writing to /tmp/fifo blocks until a reader (the tmux `tail` session)
+      # is attached. If tmux can't start (e.g. when called from a systemd
+      # user service), `tee` would hang forever — and a `timeout`-killed tee
+      # may not flush stdout, so callers doing `| fifo >&2` would see empty
+      # lines. So: slurp stdin, always emit to stdout first, then try the
+      # fifo as a best-effort side-channel.
+      input=$(cat)
+      printf '%s\n' "$input"
+      printf '%s\n' "$input" | timeout 1 dd of=/tmp/fifo 2>/dev/null || true
   fi
 #+end_src
 ** =get-random-unused-port=                                         :script:
@@ -1422,30 +1430,30 @@ Get the OS type.
 #+end_src
 ** =info=
 #+begin_src bash :tangle ~/.local/bin/info
-  echo -ne "\033[1;32m" >&2
+  if [ -t 2 ]; then echo -ne "\033[1;32m" >&2; fi
   echo "$@" | fifo >&2
-  echo -ne "\033[0m" >&2
+  if [ -t 2 ]; then echo -ne "\033[0m" >&2; fi
 #+end_src
 ** =debug=
 #+begin_src bash :tangle ~/.local/bin/debug
-  echo -ne "\033[1;33m" >&2
+  if [ -t 2 ]; then echo -ne "\033[1;33m" >&2; fi
   bash -c 'printf "%q " "$@"' -s "$@" >&2
   echo | fifo >&2
-  echo -ne "\033[0m" >&2
+  if [ -t 2 ]; then echo -ne "\033[0m" >&2; fi
 
   "$@"
 #+end_src
 ** =warn=
 #+begin_src bash :tangle ~/.local/bin/warn
-  echo -ne "\033[1;33m" >&2
+  if [ -t 2 ]; then echo -ne "\033[1;33m" >&2; fi
   echo "$@" | fifo >&2
-  echo -ne "\033[0m" >&2
+  if [ -t 2 ]; then echo -ne "\033[0m" >&2; fi
 #+end_src
 ** =error=
 #+begin_src bash :tangle ~/.local/bin/error
-  echo -ne "\033[1;31m" >&2
+  if [ -t 2 ]; then echo -ne "\033[1;31m" >&2; fi
   echo "$@" | fifo >&2
-  echo -ne "\033[0m" >&2
+  if [ -t 2 ]; then echo -ne "\033[0m" >&2; fi
   notify-send --urgency=critical "$@"
 #+end_src
 ** =dragon=
