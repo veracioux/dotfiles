@@ -713,6 +713,13 @@ that pane, with the matching pane selected.
 
   TMUX='' exec tmux attach -t "$pane_id"
 #+end_src
+** =claude-tip=
+Print the arguments back if running inside Claude Code, no-op otherwise.
+Useful for embedding hints in shell output that only Claude will see.
+#+begin_src shell :tangle ~/.local/bin/claude-tip
+  [ -n "$CLAUDECODE" ] && echo "Tip:" "$@"
+  exit 0
+#+end_src
 ** =rm-dottmp=
 Remove the =.tmp= directory at the given path. Used to clean up scratch
 directories AI agents create per the global instructions.
