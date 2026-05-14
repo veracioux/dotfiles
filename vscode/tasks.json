@@ -1,0 +1,47 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "open-in-emacs",
+			"type": "process",
+			"command": "myemacs",
+			"args": ["-c", "${file}"],
+			"presentation": {
+				"reveal": "never",
+				"panel": "dedicated",
+				"echo": false,
+				"showReuseMessage": false,
+				"close": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "open-alacritty-here",
+			"type": "process",
+			"command": "alacritty",
+			"options": { "cwd": "${fileDirname}" },
+			"presentation": {
+				"reveal": "never",
+				"panel": "dedicated",
+				"echo": false,
+				"showReuseMessage": false,
+				"close": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "open-magit-here",
+			"type": "process",
+			"command": "magit",
+			"options": { "cwd": "${fileDirname}" },
+			"presentation": {
+				"reveal": "never",
+				"panel": "dedicated",
+				"echo": false,
+				"showReuseMessage": false,
+				"close": true
+			},
+			"problemMatcher": []
+		}
+	]
+}

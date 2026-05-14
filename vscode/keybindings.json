@@ -255,59 +255,20 @@
 	},
 	{
 		"key": "alt+shift+e",
-		"command": "extension.multiCommand.execute",
-		"args": {
-			"sequence": [
-				"workbench.action.terminal.new",
-				{
-					"command": "workbench.action.terminal.sendSequence",
-					"args": {
-						"text": "myemacs -c ${file} & disown\u000D"
-					}
-				},
-				"workbench.action.terminal.kill",
-				"workbench.action.closePanel"
-			],
-			"interval": 400
-		},
+		"command": "workbench.action.tasks.runTask",
+		"args": "open-in-emacs",
 		"when": "editorTextFocus"
 	},
 	{
 		"key": "alt+shift+t",
-		"command": "extension.multiCommand.execute",
-		"args": {
-			"sequence": [
-				"workbench.action.terminal.new",
-				{
-					"command": "workbench.action.terminal.sendSequence",
-					"args": {
-						"text": "cd ${fileDirname} && alacritty & disown\u000D"
-					}
-				},
-				"workbench.action.terminal.kill",
-				"workbench.action.closePanel"
-			],
-			"interval": 400
-		},
+		"command": "workbench.action.tasks.runTask",
+		"args": "open-alacritty-here",
 		"when": "editorTextFocus"
 	},
 	{
 		"key": "alt+shift+g",
-		"command": "extension.multiCommand.execute",
-		"args": {
-			"sequence": [
-				"workbench.action.terminal.new",
-				{
-					"command": "workbench.action.terminal.sendSequence",
-					"args": {
-						"text": "cd ${fileDirname} && magit & disown\u000D"
-					}
-				},
-				"workbench.action.terminal.kill",
-				"workbench.action.closePanel"
-			],
-			"interval": 400
-		},
+		"command": "workbench.action.tasks.runTask",
+		"args": "open-magit-here",
 		"when": "editorTextFocus"
 	},
 	{

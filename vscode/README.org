@@ -16,9 +16,10 @@
   for dest in ~/".config/Code/User" ~/".config/Code - OSS"; do
       (
           cd "$dest" &&
-          rm -f "$dest"/settings.json "$dest"/keybindings.json &&
+          rm -f "$dest"/settings.json "$dest"/keybindings.json "$dest"/tasks.json &&
           ln -s "$src"/settings.json "$dest"/settings.json &&
-          ln -s "$src"/keybindings.json "$dest"/keybindings.json
+          ln -s "$src"/keybindings.json "$dest"/keybindings.json &&
+          ln -s "$src"/tasks.json "$dest"/tasks.json
       )
   done
 #+end_src
