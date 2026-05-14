@@ -1219,11 +1219,10 @@ that case so a real, multiplexing tmux can launch on top.
 #+end_src
 **** =tmp_func=
 #+begin_src fish :tangle ~/.config/fish/functions/tmp_func.fish
-  if type --query uuidgen
-      function tmp_func
-          set -g __haris_latest_tmp_func_name "__tmp_func_$(uuidgen | tr '-' '_')"
-          echo "$__haris_latest_tmp_func_name"
-      end
+  function tmp_func
+      set -g __haris_tmp_func_counter (math (set -q __haris_tmp_func_counter; and echo $__haris_tmp_func_counter; or echo 0) + 1)
+      set -g __haris_latest_tmp_func_name "__tmp_func_{$fish_pid}_$__haris_tmp_func_counter"
+      echo "$__haris_latest_tmp_func_name"
   end
 #+end_src
 ***** =tmp_func_consume_content=
@@ -1388,7 +1387,7 @@ Create an abbreviation of a callable (command, function or builting), optionally
 with arguments, but only if the callable actually exists.
 #+begin_src fish
   function conditional_abbr
-      set -l command (echo $argv[-1] | cut -f1 -d' ')
+      set -l command (string split -m1 ' ' -- $argv[-1])[1]
       if type --quiet "$command"
           _abbr -g $argv
       end
@@ -1525,8 +1524,10 @@ abbreviations for equivalent apt operations.
 #+begin_src fish
   if [ "$__haris_docker" = "docker" ] &&
       begin
-          docker compose version ||
-          type --quiet docker-compose
+          type --quiet docker-compose ||
+          test -e /usr/lib/docker/cli-plugins/docker-compose ||
+          test -e /usr/libexec/docker/cli-plugins/docker-compose ||
+          test -e ~/.docker/cli-plugins/docker-compose
       end &>/dev/null
       _abbr -g D      'docker-compose'
 
