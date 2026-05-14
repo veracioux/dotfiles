@@ -802,7 +802,7 @@ Menu of utilities that allow me to chat with my computer.
 ** Extra workspaces menu
 #+NAME: extra-workspaces-menu
 #+begin_src i3wm-config
-  set $mode_extra_ws "Extra WS | [a-f] [1-9] | Shift+key to move | [n]ext"
+  set $mode_extra_ws "Extra WS | [a-f] [1-9] | Shift+key to move | [n]ext | [w]orktree-ws"
 
   mode $mode_extra_ws {
   bindsym a               workspace $ws_a, mode default
@@ -840,6 +840,7 @@ Menu of utilities that allow me to chat with my computer.
   bindsym Shift+9         move container to workspace $ws_n9, mode default
 
   bindsym n               exec --no-startup-id <<scripts-dir>>/aux-ws-next.sh, mode default
+  bindsym w               exec --no-startup-id worktree-workspace, mode default
 
   bindsym Escape          mode default
   }

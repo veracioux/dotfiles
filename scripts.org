@@ -2973,6 +2973,110 @@ Options:
 #+begin_src bash :tangle ~/.local/bin/term
   alacritty --working-directory "$PWD" -e tmux-shell -C "$([ "$#" -ge 1 ] && printf %q\  "$@" || :)"
 #+end_src
+** =worktree-workspace=
+Set up an i3 workspace for working on a worktree (or any picked directory):
+fzf-pick a dir via the fish =a= function, then arrange the workspace as
+=split-h[ stacked[term, magit], stacked[claude] ]=. Aborts if the current
+workspace is not empty.
+
+The picker→orchestrator handoff goes through a single-shot named fifo: fish
+writes either the chosen =$PWD= or =CANCELLED= back, and the orchestrator blocks
+on =cat= until it gets one of them.
+#+begin_src bash :tangle ~/.local/bin/worktree-workspace
+  set -u
+
+  abort() {
+      notify-send -u critical 'worktree-workspace' "$1"
+      exit 1
+  }
+
+  # Snapshot of all leaf window con-ids on the focused workspace.
+  ws_window_ids() {
+      i3-msg -t get_tree | jq -c --arg n "$ws_name" '
+          [.. | objects | select(.type=="workspace" and .name==$n)] | .[0]
+          | [.. | objects | select(.window?) | .id]'
+  }
+
+  # Run "$@" in the background and block until a new window appears on the
+  # current workspace. Polls the i3 tree because i3-msg -t subscribe block-
+  # buffers its ack, which makes event-driven sync unreliable.
+  launch_and_wait() {
+      local before id="" i
+      before=$(ws_window_ids)
+      ( "$@" ) &
+      for i in $(seq 1 150); do
+          sleep 0.1
+          id=$(i3-msg -t get_tree | jq -r --arg n "$ws_name" --argjson b "$before" '
+              [.. | objects | select(.type=="workspace" and .name==$n)] | .[0]
+              | [.. | objects | select(.window?) | .id] - $b | .[0] // empty')
+          [ -n "$id" ] && break
+      done
+      [ -n "$id" ] || abort 'timed out waiting for new window'
+  }
+
+  # 1. Empty-workspace check
+  ws_name=$(i3-msg -t get_workspaces | jq -r '.[] | select(.focused) | .name')
+  [ -n "$ws_name" ] || abort 'no focused workspace'
+  count=$(i3-msg -t get_tree | jq --arg n "$ws_name" '
+      [.. | objects | select(.type=="workspace" and .name==$n)] | .[0]
+      | (.nodes + .floating_nodes) | length')
+  [ "$count" = "0" ] || abort "workspace '$ws_name' is not empty"
+
+  # 2. Single-shot fifo for picker→orchestrator handoff, plus a fish snippet
+  #    file (term's printf-%q quoting mangles multi-line args fed to fish, so
+  #    we pass two plain args — `source <path>` — and let fish read the file)
+  fifo=$(mktemp -ut wt-ws.XXXXXX)
+  mkfifo "$fifo"
+  snippet=$(mktemp -t wt-ws.XXXXXX.fish)
+  trap 'rm -f "$fifo" "$snippet"' EXIT
+
+  # 3. Open terminal; fish runs `a`, writes the chosen $PWD (or CANCELLED) back
+  cat > "$snippet" <<EOF
+  set -l fifo '$fifo'
+  if a
+      echo \$PWD > \$fifo
+  else
+      echo CANCELLED > \$fifo
+      exit
+  end
+  EOF
+  term source "$snippet" &
+
+  # 4. Block for the dir; empty payload = terminal closed before write
+  dir=$(cat "$fifo")
+  case "$dir" in
+      CANCELLED|"") abort 'cancelled' ;;
+      /*) [ -d "$dir" ] || abort "not a directory: $dir" ;;
+      *)  abort "unexpected payload: $dir" ;;
+  esac
+
+  # 5. Wrap term in its own container and stack it
+  i3-msg split v >/dev/null
+  i3-msg layout stacked >/dev/null
+
+  # 6. Magit joins the stacked container (focus is still on term → its parent)
+  launch_and_wait sh -c \
+      'cd "$1" && smart-launch myemacs -c --eval "(magit-status \"$1\")"' _ "$dir"
+
+  # 7. Escape the stacked container: focus magit → its parent (the stacked
+  #    container) → its parent (workspace root). Force horizontal split so the
+  #    next window lands to the right rather than below.
+  i3-msg focus parent >/dev/null
+  i3-msg focus parent >/dev/null
+  i3-msg split horizontal >/dev/null
+
+  # 8. Claude opens as a sibling of the stacked container at workspace root
+  launch_and_wait sh -c 'cd "$1" && term claude' _ "$dir"
+
+  # 9. Wrap claude in its own stacked container so further windows can stack
+  i3-msg split v >/dev/null
+  i3-msg layout stacked >/dev/null
+#+end_src
+*** Dependencies                                                     :deps:
+#+begin_src text :tangle (haris/tangle-deps "worktree-workspace.pacman")
+  jq
+  i3-wm
+#+end_src
 ** =aurvote=
 #+begin_src shell :tangle ~/.local/bin/aurvote
   ssh aur@aur.archlinux.org vote "$@"
