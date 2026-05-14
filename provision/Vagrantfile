@@ -69,6 +69,16 @@ Vagrant.configure("2") do |config|
     SHELL
   end
 
+  # Add user to vboxsf for VirtualBox shared folders
+  config.vm.provision "shell", privileged: true, run: "always" do |shell|
+    shell.inline = "getent group vboxsf >/dev/null && usermod -aG vboxsf haris || true"
+  end
+
+  # Console keymap
+  config.vm.provision "shell", privileged: true, run: "always" do |shell|
+    shell.inline = "localectl set-keymap sr-latin"
+  end
+
   # Ansible provisioning
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook.yml"
