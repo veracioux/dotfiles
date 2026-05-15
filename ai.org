@@ -471,6 +471,50 @@ Common instructions reused by ticket-drafting skills.
       log(f'haiku exception={e!r}')
       print(fallback)
 #+end_src
+**** Bash command tips (PreToolUse)
+Pattern-matches the bash command Claude is about to run and, on match, blocks
+it with =permissionDecision: deny= and the tip as the reason — Claude sees the
+message and reformulates before the user permission prompt fires. Mirrors the
+=claude-tip= hints embedded in shell wrappers (see =scripts.org=), but
+intercepts pre-execution so Claude can act on the hint.
+#+begin_src python :tangle ~/.local/lib/haris/claude-hook-bash-tips.py :shebang "#!/usr/bin/env python3"
+  import argparse, json, os, shlex, sys
+
+  data = json.load(sys.stdin)
+  cmd = data.get("tool_input", {}).get("command", "")
+  cwd = data.get("cwd") or os.getcwd()
+
+
+  def deny(reason):
+      json.dump({"hookSpecificOutput": {
+          "hookEventName": "PreToolUse",
+          "permissionDecision": "deny",
+          "permissionDecisionReason": reason,
+      }}, sys.stdout)
+      sys.exit(0)
+
+
+  def tip_git_dash_C():
+      """`git -C <dir>` where <dir> is the CWD or an ancestor -> -C is redundant."""
+      try:
+          tokens = shlex.split(cmd)
+      except ValueError:
+          return
+      if "git" not in tokens:
+          return
+      argv = tokens[tokens.index("git") + 1 :]
+      p = argparse.ArgumentParser(add_help=False)
+      p.add_argument("-C", dest="dir", action="append")
+      args, _ = p.parse_known_args(argv)
+      for target in args.dir or []:
+          real = os.path.realpath(target)
+          if (cwd + "/").startswith(real + "/"):
+              deny(f"you only need `-C` to act on a git worktree that's not your CWD. "
+                   f"Re-run without `-C {target}`.")
+
+
+  tip_git_dash_C()
+#+end_src
 *** Settings
 #+begin_src json :tangle ~/.claude/settings.json
   {
@@ -504,6 +548,17 @@ Common instructions reused by ticket-drafting skills.
               "type": "command",
               "command": "~/.local/lib/haris/claude-hook-notify-idle.sh",
               "async": true
+            }
+          ]
+        }
+      ],
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "~/.local/lib/haris/claude-hook-bash-tips.py"
             }
           ]
         }

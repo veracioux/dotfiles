@@ -26,8 +26,6 @@ of this document. These code blocks are utilized via =org-sbe= or via noweb refe
       alternative-command git "$@"
   }
 
-  claude-tip "you only need -C to act on a git worktree not reachable from your cwd; otherwise omit -C"
-
   git_root="$(git root 2>/dev/null)"
   if [ "$git_root" = ~ ]; then
       if [ "$PWD" = ~ ] || [[ "${PWD#~/}" =~ ^\. ]]; then
