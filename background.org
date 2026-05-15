@@ -78,6 +78,7 @@ That isolates it from systemd-oomd policies on =app.slice= and from
   [Unit]
   Description=Tmux server
   PartOf=default.target
+  Wants=tmux-shell-cleanup.timer
 
   [Service]
   SyslogIdentifier=tmux
