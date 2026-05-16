@@ -687,6 +687,27 @@ intercepts pre-execution so Claude can act on the hint.
 #+begin_src markdown :tangle ~/.claude/commands/address-reviews.md :noweb yes
   «prompts/address-reviews»
 #+end_src
+**** No-verify
+#+NAME: prompts/no-verify
+#+begin_src text
+  Re-run the most recent failed `git commit` (or repo-specific commit wrapper
+  like `git-dotharis-commit`) from this conversation, appending `--no-verify`
+  to bypass the pre-commit hook. Use the exact same arguments and commit
+  message as the failed attempt.
+
+  If no prior commit command in this conversation has failed, do NOT run any
+  commit. Instead, reply that you are confused — there is nothing to retry —
+  and ask the user to clarify.
+#+end_src
+#+begin_src markdown :tangle ~/.claude/commands/no-verify.md :noweb yes
+  «prompts/no-verify»
+#+end_src
+#+begin_src markdown :tangle ~/.config/opencode/command/no-verify.md :noweb yes
+  ---
+  description: Retry the last failed commit with --no-verify
+  ---
+  «prompts/no-verify»
+#+end_src
 **** Worktree
 #+NAME: prompts/wt
 #+begin_src text
