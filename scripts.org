@@ -724,7 +724,7 @@ Useful for embedding hints in shell output that only Claude will see.
 Remove the =.tmp= directory at the given path. Used to clean up scratch
 directories AI agents create per the global instructions.
 #+begin_src bash :tangle ~/.local/bin/rm-dottmp
-  rm -rf "$1/.tmp"
+  rm -r "$1/.tmp"
 #+end_src
 ** =safe=
 Run a command in a read-only sandbox using bubblewrap. The entire filesystem is

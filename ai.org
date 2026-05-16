@@ -12,11 +12,6 @@
   organization, documentation and overall code quality. I will use your help with
   various projects I am working on, most notably my dotfiles repo.
 
-  Never create temporary files in /tmp/. If temporary files need to be created,
-  use a .tmp directory in the current folder instead. When you are done with
-  your task, clean up by running `rm-dottmp <folder>` on each folder where you
-  created a .tmp directory.
-
   «prompts/git-commit»
 
   «prompts/workarounds/deprioritize-filesystem»
@@ -515,6 +510,32 @@ intercepts pre-execution so Claude can act on the hint.
 
   tip_git_dash_C()
 #+end_src
+**** Write path tips (PreToolUse)
+Blocks =Write= calls whose =file_path= lands under =/tmp/=, redirecting Claude
+to a project-local =.tmp/= directory and reminding it to clean up with
+=rm-dottmp= when done.
+#+begin_src python :tangle ~/.local/lib/haris/claude-hook-write-tips.py :shebang "#!/usr/bin/env python3"
+  import json, sys
+
+  data = json.load(sys.stdin)
+  path = data.get("tool_input", {}).get("file_path", "")
+
+
+  def deny(reason):
+      json.dump({"hookSpecificOutput": {
+          "hookEventName": "PreToolUse",
+          "permissionDecision": "deny",
+          "permissionDecisionReason": reason,
+      }}, sys.stdout)
+      sys.exit(0)
+
+
+  if path == "/tmp" or path.startswith("/tmp/"):
+      deny("do not create files under /tmp/. Use a .tmp/ directory in the "
+           "current folder instead. When you are done with your task, clean "
+           "up by running `rm-dottmp <folder>` on each folder where you "
+           "created a .tmp directory.")
+#+end_src
 *** Settings
 #+begin_src json :tangle ~/.claude/settings.json
   {
@@ -559,6 +580,15 @@ intercepts pre-execution so Claude can act on the hint.
             {
               "type": "command",
               "command": "~/.local/lib/haris/claude-hook-bash-tips.py"
+            }
+          ]
+        },
+        {
+          "matcher": "Write",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "~/.local/lib/haris/claude-hook-write-tips.py"
             }
           ]
         }
