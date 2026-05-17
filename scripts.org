@@ -696,8 +696,7 @@ that pane, with the matching pane selected.
   while read -r pane_id session; do
       content=$(tmux capture-pane -p -J -t "$pane_id" 2>/dev/null || true)
       hit=$(printf '%s\n' "$content" | grep -E "$PATTERN" | head -n1 || true)
-      echo "$hit $pane_id $TMUX_PANE"
-      if [ -n "$hit" ] && [ ! "$pane_id" = "$TMUX_PANE" ]; then
+      if [ -n "$hit" ] && [ ! "$pane_id" = "${TMUX_PANE:-}" ]; then
           log "MATCH $pane_id (session=$session): $(printf '%.80s' "$hit")"
           match="$pane_id $session"
           break

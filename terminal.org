@@ -139,8 +139,8 @@ If you are viewing this on Linux, you can find the config reference [[file:/usr/
   bind k select-pane -U
   bind l select-pane -R
 
-  # Detach and jump to a Claude pane awaiting confirmation
-  bind-key -n M-C detach-client -E claude-confirm
+  # Open a fresh window pointed at the next Claude pane awaiting confirmation
+  bind-key -n M-C run-shell "term claude-confirm"
 
   set -g default-terminal "tmux-256color"
   set -g extended-keys always
