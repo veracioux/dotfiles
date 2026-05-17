@@ -272,6 +272,12 @@
 		"when": "editorTextFocus"
 	},
 	{
+		"key": "alt+shift+s",
+		"command": "workbench.action.tasks.runTask",
+		"args": "toggle-snapshot",
+		"when": "editorTextFocus"
+	},
+	{
 		"key": "ctrl+shift+t",
 		"command": "workbench.view.testing.focus"
 	},

@@ -42,6 +42,25 @@
 				"close": true
 			},
 			"problemMatcher": []
+		},
+		{
+			"label": "toggle-snapshot",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-c",
+				"f=\"$1\"; if [[ \"$f\" == *.snap ]]; then dir=\"$(dirname \"$f\")\"; base=\"$(basename \"$f\" .snap)\"; target=\"$(dirname \"$dir\")/$base\"; else target=\"$(dirname \"$f\")/__snapshots__/$(basename \"$f\").snap\"; fi; vscode -r \"$target\"",
+				"--",
+				"${file}"
+			],
+			"presentation": {
+				"reveal": "never",
+				"panel": "dedicated",
+				"echo": false,
+				"showReuseMessage": false,
+				"close": false
+			},
+			"problemMatcher": []
 		}
 	]
 }
