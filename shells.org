@@ -32,14 +32,18 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
 #+end_src
 I use the =bass= plugin to reuse =~/.bashrc=. That has a slight startup cost, so I
 run it on the =fish_preexec= event if it wasn't run before.
+
+=~/.profile= is loaded eagerly at startup if =HARIS_PROFILE_LOADED= isn't already set
+(i.e. the wrapping shell didn't source it for us).
 #+begin_src fish
+  if type --quiet bass; and [ -z "$HARIS_PROFILE_LOADED" ]
+      bass source ~/.profile
+  end
+
   function __haris_source_bashrc --on-event fish_preexec
       if type --quiet bass
           # I'm setting HOME to prevent errors when running inside tuterm
           HOME="/home/$USER" bass source ~/.bashrc # Load bash's config
-          if status is-login
-              bass source ~/.profile
-          end
       end
       functions --erase __haris_source_bashrc
   end
@@ -1956,6 +1960,8 @@ abbreviations for equivalent apt operations.
       printf "%s" "$PATH" | awk -v RS=: '!seen[$0]++' | paste -sd:
   )"
   flush_exports
+  # Sentinel so fish can detect whether the wrapping shell already sourced this
+  export HARIS_PROFILE_LOADED=1
 #+end_src
 * Local and temporary configs                                  :configurable:
 These are optional and must be provided separately.
