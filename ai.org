@@ -407,13 +407,16 @@ any existing entry with the same name before re-adding. Avoids editing
   marker_dir="${XDG_RUNTIME_DIR:-/tmp}/claude-notify"
   mkdir -p "$marker_dir"
   marker="$marker_dir/$session_id.cleared"
+  notif_file="$marker_dir/$session_id.notif"
   rm -f "$marker"
   out=$(mktemp -t claude-summary.XXXXXX)
   trap 'rm -f "$marker" "$out"' EXIT
 
+  summary_title="Claude${ws:+ [$ws]} $digest"
   notify() {
+      printf '%s\n%s' "$summary_title" "$1" > "$notif_file" 2>/dev/null || true
       notify-send -t 60000 --hint="string:x-dunst-stack-tag:claude-$session_id" \
-          "Claude${ws:+ [$ws]} $digest" "$1" 2>/dev/null || true
+          "$summary_title" "$1" 2>/dev/null || true
   }
 
   notify "Done, generating summary..."
@@ -541,8 +544,16 @@ prompt.
   : > "$marker_dir/$session_id.cleared"
   # Replace the stacked idle popup with a 1ms-timeout notification so dunst
   # dismisses it immediately. Same x-dunst-stack-tag as in notify-idle.
+  # Reuse the last title/body written by notify-idle so dunst's history shows
+  # the real summary rather than an empty entry.
+  notif_file="$marker_dir/$session_id.notif"
+  title=""; body=""
+  if [ -r "$notif_file" ]; then
+      title=$(sed -n '1p' "$notif_file")
+      body=$(sed -n '2,$p' "$notif_file")
+  fi
   notify-send -t 1 --hint="string:x-dunst-stack-tag:claude-$session_id" \
-      "" "" 2>/dev/null || true
+      "$title" "$body" 2>/dev/null || true
 #+end_src
 **** Bash command tips (PreToolUse)
 Pattern-matches the bash command Claude is about to run and, on match, blocks
