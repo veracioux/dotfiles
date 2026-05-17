@@ -772,7 +772,13 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
   cp "$HOME/.claude/settings.json" "$cfg/settings.json"
   export CLAUDE_CONFIG_DIR="$cfg"
 
-  exec alternative-command claude --model opus "$@"
+  # In a VM, skip permission prompts — the VM is the sandbox.
+  extra=()
+  if systemd-detect-virt -q; then
+      extra+=(--dangerously-skip-permissions)
+  fi
+
+  exec alternative-command claude --model opus "${extra[@]}" "$@"
 #+end_src
 ** =opencode=                                                      :wrapper:
 #+begin_src shell :tangle ~/.local/bin/opencode
