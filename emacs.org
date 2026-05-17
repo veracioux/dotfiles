@@ -1079,8 +1079,8 @@ want bindings (link following etc) from =compilation-mode-map= to be available.
   (use-package mocha-snippets :ensure t)
   (use-package npm-mode :ensure t)
 
-  (setq javascript-indent-level 4
-        js-indent-level 4
+  (setq javascript-indent-level 2
+        js-indent-level 2
         lsp-javascript-suggest-complete-js-docs t)
 #+end_src
 ** Web
