@@ -66,6 +66,18 @@ scripts. Keep entries here rather than hard-coding values in individual units.
 #+end_src
 * Default
 Services that run automatically upon login (TTY or graphical).
+** Auto-start drop-in
+Drop-in on =default.target= that pulls in user services on login, so they don't
+each need =systemctl --user enable=. Additive only — to stop a service from
+auto-starting, remove it from here and =daemon-reload=.
+#+begin_src systemd :tangle ~/.config/systemd/user/default.target.d/50-haris.conf
+  [Unit]
+  Wants=emacs.service
+  Wants=tmux.service
+  Wants=excalidraw-canvas.service
+  Wants=vpn-notifier.service
+  Wants=crontab-listen-update.service
+#+end_src
 ** Emacs Daemon
 #+begin_src systemd :tangle ~/.config/systemd/user/emacs.service
   [Unit]
