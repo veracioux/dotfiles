@@ -29,6 +29,12 @@ Note: I keep fish aliases in [[#alias-fish][Aliases]].
   set -gx EDITOR 'editor'
   set -gx VISUAL 'visual-editor'
   set -gx PAGER 'less'
+
+  # SSH doesn't forward COLORTERM, so truecolor-aware tools (delta, bat, ...)
+  # fall back to the 16-color palette. Restore it.
+  if set -q SSH_TTY; and not set -q COLORTERM
+      set -gx COLORTERM truecolor
+  end
 #+end_src
 I use the =bass= plugin to reuse =~/.bashrc=. That has a slight startup cost, so I
 run it on the =fish_preexec= event if it wasn't run before.
