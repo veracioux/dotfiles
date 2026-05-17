@@ -47,6 +47,23 @@ This target is always reached when a WM is started, regardless of which one.
   Requires=default.target
   StopWhenUnneeded=yes
 #+end_src
+* Environment
+User-level environment variables for =systemd --user= and login shells, set via
+[[https://www.freedesktop.org/software/systemd/man/environment.d.html][=environment.d=]]. The user manager imports these at startup, so every user
+service spawned afterwards inherits them — no need to repeat them in each unit
+file. Changes require a re-login (or =systemctl --user daemon-reexec= +
+restart of the affected services).
+
+This is the central registry for =HARIS_*= vars referenced from services and
+scripts. Keep entries here rather than hard-coding values in individual units.
+#+begin_src conf :tangle ~/.config/environment.d/10-haris.conf
+  # Host port the Excalidraw canvas docker service publishes on 127.0.0.1.
+  # Referenced by excalidraw-canvas.service and by ai.org's MCP registration.
+  HARIS_EXCALIDRAW_PORT=10002
+
+  # Host port for the webscripts service.
+  HARIS_WEBSCRIPTS_PORT=10001
+#+end_src
 * Default
 Services that run automatically upon login (TTY or graphical).
 ** Emacs Daemon
@@ -117,6 +134,31 @@ Periodically kill detached =term-*= sessions created by [[file:scripts.org::*=tm
 
   [Install]
   WantedBy=timers.target
+#+end_src
+** Excalidraw canvas
+Docker container hosting the live Excalidraw canvas. The stdio MCP server (see
+[[file:ai.org::*MCP servers][ai.org]]) syncs into it via =EXPRESS_SERVER_URL=. View the canvas at
+=http://127.0.0.1:$HARIS_EXCALIDRAW_PORT= (see [[Environment]] for the port).
+
+The container binds inside to =0.0.0.0:3000= (=HOST=0.0.0.0= overrides its
+loopback default so port-forwarding works) but is published to the host only
+on =127.0.0.1:$HARIS_EXCALIDRAW_PORT= so it's not reachable off the machine.
+#+begin_src systemd :tangle ~/.config/systemd/user/excalidraw-canvas.service
+  [Unit]
+  Description=Excalidraw canvas (MCP)
+  PartOf=default.target
+
+  [Service]
+  SyslogIdentifier=excalidraw-canvas
+  ExecStartPre=-/usr/bin/docker pull ghcr.io/yctimlin/mcp_excalidraw-canvas:latest
+  ExecStartPre=-/usr/bin/docker rm -f mcp-excalidraw-canvas
+  ExecStart=/usr/bin/docker run --rm --name mcp-excalidraw-canvas -e HOST=0.0.0.0 -p 127.0.0.1:${HARIS_EXCALIDRAW_PORT}:3000 ghcr.io/yctimlin/mcp_excalidraw-canvas:latest
+  ExecStop=/usr/bin/docker stop mcp-excalidraw-canvas
+  Restart=on-failure
+  TimeoutStartSec=300
+
+  [Install]
+  WantedBy=default.target
 #+end_src
 ** VPN Notifier
 #+begin_src systemd :tangle ~/.config/systemd/user/vpn-notifier.service

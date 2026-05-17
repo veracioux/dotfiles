@@ -337,6 +337,34 @@ Common instructions reused by ticket-drafting skills.
   rm -f ~/.claude/keybindings.json
   ln -s "$src"/keybindings.json ~/.claude/keybindings.json
 #+end_src
+*** MCP servers
+Registers user-scope MCP servers via the =claude mcp= CLI. Idempotent: removes
+any existing entry with the same name before re-adding. Avoids editing
+=~/.claude.json= directly (it holds session state).
+#+begin_src bash :tangle ~/.local/bin/claude-mcp-bootstrap.sh :shebang "#!/usr/bin/env bash"
+  set -eu
+
+  register() {
+      name=$1; shift
+      claude mcp remove --scope user "$name" >/dev/null 2>&1 || true
+      claude mcp add --scope user "$name" -- "$@"
+  }
+
+  # NEVER ADD AN `npx <pkg>` ENTRY WITHOUT LOOKING UP THE LATEST VERSION
+  # (`npm view <pkg> version`) AND PINNING IT EXPLICITLY (`<pkg>@<version>`).
+  # UNPINNED npx FETCHES ARE UNTRUSTED AND CAN CHANGE UNDER YOU.
+
+  # excalidraw: stdio MCP server (yctimlin/mcp_excalidraw fork) that syncs to a
+  # live browser canvas. The canvas itself runs as a docker service — see
+  # background.org -> Excalidraw canvas. View it at
+  # http://127.0.0.1:$HARIS_EXCALIDRAW_PORT (port comes from environment.d).
+  register excalidraw sh -c 'exec env "EXPRESS_SERVER_URL=http://127.0.0.1:$HARIS_EXCALIDRAW_PORT" ENABLE_CANVAS_SYNC=true npx -y mcp-excalidraw-server@1.0.7'
+
+  # emacs: bridges to the running Emacs's mcp-server via Unix socket (see emacs.org).
+  # Wrapped in `systemd-run --user --pipe` so stderr (socat -v traffic dump) lands
+  # in the journal. Inspect with `journalctl --user -u 'claude-mcp-emacs-*' -f`.
+  register emacs sh -c 'exec systemd-run --user --pipe --quiet --collect --unit="claude-mcp-emacs-$$" -- socat -v - "UNIX-CONNECT:$XDG_RUNTIME_DIR/emacs-mcp-server.sock"'
+#+end_src
 *** Hook scripts
 **** Record launch workspace (SessionStart)
 #+begin_src bash :tangle ~/.local/lib/haris/claude-hook-record-workspace.sh
@@ -673,7 +701,8 @@ to a project-local =.tmp/= directory and reminding it to clean up with
         "Bash(vagrant ssh *)",
         "Bash(vagrant port *)",
         "Bash(vagrant version)",
-        "WebFetch"
+        "WebFetch",
+        "mcp__excalidraw"
       ],
       "deny": [
         "Bash(git branch *-d*)",
