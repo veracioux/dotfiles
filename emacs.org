@@ -1795,6 +1795,30 @@ Takes too long to load.
     (define-key copilot-completion-map (kbd "M-p") 'copilot-previous-completion)
     (spacemacs/set-leader-keys "oC" 'copilot-mode))
 #+end_src
+** Emacs MCP Server
+Exposes Emacs to MCP clients (e.g. Claude) via a Unix socket. Connect a client
+with:
+#+begin_example
+claude mcp add emacs -- socat - UNIX-CONNECT:$XDG_RUNTIME_DIR/emacs-mcp-server.sock
+#+end_example
+The =socat= binary must be installed on the system.
+#+begin_src elisp
+  (use-package mcp-server
+    :straight (:type git :host github :repo "rhblind/emacs-mcp-server"
+               :branch "v0.7.0"
+               :files ("*.el" "tools/*.el" "mcp-wrapper.py" "mcp-wrapper.sh"))
+    :defer t
+    :commands (mcp-server-start-unix
+               mcp-server-stop
+               mcp-server-restart
+               mcp-server-status)
+    :init
+    (setq mcp-server-emacs-tools-enabled 'all
+          mcp-server-socket-directory (or (getenv "XDG_RUNTIME_DIR")
+                                          temporary-file-directory))
+    :config
+    (add-hook 'emacs-startup-hook #'mcp-server-start-unix))
+#+end_src
 * REPLs in Emacs
 ** Common settings
 #+begin_src elisp
