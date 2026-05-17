@@ -394,21 +394,55 @@ any existing entry with the same name before re-adding. Avoids editing
   log() { printf '[%s] %s\n' "$(date +%H:%M:%S)" "$*" >&9 2>/dev/null || true; }
 
   session_id=$(jq -r '.session_id')
+  digest=$(printf '%s' "$session_id" | sha256sum | cut -c1-6)
   log "start session=$session_id"
 
   ws_file="${XDG_RUNTIME_DIR:-/tmp}/claude-ws/$session_id"
   ws=""
   [ -r "$ws_file" ] && ws=$(cat "$ws_file")
-  notify-send -t 60000 --hint="string:x-dunst-stack-tag:claude-$session_id" \
-      "Claude${ws:+ [$ws]}" "Done, generating summary..." 2>/dev/null || true
 
-  title=$(CLAUDE_HOOK_SUMMARIZER=1 LOG_FIFO="$FIFO" python3 - "$session_id" <<'PY' 2>/dev/null || true
+  # Marker is touched by claude-hook-clear-idle.sh when the user submits a new
+  # prompt. We check it (a) to abort the summarizer mid-flight, (b) to suppress
+  # the final notify-send so it doesn't re-pop after the user has moved on.
+  marker_dir="${XDG_RUNTIME_DIR:-/tmp}/claude-notify"
+  mkdir -p "$marker_dir"
+  marker="$marker_dir/$session_id.cleared"
+  rm -f "$marker"
+  out=$(mktemp -t claude-summary.XXXXXX)
+  trap 'rm -f "$marker" "$out"' EXIT
+
+  notify() {
+      notify-send -t 60000 --hint="string:x-dunst-stack-tag:claude-$session_id" \
+          "Claude${ws:+ [$ws]} $digest" "$1" 2>/dev/null || true
+  }
+
+  notify "Done, generating summary..."
+
+  # Run the summarizer in its own pgrp (setsid) so a marker-triggered
+  # `kill -- -$pid` reaps python *and* its nested `claude --model haiku` child.
+  setsid bash <<OUTER > "$out" 2>/dev/null &
+  CLAUDE_HOOK_SUMMARIZER=1 LOG_FIFO="$FIFO" python3 - "$session_id" <<'PY'
   <<claude-hook-summarizer-py>>
   PY
-  )
-  log "notify ws=${ws:-<none>} title=${title:-<empty>}"
-  notify-send -t 60000 --hint="string:x-dunst-stack-tag:claude-$session_id" \
-      "Claude${ws:+ [$ws]}" "${title:-Awaiting your input}" 2>/dev/null || true
+  OUTER
+  sum_pid=$!
+
+  while kill -0 "$sum_pid" 2>/dev/null; do
+      if [ -e "$marker" ]; then
+          kill -TERM -- "-$sum_pid" 2>/dev/null || true
+          break
+      fi
+      sleep 0.2
+  done
+  wait "$sum_pid" 2>/dev/null || true
+
+  if [ -e "$marker" ]; then
+      log "cleared before summary completed"
+  else
+      title=$(cat "$out")
+      log "notify ws=${ws:-<none>} title=${title:-<empty>}"
+      notify "${title:-Awaiting your input}"
+  fi
 #+end_src
 ***** Summarizer
 #+name: claude-hook-summarizer-py
@@ -493,6 +527,22 @@ any existing entry with the same name before re-adding. Avoids editing
   except Exception as e:
       log(f'haiku exception={e!r}')
       print(fallback)
+#+end_src
+**** Clear idle notification (UserPromptSubmit)
+Dismisses the Stop hook's lingering idle popup when the user submits a new
+prompt.
+#+begin_src bash :tangle ~/.local/lib/haris/claude-hook-clear-idle.sh
+  set -eu
+  session_id=$(jq -r '.session_id')
+  # Marker tells a still-running notify-idle to abort its summarizer and skip
+  # the final notify-send. notify-idle owns cleanup via its EXIT trap.
+  marker_dir="${XDG_RUNTIME_DIR:-/tmp}/claude-notify"
+  mkdir -p "$marker_dir"
+  : > "$marker_dir/$session_id.cleared"
+  # Replace the stacked idle popup with a 1ms-timeout notification so dunst
+  # dismisses it immediately. Same x-dunst-stack-tag as in notify-idle.
+  notify-send -t 1 --hint="string:x-dunst-stack-tag:claude-$session_id" \
+      "" "" 2>/dev/null || true
 #+end_src
 **** Bash command tips (PreToolUse)
 Pattern-matches the bash command Claude is about to run and, on match, blocks
@@ -596,6 +646,28 @@ to a project-local =.tmp/= directory and reminding it to clean up with
             {
               "type": "command",
               "command": "~/.local/lib/haris/claude-hook-notify-idle.sh",
+              "async": true
+            }
+          ]
+        }
+      ],
+      "UserPromptSubmit": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "~/.local/lib/haris/claude-hook-clear-idle.sh",
+              "async": true
+            }
+          ]
+        }
+      ],
+      "SessionEnd": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "~/.local/lib/haris/claude-hook-clear-idle.sh",
               "async": true
             }
           ]
