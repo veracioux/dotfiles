@@ -562,7 +562,7 @@ message and reformulates before the user permission prompt fires. Mirrors the
 =claude-tip= hints embedded in shell wrappers (see =scripts.org=), but
 intercepts pre-execution so Claude can act on the hint.
 #+begin_src python :tangle ~/.local/lib/haris/claude-hook-bash-tips.py :shebang "#!/usr/bin/env python3"
-  import argparse, json, os, shlex, sys
+  import argparse, json, os, re, shlex, subprocess, sys
 
   data = json.load(sys.stdin)
   cmd = data.get("tool_input", {}).get("command", "")
@@ -570,12 +570,8 @@ intercepts pre-execution so Claude can act on the hint.
 
 
   def deny(reason):
-      json.dump({"hookSpecificOutput": {
-          "hookEventName": "PreToolUse",
-          "permissionDecision": "deny",
-          "permissionDecisionReason": reason,
-      }}, sys.stdout)
-      sys.exit(0)
+      print(reason, file=sys.stderr)
+      sys.exit(2)
 
 
   def tip_git_dash_C():
@@ -597,7 +593,35 @@ intercepts pre-execution so Claude can act on the hint.
                    f"Re-run without `-C {target}`.")
 
 
+  def tip_format_long_command():
+      """Dense one-liners are unreadable in the transcript. If shfmt expands the
+      command into more lines than the original, tell Claude to re-run the
+      formatted version. Gated on length>120 OR >=2 chain operators (&&, ||, ;, |)
+      to skip the shfmt fork for trivially short commands."""
+      long_enough = len(cmd) > 120
+      chain_count = len(re.findall(r'&&|\|\||;|\|', cmd))
+      has_chains = chain_count >= 2
+      if not (long_enough or has_chains):
+          return
+      try:
+          r = subprocess.run(
+              ['shfmt', '-i', '2'], input=cmd,
+              capture_output=True, text=True, timeout=2,
+          )
+      except (FileNotFoundError, subprocess.TimeoutExpired):
+          return
+      if r.returncode != 0:
+          return
+      formatted = r.stdout.rstrip('\n')
+      orig_lines = cmd.count('\n') + 1
+      new_lines = formatted.count('\n') + 1
+      if new_lines > orig_lines:
+          deny("this command is dense and unreadable in the transcript. "
+               "Re-run it in this formatted form:\n\n" + formatted)
+
+
   tip_git_dash_C()
+  tip_format_long_command()
 #+end_src
 **** Write path tips (PreToolUse)
 Blocks =Write= calls whose =file_path= lands under =/tmp/=, redirecting Claude
@@ -611,12 +635,8 @@ to a project-local =.tmp/= directory and reminding it to clean up with
 
 
   def deny(reason):
-      json.dump({"hookSpecificOutput": {
-          "hookEventName": "PreToolUse",
-          "permissionDecision": "deny",
-          "permissionDecisionReason": reason,
-      }}, sys.stdout)
-      sys.exit(0)
+      print(reason, file=sys.stderr)
+      sys.exit(2)
 
 
   if path == "/tmp" or path.startswith("/tmp/"):
