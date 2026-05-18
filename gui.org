@@ -208,6 +208,8 @@ Bookmarks for GTK's FileChooser. Each bookmark is bound to the shortcut
     <Global>
       <ExtraData>
         <ExtraDataItem name="GUI/Input/AutoCapture" value="false"/>
+        <!-- Host key: Copilot key (Lenovo AI key; registers as Super+Shift+XF86Assistant) -->
+        <ExtraDataItem name="GUI/Input/HostKeyCombination" value="65492,65505,65515"/>
         <ExtraDataItem name="GUI/RecentFolderCD"
                        value="<<eval-user-home()>>/mnt/vm/lib"/>
         <ExtraDataItem name="GUI/SuppressMessages" value="remindAboutAutoCapture"/>
