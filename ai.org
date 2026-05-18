@@ -880,6 +880,18 @@ to a project-local =.tmp/= directory and reminding it to clean up with
 #+begin_src markdown :tangle ~/.claude/commands/wt.md :noweb yes
   «prompts/wt»
 #+end_src
+**** Excalidraw
+#+NAME: prompts/excalidraw
+#+begin_src text
+  Draw the following on Excalidraw using MCP:
+
+  $ARGUMENTS
+
+  Leave generous spacing between elements so the result does not feel cluttered.
+#+end_src
+#+begin_src markdown :tangle ~/.claude/commands/excalidraw.md :noweb yes
+  «prompts/excalidraw»
+#+end_src
 ** OpenCode
 #+begin_src jsonc :tangle ~/.config/opencode/opencode.jsonc
   // https://opencode.ai/docs/config/
@@ -1310,6 +1322,13 @@ to a project-local =.tmp/= directory and reminding it to clean up with
   description: Stop using git -C when already in the worktree
   ---
   «prompts/wt»
+#+end_src
+**** Excalidraw
+#+begin_src markdown :tangle ~/.config/opencode/command/excalidraw.md :noweb yes
+  ---
+  description: Draw something on Excalidraw
+  ---
+  «prompts/excalidraw»
 #+end_src
 **** Commit
 #+begin_src markdown :tangle ~/.config/opencode/command/commit.md
