@@ -148,19 +148,29 @@ The PKGFILE can be found [[https://github.com/veracioux/aur][here]].
   /usr/bin/redshift -l 43.84:18.35
 #+end_src
 ** =firefox=                                                         :wrapper:
-#+begin_src shell :tangle ~/.local/bin/firefox
+#+begin_src bash :tangle ~/.local/bin/firefox
   if [ -n "$VSCODE_PID" ]; then
-      args="$(printarg "$@" | uniq)"
+      raw=("$@")
   else
-      args="$(printarg --new-tab "$@" | uniq)"
+      raw=(--new-tab "$@")
   fi
 
+  # Dedupe while preserving order
+  args=()
+  for a in "${raw[@]}"; do
+      seen=0
+      for b in "${args[@]}"; do
+          [ "$a" = "$b" ] && { seen=1; break; }
+      done
+      [ "$seen" = 0 ] && args+=("$a")
+  done
+
   if [ "$(get-os-type)" = ubuntu ] && [ -e ~/.local/opt/firefox ]; then
-      ~/.local/opt/firefox/firefox $args
+      ~/.local/opt/firefox/firefox "${args[@]}"
       exit
   fi
 
-  alternative-command firefox $args
+  alternative-command firefox "${args[@]}"
 #+end_src
 ** =myemacs=                                                         :wrapper:
 #+begin_src bash :tangle ~/.local/bin/myemacs
