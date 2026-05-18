@@ -629,7 +629,7 @@ A menu for managing notifications.
   set $mode_notif      " Notifications | [c]lose [C]lose-all [h]istory [a]ction [m]enu [d]aemon [t]est"
 
   mode $mode_notif {
-  bindsym a       exec dunstctl action, mode default
+  bindsym a       exec --no-startup-id <<scripts-dir>>/notification-open-url.sh, mode default
   bindsym c       exec dunstctl close
   bindsym Shift+c exec dunstctl close-all, mode default
   bindsym m       exec dunstctl context, mode default
@@ -640,6 +640,25 @@ A menu for managing notifications.
   }
 
   bindsym $mod+Shift+n mode $mode_notif
+#+end_src
+*** Helper scripts
+**** Open URL from notification
+Closes the currently displayed notification (so it lands in history), extracts
+the first URL from its summary/body, and opens it with =xdg-open=. Handles both
+plain =https://...= text and pango =<a href="...">= markup.
+#+begin_src bash :tangle ~/.config/i3/scripts/notification-open-url.sh :tangle-mode (eval #o744) :shebang "#!/usr/bin/env bash"
+  set -eu
+
+  dunstctl close 2>/dev/null || true
+
+  content=$(dunstctl history | jq -r '
+    .data[0][0] // empty | (.summary.data // "") + " " + (.body.data // "")
+  ')
+
+  url=$(echo "$content" | grep -oE 'href="[^"]+"' | head -1 | sed 's/href="//; s/"$//')
+  [ -z "$url" ] && url=$(echo "$content" | grep -oE 'https?://[^ "<>]+' | head -1)
+
+  [ -n "$url" ] && xdg-open "$url"
 #+end_src
 ** Chat menu
 Menu of utilities that allow me to chat with my computer.
