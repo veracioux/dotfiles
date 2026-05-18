@@ -775,6 +775,14 @@ mounted read-only, with writable =/tmp= and =/run= for programs that need them.
   extra=()
   if systemd-detect-virt -q; then
       extra+=(--dangerously-skip-permissions)
+      # Suppress the bypass-permissions acceptance prompt by marking it accepted.
+      if [ -f "$HOME/.claude.json" ] && \
+         [ "$(jq 'has("bypassPermissionsModeAcceptedTwiceAt")' "$HOME/.claude.json")" = false ]; then
+          tmp=$(mktemp -t claude-json.XXXXXX)
+          jq --argjson ts "$(date +%s000)" \
+              '.bypassPermissionsModeAcceptedTwiceAt = $ts' \
+              "$HOME/.claude.json" >"$tmp" && mv "$tmp" "$HOME/.claude.json"
+      fi
   fi
 
   exec alternative-command claude --model opus "${extra[@]}" "$@"
